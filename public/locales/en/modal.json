@@ -1,0 +1,21 @@
+{
+    "ok":"OK",
+    "yes": "Yes",
+    "cancel": "Cancel",
+
+    "createSuccess": "Create success",
+    "createFailed": "Create failed",
+
+    "deleteCompleted": "Delete completed",
+    "deleteFailed": "Delete failed",
+
+    "updateSuccess":"Update success",
+    "updateFailed": "Update failed",
+
+    "errSomethingWentWrong":"Something went wrong",
+    "errPrescribingNotOwner": "Cannot diagnose from another doctor's appointment.",
+    "pleaseTryAgain": "Please try again",
+    "pleaseDoubleCheck": "Please double check the form information",
+    "noThrowBack": "This action can not be throwback, continue"
+
+}

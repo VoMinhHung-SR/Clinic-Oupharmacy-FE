@@ -1,0 +1,39 @@
+{
+    "errExaminationList": "Hệ thống không xác nhận được danh sách đặt lịch hoặc người dùng chưa tiến hành đặt lịch",
+    "errExamsNull": "Không tìm thấy phiếu khám",
+    "id": "Mã phiếu",
+    "description":"Mô tả",
+    "createdDate":"Ngày đăng ký",
+    "mailStatus":"Tình trạng mail",
+    "diagnosisStatus": "Trạng thái chẩn đoán",
+    "paymentStatus": "Trạng thái thanh toán",
+    "userCreated": "Người dùng đăng ký",
+    "doctorName": "Tên bác sĩ",
+    "patientName": "Tên bệnh nhân",
+    "function": "Chức năng",
+
+    "sendEmail":"Gửi email xác nhận",
+    "detail": "Chi tiết",
+    "diagnose": "Chẩn đoán",
+    "pay": "Thanh toán",
+    "noReady": "Chưa xác nhận",
+    "sent":"Đã gửi",
+    "noSent":"Chưa",
+
+    "all": "Tất cả",
+    "descending":"Giảm dần",
+    "ascending":"Tăng dần",
+    "search": "Tìm kiếm",
+
+    "hasDiagnosis":"Chẩn đoán",
+    "yes": "Có",
+    "no": "Không",
+
+    "filterUserLabel": "Email người dùng",
+    "confirmDelete":"Xác nhận xóa phiếu đặt lịch",
+    "confirmSendEmail": "Xác nhận gửi thư xác nhận",
+    "sendMailSuccesses": "Gửi email hoàn tất",
+    "listOfExaminations": "Danh sách phiếu khám",
+
+    "resultOfTotal": "({{result}} kết quả)"
+}

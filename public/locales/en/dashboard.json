@@ -1,0 +1,33 @@
+{
+    "users": "Users",
+    "patients": "Patients",
+    "bookings": "Bookings",
+    "medicineUnit": "Medicine Unit",
+
+    "noteTotalPatients": "Total number of patient profiles",
+    "noteTotalUsers": "Total number of users",
+    "noteTotalBookings": "Total bookings for today",
+    "noteTotalMedicines": "Total units of medicine",
+
+    "month": "Month",
+    "revenue": "Revenue (VND)",
+    "revenueLabel": "Revenue in", 
+    "revenueTitle": "Monthly Revenue Statistics for", 
+ 
+    "examinationLabel": "Examinations in",
+    "examinationTitle": "Monthly Booking Statistics for",
+
+    "January": "January",
+    "February": "February",
+    "March": "March",
+    "April": "April",
+    "May": "May",
+    "June": "June",
+    "July": "July",
+    "August": "August",
+    "September": "September",
+    "October": "October",
+    "November": "November",
+    "December": "December"
+    
+}

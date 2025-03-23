@@ -1,0 +1,18 @@
+{
+    "selectUser":"Chọn người dùng thực hiện trò chuyện",
+    "chat": "Trò chuyện",
+    "enterUserEmail":"Nhập email người dùng",
+    "conversation": "Hộp thoại tin nhắn",
+    "user": "Người dùng tìm kiếm",
+    "errNoConversation": "Không tồn tại đoạn hội thoại",
+    "errNoRecipient": "Không có kết quả tìm kiếm",
+    "errNoMessage": "Nhập nội dung để gửi tin nhắn",
+    "enterMessage": "Nhập tin nhắn mới...",
+    "isDoctor" :"Người dùng này là bác sĩ",
+    "isNurse": "Người dùng này là y tá",
+    "noRecipient": "Không tìm thấy người nhận trong đoạn hội thoại",
+
+    "addNewConversationSuccess": "Thêm cuộc trò chuyện thành công",
+    "addFailed": "Thêm cuộc trò chuyện không thành công"
+    
+}

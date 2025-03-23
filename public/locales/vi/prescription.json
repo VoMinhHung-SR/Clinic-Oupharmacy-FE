@@ -1,0 +1,26 @@
+{
+    "errNullPrescription":"Không có phiếu chẩn đoán phù hợp",
+    "prescriptionId": "Mã phiếu",
+    "sign": "Triệu chứng",
+    "diagnosed": "Chẩn đoán",
+    "diagnosisDate": "Ngày chẩn đoán",
+    "doctorName": "Bác sĩ chẩn đoán",
+    "patientName": "Tên bệnh nhân",
+    "feature": "Chức năng",
+    "prescribing": "Kê toa",
+    "prescribingStatus": "Trạng thái kê toa",
+    "payment": "Thanh toán",
+    "paymentStatus": "Trạng thái thanh toán",
+    "listOfDiagnosisForms": "Danh sách phiếu chẩn đoán",
+
+    "resultOfTotal": "({{result}} kết quả)",
+
+    "all": "Tất cả",
+    "newest": "Mới nhất",
+    "oldest": "Cũ nhất",
+    "descending":"Giảm dần",
+    "ascending":"Tăng dần",
+    "search": "Tìm kiếm",
+    "yes": "Có",
+    "no": "Không"
+}

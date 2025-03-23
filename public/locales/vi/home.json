@@ -1,0 +1,59 @@
+{
+    "quote": "Sức khỏe của bạn là một khoản đầu tư, không phải là một chi phí.",
+    "ourServices": "Dịch vụ của chúng tôi",
+    "emergencyServices": "Dịch vụ khẩn cấp",
+    "qualifiedDoctors": "Bác sĩ chuyên môn",
+    "outdoorsCheckup": "Kiểm tra ngoài trời",
+    "service24h": "Dịch vụ 24 giờ",
+    "messageAndNotification":"Tin nhắn và Thông báo",
+    "waitingRoom":"Phòng chờ",
+
+    "title2": "Sức khỏe của bạn là ưu tiên của chúng tôi",
+    "contactDescription":"Hãy liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi hoặc yêu cầu nào về dịch vụ của chúng tôi, chúng tôi rất vui lòng hỗ trợ bạn",
+
+
+    "address": "Địa chỉ",
+    "contactNumber": "Số liên lạc",
+    "emailAddress": "Địa chỉ email",
+    "website": "Trang web",
+
+    "categories": "Doanh mục",
+    "prescriptionDrugs": "Thuốc kê toa",
+    "otcDrugs": "Thuốc không kê toa",
+    "functionalFoods": "Thực phẩm sức năng",
+
+    "aboutUs": "Về chúng tôi",
+    "introduce": "Giới thiệu",
+    "businessLicense": "Giấy phép kinh doanh",
+    
+    "terms": "Các điều khoản",
+    "security": "Bảo mật",
+    "support": "Trợ giúp",
+    "privacy": "Quyền riêng tư",
+    
+    "pharmacySystem": "Hệ thống nhà thuốc",
+    "drugSystem": "Hệ thống thuốc",
+    "pharmacyRules": "Nội quy nhà thuốc",
+    "serviceQuality": "Chất lượng phục vụ",
+    "returnPolicy": "Chính sách đổi trả",
+    "warrantyPolicy": "Chính sách bảo hành",
+
+    "contactUs": "Kết nối với chúng tôi",
+    "hotline": "Liên hệ ngay",
+
+    "operatingTime": "Thời gian hoạt động",
+    "examinationSchedule": "Lịch khám (2-7): 07:00 - 17:00",
+    "onlineConsultation": "Tư vấn online",
+
+    "welcomeOUPharmacy": "Chào mừng bạn đến với OUPharmacy",
+    "welcomeTitle":"Chúng tôi ở đây để chăm sóc bạn",
+    "makeAnAppointMent": "Hẹn lịch khám",
+
+    "scriptWelcome": "Chúng tôi cam kết cung cấp dịch vụ chăm sóc sức khỏe chất lượng cao nhất cho bệnh nhân của mình. Từ kiểm tra định kỳ đến chăm sóc khẩn cấp, chúng tôi ở đây để chăm sóc sức khỏe của bạn mọi lúc, mọi nơi.",
+    "scriptQualifiedDoctors": "Đội ngũ bác sĩ chuyên nghiệp, có trình độ chuyên môn cao, được đào tạo tại các trường y hàng đầu trong và ngoài nước.",
+    "scriptEmergencyServices":"Dịch vụ cấp cứu 24/7, đảm bảo sự an toàn và chăm sóc y tế tối ưu cho bệnh nhân trong mọi tình huống khẩn cấp.",
+    "scriptOutdoorsCheckup": "Dịch vụ khám và chữa bệnh tận nơi cho những bệnh nhân khó di chuyển hoặc cần chăm sóc tại nhà.",
+    "scriptTwentyFourHoursService": "Dịch vụ chăm sóc sức khỏe liên tục 24/7, đáp ứng mọi nhu cầu y tế của bệnh nhân mọi lúc mọi nơi.",
+    "scriptMessageAndNotification": "Hệ thống thông báo và tin nhắn tự động, giúp bệnh nhân dễ dàng theo dõi lịch hẹn và nhận thông tin liên quan đến chăm sóc sức khỏe.",
+    "scriptWaitingRoom": "Phòng chờ của chúng tôi cho phép bạn xem kiểm tra của mình trực tuyến và thông báo cho bạn khi đến lượt của bạn."
+}

@@ -1,0 +1,26 @@
+{
+    "errNullPrescription":"There is no prescription exist",
+    "prescriptionId": "ID",
+    "sign": "Sign",
+    "diagnosed": "Diagnosed",
+    "diagnosisDate": "Diagnosis date",
+    "patientName": "Patient name",
+    "doctorName": "Doctor name",
+    "feature": "Feature",   
+    "prescribing": "Prescribing",
+    "prescribingStatus": "Prescribing status",
+    "payment": "Payments",
+    "paymentStatus": "Payment status",
+    "listOfDiagnosisForms": "List of diagnosis forms",
+
+    "resultOfTotal": "({{result}} results)",
+
+    "all": "All",
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "descending":"Descending",
+    "ascending":"Ascending",
+    "search": "Search",
+    "yes": "Yes",
+    "no": "No"
+}

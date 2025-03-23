@@ -1,0 +1,17 @@
+{
+    "examinationInformation":"The examination info",
+    "patientFullName": "Patient full name",
+    "createdDate": "Created date",
+    "description": "Description",
+    "errNullExamination": "The exam sheet does not exist or has not been verified by the nurse",
+    "createPrescription": "Create prescription",
+    "prescriptionInformation": "The prescription info",
+    "sign": "Sign",
+    "diagnosed": "Diagnosed",
+    "prescribing": "Prescribing",
+    "submit": "Submit",
+    "wait": "Wait...",
+    "diagnosisExist":"The list diagnosis ID of this exam sheet",
+    "errNullDiagnosis":"The medical record has not been diagnosed by a doctor",
+    "confirmCreateDiagnosis":"Confirm to create this diagnosis form"
+}

@@ -1,0 +1,40 @@
+{
+    "errExaminationList": "Examination list was not found or just empty",
+    "errExamsNull": "No examinations found",
+    "id":"Id",
+    "description":"Description",
+    "createdDate":"Created date",
+    "mailStatus":"Mail status",
+    "diagnosisStatus": "Diagnosis status",
+    "paymentStatus": "Payment status",
+    "userCreated": "User created",
+    "patientName": "Patient name",
+    "doctorName": "Doctor name",
+    "function": "Feature",
+
+    "sendEmail": "Send email confirm",
+    "detail": "Detail",
+    "diagnose":"Diagnose",
+    "pay": "Paid",
+    "noReady": "No ready",
+    "sent": "Sent",
+    "noSent":"No",
+
+    "all": "All",
+    "descending":"Descending",
+    "ascending":"Ascending",
+    "search": "Search",
+
+    "hasDiagnosis":"Diagnosed",
+    "yes": "Yes",
+    "no": "No",
+
+    "filterUserLabel": "User email (optional)",
+    "confirmDelete":"Confirm to delete this examination sheet",
+    "confirmSendEmail": "Confirm to send an email",
+    "sendMailSuccesses": "Send mail succeed",
+    "listOfExaminations": "List of examinations",
+
+    "resultOfTotal": "({{result}} results)"
+
+}

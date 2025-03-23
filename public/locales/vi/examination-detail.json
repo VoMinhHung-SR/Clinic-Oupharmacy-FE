@@ -1,0 +1,18 @@
+{
+    "examinationDetailInfo":"Chi tiết phiếu khám",
+    "patientFullName": "Tên bệnh nhân",
+    "createdDate":"Ngày đăng ký",
+    "userCreated": "Người dùng đăng ký",
+    "examinationId": "Mã phiếu khám",
+    "description":"Mô tả",
+    "mailStatus": "Tình trạng mail",
+    "remindEmail": "Nhắc nhở tái khám",
+    "sent": "Đã gửi",
+    "noSend": "Chưa gửi",
+    "moreInformation": "Thông tin khác",
+    "diagnose":"Phiếu chẩn đoán",
+    "prescribing": "Phiếu kê toa",
+    "bill": "Phiếu thanh toán",
+    "diagnosisExist":"Danh sách mã phiếu chẩn đoán của phiếu khám này là",
+    "doctor": "Bác sĩ"
+}

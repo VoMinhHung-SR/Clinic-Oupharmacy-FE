@@ -1,0 +1,58 @@
+{
+    "quote": "Your health is an investment, not an expense.",
+    "ourServices": "Our Services",
+    "emergencyServices": "Emergency Services",
+    "qualifiedDoctors": "Qualified Doctors",
+    "outdoorsCheckup": "Outdoors Checkup",
+    "service24h": "24 Hours Service",
+    "messageAndNotification":"Message And Notification",
+    "waitingRoom":"Waiting Room",
+
+    "title2": "Your Health is Our Priority",
+    "contactDescription":"Get in touch with us for any questions or inquiries about our services, and we will be happy to assist you",
+
+    "address": "Address",
+    "contactNumber": "Contact Number",
+    "emailAddress": "Email Address",
+    "website": "Website",
+
+    "categories": "Categories",
+    "prescriptionDrugs": "Prescription drugs",
+    "otcDrugs": "Over-the-counter drugs",
+    "functionalFoods": "Functional foods",
+
+    "aboutUs": "About us",
+    "introduce": "Introduce",
+    "businessLicense": "Business license",
+    
+    "terms": "Terms",
+    "security": "Security",
+    "support": "Support",
+    "privacy": "Privacy",
+    
+    "pharmacySystem": "Pharmacy system",
+    "drugSystem": "Drug system",
+    "pharmacyRules": "Pharmacy rules",
+    "serviceQuality": "Service quality",
+    "returnPolicy": "Return policy",
+    "warrantyPolicy": "Warranty policy",
+
+    "contactUs": "Contact Us",
+    "hotline": "Hotline",
+
+    "operatingTime": "Operating time",
+    "examinationSchedule": "Examination schedule (2-7): 7AM-5PM",
+    "onlineConsultation": "Online consultation",
+
+    "welcomeOUPharmacy": "Welcome to OUPharmacy",
+    "welcomeTitle":"We are here for your Care",
+    "makeAnAppointMent": "Make an appointment",
+
+    "scriptWelcome": "We are dedicated to providing the highest quality healthcare services to our patients. From routine checkups to emergency care, we are here for your care every step of the way.",
+    "scriptQualifiedDoctors": "Our team of highly qualified doctors are dedicated to providing exceptional medical care to all of our patients. With years of experience and a commitment to ongoing education, you can trust that you're in good hands with us.",
+    "scriptEmergencyServices":"Medical emergencies can happen at any time, which is why our emergency services are available 24/7. Our trained medical staff is always on call and ready to respond quickly to any emergency situation.",
+    "scriptOutdoorsCheckup": "Enjoy the great outdoors with peace of mind knowing that you can receive medical care right where you are. Our outdoors checkup service is perfect for hikers, campers, and anyone else who wants to enjoy nature without worrying about medical care.",
+    "scriptTwentyFourHoursService": "Our medical services are available to you around the clock. Whether you need medical attention in the middle of the night or on a holiday, our staff is always here to provide the care you need.",
+    "scriptMessageAndNotification": "Stay connected with our team through our messaging and notification system. Receive important updates and reminders about your medical care, and communicate directly with our staff to get the answers you need.",
+    "scriptWaitingRoom": "Our waiting room allows you to watch your exam online and notifies you when it's your turn."
+}

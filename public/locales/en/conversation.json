@@ -1,0 +1,18 @@
+{
+    "selectUser":"Choose a user to create new conversation",
+    "chat": "Chat",
+    "enterUserEmail":"Enter user email",
+    "conversation": "Conversation",
+    "user": "Search users",
+    "errNoConversation": "There is no conversations",
+    "errNoRecipient": "No recipients found",
+    "errNoMessage": "Entering something to send new message",
+    "enterMessage": "Typing a new message...",
+    "isDoctor": "This user is a doctor",
+    "isNurse": "This user is a nurse",
+    "noRecipient": "There is no recipients is your chat",
+
+    "addNewConversationSuccess": "Add new conversation successfully",
+    "addFailed":"Add conversation failed",
+    "": ""
+}

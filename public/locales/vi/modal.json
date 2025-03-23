@@ -1,0 +1,20 @@
+{
+    "ok":"OK",
+    "yes": "Đồng ý",
+    "cancel": "Hủy",
+
+    "createSuccess": "Tạo thành công",
+    "createFailed": "Tạo thất bại",
+
+    "deleteCompleted": "Xóa thành công",
+    "deleteFailed": "Xóa thất bại",
+
+    "updateSuccess":"Cập nhật thành công",
+    "updateFailed": "Cập nhật thất bại",
+
+    "errSomethingWentWrong":"Đã có lỗi xảy ra",
+    "pleaseTryAgain": "Vui lòng thử lại sau",
+    "errPrescribingNotOwner": "Không thể thực hiện chẩn đoán từ cuộc hẹn của bác sĩ khác",
+    "pleaseDoubleCheck": "Vui lòng kiểm tra kỹ thông tin biểu mẫu",
+    "noThrowBack": "Hành động nay sẽ không thể hoàn tác, tiếp tục"
+}

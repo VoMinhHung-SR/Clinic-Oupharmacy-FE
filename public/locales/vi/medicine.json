@@ -1,0 +1,22 @@
+{
+    "listOfMedicines": "Danh sách thuốc",
+    "medicineName": "Tên thuốc",
+    "packaging": "Đóng gói",
+    "inStock": "Tồn kho",
+    "quantity": "Số lượng",
+    "price": "Giá",
+    "function": "Chức năng",
+    "category": "Danh mục",
+    "errMedicinesNull": "Không có thuốc nào.",
+    "addMedicine": "Thêm thuốc",
+    "updateMedicine": "Cập nhật thuốc",
+    "medicineInfo": "Thông tin thuốc",
+    "medicineInStock": "Thông tin lưu kho",
+    "effect": "Tác dụng thuốc",
+    "contraindications": "Chống chỉ định",
+    "uploadMedicineImage": "Tải ảnh thuốc lên",
+    "confirmDeleteMedicineUnit":"Xác nhận xóa đơn vị thuốc này",
+    "resultOfTotal": "({{result}} kết quả)",
+    "all": "Tất cả",
+    "search": "Tìm kiếm"
+}

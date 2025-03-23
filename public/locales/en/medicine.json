@@ -1,0 +1,22 @@
+{
+    "listOfMedicines": "List of medicine",
+    "medicineName": "Medicine name",
+    "packaging": "Packaging",
+    "inStock": "In stock",
+    "quantity": "Quantity",
+    "price": "Price",
+    "function": "Function",
+    "category": "Category",
+    "errMedicinesNull": "No medicines available.",
+    "addMedicine": "Add medicine",
+    "updateMedicine": "Update medicine",
+    "medicineInfo": "Medicine Information",
+    "medicineInStock": "Medicine Stock Information",
+    "effect": "Medicine effect",
+    "contraindications": "Medicine contraindication",
+    "uploadMedicineImage": "Upload medicine image",
+    "confirmDeleteMedicineUnit":"Confirm to delete this medicine unit",
+    "resultOfTotal": "({{result}} results)",
+    "all": "All",
+    "search": "Search"
+}

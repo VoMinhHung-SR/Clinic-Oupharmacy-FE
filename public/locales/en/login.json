@@ -1,0 +1,8 @@
+{
+    "login":"Login",
+    "register": "Register",
+    "homePage": "Home page",
+    "username": "Email",
+    "password": "Password",
+    "incorrectInfo": "Your email or password was incorrect!"
+}

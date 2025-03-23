@@ -1,0 +1,21 @@
+{
+    "doctorCalendar": "Lịch bác sĩ",
+    "doctor-schedule": "Lịch bác sĩ",
+    "monday": "Thứ 2",
+    "tuesday": "Thứ 3",
+    "wednesday": "Thứ 4",
+    "thursday": "Thứ 5",
+    "friday": "Thứ 6",
+    "saturday": "Thứ 7",
+    "sunday": "Chủ nhật",
+    "weekly": "Ngày trong tuần",
+    "morning": "Buổi sáng",
+    "afternoon": "Buổi chiều",
+    "appointments": "Lịch hẹn",
+    "time": "Thời gian",
+    "year": "Năm",
+    "week": "Tuần",
+    "doctorScheduleTitle": "Thống kê lịch tuần của bác sĩ",
+    "confirmCreateSchedule": "Xác nhận tạo lịch tuần này?",
+    "confirmUpdateSchedule": "Xác nhận cập nhật lịch tuần này?"
+}

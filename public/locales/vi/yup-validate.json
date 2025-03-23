@@ -1,0 +1,95 @@
+{
+    "yupEmailRequired":"Email không được để trống",
+    "yupEmailMaxLength":"Email vượt quá độ dài cho phép",
+    "yupEmailInvalid": "Email không hợp lệ",
+    "yupEmailExist": "Email đã tồn tại",
+    
+    "yupPasswordRequired":"Mât khẩu không được để trống",
+    "yupPasswordMaxLength": "Mât khẩu vượt quá độ dài cho phép",
+
+    "yupConfirmPasswordRequire":"Xác nhận mật khẩu không được để trống",
+    "yupConfirmPasswordMatch":"Xác nhận mật khẩu không khớp",
+
+    "yupNewPasswordRequired":"Mật khẩu mới không đuơc để trống",
+    "yupNewPasswordMinLength": "Mật khẩu phải chứa ít nhất 8 ký tự",
+    "yupNewPasswordRegex": "Mật khẩu phải bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt",
+
+    "yupFirstNameRequired":"Họ không được để trống",
+    "yupFirstNameMaxLength":"Họ vượt quá độ dài cho phép",
+    "yupFirstNameInvalid":"Họ không hợp lệ",
+    
+    "yupLastNameRequired":"Tên không được để trống",
+    "yupLastNameMaxLength":"Tên vượt quá độ dài cho phép",
+    "yupLastNameInvalid":"Tên không hợp lệ",
+
+    "yupPhoneNumberRequired":"Số điện thoại không được để trống",
+    "yupPhoneNumberInvalid":"Số điện thoại không hợp lệ",
+    "yupPhoneNumberExist":"Số điện thoại đã tồn tại",
+    
+    "yupAddressRequired":"Địa chỉ không được để trống",
+    "yupAddressInvalid":"Địa chỉ không hợp lệ",
+    "yupAddressMustBeSelected": "Địa chỉ phải được chọn",
+    
+    "yupDOBRequired":"Ngày sinh không được để trống",
+    
+    "yupGenderRequired":"Giới tính không được để trống",
+    
+    "yupDescriptionRequired":"Mô tả không được phép để trống",
+    "yupDescriptionMaxLength":"Mô tả vượt quá độ dài cho phép",
+    "yupDescriptionInvalid":"Mô tả không hợp lệ",
+
+    "yupCreatedDateRequired":"Ngày tạo không được phép để trống",
+    "yupCreatedDateMustBeInRange": "Ngày phải nằm trong khoảng {{minDate}} và {{maxDate}}",
+
+    "yupCreatedTimeRequired":"Thời gian không được để trống",
+    "yupCreatedTimeInvalid": "Thời gian không hợp lệ",
+    "yupTimeDivisibleBy20":"Số phút phải chia hết cho 20 (00; 20; 40)",
+
+    "yupSignRequired": "Triệu chứng không được để trống",
+    "yupSignMaxLength":"Triệu chứng vượt quá độ dài cho phép",
+    "yupSignInvalid":"Triệu chứng không hợp lệ",
+
+    "yupDiagnosedRequired": "Chẩn đoán không được để trống",
+    "yupDiagnosedMaxLength": "Chẩn đoán vượt quá độ dài cho phép",
+    "yupDiagnosedInvalid":"Chẩn đoán không hợp lệ",
+
+    "yupUsesRequired": "Lần sử dụng không được để trống",
+    "yupUsesMaxLength":"Lần sử dụng vượt quá độ dài cho phép",
+    "yupUsesInvalid":"Lần sử dụng không hợp lệ",
+
+    "yupQuantityNumber": "Số lượng phải là số",
+    "yupQuantityRequired": "Số lượng không được để trống",
+    "yupQuantityMax": "Số lượng phải vượt quá số lượng cho phép",
+    "yupQuantityOverRaw": "Số lượng vượt quá ban đầu",
+    "yupQuantityInvalid":"Số lượng không hợp lệ ",
+
+    "yupCityRequired": "Tỉnh/Thành phố không được để trống",
+    "yupCityNumber": "Tỉnh/Thành phố phải được chọn",
+
+    "yupDistrictRequired": "Quận/Huyện không được để trống",
+    "yupDistrictNumber": "Quận/Huyện phải được chọn",
+
+    "yupNameCateRequired": "Tên danh mục là bắt buộc",
+    "yupNameCateMax": "Tên danh mục không được vượt quá 50 ký tự",
+    "yupNameCateInvalid": "Tên danh mục không hợp lệ",
+
+    "yupMedicineNameRequired": "Tên thuốc là bắt buộc.",
+    "yupMedicineNameInvalid": "Tên thuốc không hợp lệ.",
+    "yupMedicineNameMaxLength": "Tên thuốc không được vượt quá {{max}} ký tự.",
+
+    "yupMedicineEffectRequired": "Tác dụng của thuốc là bắt buộc.",
+    "yupMedicineEffectInvalid": "Tác dụng của thuốc không hợp lệ.",
+    "yupMedicineEffectMaxLength": "Tác dụng của thuốc không được vượt quá {{max}} ký tự.",
+
+    "yupMedicineContraindicationsRequired": "Chống chỉ định là bắt buộc.",
+    "yupMedicineContraindicationsInvalid": "Chống chỉ định không hợp lệ.",
+    "yupMedicineContraindicationsMaxLength": "Chống chỉ định không được vượt quá {{max}} ký tự.",
+
+    "yupMedicinePackagingRequired": "Đóng gói là bắt buộc.",
+    "yupMedicinePackagingInvalid": "Đóng gói không hợp lệ.",
+    "yupMedicineExist": "Tên thuốc này đã tồn tại",
+
+    "yupPriceRequired": "Giá là bắt buộc.",
+    "yupPriceNumber": "Giá phải là một số."
+
+}

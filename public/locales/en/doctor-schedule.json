@@ -1,0 +1,20 @@
+{
+    "doctorCalendar": "Doctor Calendar",
+    "doctor-schedule": "Doctor Schedule",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "appointments": "Appointments",
+    "time": "Time",
+    "year": "Year",
+    "week": "Week",
+    "doctorScheduleTitle": "Doctor Weekly Schedule Statistics",
+    "confirmCreateSchedule": "Confirm to create this week schedule?",
+    "confirmUpdateSchedule": "Confirm to update this week schedule?"
+}

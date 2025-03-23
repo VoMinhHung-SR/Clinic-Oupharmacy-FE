@@ -1,0 +1,95 @@
+{
+    "yupEmailRequired":"Email was required",
+    "yupEmailMaxLength":"Email exceeds the allowed length",
+    "yupEmailInvalid": "Invalid email",
+    "yupEmailExist": "Email already exist",
+
+    "yupPasswordRequired":"Password was required",
+    "yupPasswordMaxLength": "Password exceeds the allowed length",
+
+    "yupConfirmPasswordRequire":"Confirm password was required",
+    "yupConfirmPasswordMatch":"Confirm password didn't match with password",
+
+    "yupNewPasswordRequired":"New password was required",
+    "yupNewPasswordMinLength": "Password must be at least 8 characters long",
+    "yupNewPasswordRegex": "Password must include uppercase, lowercase, number, and special character",
+
+    "yupFirstNameRequired":"First name was required",
+    "yupFirstNameMaxLength":"First name exceeds the allowed length",
+    "yupFirstNameInvalid":"Invalid first name",
+    
+    "yupLastNameRequired":"Last name was required",
+    "yupLastNameMaxLength":"Last name exceeds the allowed length",
+    "yupLastNameInvalid":"Invalid last name",
+    
+    "yupPhoneNumberRequired":"Phone number was required",
+    "yupPhoneNumberInvalid":"Invalid phone number",
+    "yupPhoneNumberExist":"Phone number already exist",
+
+    "yupAddressRequired":"Address was required",
+    "yupAddressInvalid":"Invalid address",
+    "yupAddressMustBeSelected": "You must choose one option address",
+
+    "yupDOBRequired":"Date of birth was required",
+
+    "yupGenderRequired":"Gender was required",
+
+    "yupDescriptionRequired":"Description was required",
+    "yupDescriptionMaxLength":"Description exceeds the allowed length",
+    "yupDescriptionInvalid":"Invalid description",
+
+    "yupCreatedDateRequired":"Created date was required",
+    "yupCreatedDateMustBeInRange": "Date must be between {{minDate}} and {{maxDate}}",
+
+    "yupCreatedTimeRequired":"Time was required",
+    "yupCreatedTimeInvalid": "Invalid Time",
+    "yupTimeDivisibleBy20":"The minutes of the time divisible by 20 (00; 20; 40)",
+
+    "yupSignRequired": "Sign was required",
+    "yupSignMaxLength":"Sign exceeds the allowed length",
+    "yupSignInvalid":"Invalid sign",
+
+    "yupDiagnosedRequired": "Diagnosis was required",
+    "yupDiagnosedMaxLength":"Diagnosis exceeds the allowed length",
+    "yupDiagnosedInvalid":"Invalid Diagnosis",
+
+    "yupUsesRequired": "Uses was required",
+    "yupUsesMaxLength":"Uses exceeds the allowed length",
+    "yupUsesInvalid":"Invalid uses",
+
+    "yupQuantityNumber": "Quantity must be a number",
+    "yupQuantityRequired": "Quantity was required",
+    "yupQuantityMax": "Quantity does not accept",
+    "yupQuantityOverRaw": "Over raw quantity",
+    "yupQuantityInvalid":"Invalid quantity",
+
+    "yupCityRequired": "City was required",
+    "yupCityNumber": "City must be selected",
+
+    "yupDistrictRequired": "District was required",
+    "yupDistrictNumber": "District must be selected",
+
+    "yupNameCateRequired": "Category name is required",
+    "yupNameCateMax": "Category name must not exceed 50 characters",
+    "yupNameCateInvalid": "Invalid category name",
+
+    "yupMedicineNameRequired": "Medicine name is required.",
+    "yupMedicineNameInvalid": "Invalid medicine name.",
+    "yupMedicineNameMaxLength": "Medicine name must not exceed {{max}} characters.",
+
+    "yupMedicineEffectRequired": "Medicine effect is required.",
+    "yupMedicineEffectInvalid": "Invalid medicine effect.",
+    "yupMedicineEffectMaxLength": "Medicine effect must not exceed {{max}} characters.",
+
+    "yupMedicineContraindicationsRequired": "Contraindications are required.",
+    "yupMedicineContraindicationsInvalid": "Invalid contraindications.",
+    "yupMedicineContraindicationsMaxLength": "Contraindications must not exceed {{max}} characters.",
+
+    "yupMedicinePackagingRequired": "Packaging is required.",
+    "yupMedicinePackagingInvalid": "Invalid packaging.",
+    "yupMedicineExist": "Medicine name is already existed",
+
+    "yupPriceRequired":"Price was required",
+    "yupPriceNumber":"Price must be a number"
+
+}

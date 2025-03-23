@@ -1,0 +1,18 @@
+{
+    "examinationDetailInfo":"Examination detail Information",
+    "patientFullName": "Patient full name",
+    "createdDate": "Created date",
+    "userCreated": "User created",
+    "examinationId": "Examination ID",
+    "description": "Description",
+    "mailStatus": "Mail status",
+    "remindEmail": "Remind email",
+    "sent": "Sent",
+    "noSend": "Not send yet",
+    "moreInformation": "More information",
+    "diagnose":"Diagnose",
+    "prescribing": "Prescribing",
+    "bill":"Receipt",
+    "diagnosisExist":"The list diagnosis ID of this exam sheet",
+    "doctor": "Doctor"
+}

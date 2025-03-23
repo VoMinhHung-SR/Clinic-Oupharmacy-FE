@@ -1,0 +1,9 @@
+{
+    "id":"ID",
+    "name": "Tên danh mục",
+    "function": "Chức năng",
+    "addCategory": "Thêm danh mục",
+    "updateCategory": "Cập nhật danh mục",
+    "submit": "Tạo mới",
+    "deleteCate": "Xóa danh mục"
+}

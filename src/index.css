@@ -1,0 +1,202 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .ou-list-item-text-container {
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* number of lines to show */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    .ou-list-item-2-text-container {
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* number of lines to show */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ou-table-truncate-text-container {
+        text-align: left;
+        display: -webkit-box;
+        -webkit-line-clamp: 1; /* number of lines to show */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .ou-error-timepicker .MuiInputLabel-root {
+      color: red; /* Customize the label color */
+    }
+    
+    .ou-error-timepicker .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+      border-color: red; /* Customize the input border color */
+    }
+
+    .ou-radio-container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .ou-radio-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      margin: 8px 20px;
+    }
+    
+    .ou-radio-input {
+      display: none;
+    }
+    
+    .ou-radio-custom {
+      width: 120px;
+      height: 40px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .ou-radio-input:checked + .ou-radio-custom {
+      background-color: #1976d2;
+      color: #fff;
+    }
+    
+    .ou-radio-custom:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .ou-radio-custom:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .ou-radio-custom:active {
+      background-color: #ddd;
+    }
+    .ou-selected-time {
+      background-color: #1976d2;
+      color: #fff;
+    }
+    .ou-table-cell {
+      display: flex;
+      align-items: flex-start; /* Aligns content to the top */
+      padding: 16px; /* Adjust the padding as needed */
+    }
+
+    /* Style --- Base button */
+    .ou-btn-base {
+      background-color: #1976d2;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 12px;
+    }
+    .ou-btn-base__disable {
+      background-color:#EDEDED;
+      /* color: ccc; */
+    }
+    .ou-btn-base:hover {
+      background-color:#1D4ED8;
+    }
+    .ou-btn-base__success {
+      background-color: #15803d;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 12px;
+    }
+    .ou-btn-base__success:hover {
+      background-color:#166534;
+    }
+    .ou-btn-booking{
+      padding: 32px 48px;
+      border: 3px solid #1976d2;
+      border-radius: 12px;
+      color: #1976d2;
+      opacity: 60%;
+
+    }
+    .ou-btn-booking__focus{
+      border-color: #1D4ED8;
+      color: #1D4ED8;      
+      opacity: 100%
+    }
+    .ou-btn-booking:hover{
+      border-color: #1D4ED8;
+      color: #1D4ED8;
+      opacity: 100%
+    }
+    /* Style --- Base button */
+    /* Style --- Base Form */
+    .ou-base-form-outline{
+      padding: 32px 48px;
+      border: 3px solid #1D4ED8;
+      border-radius: 20px;
+
+      color: #1D4ED8;
+      opacity: 100%;
+    }
+    /* Style --- Base Form */
+
+
+    /* Progress Bar */
+    ul.ou-booking-progress-bar{
+      display: flex;
+      text-align: center;
+      align-self: center;
+      justify-content: center;
+    }
+    ul.ou-booking-progress-bar > li {
+      margin: 0 20px;
+    }
+    .ou-booking-progress-object{
+      border-radius: 12px;
+      padding: 8px;
+      background-color:  #1976d2;
+     
+      color: white;
+      position: relative;
+      opacity: 0.3;
+    }
+    .ou-booking-progress-object__active {
+      background-color: #1D4ED8;
+      opacity: 1;
+    }
+    .ou-booking-progress-object::after{
+      content: " ";
+      position: absolute;
+      width: 40px;
+      height: 4px;
+      top: 50%;
+      right: 0;
+      background-color: #1D4ED8;
+      transform: translate(100%, -50%);                       
+    }
+    ul.ou-booking-progress-bar > li:last-child p.ou-booking-progress-object::after {
+      content: " ";
+      width: 0px;
+      height: 0px;
+    }
+    /* Progress Bar */
+
+    /* Chat - Page */
+    .ou-recipients-conversation{
+      background-color: #fff;
+      border: 2px solid rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      overflow-y: auto;
+      /* overflow-x: hidden; */
+    }
+    .ou-chat-window{
+      background-color: #fff;
+      border: 2px solid rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+    }
+    /* Chat - Page */
+
+  }
