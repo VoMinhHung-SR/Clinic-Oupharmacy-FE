@@ -9,3 +9,8 @@ export const fetchListUsers = async () => {
     const res = await authApi().get(`${endpoints['users']}`);
     return res
 }
+
+export const fetchListMedicinesUnit = async () => {
+    const res = await authApi().get(`${endpoints['medicine-units']}`);
+    return res
+}

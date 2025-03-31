@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import UserContext from "../../../../lib/context/UserContext"
-import { fetchListPatients, fetchListUsers } from "../services"
-import { fetchMedicinesUnit } from "../../../common/components/card/PrescriptionDetailCard/services"
+import { fetchListPatients, fetchListUsers, fetchListMedicinesUnit } from "../services"
 
 const useStatistic = () => {
     const {user} = useContext(UserContext)
@@ -25,7 +24,7 @@ const useStatistic = () => {
         }
 
         const getTotalMedicinesUnit = async () => {
-            const res = await fetchMedicinesUnit()
+            const res = await fetchListMedicinesUnit()
             if (res.status === 200)
                 setTotalMedicineUnit(res.data.count)
         }
