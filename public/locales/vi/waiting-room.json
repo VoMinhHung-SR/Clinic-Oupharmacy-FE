@@ -30,5 +30,10 @@
     "unKnown":"Chưa rõ",
     "endTime": "Thời gian kết thúc",
     "doctorFullName": "Tên bác sĩ",
-    "processing": "Đang diễn ra"
+    "processing": "Đang diễn ra",
+
+    "title": "Phòng chờ trực tuyến",
+    "morning": "Ca sáng",
+    "afternoon": "Ca chiều",
+    "noAppointment": "Không có lịch hẹn"
 }

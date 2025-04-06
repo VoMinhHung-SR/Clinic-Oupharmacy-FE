@@ -50,6 +50,7 @@ import CategoryList from './pages/dashboard/categories'
 import MedicineList from './pages/dashboard/medicines'
 import DoctorSchedules from './pages/dashboard/doctor-schedules'
 import PatientManagement from './pages/profile/patient-list'
+import OnlineWaitingRoom from './pages/waiting-room/demo'
 export const userContext = createContext()
 const queryClient = new QueryClient()
 function App() {
@@ -92,7 +93,7 @@ function App() {
                             <Route path='/' element={<Layout />}>
                               <Route path='/' element={<Home />}/>
                               
-                              <Route path='/waiting-room' element={<WaitingRoom/>}/>
+                              <Route path='/waiting-room' element={<OnlineWaitingRoom/>}/>
                               {/* <Route path='/products' element={<ProductList/>}/> */}
                               {/* Accepted when user authorized */}
                               <Route element={<ProtectedUserRoute/>}>

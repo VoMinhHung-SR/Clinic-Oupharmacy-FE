@@ -198,5 +198,12 @@
       border-radius: 12px;
     }
     /* Chat - Page */
-
+    /* Waiting Room - Page */
+    .ou-waiting-room-header{
+      background-color: #1976d2;
+      color: #fff;
+      border-bottom: 1px solid #1976d2;
+      padding: 10px;
+      text-align: center;
+    }
   }

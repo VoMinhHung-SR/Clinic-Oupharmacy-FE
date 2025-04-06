@@ -30,5 +30,10 @@
     "unKnown":"Unknown",
     "endTime": "End time",
     "doctorFullName": "Doctor full name",
-    "processing": "Processing"
+    "processing": "Processing",
+
+    "title": "Online Waiting Room",
+    "morning": "Morning Shift",
+    "afternoon": "Afternoon Shift",
+    "noAppointment": "No appointment"
 }
