@@ -26,11 +26,11 @@
     "sent": "Đã gửi",
     "unSent": "Chưa gửi",
     "done": "Hoàn tất",
+    "processing": "Đang diễn ra",
     "unDone": "Đang chờ",
     "unKnown":"Chưa rõ",
     "endTime": "Thời gian kết thúc",
     "doctorFullName": "Tên bác sĩ",
-    "processing": "Đang diễn ra",
 
     "title": "Phòng chờ trực tuyến",
     "morning": "Ca sáng",
