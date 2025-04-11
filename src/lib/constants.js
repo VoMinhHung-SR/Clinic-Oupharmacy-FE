@@ -50,3 +50,8 @@ export const ORIGIN_LNG = 106.6786961439645
 export const TOAST_SUCCESS = "success"
 export const TOAST_ERROR = "error"
 export const TOAST_WARNING = "warning"
+
+// Online waiting room constant
+export const WAITING_STATUS_UNDONE = 'undone'
+export const WAITING_STATUS_PROCESSING = 'processing'
+export const WAITING_STATUS_DONE = 'done'
