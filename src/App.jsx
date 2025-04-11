@@ -50,7 +50,7 @@ import CategoryList from './pages/dashboard/categories'
 import MedicineList from './pages/dashboard/medicines'
 import DoctorSchedules from './pages/dashboard/doctor-schedules'
 import PatientManagement from './pages/profile/patient-list'
-import OnlineWaitingRoom from './pages/waiting-room/demo'
+import OnlineWaitingRoom from './pages/waiting-room/sub'
 export const userContext = createContext()
 const queryClient = new QueryClient()
 function App() {
