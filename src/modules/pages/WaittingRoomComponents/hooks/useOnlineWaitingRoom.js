@@ -13,14 +13,13 @@ const useOnlineWaitingRoom = (date  = CURRENT_DATE) => {
             try {
                 setLoading(true);
                 setError(null);
-                
+
                 const formattedDate = date.toISOString().split('T')[0];
                 const docRef = doc(db, `${APP_ENV}_doctor_schedule`, formattedDate);
                 const docSnap = await getDoc(docRef);
     
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    console.log("Fetched data:", data);
                     if (data && data.schedules && Array.isArray(data.schedules)) {
                         data.schedules.forEach(schedule => {
                             console.log("Time slots for schedule:", schedule.time_slots);
