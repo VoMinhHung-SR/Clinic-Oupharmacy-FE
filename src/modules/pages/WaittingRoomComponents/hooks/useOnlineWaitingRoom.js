@@ -21,9 +21,6 @@ const useOnlineWaitingRoom = (date  = CURRENT_DATE) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     if (data && data.schedules && Array.isArray(data.schedules)) {
-                        data.schedules.forEach(schedule => {
-                            console.log("Time slots for schedule:", schedule.time_slots);
-                        });
                         setSchedules(data.schedules);
                     } else {
                         console.log("Document exists but no valid schedules array found:", data);
