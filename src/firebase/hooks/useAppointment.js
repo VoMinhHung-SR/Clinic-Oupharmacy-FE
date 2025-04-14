@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../config';
-import { APP_ENV } from '../../lib/constants';
+import { APP_ENV, TOAST_ERROR, TOAST_SUCCESS } from '../../lib/constants';
+import { db } from '../../config/firebase';
+import createToastMessage from '../../lib/utils/createToastMessage';
+import { useTranslation } from 'react-i18next';
 
 const useAppointment = (timeSlotId) => {
     const [appointmentData, setAppointmentData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const {t} = useTranslation(['modal'])
     useEffect(() => {
         const fetchAppointment = async () => {
             if (!timeSlotId) {
@@ -93,8 +95,10 @@ const useAppointment = (timeSlotId) => {
                 ...prevData,
                 timeSlot: { ...prevData.timeSlot, status }
             }));
+            createToastMessage({message: t('modal:updateSuccess'), type: TOAST_SUCCESS})
         } catch (err) {
             setError(err.message);
+            createToastMessage({message: t('modal:updateFailed'), type: TOAST_ERROR})
         }
     };
 
