@@ -10,7 +10,7 @@ const usePayment = () => {
     const [isLoadingPrescriptionDetail, setIsloadingPrescriptionDetail] = useState(true)
     const [examinationDetail, setExaminationDetail] = useState([])
 
-    const [prescribing, setPrecribing] = useState([])
+    const [prescribing, setPrescribing] = useState([])
 
     useEffect(()=>{
         const loadDiagnosis = async () => {
@@ -21,7 +21,7 @@ const usePayment = () => {
                         setExaminationDetail([])
                     }else{
                         setExaminationDetail(res.data)
-                        loadPrescribings(res.data.id)
+                        loadPrescribing(res.data.id)
                     }
                 }
             } catch (err) {
@@ -32,15 +32,15 @@ const usePayment = () => {
                 
             }
         }
-        const loadPrescribings = async (diagnosisId) => {
+        const loadPrescribing = async (diagnosisId) => {
             try {
                 const res = await fetchPrescribingByDiagnosis(diagnosisId)
                 if (res.status === 200) {
-                    setPrecribing(res.data)
+                    setPrescribing(res.data)
                 }
             } catch (err) {
                 if(err.status === 500)
-                    setPrecribing([])
+                    setPrescribing([])
             }
         }
         if(user){

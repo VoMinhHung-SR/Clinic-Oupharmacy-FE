@@ -142,7 +142,7 @@ const Diagnosis = () => {
                                     </Box>
                                 </Box>
                             </Container>
-                            {!appointmentLoading && appointmentData && 
+                            {!appointmentLoading && appointmentData &&
                             appointmentData.timeSlot && appointmentData.timeSlot.status === WAITING_STATUS_UNDONE && (
                                 <Box className="ou-mt-4 ou-text-center">
                                     <Button 
@@ -154,7 +154,7 @@ const Diagnosis = () => {
                                     </Button>
                                 </Box>
                             )}
-                            {!appointmentLoading && appointmentData && 
+                            {!appointmentLoading && appointmentData && !diagnosis &&
                             appointmentData.timeSlot && appointmentData.timeSlot.status === WAITING_STATUS_PROCESSING && (
                                 <Box className="ou-mt-4 ou-text-center">
                                     <Button 

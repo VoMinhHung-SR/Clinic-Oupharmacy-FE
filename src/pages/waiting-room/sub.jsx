@@ -37,8 +37,8 @@ const OnlineWaitingRoom = () => {
         const slotTime = `${slot.start_time.slice(0, 5)}-${slot.end_time.slice(0, 5)}`;
         return slotTime === timeSlot;
       }).map(slot => ({
-        id: schedule.id,
-        patientName: schedule.doctor_name,
+        id: slot.appointment_info.id,
+        patientName: slot.patient_info.name,
         status: slot.status
       }))
     );
