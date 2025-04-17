@@ -1,5 +1,6 @@
 {
-    "examinationInformation":"The examination info",
+    "title": "Diagnosis",
+    "examinationInformation":"The examination information",
     "patientFullName": "Patient full name",
     "createdDate": "Created date",
     "description": "Description",
@@ -13,5 +14,10 @@
     "wait": "Wait...",
     "diagnosisExist":"The list diagnosis ID of this exam sheet",
     "errNullDiagnosis":"The medical record has not been diagnosed by a doctor",
-    "confirmCreateDiagnosis":"Confirm to create this diagnosis form"
+    "confirmCreateDiagnosis":"Confirm to create this diagnosis form",
+    "startProcessing":"Start processing",
+    "waitingForProcessing":"Waiting for processing",
+    "appointmentNotStarted":"This appointment has not been started",
+    "markAsNotStarted":"Mark as not started",
+    "markProcessing":"Mark as processing"
 }

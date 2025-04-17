@@ -1,58 +1,79 @@
 import { useContext, useEffect, useState } from "react"
 import { useParams } from "react-router"
-import { userContext } from "../../../../App"
 import { fetchDiagnosisByExaminationID, fetchPrescribingByDiagnosis } from "../services"
 import UserContext from "../../../../lib/context/UserContext"
+import { fetchExaminationDetail } from "../../ExaminationDetailComponents/services"
 
 const usePayment = () => {
     const {user} = useContext(UserContext)
     const {examinationId} = useParams()
-    const [isLoadingPrescriptionDetail, setIsloadingPrescriptionDetail] = useState(true)
-    const [examinationDetail, setExaminationDetail] = useState([])
+    const [isLoadingPrescriptionDetail, setIsLoadingPrescriptionDetail] = useState(true)
+    const [examinationDetail, setExaminationDetail] = useState(null)
+    const [diagnosisInfo, setDiagnosisInfo] = useState([])
+    const [prescribingList, setPrescribingList] = useState({})
 
-    const [prescribing, setPrecribing] = useState([])
-
-    useEffect(()=>{
+    useEffect(() => {
         const loadDiagnosis = async () => {
             try {
-                const res = await fetchDiagnosisByExaminationID(examinationId)
+                const res = await fetchExaminationDetail(examinationId)
                 if (res.status === 200) {
-                    if(res.data === null){
-                        setExaminationDetail([])
-                    }else{
+                    if (res.data === null) {
+                        setExaminationDetail(null)
+                    } else {
                         setExaminationDetail(res.data)
-                        loadPrescribings(res.data.id)
+                        if (res.data.diagnosis_info && Array.isArray(res.data.diagnosis_info)) {
+                            setDiagnosisInfo(res.data.diagnosis_info)
+
+                            res.data.diagnosis_info.forEach(diagnosis => {
+                                loadPrescribing(diagnosis.id)
+                            })
+                        }
                     }
                 }
             } catch (err) {
-                setExaminationDetail([])
-                console.error(err)
-            }finally {
-                setIsloadingPrescriptionDetail(false)
-                
+                setExaminationDetail(null)
+                console.error('Error loading examination:', err)
+            } finally {
+                setIsLoadingPrescriptionDetail(false)
             }
         }
-        const loadPrescribings = async (diagnosisId) => {
+
+        const loadPrescribing = async (diagnosisId) => {
             try {
                 const res = await fetchPrescribingByDiagnosis(diagnosisId)
                 if (res.status === 200) {
-                    setPrecribing(res.data)
+                    setPrescribingList(prev => ({
+                        ...prev,
+                        [diagnosisId]: res.data
+                    }))
                 }
             } catch (err) {
-                if(err.status === 500)
-                    setPrecribing([])
+                console.error(`Error loading prescribing for diagnosis ${diagnosisId}:`, err)
+                setPrescribingList(prev => ({
+                    ...prev,
+                    [diagnosisId]: []
+                }))
             }
         }
-        if(user){
+
+        if (user && examinationId) {
             loadDiagnosis()
         }
-    },[ examinationId])
-    return{
-        prescribing,
+    }, [user, examinationId])
+
+    const getPrescribingByDiagnosisId = (diagnosisId) => {
+        return prescribingList[diagnosisId] || []
+    }
+
+    return {
+        prescribingList,
+        getPrescribingByDiagnosisId,
         isLoadingPrescriptionDetail,
         user,
         examinationDetail,
         examinationId,
+        diagnosisInfo
     }
 }
+
 export default usePayment

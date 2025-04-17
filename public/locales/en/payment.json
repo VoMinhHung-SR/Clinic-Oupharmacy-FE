@@ -1,6 +1,6 @@
 {
     "errNullPrescription": "The medical records that have not been diagnosed by a doctor",
-    "errNullPrescriptionDetail": "The medical records that have not been prescribed by a doctor",
+    "errNullPrescriptionDetail": "The medical records {{diagnosisID}} that have not been prescribed by a doctor",
     "basicInformation": "Basic Information",
     "prescriptionId": "Prescription Id",
     "examinationId": "Examination Id",

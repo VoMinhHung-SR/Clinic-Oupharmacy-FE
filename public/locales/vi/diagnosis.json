@@ -1,4 +1,5 @@
 {
+    "title": "Chẩn đoán",
     "examinationInformation":"Thông tin phiếu đặt lịch khám",
     "patientFullName": "Họ tên bệnh nhân",
     "createdDate": "Ngày tạo",
@@ -13,5 +14,10 @@
     "wait": "Đang xử lý...",
     "diagnosisExist":"Danh sách mã phiếu chẩn đoán của phiếu khám này là",
     "errNullDiagnosis":"Phiếu khám chưa được chẩn đoán",
-    "confirmCreateDiagnosis":"Xác nhận tạo phiếu chẩn đoán"
+    "confirmCreateDiagnosis":"Xác nhận tạo phiếu chẩn đoán",
+    "startProcessing":"Bắt đầu xử lý",
+    "waitingForProcessing":"Đang chờ xử lý",
+    "appointmentNotStarted":"Phiếu khám chưa được bắt đầu",
+    "markAsNotStarted":"Đánh dấu chưa bắt đầu",
+    "markProcessing":"Đánh dấu tiếp nhận"
 }

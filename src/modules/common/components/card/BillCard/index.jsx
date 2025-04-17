@@ -6,13 +6,18 @@ import { calculateAmount } from "./utils/helper";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { formatNumber, formatNumberCurrency } from "../../../../../lib/utils/helper";
+import useAppointment from "../../../../../firebase/hooks/useAppointment";
+import { WAITING_STATUS_DONE } from "../../../../../lib/constants";
+
 const BillCard = (props) =>{
+    const {t} = useTranslation(['payment','common', 'modal', 'prescription-detail']);
 
-    const {t} = useTranslation(['payment','common', 'modal']);
-
-    const {isLoadingPrescriptionDetail, onSubmit,prescriptionDetail,receipt,
+    const {isLoadingPrescriptionDetail, onSubmit,prescriptionDetail,
          isLoadingButton, momoPayment, zaloPayPayment} = useBillCard(props.id)
+
+    const {updateAppointmentStatus} = useAppointment(props.date, props.slotID)
     const router = useNavigate();
+
 
     const renderLoadingButton = () => {
         if(isLoadingButton)
@@ -35,7 +40,14 @@ const BillCard = (props) =>{
                 </Button>
                 
                 <Button className="!ou-ml-5" onClick={()=>
-                    onSubmit(calculateAmount(prescriptionDetail, props.wage), props.id)} 
+                    onSubmit(calculateAmount(prescriptionDetail, props.wage), props.id, 
+                    async () => {
+                        try {
+                            await updateAppointmentStatus(WAITING_STATUS_DONE);
+                        } catch (error) {
+                            console.error('Failed to update appointment status:', error);
+                        }
+                    }, () => {})} 
                     variant="contained" color="success">
                     {t('pay')}
                 </Button>
@@ -66,8 +78,8 @@ const BillCard = (props) =>{
                 </Box>)
                 : (
                     <>
-                        <Box component={Paper} elevation={4}>
-                            <h1 className="ou-text-center ou-mt-8 ou-mb-4 ou-pt-4 ou-text-xl">{t('prescriptionDetail')}</h1>
+                        <Box component={Paper} elevation={6}>
+                            <h2 className="ou-text-center ou-mt-8 ou-mb-4 ou-pt-4 ou-text-xl">{t('prescriptionDetail')}</h2>
                             <Box className="ou-p-3">
                                 <TableContainer component={Paper}>
                                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -126,10 +138,7 @@ const BillCard = (props) =>{
                                 <Box className="ou-p-3" style={{ textAlign: "right" }}>
                                     <Typography className="ou-p-2">{t('serviceFee')}:  {formatNumberCurrency(props.wage, 'VND')} VND</Typography>
                                     <h4 className="p-2">{t('amount')}:   {formatNumberCurrency(calculateAmount(prescriptionDetail, props.wage))}  VND</h4>
-                                    {receipt ? 
-                                    (<>
-                                        <h3 className="ou-text-xl ou-mt-4 ou-text-green-700 ou-font-bold ou-flex ou-justify-end ou-items-center">{t('done')} <CheckCircleOutlineIcon /></h3>
-                                    </>)
+                                    {props.bill_status ? ( <h3 className="ou-text-xl ou-mt-4 ou-text-green-700 ou-font-bold ou-flex ou-justify-end ou-items-center">{t('done')} <CheckCircleOutlineIcon /></h3>)
                                         : renderLoadingButton()}
 
                                 </Box>

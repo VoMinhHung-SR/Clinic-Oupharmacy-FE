@@ -6,8 +6,7 @@ import useExaminationDetail from "../../../../modules/pages/ExaminationDetailCom
 
 const ExaminationDetail = () => {
   const { t, tReady } = useTranslation(["examination-detail"]);
-  const { examinationData, isLoadingExaminationDetail } =
-    useExaminationDetail();
+  const { examinationData, isLoadingExaminationDetail } = useExaminationDetail();
   if (isLoadingExaminationDetail)
     return (
       <Box>
