@@ -16,10 +16,8 @@ export const fetchReceipt = async (prescribingID) =>{
 }
 
 // To get all the prescribing
-// [ { presbingObj }, {...} ]
-//
-// prescbingObj: {id, created_Date, {diagnosis}, {userDoctor} }
-//
+// [ { prescribingObj }, {...} ]
+// prescribingObj: {id, created_Date, {diagnosisID}, {user_create(ROLE_DOCTOR)}, {bill_status} }
 export const fetchPrescribingByDiagnosis = async (diagnosisId) => {
     const res = await authApi().post(endpoints['get-pres-by-diagnosis'], {
         diagnosis: parseInt(diagnosisId)

@@ -8,6 +8,8 @@ import PendingIcon from '@mui/icons-material/Pending';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import useOnlineWaitingRoom from "../../modules/pages/WaittingRoomComponents/hooks/useOnlineWaitingRoom";
 import TimeSlotGrid from "../../modules/pages/WaittingRoomComponents/TimeSlotGrid";
+import { CURRENT_DATE } from "../../lib/constants";
+import moment from "moment";
 
 
 const OnlineWaitingRoom = () => {
@@ -35,8 +37,8 @@ const OnlineWaitingRoom = () => {
         const slotTime = `${slot.start_time.slice(0, 5)}-${slot.end_time.slice(0, 5)}`;
         return slotTime === timeSlot;
       }).map(slot => ({
-        id: schedule.id,
-        patientName: schedule.doctor_name,
+        id: slot.appointment_info.id,
+        patientName: slot.patient_info.name,
         status: slot.status
       }))
     );
@@ -46,12 +48,12 @@ const OnlineWaitingRoom = () => {
   return (
     <Container>
       <Helmet>
-        <title>{t('title')}</title>
+        <title>{t('title')} </title>
       </Helmet>
       
       <Paper elevation={3} sx={{ mt: 4 }}>
         <Box sx={{ p: 2, bgcolor: '#1D4ED8', color: '#fff', textAlign: 'center' }}>
-          <Typography variant="h6">{t('title')}</Typography>
+          <Typography variant="h6">{t('title')} - {moment(CURRENT_DATE).format('DD/MM/YYYY')}</Typography>
         </Box>
         
         <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9', p: '10px' }}>{t('morning')}</Box>
