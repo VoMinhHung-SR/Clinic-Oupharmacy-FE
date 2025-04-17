@@ -5,28 +5,32 @@ import { db } from '../../config/firebase';
 import createToastMessage from '../../lib/utils/createToastMessage';
 import { useTranslation } from 'react-i18next';
 
-const useAppointment = (timeSlotId) => {
+// date format: YYYYMMDD
+// Example: "20231225" where 20231225 is the date and 1 is the slot ID
+const useAppointment = (date, slotId) => {
     const [appointmentData, setAppointmentData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const {t} = useTranslation(['modal'])
+
     useEffect(() => {
         const fetchAppointment = async () => {
-            if (!timeSlotId) {
+            if (!date || !slotId) {
                 setLoading(false);
                 return;
             }
 
             try {
-                const dateDoc = await getDoc(doc(db, `${APP_ENV}_doctor_schedule`, timeSlotId.split('_')[0]));
+                const dateDoc = await getDoc(doc(db, `${APP_ENV}_doctor_schedule`, date));
                 
                 if (dateDoc.exists()) {
                     const data = dateDoc.data();
+                    
                     // Find the schedule containing the time slot
                     let foundAppointment = null;
                     
                     for (const schedule of data.schedules || []) {
-                        const timeSlot = schedule.time_slots?.find(slot => slot.id.toString() === timeSlotId.split('_')[1]);
+                        const timeSlot = schedule.time_slots?.find(slot => slot.id.toString() === slotId.toString());
                         if (timeSlot) {
                             foundAppointment = {
                                 date: data.date,
@@ -61,25 +65,27 @@ const useAppointment = (timeSlotId) => {
         };
 
         fetchAppointment();
-    }, [timeSlotId]);
+    }, [date, slotId]);
 
     const updateAppointmentStatus = async (status) => {
-        if (!timeSlotId) {
+        if (!date || !slotId) {
             return;
         }
 
         try {
-            const dateDoc = await getDoc(doc(db, `${APP_ENV}_doctor_schedule`, 
-                timeSlotId.split('_')[0]));
+            const dateDoc = await getDoc(doc(db, `${APP_ENV}_doctor_schedule`, date));
             if (!dateDoc.exists()) {
-                console.error('No schedule found for this date');
+                console.error('No schedule found for this date:', date);
                 return;
             }
 
             const data = dateDoc.data();
+
+            let found = false;
             const updatedSchedules = data.schedules.map(schedule => {
                 const updatedTimeSlots = schedule.time_slots.map(slot => {
-                    if (slot.id.toString() === timeSlotId.split('_')[1]) {
+                    if (slot.id.toString() === slotId.toString()) {
+                        found = true;
                         return { ...slot, status };
                     }
                     return slot;
@@ -87,14 +93,23 @@ const useAppointment = (timeSlotId) => {
                 return { ...schedule, time_slots: updatedTimeSlots };
             });
 
-            await updateDoc(doc(db, `${APP_ENV}_doctor_schedule`, timeSlotId.split('_')[0]), {
+            if (!found) {
+                return;
+            }
+
+            await updateDoc(doc(db, `${APP_ENV}_doctor_schedule`, date), {
                 schedules: updatedSchedules
             });
 
-            setAppointmentData(prevData => ({
-                ...prevData,
-                timeSlot: { ...prevData.timeSlot, status }
-            }));
+            setAppointmentData(prevData => {
+                if (!prevData) {
+                    return null;
+                }
+                return {
+                    ...prevData,
+                    timeSlot: { ...prevData.timeSlot, status }
+                };
+            });
             createToastMessage({message: t('modal:updateSuccess'), type: TOAST_SUCCESS})
         } catch (err) {
             setError(err.message);
@@ -106,4 +121,3 @@ const useAppointment = (timeSlotId) => {
 };
 
 export default useAppointment;
-

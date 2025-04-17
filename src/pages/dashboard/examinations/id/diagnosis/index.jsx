@@ -18,10 +18,12 @@ const Diagnosis = () => {
 
     // Construct timeSlotId from examinationDetail
     const timeSlotId = examinationDetail?.schedule_appointment 
-        ? `${examinationDetail.schedule_appointment.day}_${examinationDetail.schedule_appointment.id}`
+        ? examinationDetail.schedule_appointment.id
         : null;
+    const date = examinationDetail?.schedule_appointment?.day
 
-    const { appointmentData, loading: appointmentLoading, error: appointmentError, updateAppointmentStatus } = useAppointment(timeSlotId);
+    const { appointmentData, loading: appointmentLoading, error: appointmentError, 
+        updateAppointmentStatus } = useAppointment(date, timeSlotId);
 
     if (!ready)
         return <Box sx={{ height: "300px" }}>

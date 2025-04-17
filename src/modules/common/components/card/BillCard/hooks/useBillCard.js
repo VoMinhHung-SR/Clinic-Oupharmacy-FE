@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import SuccessfulAlert, { ConfirmAlert, ErrorAlert } from "../../../../../../config/sweetAlert2"
-import { fetchReceipt } from "../../../../../pages/PaymentComponents/services"
 import { fetchAddBill, fetchMomoPaymentURL, fetchPrescriptionDetailBillCard, fetcZaloPayPaymentURL } from "../services"
 
 const useBillCard = (prescribingID) => {
     const {t} = useTranslation(['payment','modal'])
     const [isLoadingPrescriptionDetail, setIsLoadingPrescriptionDetail] = useState(true)
     const [prescriptionDetail, setPrescriptionDetail] = useState([])
-    const [receipt, setReceipt] = useState(false)
     const [flag, setFlag] = useState(false)
     const [isLoadingButton, setIsLoadingButton] = useState(false)
      
@@ -29,34 +27,25 @@ const useBillCard = (prescribingID) => {
                 setPrescriptionDetail([])
             }
         }
-        const loadReceipt = async () => {
-            try {
-                const res = await fetchReceipt(prescribingID)
-                if (res.status === 200) {
-                    setReceipt(true)
-                    console.log(res.data)
-                }
-            } catch (err) {
-                if(err.status === 500)
-                    setReceipt(false)
-            }
-        }
+     
         if(prescribingID){
             loadPrescriptionDetail()
-            loadReceipt()
         }
     },[flag, prescribingID])
-    const onSubmit = (amount, prescribingID) => {
+    
+    const onSubmit = (amount, prescribingID, callbackSuccess, callbackError) => {
         const handleOnSubmit = async () => {
             try {
                 const res = await fetchAddBill({amount: amount, prescribing: prescribingID})
                 if (res.status === 201) {
                     handleChangeFlag();
                     setIsLoadingButton(false)
+                    callbackSuccess && callbackSuccess()
                     return SuccessfulAlert(t('paidCompleted'), t('modal:ok'))                 
                 }
             } catch (err) {
                 setIsLoadingButton(false)
+                callbackError && callbackError()
                 return ErrorAlert(t('payFailed'), t('modal:errSomethingWentWrong'), t('modal:ok'))
             }
         }
@@ -108,7 +97,7 @@ const useBillCard = (prescribingID) => {
 
     return {
         prescriptionDetail,isLoadingPrescriptionDetail,
-        onSubmit, isLoadingButton, momoPayment, receipt,zaloPayPayment
+        onSubmit, isLoadingButton, momoPayment,zaloPayPayment
     }
 
 }
