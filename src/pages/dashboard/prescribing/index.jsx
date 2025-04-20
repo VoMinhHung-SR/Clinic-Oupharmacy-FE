@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next"
 import { Helmet } from "react-helmet"
 import DiagnosisFilter from "../../../modules/common/components/FIlterBar/DiagnosisFilter"
 import DiagnosedCard from "../../../modules/common/components/card/DiagnosedCard"
+import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem"
 
 const PrescriptionList = () => {
     const {user, prescriptionList, isLoadingPrescriptionList,
@@ -18,8 +19,8 @@ const PrescriptionList = () => {
                 <title>Prescribing</title>
             </Helmet>
 
-            <Box className='ou-p-5'>
-                <Loading/>
+            <Box component={Paper} elevation={4} className="ou-text-center ou-p-10 ou-h-[30vh]">
+                <SkeletonListLineItem count={5} className="ou-w-full"/>
             </Box>
         </Box>
 
@@ -60,9 +61,10 @@ const PrescriptionList = () => {
                             {isLoadingPrescriptionList && 
                              <TableCell colSpan={12} component="th" scope="row">
                                 <Box className="ou-text-center ou-p-10">
-                                    <Loading/>
+                                    <SkeletonListLineItem count={3} className="ou-w-full"  />
                                 </Box>
-                            </TableCell>}
+                            </TableCell>
+                            }
 
                             {!isLoadingPrescriptionList && prescriptionList.length === 0 &&  
                             <TableCell colSpan={12} component="th" scope="row">

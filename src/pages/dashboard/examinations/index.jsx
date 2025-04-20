@@ -11,12 +11,12 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import Loading from "../../../modules/common/components/Loading";
 import useExaminationConfirm from "../../../modules/pages/ExaminationListComponents/ExaminationConfirm/hooks/useExaminationConfirm";
 import { useTranslation } from "react-i18next";
 import ExaminationCard from "../../../modules/common/components/card/ExaminationCard";
 import ExaminationFilter from "../../../modules/common/components/FIlterBar/ExaminationFilter";
 import { Helmet } from "react-helmet";
+import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem";
 const Examinations = () => {
   const {
     user,
@@ -42,8 +42,8 @@ const Examinations = () => {
           <title>Examinations</title>
         </Helmet>
 
-        <Box className="ou-text-center ou-p-10">
-            <Loading/>
+        <Box component={Paper} elevation={4} className="ou-text-center ou-p-10 ou-h-[30vh]">
+            <SkeletonListLineItem count={5} className="ou-w-full"/>
         </Box>
       </Box>
     )
@@ -92,7 +92,7 @@ const Examinations = () => {
                 {isLoadingExamination && 
                   <TableCell colSpan={12} component="th" scope="row">
                       <Box className="ou-text-center ou-p-10">
-                          <Loading/>
+                          <SkeletonListLineItem count={3} className="ou-w-full"  />
                       </Box>
                   </TableCell>
                 }
