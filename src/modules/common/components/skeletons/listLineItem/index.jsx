@@ -12,7 +12,7 @@ const SkeletonListLineItem = ({
     <Stack spacing={1} className={className}>
       {[...Array(count)].map((_, index) => (
         <Skeleton
-          key={index}
+          key={`skeleton-line-item-${index}`}
           variant={variant}
           width={width}
           height={height}

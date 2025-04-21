@@ -1,6 +1,5 @@
 import { Button, Container, FormControl, Pagination, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material"
 import { Box } from "@mui/system"
-import Loading from "../../../modules/common/components/Loading"
 import usePrescriptionList from "../../../modules/pages/PrescriptionListComponents/hooks/usePrescription"
 import { useTranslation } from "react-i18next"
 import { Helmet } from "react-helmet"
@@ -12,7 +11,7 @@ const PrescriptionList = () => {
     const {user, prescriptionList, isLoadingPrescriptionList,
     pagination, page, handleChangePage, handleOnSubmitFilter, paramsFilter} = usePrescriptionList()
     const {t, ready} = useTranslation(['prescription', 'common'])
-    //TODO: add skeletons here
+
     if(!ready)
         return <Box sx={{ height: "300px" }}>
             <Helmet>
