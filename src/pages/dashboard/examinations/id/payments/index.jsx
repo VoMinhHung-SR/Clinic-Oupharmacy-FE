@@ -30,7 +30,7 @@ const Payments = () => {
                     <SkeletonBasicInformationCard />
                 </Box>
                 <Box component={Paper} elevation={6} className="ou-p-5 ou-mb-4">
-                    <SkeletonBillCard count={4} height="200px" /> 
+                    <SkeletonBillCard count={4} height="20px" /> 
                 </Box>
             </Box>
         </Box>
@@ -38,7 +38,7 @@ const Payments = () => {
 
     const renderPrescriptionSkeleton = (key) => (
         <Box component={Paper} key={key} elevation={6} className="ou-p-5 ou-mb-4">
-            <SkeletonBillCard count={4} height="200px" /> 
+            <SkeletonBillCard count={4} height="20px" /> 
         </Box>
     );
     

@@ -26,7 +26,7 @@ const PrescriptionList = () => {
     return (
         <>
             <Helmet>
-                <title>Prescribing</title>
+                <title>{t('common:prescribing')}</title>
             </Helmet>
             <Box className='ou-m-auto ou-w-full'>
                 <TableContainer component={Paper} elevation={4}>
@@ -59,8 +59,8 @@ const PrescriptionList = () => {
                         <TableBody>
                             {isLoadingPrescriptionList && 
                              <TableCell colSpan={12} component="th" scope="row">
-                                <Box className="ou-text-center ou-p-10">
-                                    <SkeletonListLineItem count={3} className="ou-w-full"  />
+                                <Box className="ou-text-center">
+                                    <SkeletonListLineItem count={4} className="ou-w-full"  />
                                 </Box>
                             </TableCell>
                             }

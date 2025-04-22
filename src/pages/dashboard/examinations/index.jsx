@@ -33,11 +33,8 @@ const Examinations = () => {
 
   const { t, ready } = useTranslation(["examinations", "common", "modal"]);
 
-  //TODO: add skeletons here
   if (!ready)
-    return (
-      <Box sx={{ height: "300px" }}>
-
+    return <Box sx={{ height: "300px" }}>
         <Helmet>
           <title>Examinations</title>
         </Helmet>
@@ -46,7 +43,6 @@ const Examinations = () => {
             <SkeletonListLineItem count={5} className="ou-w-full"/>
         </Box>
       </Box>
-    )
 
   return (
     <>
@@ -91,8 +87,8 @@ const Examinations = () => {
 
                 {isLoadingExamination && 
                   <TableCell colSpan={12} component="th" scope="row">
-                      <Box className="ou-text-center ou-p-10">
-                          <SkeletonListLineItem count={3} className="ou-w-full"  />
+                      <Box className="ou-text-center">
+                          <SkeletonListLineItem count={4} className="ou-w-full" />
                       </Box>
                   </TableCell>
                 }
