@@ -5,42 +5,41 @@ import { fetchAddBill, fetchMomoPaymentURL, fetchPrescriptionDetailBillCard, fet
 
 const useBillCard = (prescribingID) => {
     const {t} = useTranslation(['payment','modal'])
-    const [isLoadingPrescriptionDetail, setIsLoadingPrescriptionDetail] = useState(true)
+    const [isLoading, setIsLoading] = useState(true)
     const [prescriptionDetail, setPrescriptionDetail] = useState([])
-    const [flag, setFlag] = useState(false)
     const [isLoadingButton, setIsLoadingButton] = useState(false)
      
-    const handleChangeFlag = () => {
-        setFlag(!flag)
-    }
-
-    useEffect(()=>{
-        const loadPrescriptionDetail = async () =>{
-            try{
+    useEffect(() => {
+        const loadPrescriptionDetail = async () => {
+            setIsLoading(true)
+            try {
                 const res = await fetchPrescriptionDetailBillCard(prescribingID)
-                if (res.status === 200){
-                    setIsLoadingPrescriptionDetail(false)
+                if (res.status === 200) {
                     setPrescriptionDetail(res.data)
                 }
-            }catch(err){
-                setIsLoadingPrescriptionDetail(false)
+            } catch (err) {
                 setPrescriptionDetail([])
+            } finally {
+                setIsLoading(false)
             }
         }
      
-        if(prescribingID){
+        if (prescribingID) {
             loadPrescriptionDetail()
         }
-    },[flag, prescribingID])
+    }, [prescribingID])
     
     const onSubmit = (amount, prescribingID, callbackSuccess, callbackError) => {
         const handleOnSubmit = async () => {
             try {
                 const res = await fetchAddBill({amount: amount, prescribing: prescribingID})
                 if (res.status === 201) {
-                    handleChangeFlag();
                     setIsLoadingButton(false)
                     callbackSuccess && callbackSuccess()
+                    const updatedRes = await fetchPrescriptionDetailBillCard(prescribingID)
+                    if (updatedRes.status === 200) {
+                        setPrescriptionDetail(updatedRes.data)
+                    }
                     return SuccessfulAlert(t('paidCompleted'), t('modal:ok'))                 
                 }
             } catch (err) {
@@ -96,8 +95,12 @@ const useBillCard = (prescribingID) => {
 
 
     return {
-        prescriptionDetail,isLoadingPrescriptionDetail,
-        onSubmit, isLoadingButton, momoPayment,zaloPayPayment
+        prescriptionDetail,
+        isLoading,
+        onSubmit, 
+        isLoadingButton, 
+        momoPayment,
+        zaloPayPayment
     }
 
 }

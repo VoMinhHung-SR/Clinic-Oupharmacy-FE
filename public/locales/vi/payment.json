@@ -11,7 +11,7 @@
     "diagnosed": "Chẩn đoán",
     "sign":"Triệu chứng",
 
-    "prescriptionDetail": "Chi tiết phiếu kê toa",
+    "prescriptionDetail": "Chi tiết phiếu kê toa: {{id}}",
     "prescriptionDetailId": "Mã phiếu",
     "medicineName": "Tên thuốc",
     "uses": "Liều dùng",
@@ -29,5 +29,7 @@
     "unDone": "Chưa thanh toán",
     "paidCompleted":"Thanh toán thành công",
     "payFailed":"Thanh toán thất bại",
-    "confirmCreateBill": "Xác nhận tạo hóa đơn cho phiếu khám này"
+    "confirmCreateBill": "Xác nhận tạo hóa đơn cho phiếu khám này",
+    "errLoadPrescriptionDetailFailed": "Không tải được chi tiết phiếu kê toa",
+    "errLoadExaminationDetailFailed": "Không tải được chi tiết phiếu khám"
 }

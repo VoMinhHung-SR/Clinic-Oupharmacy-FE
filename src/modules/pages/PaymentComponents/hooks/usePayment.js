@@ -7,10 +7,13 @@ import { fetchExaminationDetail } from "../../ExaminationDetailComponents/servic
 const usePayment = () => {
     const {user} = useContext(UserContext)
     const {examinationId} = useParams()
-    const [isLoadingPrescriptionDetail, setIsLoadingPrescriptionDetail] = useState(true)
     const [examinationDetail, setExaminationDetail] = useState(null)
     const [diagnosisInfo, setDiagnosisInfo] = useState([])
     const [prescribingList, setPrescribingList] = useState({})
+    const [loadingStates, setLoadingStates] = useState({
+        examination: true,
+        prescriptions: {}
+    })
 
     useEffect(() => {
         const loadDiagnosis = async () => {
@@ -23,18 +26,26 @@ const usePayment = () => {
                         setExaminationDetail(res.data)
                         if (res.data.diagnosis_info && Array.isArray(res.data.diagnosis_info)) {
                             setDiagnosisInfo(res.data.diagnosis_info)
-
+                            const initialLoadingStates = {}
                             res.data.diagnosis_info.forEach(diagnosis => {
+                                initialLoadingStates[diagnosis.id] = true
                                 loadPrescribing(diagnosis.id)
                             })
+                            setLoadingStates(prev => ({
+                                ...prev,
+                                examination: false,
+                                prescriptions: initialLoadingStates
+                            }))
                         }
                     }
                 }
             } catch (err) {
                 setExaminationDetail(null)
                 console.error('Error loading examination:', err)
-            } finally {
-                setIsLoadingPrescriptionDetail(false)
+                setLoadingStates(prev => ({
+                    ...prev,
+                    examination: false
+                }))
             }
         }
 
@@ -53,6 +64,14 @@ const usePayment = () => {
                     ...prev,
                     [diagnosisId]: []
                 }))
+            } finally {
+                setLoadingStates(prev => ({
+                    ...prev,
+                    prescriptions: {
+                        ...prev.prescriptions,
+                        [diagnosisId]: false
+                    }
+                }))
             }
         }
 
@@ -65,14 +84,19 @@ const usePayment = () => {
         return prescribingList[diagnosisId] || []
     }
 
+    const isPrescribingLoading = (diagnosisId) => {
+        return loadingStates.prescriptions[diagnosisId] === true
+    }
+
     return {
         prescribingList,
         getPrescribingByDiagnosisId,
-        isLoadingPrescriptionDetail,
+        isLoadingExamination: loadingStates.examination,
+        isPrescribingLoading,
         user,
         examinationDetail,
         examinationId,
-        diagnosisInfo
+        diagnosisInfo,
     }
 }
 
