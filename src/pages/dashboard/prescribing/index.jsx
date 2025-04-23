@@ -1,32 +1,32 @@
 import { Button, Container, FormControl, Pagination, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material"
 import { Box } from "@mui/system"
-import Loading from "../../../modules/common/components/Loading"
 import usePrescriptionList from "../../../modules/pages/PrescriptionListComponents/hooks/usePrescription"
 import { useTranslation } from "react-i18next"
 import { Helmet } from "react-helmet"
 import DiagnosisFilter from "../../../modules/common/components/FIlterBar/DiagnosisFilter"
 import DiagnosedCard from "../../../modules/common/components/card/DiagnosedCard"
+import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem"
 
 const PrescriptionList = () => {
     const {user, prescriptionList, isLoadingPrescriptionList,
     pagination, page, handleChangePage, handleOnSubmitFilter, paramsFilter} = usePrescriptionList()
     const {t, ready} = useTranslation(['prescription', 'common'])
-    //TODO: add skeletons here
+
     if(!ready)
         return <Box sx={{ height: "300px" }}>
             <Helmet>
                 <title>Prescribing</title>
             </Helmet>
 
-            <Box className='ou-p-5'>
-                <Loading/>
+            <Box component={Paper} elevation={4} className="ou-text-center ou-p-10 ou-h-[30vh]">
+                <SkeletonListLineItem count={5} className="ou-w-full"/>
             </Box>
         </Box>
 
     return (
         <>
             <Helmet>
-                <title>Prescribing</title>
+                <title>{t('common:prescribing')}</title>
             </Helmet>
             <Box className='ou-m-auto ou-w-full'>
                 <TableContainer component={Paper} elevation={4}>
@@ -59,10 +59,11 @@ const PrescriptionList = () => {
                         <TableBody>
                             {isLoadingPrescriptionList && 
                              <TableCell colSpan={12} component="th" scope="row">
-                                <Box className="ou-text-center ou-p-10">
-                                    <Loading/>
+                                <Box className="ou-text-center">
+                                    <SkeletonListLineItem count={4} className="ou-w-full"  />
                                 </Box>
-                            </TableCell>}
+                            </TableCell>
+                            }
 
                             {!isLoadingPrescriptionList && prescriptionList.length === 0 &&  
                             <TableCell colSpan={12} component="th" scope="row">

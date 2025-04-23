@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import SchemaModels from "../../../lib/schema";
 import BackdropLoading from "../../../modules/common/components/BackdropLoading";
 import MedicineFilter from "../../../modules/common/components/FIlterBar/MedicineFilter";
+import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem";
 
 const MedicineList = () => {
     const {page, pagination, handleChangePage, selectedImage, setSelectedImage, imageUrl, 
@@ -48,8 +49,8 @@ const MedicineList = () => {
             <title>Medicine List</title>
           </Helmet>
   
-          <Box className="ou-text-center ou-p-10">
-              <Loading/>
+          <Box component={Paper} elevation={4} className="ou-text-center ou-p-10 ou-h-[30vh]">
+            <SkeletonListLineItem count={5} className="ou-w-full"/>
           </Box>
         </Box>
       )
@@ -103,8 +104,8 @@ const MedicineList = () => {
                 <TableBody>
                   {medicineLoading && 
                     <TableCell colSpan={12} component="th" scope="row">
-                      <Box className="ou-text-center ou-p-10">
-                          <Loading/>
+                      <Box className="ou-text-center">
+                          <SkeletonListLineItem count={4} className="ou-w-full" />
                       </Box>
                   </TableCell>}
 

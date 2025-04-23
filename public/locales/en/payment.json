@@ -11,7 +11,7 @@
     "diagnosed": "Diagnosed",
     "sign":"Sign",
 
-    "prescriptionDetail": "Prescription detail",
+    "prescriptionDetail": "Prescription detail: {{id}}",
     "prescriptionDetailId": "ID",
     "medicineName": "Medicine name",
     "uses": "Uses",
@@ -30,5 +30,7 @@
     "unDone": "Undone",
     "paidCompleted":"Success",
     "payFailed":"Failed",
-    "confirmCreateBill": "Confirm to create this bill"
+    "confirmCreateBill": "Confirm to create this bill",
+    "errLoadPrescriptionDetailFailed": "Failed to load prescription detail",
+    "errLoadExaminationDetailFailed": "Failed to load examination detail"
 }

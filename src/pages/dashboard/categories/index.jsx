@@ -12,6 +12,7 @@ import * as Yup from 'yup';
 import { REGEX_NOTE, TOAST_ERROR } from "../../../lib/constants";
 import { useState } from "react";
 import createToastMessage from "../../../lib/utils/createToastMessage";
+import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem";
 const CategoryList = () => {
     const {categories, isLoading, onSubmit, handleOnDeleted, handleOnUpdate} = useCategory();
     const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
@@ -41,8 +42,8 @@ const CategoryList = () => {
         <Helmet>
             <title>Categories</title>
         </Helmet>
-        <Box className='ou-p-5'>
-            <Loading></Loading>
+        <Box component={Paper} elevation={4} className="ou-text-center ou-p-10 ou-h-[30vh]">
+            <SkeletonListLineItem count={5} className="ou-w-full"/>
         </Box>
     </Box>
 
@@ -62,8 +63,8 @@ const CategoryList = () => {
         </Helmet>
         {isLoading && categories.length === 0 ?
             (<Box sx={{ minHeight: "300px" }}>
-                <Box className='ou-p-5'>
-                    <Loading></Loading>
+                <Box className="ou-text-center">
+                    <SkeletonListLineItem count={4} className="ou-w-full" />
                 </Box>
             </Box>)
                 : (
