@@ -1,4 +1,4 @@
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
@@ -8,7 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useTranslation } from 'react-i18next';
 import { ListItemIcon, ListItemButton, ListItemText, Toolbar,
-    MenuItem, Tooltip, Button, Box, List, Menu, Avatar } from '@mui/material';
+    MenuItem, Tooltip, Button, Box, List, Menu, Avatar, useMediaQuery } from '@mui/material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import FlagUK from '../../../../../public/flagUK';
 import FlagVN from '../../../../../public/flagVN';
@@ -38,54 +38,44 @@ const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  backgroundColor: "white",
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+})(({ theme, open }) => {
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  return {
+    backgroundColor: "white",
+    zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+      duration: theme.transitions.duration.leavingScreen,
     }),
-  }),
-}));
-
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    '& .MuiDrawer-paper': {
-      position: 'relative',
-      whiteSpace: 'nowrap',
-      color: 'white',
-      backgroundColor: '#1976d2',
-      width: drawerWidth,
-      transition: theme.transitions.create('width', {
+    ...(!isMobile && open && {
+      marginLeft: drawerWidth,
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
       }),
-    
-      boxSizing: 'border-box',
-      ...(!open && {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-          width: theme.spacing(9),
-        },
-      }),
-    },
-  }),
-);
+    }),
+    ...(isMobile && {
+      width: '100%',
+      marginLeft: 0,
+    }),
+  };
+});
+
+const StyledDrawer = styled(MuiDrawer)(({ theme }) => ({
+  '& .MuiDrawer-paper': {
+    position: 'relative',
+    whiteSpace: 'nowrap',
+    color: 'white',
+    backgroundColor: '#1976d2',
+    width: drawerWidth,
+    boxSizing: 'border-box',
+  },
+}));
 
 const NavDashboard = () => {
-    
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [anchorEl, setAnchorEl] = useState(null);
     const openSettingMenu = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -97,7 +87,7 @@ const NavDashboard = () => {
     const {isLoading, notifyListContent, updateNotifications} = useNotification();
     const location = useLocation()
     const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(!isMobile);
     const toggleDrawer = () => {
         setOpen(!open);
     };
@@ -171,13 +161,25 @@ const NavDashboard = () => {
       handleChangingPage("/dashboard/forbidden")
     }
 
-    const renderPage = (routingRole, role) => {
+    const renderPage = (routingRole, role, isOpen, isMobile) => {
         return routingRole && routingRole.map(item => (
-            <ListItemButton key={"dashboard"+item.name} onClick={() => handleNav(role, item.link)}>
-                <ListItemIcon >
+            <ListItemButton key={"dashboard"+item.name} onClick={() => handleNav(role, item.link)}
+                sx={{ 
+                    justifyContent: isOpen ? 'initial' : 'center',
+                    px: 2.5,
+                }}
+            >
+                <ListItemIcon
+                    sx={{ 
+                        minWidth: 0,
+                        mr: isOpen ? 3 : 'auto',
+                        justifyContent: 'center',
+                        color: 'inherit',
+                    }}
+                >
                   {item.icon && item.icon}
                 </ListItemIcon>
-                <ListItemText primary={`${item.name}`}/>
+                {isOpen && <ListItemText primary={`${item.name}`} sx={{ opacity: isOpen ? 1 : 0 }} />} 
             </ListItemButton>
 
         ))
@@ -287,80 +289,119 @@ const NavDashboard = () => {
     }
     return (
       <>
-        <AppBar position="absolute" open={open}>
-            <Toolbar >
-                <IconButton
-                    edge="start"
-                    aria-label="open drawer"
-                    onClick={toggleDrawer}
-                    sx={{
-                    ...(open && { display: 'none' }),
-                    }}
-                >
-                    <MenuIcon />
-                </IconButton>
-                <Typography
-                    component="h1"
-                    variant="h6"
-                    noWrap
-                    color='#707070'
-                    sx={{ flexGrow: 1 }}
-                >
-                    {t(renderHeadingTitle(location.pathname))}
-                </Typography>
+        <AppBar position="fixed" open={open}>
+            <Toolbar className="ou-flex ou-justify-between">
+                <Box className="ou-flex ou-items-center">
+                    <IconButton
+                        edge="start"
+                        aria-label="open drawer"
+                        onClick={toggleDrawer}
+                        sx={{
+                            marginRight: 2,
+                            display: isMobile ? 'inline-flex' : (open ? 'none' : 'inline-flex'),
+                        }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography
+                        component="h1"
+                        variant="h6"
+                        noWrap
+                        color='#707070'
+                        sx={{ 
+                            flexGrow: 1,
+                            [theme.breakpoints.down('sm')]: {
+                                fontSize: '1rem',
+                            },
+                        }}
+                    >
+                        {t(renderHeadingTitle(location.pathname))}
+                    </Typography>
+                </Box>
 
-                <Box sx={{ flexGrow: 0 }} className="ou-flex">
-                {i18n.language === 'en' ? 
-                    <Tooltip followCursor title={t('changeLanguage')}>
-                    <Button className="!ou-text-white" onClick={()=> changeLanguage('vi')}>
-                        <FlagUK width={30} height={30}/>
-                    </Button> 
-                    </Tooltip>
-                    :
-                    <Tooltip followCursor title={t('changeLanguage')}>
-                    <Button className="!ou-text-white" onClick={()=> changeLanguage('en')}>
-                        <FlagVN width={30} height={30}/>
-                    </Button>
-                    </Tooltip>
-                }
-                {btn}
+                <Box sx={{ flexGrow: 0 }} className="ou-flex ou-items-center ou-gap-2">
+                    {i18n.language === 'en' ? 
+                        <Tooltip followCursor title={t('changeLanguage')}>
+                            <Button className="!ou-text-white" onClick={()=> changeLanguage('vi')}>
+                                <FlagUK width={30} height={30}/>
+                            </Button> 
+                        </Tooltip>
+                        :
+                        <Tooltip followCursor title={t('changeLanguage')}>
+                            <Button className="!ou-text-white" onClick={()=> changeLanguage('en')}>
+                                <FlagVN width={30} height={30}/>
+                            </Button>
+                        </Tooltip>
+                    }
+                    {btn}
                 </Box>
             </Toolbar>
         </AppBar>
         
-        <Drawer variant="permanent" open={open} >
-            <Toolbar
-            sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                px: [1],
+        <StyledDrawer
+            variant={isMobile ? 'temporary' : 'permanent'} 
+            open={open} 
+            onClose={isMobile ? toggleDrawer : undefined}
+            ModalProps={{
+              keepMounted: true,
             }}
-            
+            sx={{
+              ...(!isMobile && {
+                width: drawerWidth,
+                flexShrink: 0,
+                [`& .MuiDrawer-paper`]: {
+                  width: drawerWidth,
+                  transition: theme.transitions.create('width', {
+                    easing: theme.transitions.easing.sharp,
+                    duration: open ? theme.transitions.duration.enteringScreen : theme.transitions.duration.leavingScreen,
+                  }),
+                  overflowX: 'hidden',
+                  boxSizing: 'border-box',
+                  ...(!open && {
+                    overflowX: 'hidden',
+                    transition: theme.transitions.create('width', {
+                      easing: theme.transitions.easing.sharp,
+                      duration: theme.transitions.duration.leavingScreen,
+                    }),
+                    width: theme.spacing(7),
+                    [theme.breakpoints.up('sm')]: {
+                      width: theme.spacing(9),
+                    },
+                  }),
+                },
+              }),
+            }}
+        > 
+            <Toolbar
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                    px: [1],
+                    ... (isMobile && { display: 'none' })
+                }}
             >
-            <IconButton color="inherit" onClick={toggleDrawer}>
-                <ChevronLeftIcon />
-            </IconButton>
+                <IconButton color="inherit" onClick={toggleDrawer}>
+                    <ChevronLeftIcon />
+                </IconButton>
             </Toolbar>
-            <Divider />
+            <Divider sx={{ ...(isMobile && { display: 'none' }) }}/>
 
             {/* Nav */}
-            <List component="nav">
-    
-            {renderPage(pages, ROLE_NURSE +" "+ ROLE_DOCTOR)}
-            <Divider sx={{ my: 1 }} />
+            <List component="nav" className="ou-overflow-y-auto">
+                {renderPage(pages, ROLE_NURSE +" "+ ROLE_DOCTOR, open, isMobile)}
+                <Divider sx={{ my: 1 }} />
 
-            {renderPage(page_ROLE_DOCTOR, ROLE_DOCTOR)}
+                {renderPage(page_ROLE_DOCTOR, ROLE_DOCTOR, open, isMobile)}
 
-            <Divider sx={{ my: 1 }} />
-            {renderPage(page_ROLE_NURSE, ROLE_NURSE)}
+                <Divider sx={{ my: 1 }} />
+                {renderPage(page_ROLE_NURSE, ROLE_NURSE, open, isMobile)}
 
-            <Divider sx={{ my: 1 }} />
-            {renderPage(pagesMedicineManagement, ROLE_NURSE +" "+ ROLE_DOCTOR+" "+ ROLE_ADMIN)}
-
+                <Divider sx={{ my: 1 }} />
+                {renderPage(pagesMedicineManagement, ROLE_NURSE +" "+ ROLE_DOCTOR+" "+ ROLE_ADMIN, open, isMobile)}
             </List>
 
-        </Drawer>
+        </StyledDrawer>
 
         <CustomModal
           className="ou-w-[900px]"
