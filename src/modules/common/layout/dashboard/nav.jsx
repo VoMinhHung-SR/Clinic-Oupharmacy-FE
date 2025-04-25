@@ -9,7 +9,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useTranslation } from 'react-i18next';
 import { ListItemIcon, ListItemButton, ListItemText, Toolbar,
     MenuItem, Tooltip, Button, Box, List, Menu, Avatar, useMediaQuery } from '@mui/material';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import FlagUK from '../../../../../public/flagUK';
 import FlagVN from '../../../../../public/flagVN';
 import Logout from '@mui/icons-material/Logout';
@@ -73,7 +73,7 @@ const StyledDrawer = styled(MuiDrawer)(({ theme }) => ({
   },
 }));
 
-const NavDashboard = () => {
+const NavDashboard = ({ open, toggleDrawer }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [anchorEl, setAnchorEl] = useState(null);
@@ -87,10 +87,7 @@ const NavDashboard = () => {
     const {isLoading, notifyListContent, updateNotifications} = useNotification();
     const location = useLocation()
     const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
-    const [open, setOpen] = useState(!isMobile);
-    const toggleDrawer = () => {
-        setOpen(!open);
-    };
+
     const {t, i18n}= useTranslation(['common', 'modal']);
 
     const pages = [
@@ -337,7 +334,6 @@ const NavDashboard = () => {
                 </Box>
             </Toolbar>
         </AppBar>
-        
         <StyledDrawer
             variant={isMobile ? 'temporary' : 'permanent'} 
             open={open} 
@@ -346,8 +342,7 @@ const NavDashboard = () => {
               keepMounted: true,
             }}
             sx={{
-              ...(!isMobile && {
-                width: drawerWidth,
+              ...(!isMobile && { 
                 flexShrink: 0,
                 [`& .MuiDrawer-paper`]: {
                   width: drawerWidth,

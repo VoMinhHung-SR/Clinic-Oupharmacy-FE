@@ -1,7 +1,6 @@
 import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
-import Loading from "../../../modules/common/components/Loading";
 import useCategory from "../../../modules/pages/CategoriesComponents/hooks/useCategory";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CustomModal from "../../../modules/common/components/Modal";
@@ -61,71 +60,78 @@ const CategoryList = () => {
         <Helmet>
             <title>{t('common:categories')}</title>
         </Helmet>
-        {isLoading && categories.length === 0 ?
-            (<Box sx={{ minHeight: "300px" }}>
-                <Box className="ou-text-center">
-                    <SkeletonListLineItem count={4} className="ou-w-full" />
-                </Box>
-            </Box>)
-                : (
-                    <Box sx={{ minHeight: "300px" }}>
-                        <TableContainer component={Paper} elevation={4}>
-                        <div className="ou-flex ou-items-center ou-justify-between">
-                            <div className="ou-flex ou-justify-between ou-w-full">
-                                <h1 className="ou-text-xl ou-px-4 ou-py-8">{t('common:categories')}</h1>
-                                <div className="ou-ml-auto ou-px-4 ou-py-8">
-                                    <Button color="success" variant="contained"
-                                    onClick={() => {handleOpenModal(); setCreateNoUpdate(true)}}>
-                                        <AddCircleOutlineIcon className="ou-mr-1"/> {t('category:addCategory')}
-                                    </Button>
-                                </div>
-                            </div>
+        <Box sx={{ minHeight: "300px" }}>
+            <TableContainer component={Paper} elevation={4}>
+                <div className="ou-flex ou-items-center ou-justify-between">
+                    <div className="ou-flex ou-justify-between ou-w-full">
+                        <h1 className="ou-text-xl ou-px-4 ou-py-8">{t('common:categories')}</h1>
+                        <div className="ou-ml-auto ou-px-4 ou-py-8">
+                            <Button color="success" variant="contained"
+                            onClick={() => {handleOpenModal(); setCreateNoUpdate(true)}}>
+                                <AddCircleOutlineIcon className="ou-mr-1"/> {t('category:addCategory')}
+                            </Button>
                         </div>
-                            <Table aria-label="simple table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>{t('category:id')}</TableCell>
-                                        <TableCell align="left">{t('category:name')}</TableCell>
-                                        <TableCell align="center">{t('category:function')}</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {categories.map(c => (
-                                        <TableRow key={c.id}
-                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                        >
-                                            <TableCell component="th" scope="row" >
-                                                <Typography>
-                                                    {c.id}
-                                                </Typography>
-                                            </TableCell>
-                                
-                                            <TableCell align="center">
-                                                <Typography className="ou-table-truncate-text-container">
-                                                    {c.name}
-                                                </Typography>
-                                            </TableCell>
+                    </div>
+                </div>
+                    <Table aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>{t('category:id')}</TableCell>
+                                <TableCell align="left">{t('category:name')}</TableCell>
+                                <TableCell align="center">{t('category:function')}</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                        {isLoading && 
+                            <TableCell colSpan={12} component="th" scope="row">
+                                <Box className="ou-text-center">
+                                    <SkeletonListLineItem count={4} className="ou-w-full" />
+                                </Box>
+                            </TableCell>}
+                        {!isLoading && categories.length === 0 &&
+                            <TableCell colSpan={12} component="th" scope="row">
+                                <Typography> 
+                                    <Box className="ou-text-center ou-p-10 ou-text-red-700">
+                                        {t('category:errNullCate')}
+                                    </Box>
+                                </Typography>
+                            </TableCell>}
+            
+                        {!isLoading && categories.length > 0 && categories.map(c => (
+                            <TableRow key={c.id}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                                <TableCell component="th" scope="row" >
+                                    <Typography>
+                                        {c.id}
+                                    </Typography>
+                                </TableCell>
 
-                                            <TableCell align="center">
-                                                <Button variant="contained" color="primary" 
-                                                    className="!ou-mr-1" onClick={() => {
-                                                        handleOpenModal(); setCreateNoUpdate(false); setCateID(c.id)} 
-                                                    }>
-                                                    {t('common:update')}
-                                                </Button>
-                                                <Button variant="contained" color="error" 
-                                                    onClick={() => handleOnDeleted(c.id)} className="!ou-ml-1">
-                                                    {t('common:delete')}
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Box>
-                )
-            }
+                                <TableCell align="center">
+                                    <Typography className="ou-table-truncate-text-container">
+                                        {c.name}
+                                    </Typography>
+                                </TableCell>
+
+                                <TableCell align="center">
+                                    <Button variant="contained" color="primary" 
+                                        className="!ou-mr-1" onClick={() => {
+                                            handleOpenModal(); setCreateNoUpdate(false); setCateID(c.id)} 
+                                        }>
+                                        {t('common:update')}
+                                    </Button>
+                                    <Button variant="contained" color="error" 
+                                        onClick={() => handleOnDeleted(c.id)} className="!ou-ml-1">
+                                        {t('common:delete')}
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                        </TableBody>
+                    </Table>
+            </TableContainer>
+        </Box>
+       
         <CustomModal
             title={createNotUpdate && createNotUpdate ? t('category:addCategory') : t('category:updateCategory')}
             className="ou-w-[800px]"

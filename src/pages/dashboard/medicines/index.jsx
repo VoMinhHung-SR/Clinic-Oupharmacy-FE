@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import useMedicine from "../../../lib/hooks/useMedicine"
-import { Box, Button, Divider, FilledInput, FormControl, Input, InputAdornment, InputLabel, MenuItem, OutlinedInput, Pagination, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, FilledInput, FormControl, Input, InputAdornment, InputLabel, MenuItem, OutlinedInput, Pagination, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Grid } from "@mui/material";
 import { Helmet } from "react-helmet";
 import Loading from "../../../modules/common/components/Loading";
 import MedicineUnitLineItem from "../../../modules/pages/MedicineComponent/MedicineUnitLineItem";
@@ -63,69 +63,83 @@ const MedicineList = () => {
         <Helmet>
             <title>Medicine List</title>
         </Helmet>
-            <Box className="ou-flex ou-justify-center ou-flex-col" >
+            <Box className="ou-flex ou-flex-col" >
             <TableContainer component={Paper} elevation={4}>
   
-              <div className="ou-flex ou-items-center ou-justify-between">
-                <div className="ou-flex ou-items-end ou-py-8 ou-px-4">
-                  <h1 className="ou-text-xl">{t('medicine:listOfMedicines')}</h1>
-                  <span className="ou-pl-2 ou-text-sm">{t('medicine:resultOfTotal', {result: pagination.count})}</span>
-                </div>
+              <Box className="ou-flex ou-flex-col sm:ou-flex-row ou-items-start sm:ou-items-center ou-justify-between ou-p-4">
+                <Box className="ou-flex ou-flex-col sm:ou-flex-row ou-items-start sm:ou-items-end ou-mb-4 sm:ou-mb-0">
+                  <Typography variant="h6" className="ou-text-xl">{t('medicine:listOfMedicines')}</Typography>
+                  <Typography variant="body2" className="ou-pl-2 ou-text-sm">{t('medicine:resultOfTotal', {result: pagination.count})}</Typography>
+                </Box>
   
-                <div className="ou-ml-auto ou-px-4 ou-py-8">
-                    <Button color="success" variant="contained"
-                    onClick={() => {handleOpenModal()}}>
+                <Box className="ou-flex ou-flex-col sm:ou-flex-row ou-items-start sm:ou-items-center ou-gap-4 ou-w-full sm:ou-w-auto">
+                    <Button 
+                      color="success" 
+                      variant="contained"
+                      onClick={() => {handleOpenModal()}}
+                      className="ou-w-full sm:ou-w-auto"
+                    >
                         <AddCircleOutlineIcon className="ou-mr-1"/> {t('medicine:addMedicine')}
                     </Button>
-                </div>
                     {/* Filter area */}
-                  <MedicineFilter onSubmit={handleOnSubmitFilter} kw={paramsFilter.kw}
-                  categories={categories} cateFilter={paramsFilter.cate}/>
-              </div>
+                    <MedicineFilter 
+                      onSubmit={handleOnSubmitFilter} 
+                      kw={paramsFilter.kw}
+                      categories={categories} 
+                      cateFilter={paramsFilter.cate}
+                      className="ou-w-full sm:ou-w-auto"
+                    />
+                </Box>
+              </Box>
               
               {/* Content area */}
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell align="center">{t("medicine:medicineName")}</TableCell>
-                    <TableCell align="center">{t("medicine:inStock")}</TableCell>
-                    <TableCell align="center">{t("medicine:price")}</TableCell>    
-                    <TableCell align="center">{t("medicine:packaging")}</TableCell>
-                    <TableCell align="center">{t("medicine:category")}</TableCell>
-                    <TableCell align="center">
-                      <Box className="ou-flex ou-justify-center ou-items-center">
-                        {t("function")} 
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
+              <Box sx={{ overflowX: 'auto' }}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell></TableCell>
+                      <TableCell align="center">{t("medicine:medicineName")}</TableCell>
+                      <TableCell align="center">{t("medicine:inStock")}</TableCell>
+                      <TableCell align="center">{t("medicine:price")}</TableCell>    
+                      <TableCell align="center">{t("medicine:packaging")}</TableCell>
+                      <TableCell align="center">{t("medicine:category")}</TableCell>
+                      <TableCell align="center">
+                        <Box className="ou-flex ou-justify-center ou-items-center">
+                          {t("function")} 
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
 
-                <TableBody>
-                  {medicineLoading && 
-                    <TableCell colSpan={12} component="th" scope="row">
-                      <Box className="ou-text-center">
-                          <SkeletonListLineItem count={4} className="ou-w-full" />
-                      </Box>
-                  </TableCell>}
+                  <TableBody>
+                    {medicineLoading && 
+                      <TableCell colSpan={12} component="th" scope="row">
+                        <Box className="ou-text-center">
+                            <SkeletonListLineItem count={4} className="ou-w-full" />
+                        </Box>
+                    </TableCell>}
 
-                  {!medicineLoading && medicines.length > 0 && medicines.map(medicine => (
-                      <MedicineUnitLineItem 
-                      key={`medicine-unit-${medicine.id}`}  
-                      categories={categories} updateMedicine={updateMedicine}
-                      data={medicine} removeMedicine={removeMedicine}/>
-                  ))}
+                    {!medicineLoading && medicines.length > 0 && medicines.map(medicine => (
+                        <MedicineUnitLineItem 
+                        key={`medicine-unit-${medicine.id}`}  
+                        categories={categories} 
+                        updateMedicine={updateMedicine}
+                        data={medicine} 
+                        removeMedicine={removeMedicine}/>
+                    ))}
 
-                  {!medicineLoading && medicines.length === 0 &&  <TableCell colSpan={12} component="th" scope="row">
-                      <Typography> 
-                          <Box className="ou-text-center ou-p-10 ou-text-red-700">
-                              {t('medicine:errMedicinesNull')}
-                          </Box>
-                      </Typography>
-                  </TableCell>} 
-  
-                </TableBody>
-              </Table>
+                    {!medicineLoading && medicines.length === 0 &&  
+                      <TableCell colSpan={12} component="th" scope="row">
+                          <Typography> 
+                              <Box className="ou-text-center ou-p-10 ou-text-red-700">
+                                  {t('medicine:errMedicinesNull')}
+                              </Box>
+                          </Typography>
+                      </TableCell>
+                    } 
+                  </TableBody>
+                </Table>
+              </Box>
             </TableContainer>
             {pagination.sizeNumber >= 2 && (
               <Box sx={{ pt: 5, pb: 2 }}>
@@ -148,15 +162,15 @@ const MedicineList = () => {
           open={isOpen}
           onClose={handleCloseModal}
           content={
-          <Box className="ou-p-8">
+          <Box className="ou-p-4 sm:ou-p-8">
               <form onSubmit={methods.handleSubmit((data) =>  
               addMedicine(data,() => {methods.reset(); handleCloseModal()}, methods.setError))}
                 >
-                  <h3 className="ou-text-center ou-pb-3 ou-text-xl">
+                  <Typography variant="h6" className="ou-text-center ou-pb-3">
                     {t('medicine:medicineInfo')}
                     <Divider/>
-                  </h3>
-                  <div className="ou-mb-3">
+                  </Typography>
+                  <Box className="ou-mb-3">
                     <FormControl className="ou-w-full !ou-mb-2">
                       <TextField
                           className="ou-w-full"
@@ -167,121 +181,142 @@ const MedicineList = () => {
                       />
                       {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">
                         {methods.formState.errors.name?.message}</p>) : <></>}
-
                     </FormControl>
 
-                      <FormControl fullWidth className="!ou-mb-2">
-                        <InputLabel htmlFor="medicine-effect">{t('medicine:effect')}</InputLabel>
-                        <OutlinedInput
-                            fullWidth
-                            autoComplete="given-name"
-                            multiline
-                            rows={2}
-                            id="effect"
-                            name="effect"
-                            type="text"
-                            label={t('medicine:effect')}
-                            error={methods.formState.errors.effect}
-                            {...methods.register("effect")}
-                        />
-                        {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.effect?.message}</p>) : <></>}
-                      </FormControl>
+                    <FormControl fullWidth className="!ou-mb-2">
+                      <InputLabel htmlFor="medicine-effect">{t('medicine:effect')}</InputLabel>
+                      <OutlinedInput
+                          fullWidth
+                          autoComplete="given-name"
+                          multiline
+                          rows={2}
+                          id="effect"
+                          name="effect"
+                          type="text"
+                          label={t('medicine:effect')}
+                          error={methods.formState.errors.effect}
+                          {...methods.register("effect")}
+                      />
+                      {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.effect?.message}</p>) : <></>}
+                    </FormControl>
 
-                      <FormControl fullWidth className="!ou-mb-3">
-                        <InputLabel htmlFor="medicine-contraindications">{t('medicine:contraindications')}</InputLabel>
-                        <OutlinedInput
-                            fullWidth
-                            autoComplete="given-name"
-                            multiline
-                            rows={2}
-                            id="contraindications"
-                            name="contraindications"
-                            type="text"
-                            label={t('medicine:contraindications')}
-                            error={methods.formState.errors.contraindications}
-                            {...methods.register("contraindications")}
-                        />
-                        {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.contraindications?.message}</p>) : <></>}
-                      </FormControl>
+                    <FormControl fullWidth className="!ou-mb-3">
+                      <InputLabel htmlFor="medicine-contraindications">{t('medicine:contraindications')}</InputLabel>
+                      <OutlinedInput
+                          fullWidth
+                          autoComplete="given-name"
+                          multiline
+                          rows={2}
+                          id="contraindications"
+                          name="contraindications"
+                          type="text"
+                          label={t('medicine:contraindications')}
+                          error={methods.formState.errors.contraindications}
+                          {...methods.register("contraindications")}
+                      />
+                      {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.contraindications?.message}</p>) : <></>}
+                    </FormControl>
 
-                    <h3 className="ou-text-center ou-pb-3 ou-text-xl">
+                    <Typography variant="h6" className="ou-text-center ou-pb-3">
                       {t('medicine:medicineInStock')}
                       <Divider/>
-                    </h3>
+                    </Typography>
 
-                    <div className="ou-flex ou-mb-3">
-                      <FormControl className="ou-w-[50%] !ou-mr-2">
-                        <InputLabel htmlFor="medicine-form-price-label">{t('medicine:price')}</InputLabel>
-                        <OutlinedInput
-                          id="medicine-form-price"
-                          label={t('medicine:price')}
-                          startAdornment={<InputAdornment position="start">VND</InputAdornment>}
-                          error={methods.formState.errors.price}
-                          {...methods.register("price")} 
-                        />
-                        {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.price?.message}</p>) : <></>}
-                      </FormControl> 
-                      <FormControl className="ou-w-[50%]">
-                        <TextField
-                            className="ou-w-full"
-                            variant="outlined"
-                            label={t('medicine:quantity')}
-                            error={methods.formState.errors.inStock}
-                            {...methods.register("inStock")} 
-                        />
-                        {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.inStock?.message}</p>) : <></>}
-                      </FormControl>
-                    
-                    </div>
-                    <div className="ou-flex">
-                      <FormControl className="ou-w-[40%] !ou-mr-2">
-                        <TextField
-                            variant="outlined"
-                            label={t('medicine:packaging')}
-                            error={methods.formState.errors.packaging}
-                            {...methods.register("packaging")} 
-                        />
-                        {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.packaging?.message}</p>) : <></>}
-
-                      </FormControl>
-                      <FormControl className='ou-w-[60%]'>
-                          <InputLabel id="prescription_filter_email">{t('medicine:category')}</InputLabel>
-                              <Select
-                                className="ou-w-full"
-                                  id="form__addMedicine_category"      
-                                  name="category"
-                                  label={t('medicine:category')}
-                                  {...methods.register("category")} 
-                              >
-                                {categories && categories.map(c =><MenuItem key={`medicine-cate-${c.id}`} value={c.id}>{c.name}</MenuItem> )}
-                              </Select>
-                        {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">
-                          {methods.formState.errors.category?.message}</p>) : <></>} 
-                      </FormControl>
-
-                    </div>
-                      <Box className="ou-py-2">
-                          <input accept="image/*" type="file" id="select-image" style={{ display: 'none' }}
-                              onChange={(e) => {
-                                  setSelectedImage(e.target.files[0]);
-                              }}
+                    <Grid container spacing={2} className="ou-mb-3">
+                      <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth>
+                          <InputLabel htmlFor="medicine-form-price-label">{t('medicine:price')}</InputLabel>
+                          <OutlinedInput
+                            id="medicine-form-price"
+                            label={t('medicine:price')}
+                            startAdornment={<InputAdornment position="start">VND</InputAdornment>}
+                            error={methods.formState.errors.price}
+                            {...methods.register("price")} 
                           />
-                          <label htmlFor="select-image">
-                              <Button className="!ou-min-w-[150px]"  variant="contained" color="primary" component="span">
-                                  {t('medicine:uploadMedicineImage')}
-                              </Button>
-                          </label>
-          
-                          {imageUrl && selectedImage && (
-                              <Box className="ou-my-4 ou-border-solid" textAlign="center">
-                                  <img src={imageUrl} alt={selectedImage.name} height="250px" width={250} className="ou-mx-auto"/>
-                              </Box>
-                          )}
-                      </Box>
-                  </div>
-                  <div className="ou-text-right">
+                          {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.price?.message}</p>) : <></>}
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth>
+                          <TextField
+                              className="ou-w-full"
+                              variant="outlined"
+                              label={t('medicine:quantity')}
+                              error={methods.formState.errors.inStock}
+                              {...methods.register("inStock")} 
+                          />
+                          {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.inStock?.message}</p>) : <></>}
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={5}>
+                        <FormControl fullWidth>
+                          <TextField
+                              variant="outlined"
+                              label={t('medicine:packaging')}
+                              error={methods.formState.errors.packaging}
+                              {...methods.register("packaging")} 
+                          />
+                          {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.packaging?.message}</p>) : <></>}
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12} sm={7}>
+                        <FormControl fullWidth>
+                          <InputLabel id="prescription_filter_email">{t('medicine:category')}</InputLabel>
+                          <Select
+                            className="ou-w-full"
+                            id="form__addMedicine_category"      
+                            name="category"
+                            label={t('medicine:category')}
+                            {...methods.register("category")} 
+                          >
+                            {categories && categories.map(c =><MenuItem key={`medicine-cate-${c.id}`} value={c.id}>{c.name}</MenuItem> )}
+                          </Select>
+                          {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">
+                            {methods.formState.errors.category?.message}</p>) : <></>} 
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+
+                    <Box className="ou-py-4">
+                      <input accept="image/*" type="file" id="select-image" style={{ display: 'none' }}
+                          onChange={(e) => {
+                              setSelectedImage(e.target.files[0]);
+                          }}
+                      />
+                      <label htmlFor="select-image">
+                          <Button 
+                            className="!ou-min-w-[150px]"  
+                            variant="contained" 
+                            color="primary" 
+                            component="span"
+                            fullWidth
+                          >
+                              {t('medicine:uploadMedicineImage')}
+                          </Button>
+                      </label>
+      
+                      {imageUrl && selectedImage && (
+                          <Box className="ou-my-4 ou-border-solid" textAlign="center">
+                              <img 
+                                src={imageUrl} 
+                                alt={selectedImage.name} 
+                                style={{ 
+                                  height: 'auto',
+                                  maxWidth: '100%',
+                                  maxHeight: '250px'
+                                }} 
+                                className="ou-mx-auto"
+                              />
+                          </Box>
+                      )}
+                    </Box>
+                  </Box>
+                  <Box className="ou-text-right">
                       <Button type="submit" color="success" variant="contained">{t('common:submit')}</Button>
-                  </div>
+                  </Box>
               </form>
           </Box>
       }

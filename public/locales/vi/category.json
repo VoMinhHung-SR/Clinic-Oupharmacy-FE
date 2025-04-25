@@ -5,5 +5,6 @@
     "addCategory": "Thêm danh mục",
     "updateCategory": "Cập nhật danh mục",
     "submit": "Tạo mới",
-    "deleteCate": "Xóa danh mục"
+    "deleteCate": "Xóa danh mục",
+    "errNullCate": "Không tìm thấy danh mục hợp lệ"
 }
