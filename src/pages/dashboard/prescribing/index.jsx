@@ -1,4 +1,4 @@
-import { Button, Container, FormControl, Pagination, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material"
+import { Button, Container, FormControl, Pagination, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { Box } from "@mui/system"
 import usePrescriptionList from "../../../modules/pages/PrescriptionListComponents/hooks/usePrescription"
 import { useTranslation } from "react-i18next"
@@ -11,6 +11,9 @@ const PrescriptionList = () => {
     const {user, prescriptionList, isLoadingPrescriptionList,
     pagination, page, handleChangePage, handleOnSubmitFilter, paramsFilter} = usePrescriptionList()
     const {t, ready} = useTranslation(['prescription', 'common'])
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
     if(!ready)
         return <Box sx={{ height: "300px" }}>
@@ -28,31 +31,33 @@ const PrescriptionList = () => {
             <Helmet>
                 <title>{t('common:prescribing')}</title>
             </Helmet>
-            <Box className='ou-m-auto ou-w-full'>
-                <TableContainer component={Paper} elevation={4}>
-                <div className="ou-flex ou-items-center ou-justify-between">
-                    <div className="ou-flex ou-items-end">
-                        <h1 className="ou-text-xl ou-pl-4">{t('listOfDiagnosisForms')}</h1>
-                        <span className="ou-pl-2 ou-text-sm">{t('resultOfTotal', {result: pagination.count})}</span>
+            <Box className='ou-m-auto ou-w-full ou-px-4 ou-py-6'>
+                <TableContainer component={Paper} elevation={4} className="ou-overflow-x-auto ">
+                    <div className={`ou-flex ${isTablet ? 'ou-flex-col' : 'ou-flex-row ou-justify-center ou-items-center'} 
+                    ou-items-start ou-justify-between ou-gap-4 ou-p-4`}>
+                        <div className="ou-flex ou-items-end">
+                            <h1 className="ou-text-xl ">{t('listOfDiagnosisForms')}</h1>
+                            <span className="ou-text-sm ou-text-gray-600">{t('resultOfTotal', {result: pagination.count})}</span>
+                        </div>
+                        <Box className="ou-w-full md:ou-w-auto">
+                            <DiagnosisFilter onSubmit={handleOnSubmitFilter}
+                            doctorName={paramsFilter.doctorName} createdDate={paramsFilter.createdDate} 
+                            patientName={paramsFilter.patientName} hasPrescription={paramsFilter.hasPrescription}
+                            hasPayment={paramsFilter.hasPayment}/>
+                        </Box>
                     </div>
-                    <DiagnosisFilter onSubmit={handleOnSubmitFilter}
-                    doctorName={paramsFilter.doctorName} createdDate={paramsFilter.createdDate} 
-                    patientName={paramsFilter.patientName} hasPrescription={paramsFilter.hasPrescription}
-                    hasPayment={paramsFilter.hasPayment}/>
-
-                </div>
-                    <Table>
+                    <Table size={isMobile ? "small" : "medium"}>
                         <TableHead>
                             <TableRow>
-                                <TableCell>{t('prescriptionId')}</TableCell>
-                                <TableCell>{t('EID')}</TableCell>
+                                <TableCell className="ou-hidden md:ou-table-cell">{t('prescriptionId')}</TableCell>
+                                <TableCell className="ou-hidden md:ou-table-cell">{t('EID')}</TableCell>
                                 <TableCell align="center">{t('sign')}</TableCell>
                                 <TableCell align="center">{t('diagnosed')}</TableCell>
                                 <TableCell align="center">{t('diagnosisDate')}</TableCell>
                                 <TableCell align="center">{t('prescribingStatus')}</TableCell>
                                 <TableCell align="center">{t('paymentStatus')}</TableCell>
                                 <TableCell align="center">{t('patientName')}</TableCell>
-                                <TableCell align="center">{t('doctorName')}</TableCell>
+                                <TableCell className="ou-hidden md:ou-table-cell" align="center">{t('doctorName')}</TableCell>
                                 <TableCell align="center">{t('feature')}</TableCell>
                             </TableRow>
                         </TableHead>
@@ -73,7 +78,7 @@ const PrescriptionList = () => {
                             </TableCell> }
                             
                             {!isLoadingPrescriptionList && prescriptionList.map(diagnosisInfo => (
-                                <DiagnosedCard diagnosedInfo={diagnosisInfo} user={user}/>
+                                <DiagnosedCard diagnosedInfo={diagnosisInfo} user={user} isMobile={isMobile}/>
                             ))}
                         </TableBody>
                     </Table>
@@ -88,6 +93,7 @@ const PrescriptionList = () => {
                         sx={{ margin: "0 auto" }}
                         page={page}
                         onChange={handleChangePage}
+                        size={isMobile ? "small" : "medium"}
                         />
                     </Stack>
                     </Box>
