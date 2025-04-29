@@ -35,5 +35,6 @@
     "sendMailSuccesses": "Gửi email hoàn tất",
     "listOfExaminations": "Danh sách phiếu khám",
 
-    "resultOfTotal": "({{result}} kết quả)"
+    "resultOfTotal": "({{result}} kết quả)",
+    "appointmentList": "Danh sách đặt lịch"
 }

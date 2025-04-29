@@ -35,6 +35,7 @@
     "sendMailSuccesses": "Send mail succeed",
     "listOfExaminations": "List of examinations",
 
-    "resultOfTotal": "({{result}} results)"
+    "resultOfTotal": "({{result}} results)",
+    "appointmentList": "Appointment list"
 
 }
