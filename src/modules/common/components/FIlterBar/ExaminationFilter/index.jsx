@@ -16,69 +16,116 @@ const ExaminationFilter = (props) => {
     return (
     <>
         <Box className='ou-px-3 ou-mb-3'>
-            <form onSubmit={methods.handleSubmit((data) => props.onSubmit(data))} className='ou-flex ou-items-center ou-mt-5 ou-mb-3'>
-            
-                <FormControl className='!ou-min-w-[100px] !ou-mr-3'>
-                    <InputLabel id="exam_filter_createdDate">{t('examinations:createdDate')}</InputLabel>
-                        <Select
-
-                            id="exam_filter_created_date_label"      
-                            name="createdDate"
-                            label={('examinations:createdDate')}
-                            defaultValue={props.createdDate ? props.createdDate : 0}
-                            {...methods.register("createdDate")} 
-                        >
-                                <MenuItem value={0}>{t('examinations:descending')}</MenuItem>
-                            <MenuItem value={1}>{t('examinations:ascending')}</MenuItem>
-                        </Select>
-                </FormControl>
-
-                <FormControl className='!ou-min-w-[100px] !ou-mr-3'>
-                    <InputLabel id="exam_filter_email">{t('examinations:mailStatus')}</InputLabel>
-                        <Select
-                            id="exam_filter_email_label"      
-                            name="mailStatus"
-                            label={('examinations:mailStatus')}
-                            defaultValue={props.mailStatus ? props.mailStatus : 0}
-                            {...methods.register("mailStatus")} 
-                        >
-                            <MenuItem value={0}>{t('examinations:all')}</MenuItem>
-                            <MenuItem value={1}>{t('examinations:sent')}</MenuItem>
-                            <MenuItem value={-1}>{t('examinations:noSent')}</MenuItem>
-                        </Select>
-                </FormControl>
-
-                <FormControl className='!ou-min-w-[100px] !ou-mr-3'>
-                    <InputLabel id="exam_filter_email">{t('examinations:hasDiagnosis')}</InputLabel>
-                        <Select
-                            id="exam_filter_has_diagnosis_label"      
-                            name="hasDiagnosis"
-                            label={('examinations:hasDiagnosis')}
-                            defaultValue={props.hasDiagnosis ? props.hasDiagnosis : 0}
-                            {...methods.register("hasDiagnosis")} 
-                        >
-                            <MenuItem value={0}>{t('examinations:all')}</MenuItem>
-                            <MenuItem value={1}>{t('examinations:yes')}</MenuItem>
-                            <MenuItem value={-1}>{t('examinations:no')}</MenuItem>
-                        </Select>
-                </FormControl>
-
-
-                <FormControl  className=' !ou-mr-3'>
+            <form 
+                onSubmit={methods.handleSubmit((data) => props.onSubmit(data))}
+                className={`ou-mt-5 ou-mb-3 ${props.isMobile ? 'ou-flex ou-flex-col ou-items-stretch' : 'ou-flex ou-items-center'}`}
+            >
+                {props.isMobile ? (
+                  <div className='ou-flex ou-flex-row ou-gap-2 ou-mb-2'>
+                    <FormControl className='!ou-min-w-[100px] ou-flex-1'>
+                      <InputLabel id="exam_filter_createdDate">{t('examinations:createdDate')}</InputLabel>
+                      <Select
+                        id="exam_filter_created_date_label"
+                        name="createdDate"
+                        label={('examinations:createdDate')}
+                        defaultValue={props.createdDate ? props.createdDate : 0}
+                        {...methods.register("createdDate")}
+                      >
+                        <MenuItem value={0}>{t('examinations:descending')}</MenuItem>
+                        <MenuItem value={1}>{t('examinations:ascending')}</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl className='!ou-min-w-[100px] ou-flex-1'>
+                      <InputLabel id="exam_filter_email">{t('examinations:mailStatus')}</InputLabel>
+                      <Select
+                        id="exam_filter_email_label"
+                        name="mailStatus"
+                        label={('examinations:mailStatus')}
+                        defaultValue={props.mailStatus ? props.mailStatus : 0}
+                        {...methods.register("mailStatus")}
+                      >
+                        <MenuItem value={0}>{t('examinations:all')}</MenuItem>
+                        <MenuItem value={1}>{t('examinations:sent')}</MenuItem>
+                        <MenuItem value={-1}>{t('examinations:noSent')}</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl className='!ou-min-w-[100px] ou-flex-1'>
+                      <InputLabel id="exam_filter_email">{t('examinations:hasDiagnosis')}</InputLabel>
+                      <Select
+                        id="exam_filter_has_diagnosis_label"
+                        name="hasDiagnosis"
+                        label={('examinations:hasDiagnosis')}
+                        defaultValue={props.hasDiagnosis ? props.hasDiagnosis : 0}
+                        {...methods.register("hasDiagnosis")}
+                      >
+                        <MenuItem value={0}>{t('examinations:all')}</MenuItem>
+                        <MenuItem value={1}>{t('examinations:yes')}</MenuItem>
+                        <MenuItem value={-1}>{t('examinations:no')}</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                ) : (
+                  <>
+                    <FormControl className='!ou-min-w-[100px] !ou-mr-3'>
+                      <InputLabel id="exam_filter_createdDate">{t('examinations:createdDate')}</InputLabel>
+                      <Select
+                        id="exam_filter_created_date_label"
+                        name="createdDate"
+                        label={('examinations:createdDate')}
+                        defaultValue={props.createdDate ? props.createdDate : 0}
+                        {...methods.register("createdDate")}
+                      >
+                        <MenuItem value={0}>{t('examinations:descending')}</MenuItem>
+                        <MenuItem value={1}>{t('examinations:ascending')}</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl className='!ou-min-w-[100px] !ou-mr-3'>
+                      <InputLabel id="exam_filter_email">{t('examinations:mailStatus')}</InputLabel>
+                      <Select
+                        id="exam_filter_email_label"
+                        name="mailStatus"
+                        label={('examinations:mailStatus')}
+                        defaultValue={props.mailStatus ? props.mailStatus : 0}
+                        {...methods.register("mailStatus")}
+                      >
+                        <MenuItem value={0}>{t('examinations:all')}</MenuItem>
+                        <MenuItem value={1}>{t('examinations:sent')}</MenuItem>
+                        <MenuItem value={-1}>{t('examinations:noSent')}</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl className='!ou-min-w-[100px] !ou-mr-3'>
+                      <InputLabel id="exam_filter_email">{t('examinations:hasDiagnosis')}</InputLabel>
+                      <Select
+                        id="exam_filter_has_diagnosis_label"
+                        name="hasDiagnosis"
+                        label={('examinations:hasDiagnosis')}
+                        defaultValue={props.hasDiagnosis ? props.hasDiagnosis : 0}
+                        {...methods.register("hasDiagnosis")}
+                      >
+                        <MenuItem value={0}>{t('examinations:all')}</MenuItem>
+                        <MenuItem value={1}>{t('examinations:yes')}</MenuItem>
+                        <MenuItem value={-1}>{t('examinations:no')}</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </>
+                )}
+                <FormControl  
+                    className={`${props.isMobile ? 'ou-mb-2' : '!ou-mr-3'}`}
+                >
                     <TextField
                         required={false}
                         variant="outlined"
                         label={t('examinations:filterUserLabel')}
                         {...methods.register("kw")} 
                     />
-
                 </FormControl>
-                
                 <Tooltip title={t('examinations:search')} followCursor>
-                    <Button variant="outlined" 
+                    <Button 
+                        variant="outlined" 
                         color="success" 
                         type="submit" 
-                        className='!ou-p-3.5'
+                        className={`!ou-p-3.5 ${props.isMobile ? 'ou-w-full' : ''}`}
+                        style={props.isMobile ? {marginTop: 8} : {}}
                     >
                         <SearchIcon fontSize='medium'/>
                     </Button>
