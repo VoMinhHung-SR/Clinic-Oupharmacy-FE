@@ -10,6 +10,8 @@ import {
   TableHead,
   TableRow,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import useExaminationConfirm from "../../../modules/pages/ExaminationListComponents/ExaminationConfirm/hooks/useExaminationConfirm";
 import { useTranslation } from "react-i18next";
@@ -17,6 +19,7 @@ import ExaminationCard from "../../../modules/common/components/card/Examination
 import ExaminationFilter from "../../../modules/common/components/FIlterBar/ExaminationFilter";
 import { Helmet } from "react-helmet";
 import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem";
+
 const Examinations = () => {
   const {
     user,
@@ -32,6 +35,10 @@ const Examinations = () => {
   } = useExaminationConfirm();
 
   const { t, ready } = useTranslation(["examinations", "common", "modal"]);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   if (!ready)
     return <Box sx={{ height: "300px" }}>
@@ -49,24 +56,45 @@ const Examinations = () => {
       <Helmet>
           <title>{t('common:examinations')}</title>
       </Helmet>
-          <Box className="ou-flex ou-justify-center ou-flex-col" >
-          <TableContainer component={Paper} elevation={4}>
-
-            <div className="ou-flex ou-items-center ou-justify-between">
+      <Box className="ou-flex ou-justify-center ou-flex-col" sx={{ width: '100%', overflowX: 'auto' }}>
+          <TableContainer component={Paper} elevation={4} sx={{ 
+            maxWidth: '100%',
+            overflowX: 'auto',
+            '& .MuiTableCell-root': {
+              padding: isMobile ? '8px' : '16px',
+              fontSize: isMobile ? '0.75rem' : '0.875rem',
+            }
+          }}>
+            <div className="ou-flex ou-items-center ou-justify-between" style={{ 
+              flexDirection: isMobile ? 'column' : 'row',
+              gap: isMobile ? '1rem' : '0',
+              padding: isMobile ? '1rem' : '0'
+            }}>
               <div className="ou-flex ou-items-end">
-                <h1 className="ou-text-xl ou-pl-4">{t('listOfExaminations')}</h1>
+                <h1 className="ou-text-xl ou-pl-4" style={{ fontSize: isMobile ? '1rem' : '1.25rem' }}>
+                  {t('listOfExaminations')}
+                </h1>
                 <span className="ou-pl-2 ou-text-sm">{t('resultOfTotal', {result: pagination.count})}</span>
               </div>
 
-              {/* Filter area */}
               <ExaminationFilter onSubmit={handleOnSubmitFilter} 
-                mailStatus={paramsFilter.mailStatus} createdDate={paramsFilter.createdDate} 
-                kw={paramsFilter.kw} hasDiagnosis={paramsFilter.hasDiagnosis}
+                mailStatus={paramsFilter.mailStatus} 
+                createdDate={paramsFilter.createdDate} 
+                kw={paramsFilter.kw} 
+                hasDiagnosis={paramsFilter.hasDiagnosis}
+                isMobile={isMobile}
               />
             </div>
             
-            {/* Content area */}
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{ 
+              minWidth: isMobile ? 300 : 650,
+              '& .MuiTableCell-root': {
+                whiteSpace: isMobile ? 'nowrap' : 'normal',
+                maxWidth: isMobile ? '150px' : 'none',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }
+            }} aria-label="simple table">
               <TableHead>
                 <TableRow>
                   <TableCell>{t("id")}</TableCell>
@@ -114,7 +142,16 @@ const Examinations = () => {
             </Table>
           </TableContainer>
           {pagination.sizeNumber >= 2 && (
-            <Box sx={{ pt: 5, pb: 2 }}>
+            <Box sx={{ 
+              pt: 5, 
+              pb: 2,
+              '& .MuiPagination-root': {
+                '& .MuiPaginationItem-root': {
+                  fontSize: isMobile ? '0.75rem' : '0.875rem',
+                  padding: isMobile ? '4px' : '8px'
+                }
+              }
+            }}>
               <Stack>
                 <Pagination
                   count={pagination.sizeNumber}

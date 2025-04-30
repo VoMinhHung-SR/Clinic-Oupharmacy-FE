@@ -31,52 +31,51 @@ const ExaminationList = () =>{
     return(
     <>
         <Helmet>
-            <title>Booking list</title>
+            <title>{t('examinations:appointmentList')}</title>
         </Helmet>
-        {isLoading && examinationList.length === 0 ?
-            (<Box sx={{ minHeight: "300px" }}>
-                <Box className='ou-p-5'>
-                    <Loading></Loading>
-                </Box>
-            </Box>)
-            : examinationList.length === 0 ?
-                (<Box className="ou-relative ou-items-center  ou-h-full">
-                    <Box className='ou-absolute ou-p-5 ou-text-center 
-                    ou-flex-col ou-flex ou-justify-center ou-items-center
-                    ou-top-0 ou-bottom-0 ou-w-full ou-place-items-center'>
-                        <h2 className='ou-text-xl ou-text-red-600'>
-                            {t('errExaminationList')}
-                        </h2>
-                        <Typography className='text-center'>
-                            <h3>{t('common:goToBooking')}</h3>
-                            <Button onClick={() => { router('/booking') }}>{t('common:here')}!</Button>
-                        </Typography>
-                    </Box>
-                </Box>)
-                : (
-                    <Box sx={{ minHeight: "300px" }}>
-                        <TableContainer >
-                            <Table aria-label="simple table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>{t('id')}</TableCell>
-                                        <TableCell align="center">{t('description')}</TableCell>
-                                        <TableCell align="center">{t('createdDate')}</TableCell>
-                                        <TableCell align="center">{t('mailStatus')}</TableCell>
-                                        <TableCell align="center">{t('patientName')}</TableCell>
-                                        <TableCell align="center">{t('function')}</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {examinationList.map(examination => (
-                                        <OwnerExaminationUpdate e={examination} key={`own-e-${examination.id}`} 
-                                        onUpdateSuccess={handleChangeFlag}
-                                        handleDeleteExamination={() => handleDeleteExamination(examination.id)}/>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    {pagination.sizeNumber >= 2 && (
+        <Box sx={{ minHeight: "300px" }}>
+            <TableContainer className="md:ou-min-w-0">
+                <Table aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>{t('id')}</TableCell>
+                            <TableCell align="center">{t('description')}</TableCell>
+                            <TableCell align="center">{t('createdDate')}</TableCell>
+                            <TableCell align="center">{t('mailStatus')}</TableCell>
+                            <TableCell align="center">{t('patientName')}</TableCell>
+                            <TableCell align="center">{t('function')}</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {isLoading && (
+                            <Box sx={{ minHeight: "300px" }}>
+                                <Box className='ou-p-5'>
+                                    <Loading></Loading>
+                                </Box>
+                            </Box>
+                        )}
+                          {!isLoading && examinationList.length === 0 && (
+                            <TableCell colSpan={12} component="th" scope="row">
+                                <Typography> 
+                                    <Box className="ou-text-center ou-p-10 ou-text-red-700">
+                                        {t('examinations:errExamsNull')}
+                                        <br/>
+                                        <br/>
+                                        <Button color="primary" onClick={() => router('/booking')}>
+                                            {t('common:goToBooking')}
+                                        </Button>
+                                    </Box>
+                                </Typography>
+                            </TableCell>
+                        )}
+                        {!isLoading && examinationList.length > 0 && examinationList.map(e => (
+                            <OwnerExaminationUpdate e={e} key={`own-e-${e.id}`} 
+                            onUpdateSuccess={handleChangeFlag}
+                            handleDeleteExamination={() => handleDeleteExamination(e.id)}/>
+                        ))}
+                    </TableBody>
+                </Table>
+                {pagination.sizeNumber >= 2 && (
                         <Box sx={{ pt: 5, pb: 2 }}>
                         <Stack>
                             <Pagination
@@ -89,11 +88,8 @@ const ExaminationList = () =>{
                         </Stack>
                         </Box>
                     )}
-                    </Box>
-                 
-                )
-        }
-        
+            </TableContainer>
+        </Box>   
     </>)
 } 
 export default ExaminationList

@@ -26,6 +26,9 @@ const DashBoard = () => {
 
     if (tReady)
         return <Box sx={{ minHeight: "300px" }}>
+            <Helmet>
+                <title>Dashboard</title>
+            </Helmet>
         <Box className='ou-p-5'>
             <Loading></Loading>
         </Box>
@@ -34,40 +37,44 @@ const DashBoard = () => {
     return (
         <>
         <Helmet>
-            <title>Dashboard</title>
+            <title>{t('dashboard:dashboard')}</title>
         </Helmet>
 
         <Box>
-            <Grid container columns={{ xs: 4, sm: 6, md: 12 }} className="ou-flex ou-mb-8">
-                <Grid item xs={3} className="ou-p-2">
+            <Grid container className="ou-mb-8">
+                <Grid item xs={12} sm={6} md={3} className="ou-p-2 md:ou-pl-0" >
                     <StatisticCard icon={<AccessibilityNewIcon className="!ou-text-[60px] ou-text-blue-700"/>} 
                     title={t('dashboard:patients')} value={totalPatients} footer={t('dashboard:noteTotalPatients')}/>
                 </Grid>
 
-                <Grid item xs={3} className="ou-p-2">
+                <Grid item xs={12} sm={6} md={3} className="ou-p-2">
                     <StatisticCard icon={<AccountCircleIcon className="!ou-text-[60px] ou-text-blue-700"/>} 
                     title={t('dashboard:users')} value={totalUsers} footer={t('dashboard:noteTotalUsers')}/>
                 </Grid>
-                <Grid item xs={3} className="ou-p-2">
+                <Grid item xs={12} sm={6} md={3} className="ou-p-2">
                     <StatisticCard icon={<AssignmentIcon className="!ou-text-[60px] ou-text-blue-700"/>} 
                     title={t('dashboard:bookings')} value={`${totalExams}/${MAX_EXAM_PER_DAY}`} footer={t('dashboard:noteTotalBookings')}/>
                 </Grid>
                 
-                <Grid item xs={3} className="ou-p-2">    
+                <Grid item xs={12} sm={6} md={3} className="ou-p-2 md:ou-pr-0">    
                     <StatisticCard icon={<PillsIcon size={60} className="ou-text-blue-700"/>} 
                     title={t('dashboard:medicineUnit')} value={totalMedicineUnit} footer={t('dashboard:noteTotalMedicines')}/>
                 </Grid>
             </Grid>
             
-            <Box className="ou-flex ou-mb-4">
-                <Box component={Paper} className="ou-w-[50%] ou-p-4 ou-mr-2">
-                    {user.role === ROLE_ADMIN || ROLE_DOCTOR ?
-                     <DoctorScheduleWeeklyChart/> : <BookingChart/>}
-                </Box>
-                <Box component={Paper} className="ou-w-[50%] ou-p-4 ou-ml-2">
-                    <RevenueChart/>
-                </Box> 
-            </Box>
+            <Grid container spacing={2} className="ou-mb-4">
+                <Grid item xs={12} md={6}>
+                    <Box component={Paper} className="ou-p-4">
+                        {user.role === ROLE_ADMIN || ROLE_DOCTOR ?
+                         <DoctorScheduleWeeklyChart/> : <BookingChart/>}
+                    </Box>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Box component={Paper} className="ou-p-4">
+                        <RevenueChart/>
+                    </Box>
+                </Grid>
+            </Grid>
         </Box>
 
         </>
