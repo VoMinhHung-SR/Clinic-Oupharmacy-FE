@@ -108,6 +108,12 @@ const NavDashboard = ({ open, toggleDrawer }) => {
           name:t('doctor-schedules'),
           icon: <CalendarMonthIcon className='ou-text-white'/>,
           link: '/dashboard/doctor-schedules'
+        },      
+        {  
+          id: 'waiting-room',
+          name:t('waiting-room'),
+          icon: <CalendarMonthIcon className='ou-text-white'/>,
+          link: '/dashboard/waiting-room'
         }
       ];
     const page_ROLE_DOCTOR = [ 
@@ -132,7 +138,7 @@ const NavDashboard = ({ open, toggleDrawer }) => {
         link: '/dashboard/medicines'
       }
     ] 
-    const page_ROLE_NURSE= [ 
+    const page_ROLE_NURSE= [
       {  
         id: 'payments',
         name:t('payments'),

@@ -51,6 +51,7 @@ import MedicineList from './pages/dashboard/medicines'
 import DoctorSchedules from './pages/dashboard/doctor-schedules'
 import PatientManagement from './pages/profile/patient-list'
 import OnlineWaitingRoom from './pages/waiting-room/sub'
+import DashboardWaitingRoom from './pages/dashboard/waiting-room'
 export const userContext = createContext()
 const queryClient = new QueryClient()
 function App() {
@@ -126,6 +127,7 @@ function App() {
                                     <Route path='/dashboard/categories' element={<CategoryList/>}/>
                                     <Route path='/dashboard/doctor-schedules' element={<DoctorSchedules/>}/>  
                                     <Route path='/dashboard/medicines' element={<MedicineList/>}/> 
+                                    <Route path='/dashboard/waiting-room' element={<DashboardWaitingRoom/>}/>
                                   </Route>
 
                                   {/* Accepted user.role = ROLE_DOCTOR */}

@@ -18,8 +18,7 @@ const useOnlineWaitingRoom = (date = CURRENT_DATE) => {
         setError(null);
 
         const formattedDate = date.toISOString().split('T')[0];
-        const docRef = doc(db, `${APP_ENV}_doctor_schedule`, formattedDate);
-        
+        const docRef = doc(db, `${APP_ENV}_doctor_schedule`, '2025-05-07');
         const unsubscribe = onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
