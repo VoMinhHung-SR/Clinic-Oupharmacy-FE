@@ -21,10 +21,19 @@ const TicketCard = ({ ticket }) => {
           borderLeft: `4px solid ${style.color}`,
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          cursor: 'pointer'
         }}
       >
-        <Typography variant="body2">{ticket.patientName} - {ticket.id}</Typography>
+        <Typography variant="body2" sx={{
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}>
+          <b>{ticket.doctorName ? `${t('drTitle')} ${ticket.doctorName} -` : ''}</b> {ticket.patientName} - {ticket.id}
+        </Typography>
         <Typography 
           variant="caption" 
           sx={{ 

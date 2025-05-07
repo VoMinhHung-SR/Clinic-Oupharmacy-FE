@@ -35,5 +35,6 @@
     "title": "Online Waiting Room",
     "morning": "Morning Shift",
     "afternoon": "Afternoon Shift",
-    "noAppointment": "No appointment"
+    "noAppointment": "No appointment",
+    "drTitle": "Dr."
 }

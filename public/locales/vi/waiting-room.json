@@ -35,5 +35,6 @@
     "title": "Phòng chờ trực tuyến",
     "morning": "Ca sáng",
     "afternoon": "Ca chiều",
-    "noAppointment": "Không có lịch hẹn"
+    "noAppointment": "Không có lịch hẹn",
+    "drTitle": "Bs."
 }

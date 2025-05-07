@@ -61,7 +61,8 @@ const DashboardWaitingRoom = () => {
         }).map(slot => ({
           id: slot.appointment_info.id,
           patientName: slot.patient_info.name,
-          status: slot.status
+          status: slot.status,
+          doctorName: slot.appointment_info.doctor_info.doctor_name
         }))
       );
       return tickets;

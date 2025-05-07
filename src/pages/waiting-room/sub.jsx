@@ -11,8 +11,7 @@ import SkeletonListLineItem from "../../modules/common/components/skeletons/list
 
 const OnlineWaitingRoom = () => {
   const { t } = useTranslation(['waiting-room']);
-  const { schedules, loading, error } = useOnlineWaitingRoom();
-
+  const { schedules, loading, error } = useOnlineWaitingRoom();;
   if (loading) 
     return(
   <Container>
@@ -63,7 +62,8 @@ const OnlineWaitingRoom = () => {
       }).map(slot => ({
         id: slot.appointment_info.id,
         patientName: slot.patient_info.name,
-        status: slot.status
+        status: slot.status,
+        doctorName: slot.appointment_info.doctor_info.doctor_name
       }))
     );
     return tickets;
@@ -76,7 +76,7 @@ const OnlineWaitingRoom = () => {
       </Helmet>
       
       <Paper elevation={3}>
-        <Box sx={{ p: 2, bgcolor: '#1D4ED8', color: '#fff', textAlign: 'center' }}>
+        <Box sx={{ p: 2, bgcolor: '#1976d2', color: '#fff', textAlign: 'center' }}>
           <Typography variant="h6">{t('title')} - {moment(CURRENT_DATE).format('DD/MM/YYYY')}</Typography>
         </Box>
         <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9', p: '10px' }}>{t('morning')}</Box>
