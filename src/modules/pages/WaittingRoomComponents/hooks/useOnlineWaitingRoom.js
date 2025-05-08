@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../../config/firebase';
 import { APP_ENV, CURRENT_DATE } from '../../../../lib/constants';
 
@@ -18,7 +18,7 @@ const useOnlineWaitingRoom = (date = CURRENT_DATE) => {
         setError(null);
 
         const formattedDate = date.toISOString().split('T')[0];
-        const docRef = doc(db, `${APP_ENV}_doctor_schedule`, '2025-05-07');
+        const docRef = doc(db, `${APP_ENV}_doctor_schedule`, formattedDate);
         const unsubscribe = onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
@@ -47,10 +47,44 @@ const useOnlineWaitingRoom = (date = CURRENT_DATE) => {
         };
     }, [date]);
 
+    const updateTimeSlot = async (appointmentId, newStartTime, newEndTime) => {
+        try {
+            const formattedDate = date.toISOString().split('T')[0];
+            const docRef = doc(db, `${APP_ENV}_doctor_schedule`, formattedDate);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                let updated = false;
+                console.log('Looking for appointmentId:', appointmentId);
+                console.log('All slot ids:', data.schedules.flatMap(sch => sch.time_slots.map(slot => slot.appointment_info.id)));
+                data.schedules.forEach(schedule => {
+                    schedule.time_slots.forEach(slot => {
+                        if (slot.appointment_info && slot.appointment_info.id == appointmentId) {
+                            slot.start_time = newStartTime + ':00';
+                            slot.end_time = newEndTime + ':00';
+                            updated = true;
+                        }
+                    });
+                });
+                if (updated) {
+                    await updateDoc(docRef, { schedules: data.schedules });
+                } else {
+                    throw new Error('Appointment not found');
+                }
+            } else {
+                throw new Error('Document not found');
+            }
+        } catch (err) {
+            console.error('Error updating time slot:', err);
+            throw err;
+        }
+    };
+
     return {
         schedules,
         loading,
-        error
+        error,
+        updateTimeSlot
     };
 };
 
