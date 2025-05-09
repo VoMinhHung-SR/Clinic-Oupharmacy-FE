@@ -36,5 +36,7 @@
     "morning": "Ca sáng",
     "afternoon": "Ca chiều",
     "noAppointment": "Không có lịch hẹn",
-    "drTitle": "Bs."
+    "drTitle": "Bs.",
+
+    "confirmUpdateTimeSlot": "Xác nhận cập nhật thời gian"
 }

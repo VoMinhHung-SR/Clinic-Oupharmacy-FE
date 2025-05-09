@@ -36,5 +36,7 @@
     "morning": "Morning Shift",
     "afternoon": "Afternoon Shift",
     "noAppointment": "No appointment",
-    "drTitle": "Dr."
+    "drTitle": "Dr.",
+
+    "confirmUpdateTimeSlot": "Confirm update time slot"
 }

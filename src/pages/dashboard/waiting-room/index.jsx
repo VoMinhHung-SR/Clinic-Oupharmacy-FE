@@ -50,6 +50,10 @@ const DashboardWaitingRoom = () => {
     };
 
     const handleTicketMove = async (ticket, newTimeSlot) => {
+      // Store the previous state to revert if needed
+      const previousState = { ...ticketsByTimeSlot };
+      
+      // Update UI immediately
       setTicketsByTimeSlot(prevTickets => {
         const newTickets = { ...prevTickets };
         Object.keys(newTickets).forEach(slot => {
@@ -61,9 +65,15 @@ const DashboardWaitingRoom = () => {
 
       const [newStartTime, newEndTime] = newTimeSlot.split('-');
       try {
-        await updateTimeSlot(ticket.id, newStartTime, newEndTime);
+        const result = await updateTimeSlot(ticket.id, newStartTime, newEndTime);
+        // If user cancels, revert the state
+        if (!result) {
+          setTicketsByTimeSlot(previousState);
+        }
       } catch (err) {
         console.error('Update Firestore failed:', err);
+        // If there's an error, revert the state
+        setTicketsByTimeSlot(previousState);
       }
     };
     if (loading) 
