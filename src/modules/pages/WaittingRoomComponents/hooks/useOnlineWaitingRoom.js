@@ -50,7 +50,7 @@ const useOnlineWaitingRoom = (date = CURRENT_DATE) => {
         };
     }, [date]);
 
-    const updateTimeSlot = async (appointmentId, newStartTime, newEndTime) => {
+    const updateTimeSlot = async (appointmentId, newStartTime, newEndTime, session) => {
         const handleUpdate = async () => {
             try {
                 const formattedDate = date.toISOString().split('T')[0];
@@ -59,31 +59,36 @@ const useOnlineWaitingRoom = (date = CURRENT_DATE) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     let updated = false;
-                    console.log('Looking for appointmentId:', appointmentId);
-                    console.log('All slot ids:', data.schedules.flatMap(sch => sch.time_slots.map(slot => slot.appointment_info.id)));
-                    data.schedules.forEach(schedule => {
-                        schedule.time_slots.forEach(slot => {
-                            if (slot.appointment_info && slot.appointment_info.id == appointmentId) {
-                                slot.start_time = newStartTime + ':00';
-                                slot.end_time = newEndTime + ':00';
-                                updated = true;
-                            }
-                        });
+
+                    const schedule = data.schedules.find(
+                        sch => sch.session === session
+                    );
+
+                    if (!schedule) {
+                        createToastMessage({message: t('waiting-room:noSessionFound'), type: TOAST_ERROR});
+                        return false;
+                    }
+
+                    // Tìm slot đúng appointmentId trong schedule này
+                    schedule.time_slots.forEach(slot => {
+                        if (slot.appointment_info && slot.appointment_info.id == appointmentId) {
+                            slot.start_time = newStartTime + ':00';
+                            slot.end_time = newEndTime + ':00';
+                            updated = true;
+                        }
                     });
+
                     if (updated) {
                         await updateDoc(docRef, { schedules: data.schedules });
-                        createToastMessage({message: t('modal:updateSuccess'),
-                            type: TOAST_SUCCESS});
+                        createToastMessage({message: t('modal:updateSuccess'), type: TOAST_SUCCESS});
                         return true;
                     } else {
-                        throw new Error('Appointment not found');
+                        createToastMessage({message: t('waiting-room:appointmentNotFound'), type: TOAST_ERROR});
+                        return false;
                     }
-                } else {
-                    throw new Error('Document not found');
                 }
             } catch (err) {
-                createToastMessage({message: t('modal:updateFailed'),
-                    type: TOAST_ERROR});
+                createToastMessage({message: t('modal:updateFailed'), type: TOAST_ERROR});
                 return false;
             }
         }

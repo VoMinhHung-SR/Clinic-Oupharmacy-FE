@@ -38,5 +38,8 @@
     "noAppointment": "Không có lịch hẹn",
     "drTitle": "Bs.",
 
-    "confirmUpdateTimeSlot": "Xác nhận cập nhật thời gian"
+    "confirmUpdateTimeSlot": "Xác nhận cập nhật thời gian",
+    "noSessionFound": "Không tìm thấy phiên làm việc",
+    "appointmentNotFound": "Không tìm thấy lịch hẹn",
+    "docNotFound": "Không tìm thấy bác sĩ"
 }
