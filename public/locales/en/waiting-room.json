@@ -35,5 +35,11 @@
     "title": "Online Waiting Room",
     "morning": "Morning Shift",
     "afternoon": "Afternoon Shift",
-    "noAppointment": "No appointment"
+    "noAppointment": "No appointment",
+    "drTitle": "Dr.",
+
+    "confirmUpdateTimeSlot": "Confirm update time slot",
+    "noSessionFound": "No session found",
+    "appointmentNotFound": "Appointment not found",
+    "docNotFound": "Doctor not found"
 }

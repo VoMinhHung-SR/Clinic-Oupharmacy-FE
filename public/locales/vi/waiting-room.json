@@ -35,5 +35,11 @@
     "title": "Phòng chờ trực tuyến",
     "morning": "Ca sáng",
     "afternoon": "Ca chiều",
-    "noAppointment": "Không có lịch hẹn"
+    "noAppointment": "Không có lịch hẹn",
+    "drTitle": "Bs.",
+
+    "confirmUpdateTimeSlot": "Xác nhận cập nhật thời gian",
+    "noSessionFound": "Không tìm thấy phiên làm việc",
+    "appointmentNotFound": "Không tìm thấy lịch hẹn",
+    "docNotFound": "Không tìm thấy bác sĩ"
 }

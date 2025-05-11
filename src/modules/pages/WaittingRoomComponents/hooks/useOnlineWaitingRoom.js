@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../../config/firebase';
-import { APP_ENV, CURRENT_DATE } from '../../../../lib/constants';
+import { APP_ENV, CURRENT_DATE, TOAST_SUCCESS, TOAST_ERROR } from '../../../../lib/constants';
+import { ConfirmAlert } from '../../../../config/sweetAlert2';
+import createToastMessage from '../../../../lib/utils/createToastMessage';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Hook to get real-time online waiting room data
@@ -12,14 +15,14 @@ const useOnlineWaitingRoom = (date = CURRENT_DATE) => {
     const [schedules, setSchedules] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const {t} = useTranslation(['waiting-room', 'modal'])
 
     useEffect(() => {
         setLoading(true);
         setError(null);
 
         const formattedDate = date.toISOString().split('T')[0];
-        const docRef = doc(db, `${APP_ENV}_doctor_schedule`, formattedDate);
-        
+        const docRef = doc(db, `${APP_ENV}_doctor_schedule`, '2025-05-07');
         const unsubscribe = onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
@@ -41,17 +44,69 @@ const useOnlineWaitingRoom = (date = CURRENT_DATE) => {
                 setLoading(false);
             }
         );
-        
         // Cleanup function
         return () => {
             unsubscribe();
         };
     }, [date]);
 
+    const updateTimeSlot = async (appointmentId, newStartTime, newEndTime, session) => {
+        const handleUpdate = async () => {
+            try {
+                const formattedDate = date.toISOString().split('T')[0];
+                const docRef = doc(db, `${APP_ENV}_doctor_schedule`, '2025-05-07');
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    let updated = false;
+
+                    const schedule = data.schedules.find(
+                        sch => sch.session === session
+                    );
+
+                    if (!schedule) {
+                        createToastMessage({message: t('waiting-room:noSessionFound'), type: TOAST_ERROR});
+                        return false;
+                    }
+
+                    // Tìm slot đúng appointmentId trong schedule này
+                    schedule.time_slots.forEach(slot => {
+                        if (slot.appointment_info && slot.appointment_info.id == appointmentId) {
+                            slot.start_time = newStartTime + ':00';
+                            slot.end_time = newEndTime + ':00';
+                            updated = true;
+                        }
+                    });
+
+                    if (updated) {
+                        await updateDoc(docRef, { schedules: data.schedules });
+                        createToastMessage({message: t('modal:updateSuccess'), type: TOAST_SUCCESS});
+                        return true;
+                    } else {
+                        createToastMessage({message: t('waiting-room:appointmentNotFound'), type: TOAST_ERROR});
+                        return false;
+                    }
+                }
+            } catch (err) {
+                createToastMessage({message: t('modal:updateFailed'), type: TOAST_ERROR});
+                return false;
+            }
+        }
+        
+        return ConfirmAlert(t('waiting-room:confirmUpdateTimeSlot'),
+            t('modal:noThrowBack'),t('modal:yes'),t('modal:cancel'),
+            async () => {
+                const result = await handleUpdate();
+                return result;
+            }, 
+            () => { return false; });
+    };
+
     return {
         schedules,
         loading,
-        error
+        error,
+        updateTimeSlot
     };
 };
 
