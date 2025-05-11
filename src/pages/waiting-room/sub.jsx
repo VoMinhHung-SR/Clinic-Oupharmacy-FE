@@ -2,22 +2,45 @@ import { Box, Container, Paper, Typography, Grid } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import React, { useMemo } from "react";
-
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import PendingIcon from '@mui/icons-material/Pending';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import useOnlineWaitingRoom from "../../modules/pages/WaittingRoomComponents/hooks/useOnlineWaitingRoom";
 import TimeSlotGrid from "../../modules/pages/WaittingRoomComponents/TimeSlotGrid";
 import { CURRENT_DATE } from "../../lib/constants";
 import moment from "moment";
+import SkeletonListLineItem from "../../modules/common/components/skeletons/listLineItem";
 
 
 const OnlineWaitingRoom = () => {
   const { t } = useTranslation(['waiting-room']);
-  const { schedules, loading, error } = useOnlineWaitingRoom();
+  const { schedules, loading, error } = useOnlineWaitingRoom();;
+  if (loading) 
+    return(
+  <Container>
+    <Paper elevation={3}>
+    <Box sx={{ p: 2, bgcolor: '#1D4ED8', color: '#fff', textAlign: 'center' }}>
+          <Typography variant="h6">{t('title')} - {moment(CURRENT_DATE).format('DD/MM/YYYY')}</Typography>
+        </Box>
+      <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9', p: '10px' }}>{t('morning')}</Box>
+      <Grid container>
+        <SkeletonListLineItem height="200px" width="25%" />
+        <SkeletonListLineItem height="200px" width="25%"/>
+        <SkeletonListLineItem height="200px" width="25%"/>
+        <SkeletonListLineItem height="200px" width="25%"/>
+      </Grid>
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+      <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9', p: '10px' }}>{t('afternoon')}</Box>
+      <Grid container>
+        <SkeletonListLineItem height="200px" width="25%"/>
+        <SkeletonListLineItem height="200px" width="25%"/>
+        <SkeletonListLineItem height="200px" width="25%"/>
+        <SkeletonListLineItem height="200px" width="25%"/>
+      </Grid>
+    </Paper>
+  </Container>
+  )  
+
+  if (error) return <div>
+    Error: {error}
+  </div>;
 
   // Time slots with formatted time
   const timeSlots = [
@@ -39,7 +62,8 @@ const OnlineWaitingRoom = () => {
       }).map(slot => ({
         id: slot.appointment_info.id,
         patientName: slot.patient_info.name,
-        status: slot.status
+        status: slot.status,
+        doctorName: slot.appointment_info.doctor_info.doctor_name
       }))
     );
     return tickets;
@@ -51,11 +75,10 @@ const OnlineWaitingRoom = () => {
         <title>{t('title')} </title>
       </Helmet>
       
-      <Paper elevation={3} sx={{ mt: 4 }}>
-        <Box sx={{ p: 2, bgcolor: '#1D4ED8', color: '#fff', textAlign: 'center' }}>
+      <Paper elevation={3}>
+        <Box sx={{ p: 2, bgcolor: '#1976d2', color: '#fff', textAlign: 'center' }}>
           <Typography variant="h6">{t('title')} - {moment(CURRENT_DATE).format('DD/MM/YYYY')}</Typography>
         </Box>
-        
         <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9', p: '10px' }}>{t('morning')}</Box>
         <Grid container>
           {timeSlots.slice(0, 4).map((timeSlot, index) => (
