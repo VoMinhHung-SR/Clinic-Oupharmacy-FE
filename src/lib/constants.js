@@ -55,3 +55,6 @@ export const TOAST_WARNING = "warning"
 export const WAITING_STATUS_UNDONE = 'undone'
 export const WAITING_STATUS_PROCESSING = 'processing'
 export const WAITING_STATUS_DONE = 'done'
+
+export const WAITING_SESSION_MORNING = 'morning'
+export const WAITING_SESSION_AFTERNOON = 'afternoon'
