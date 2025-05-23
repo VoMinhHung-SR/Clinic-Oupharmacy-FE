@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import useOnlineWaitingRoom from "../../../modules/pages/WaittingRoomComponents/hooks/useOnlineWaitingRoom";
 import { Paper, Typography, Grid, Box } from "@mui/material";
 import moment from "moment";
-import { CURRENT_DATE } from "../../../lib/constants";
+import { CURRENT_DATE, WAITING_SESSION_AFTERNOON, WAITING_SESSION_MORNING } from "../../../lib/constants";
 import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem";
 import { Helmet } from "react-helmet";
 import TimeSlotGrid from "../../../modules/pages/WaittingRoomComponents/TimeSlotGrid";
@@ -12,7 +12,7 @@ const DashboardWaitingRoom = () => {
     const { t } = useTranslation(['waiting-room']);
     const { schedules, loading, error, updateTimeSlot } = useOnlineWaitingRoom();
     const [ticketsByTimeSlot, setTicketsByTimeSlot] = useState({});
-    // Time slots with formatted time
+   
     const timeSlots = [
       "08:00-09:00", 
       "09:00-10:00", 
@@ -39,11 +39,15 @@ const DashboardWaitingRoom = () => {
         schedule.time_slots.filter(slot => {
           const slotTime = `${slot.start_time.slice(0, 5)}-${slot.end_time.slice(0, 5)}`;
           return slotTime === timeSlot;
-        }).map(slot => ({
+        }).map(slot => ({ // ticketObject: {id, patientName, status, session, doctorName, doctorId, timeSlot}
           id: slot.appointment_info.id,
           patientName: slot.patient_info.name,
           status: slot.status,
-          doctorName: slot.appointment_info.doctor_info.doctor_name
+          session: Number(slot.start_time.slice(0, 2)) < 12 ? 
+            WAITING_SESSION_MORNING : WAITING_SESSION_AFTERNOON,
+          doctorName: slot.appointment_info.doctor_info.doctor_name,
+          doctorId: slot.appointment_info.doctor_info.doctor_id,
+          timeSlot: `${slot.start_time.slice(0, 5)}-${slot.end_time.slice(0, 5)}`
         }))
       );
       return tickets;
@@ -62,7 +66,8 @@ const DashboardWaitingRoom = () => {
 
       const [newStartTime, newEndTime] = newTimeSlot.split('-');
       try {
-        const result = await updateTimeSlot(ticket.id, newStartTime, newEndTime, session);
+        const result = await updateTimeSlot(ticket.id, newStartTime, newEndTime, 
+          ticket.doctorId, ticket.session, session);
         if (!result) {
           setTicketsByTimeSlot(previousState);
         }
@@ -129,7 +134,9 @@ const DashboardWaitingRoom = () => {
                 key={timeSlot} 
                 timeSlot={timeSlot} 
                 tickets={ticketsByTimeSlot[timeSlot] || []} 
-                onTicketMove={(ticket, newTimeSlot) => handleTicketMove(ticket, newTimeSlot, 'afternoon')}
+                onTicketMove={(ticket, newTimeSlot) => {
+                  handleTicketMove(ticket, newTimeSlot, 'afternoon')
+                }}
               />
             ))}
           </Grid>

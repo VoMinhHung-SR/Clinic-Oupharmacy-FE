@@ -91,6 +91,7 @@ const TimeSlotGrid = ({ timeSlot, tickets, onTicketMove }) => {
     
       try {
         const ticket = JSON.parse(data);
+        if (ticket.timeSlot === timeSlot) return;
         if (onTicketMove) {
           onTicketMove(ticket, timeSlot);
         }
