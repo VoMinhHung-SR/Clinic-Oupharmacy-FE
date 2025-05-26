@@ -39,8 +39,7 @@ export const GOONGMAP_APITOKEN = import.meta.env.VITE_GOONGMAP_APIKEY
 export const GOONGMAP_MAPTOKEN = import.meta.env.VITE_GOONGMAP_MAYKEY
 export const MAX_EXAM_PER_DAY = 30
 
-export const BACKEND_BASEURL = 'http://127.0.0.1:8000'
-export const PRD_BACKEND_BASEURL = 'https://oupharmacy-vominhhung.up.railway.app'
+export const BACKEND_BASEURL = import.meta.env.VITE_SERVER
 
 export const ERROR_CLOUDINARY = 'https://res.cloudinary.com/dl6artkyb/null'
 export const AVATAR_DEFAULT = 'https://res.cloudinary.com/dl6artkyb/image/upload/v1666353307/OUPharmacy/logo_oupharmacy_kz2yzd.png'
