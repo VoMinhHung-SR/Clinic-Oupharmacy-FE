@@ -14,8 +14,8 @@ A responsive and modern frontend application for managing clinic and pharmacy op
 - 📅 **Appointment Booking**  
   Real-time booking system with availability tracking.
 
-- 💊 **Medicine Inventory**  
-  Track stock, usage, and manage medicine units.
+- 🌐 **Multi-language Support**  
+  Supports both English and Vietnamese languages for better accessibility and localization.
 
 - 🔐 **Authentication**  
   JWT-based login system with role-based routing.
@@ -44,13 +44,28 @@ A responsive and modern frontend application for managing clinic and pharmacy op
 ```
 Clinic-Oupharmacy-FE/
   ├── src/
-  │ ├── assets/ # Images & static assets
-  │ ├── components/ # Reusable UI components
-  │ ├── contexts/ # Global state providers
-  │ ├── pages/ # Route-level pages (Dashboard, Login, etc.)
-  │ ├── services/ # API handlers using Axios
-  │ ├── utils/ # Utility functions
-  │ └── App.jsx # Main app entry point
+    ├── assets/ # Static assets (images, logos, etc.)
+    ├── config/ # Configuration files (APIs, Firebase, Alerts, etc.)
+    │ ├── APIs.js # All API endpoints
+    │ ├── firebase.js # Firebase configuration
+    │ └── ...
+    ├── lib/ # Shared utilities and logic
+    │ ├── assets/ # Additional shared assets
+    │ ├── context/ # React Context providers
+    │ ├── hooks/ # Custom React hooks
+    │ ├── icon/ # Icon components or library
+    │ ├── reducer/ # Redux reducers
+    │ ├── redux/ # Redux store setup and slices
+    │ ├── services/ # API service logic
+    │ ├── utils/ # Utility functions/helpers
+    │ ├── constants.js # Centralized app constants
+    │ └── schema.js # Yup validation schemas
+    ├── modules/ # High-level modules
+    │ ├── common/ # Reusable module components
+    │ └── pages/ # Page-level modules and layouts
+    ├── pages/ # Main route components
+    ├── App.jsx # Root React component
+    ├── i18n.js # Internationalization (EN/VI language support)
   ├── public/
   ├── .env # Environment variables
   ├── vite.config.js
