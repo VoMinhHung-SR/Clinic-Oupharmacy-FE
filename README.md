@@ -41,8 +41,7 @@ A responsive and modern frontend application for managing clinic and pharmacy op
 
 ## 📁 Project Structure
 
-```bash
-
+```
 Clinic-Oupharmacy-FE/
 ├── src/
 │ ├── assets/ # Images & static assets
@@ -56,7 +55,6 @@ Clinic-Oupharmacy-FE/
 ├── .env # Environment variables
 ├── vite.config.js
 ├── package.json
-
 ---
 
 ## 🔗 Other Resources
