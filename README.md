@@ -43,19 +43,21 @@ A responsive and modern frontend application for managing clinic and pharmacy op
 
 ```
 Clinic-Oupharmacy-FE/
-├── src/
-│ ├── assets/ # Images & static assets
-│ ├── components/ # Reusable UI components
-│ ├── contexts/ # Global state providers
-│ ├── pages/ # Route-level pages (Dashboard, Login, etc.)
-│ ├── services/ # API handlers using Axios
-│ ├── utils/ # Utility functions
-│ └── App.jsx # Main app entry point
-├── public/
-├── .env # Environment variables
-├── vite.config.js
-├── package.json
----
+  ├── src/
+  │ ├── assets/ # Images & static assets
+  │ ├── components/ # Reusable UI components
+  │ ├── contexts/ # Global state providers
+  │ ├── pages/ # Route-level pages (Dashboard, Login, etc.)
+  │ ├── services/ # API handlers using Axios
+  │ ├── utils/ # Utility functions
+  │ └── App.jsx # Main app entry point
+  ├── public/
+  ├── .env # Environment variables
+  ├── vite.config.js
+  ├── package.json
+```
+
+--- 
 
 ## 🔗 Other Resources
 
