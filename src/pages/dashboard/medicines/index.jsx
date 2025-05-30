@@ -61,7 +61,7 @@ const MedicineList = () => {
   return (
       <>
         <Helmet>
-            <title>Medicine List</title>
+            <title>{t('medicine:medicineList')}</title>
         </Helmet>
             <Box className="ou-flex ou-flex-col" >
             <TableContainer component={Paper} elevation={4}>
@@ -77,7 +77,7 @@ const MedicineList = () => {
                       color="success" 
                       variant="contained"
                       onClick={() => {handleOpenModal()}}
-                      className="ou-w-full sm:ou-w-auto"
+                      className="ou-w-full sm:ou-w-auto !ou-py-4"
                     >
                         <AddCircleOutlineIcon className="ou-mr-1"/> {t('medicine:addMedicine')}
                     </Button>

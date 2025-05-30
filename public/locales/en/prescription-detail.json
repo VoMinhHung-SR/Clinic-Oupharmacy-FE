@@ -5,6 +5,7 @@
     "prescribingExist":"The list prescribing ID of this exam sheet",
     "errNullPrescribing":"There is no prescribing exist",
     "errNullPrescription":"There is no prescription exist",
+    "errNullCategory":"There is no category exist",
     "basicInformation": "Basic information",
     "patientFullName": "Patient full name",
     "dateOfBirth": "Date of birth",
