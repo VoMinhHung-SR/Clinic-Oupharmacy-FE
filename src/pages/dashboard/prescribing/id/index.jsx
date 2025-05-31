@@ -2,7 +2,6 @@ import { Button, Container, FormControl, Grid, Paper, TextField, Tooltip, Typogr
 import { Box } from "@mui/system"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
-import PrescriptionDetailCard from "../../../../modules/common/components/card/PrescriptionDetailCard"
 import Loading from "../../../../modules/common/components/Loading"
 import usePrescriptionDetail from "../../../../modules/pages/PrescriptionDetailComponents/hooks/usePrescriptionDetail"
 import { Helmet } from "react-helmet"
@@ -12,12 +11,12 @@ import { useContext, useState } from "react"
 import PrescribingContext from "../../../../lib/context/PrescribingContext"
 import UserContext from "../../../../lib/context/UserContext"
 import EditPrescriptionModal from "../../../../modules/pages/PrescriptionDetailComponents/EditPrescriptionModal"
+import MedicinesHome from "../../../../modules/pages/ProductComponents/MedicinesHome"
 
 const PrescriptionDetail = () => {
     const {user} = useContext(UserContext)
     const {medicinesSubmit, handleAddPrescriptionDetail, handleUpdateMedicinesSubmit,
-        resetMedicineStore
-     } = useContext(PrescribingContext)
+        resetMedicineStore, addMedicine} = useContext(PrescribingContext)
     
     const {isLoadingPrescriptionDetail, prescriptionDetail} = usePrescriptionDetail()
     const router = useNavigate()
@@ -65,7 +64,7 @@ const PrescriptionDetail = () => {
     return (
         <>
             <Helmet>
-                <title>Prescribing</title>
+                <title>{t('prescription-detail:prescriptionDetail')}</title>
             </Helmet>
 
             {isLoadingPrescriptionDetail && prescriptionDetail === null ?
@@ -93,8 +92,13 @@ const PrescriptionDetail = () => {
                             <Grid container className="ou-p-8">
                                 <Grid item xs={8} className="ou-pr-6">
                                     <Box>
-                                        <PrescriptionDetailCard examID={prescriptionDetail.examination.id} 
-                                        recipientID={prescriptionDetail.examination.user.id} />
+                                    <MedicinesHome 
+                                        onAddMedicineLineItem={addMedicine} 
+                                        actionButton={
+                                            <Button fullWidth className="!ou-p-3 !ou-bg-blue-600 !ou-text-white"> Prescribing 
+                                            </Button>
+                                        }
+                                    />
                                     </Box>
                                 </Grid>
                                 <Grid item xs={4} className="ou-w-[100%]">
@@ -115,7 +119,7 @@ const PrescriptionDetail = () => {
                                         </Box>
                                         {/* Medicine Submit area */}
                                         
-                                        <Grid item component={Paper} elevation={5} >     
+                                        <Grid item component={Paper} elevation={5}>
                                             <form
                                                 className="ou-p-5 ou-w-full">
                                                 <h1 className="ou-text-center ou-text-xl ou-pb-8 ou-font-semibold">{t('prescriptionDetail')}</h1>

@@ -18,5 +18,6 @@
     "confirmDeleteMedicineUnit":"Xác nhận xóa đơn vị thuốc này",
     "resultOfTotal": "({{result}} kết quả)",
     "all": "Tất cả",
-    "search": "Tìm kiếm"
+    "search": "Tìm kiếm",
+    "medicineList": "Danh sách thuốc"
 }

@@ -18,5 +18,6 @@
     "confirmDeleteMedicineUnit":"Confirm to delete this medicine unit",
     "resultOfTotal": "({{result}} results)",
     "all": "All",
-    "search": "Search"
+    "search": "Search",
+    "medicineList": "Medicine List"
 }

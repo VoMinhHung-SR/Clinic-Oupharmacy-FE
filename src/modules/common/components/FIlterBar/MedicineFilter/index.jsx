@@ -18,7 +18,7 @@ const MedicineFilter = (props) => {
 
     return (
         <>
-            <Box className='ou-px-3 ou-mb-3'>
+            <Box className='ou-px-3'>
                 <form onSubmit={methods.handleSubmit((data) => props.onSubmit(data))} 
                 className='ou-flex ou-items-center ou-mt-5 ou-mb-3'>
                     <FormControl className='!ou-min-w-[100px] !ou-mr-3'>
