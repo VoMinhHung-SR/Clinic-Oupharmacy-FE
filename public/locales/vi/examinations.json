@@ -28,6 +28,7 @@
     "hasDiagnosis":"Chẩn đoán",
     "yes": "Có",
     "no": "Không",
+    "filter": "Bộ lọc",
 
     "filterUserLabel": "Email người dùng",
     "confirmDelete":"Xác nhận xóa phiếu đặt lịch",

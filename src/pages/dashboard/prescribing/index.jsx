@@ -1,4 +1,4 @@
-import { Button, Container, FormControl, Pagination, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Badge, Button, Container, FormControl, Pagination, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { Box } from "@mui/system"
 import usePrescriptionList from "../../../modules/pages/PrescriptionListComponents/hooks/usePrescription"
 import { useTranslation } from "react-i18next"
@@ -6,6 +6,12 @@ import { Helmet } from "react-helmet"
 import DiagnosisFilter from "../../../modules/common/components/FIlterBar/DiagnosisFilter"
 import DiagnosedCard from "../../../modules/common/components/card/DiagnosedCard"
 import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem"
+import FilterListIcon from '@mui/icons-material/FilterList';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useState, memo } from "react";
+import { Collapse } from "@mui/material";
+
+const MemoizedDiagnosisFilter = memo(DiagnosisFilter);
 
 const PrescriptionList = () => {
     const {user, prescriptionList, isLoadingPrescriptionList,
@@ -14,7 +20,7 @@ const PrescriptionList = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const isTablet = useMediaQuery(theme.breakpoints.down('md'));
-
+    const [showFilter, setShowFilter] = useState(false);
     if(!ready)
         return <Box sx={{ height: "300px" }}>
             <Helmet>
@@ -31,21 +37,33 @@ const PrescriptionList = () => {
             <Helmet>
                 <title>{t('common:prescribing')}</title>
             </Helmet>
-            <Box className='ou-m-auto ou-w-full ou-px-4 ou-py-6'>
+            <Box className='ou-m-auto ou-w-full'>
                 <TableContainer component={Paper} elevation={4} className="ou-overflow-x-auto ">
                     <div className={`ou-flex ${isTablet ? 'ou-flex-col' : 'ou-flex-row ou-justify-center ou-items-center'} 
                     ou-items-start ou-justify-between ou-gap-4 ou-p-4`}>
-                        <div className="ou-flex ou-items-end">
+                        <div className="ou-flex ou-items-center">
                             <h1 className="ou-text-xl ">{t('listOfDiagnosisForms')}</h1>
-                            <span className="ou-text-sm ou-text-gray-600">{t('resultOfTotal', {result: pagination.count})}</span>
+                            <Button
+                                variant="outlined"
+                                startIcon={<Badge badgeContent={pagination.count} color="primary"> <FilterListIcon /> </Badge>}
+                                endIcon={<ExpandMoreIcon sx={{ transform: showFilter ? 'rotate(180deg)' : 'rotate(0deg)', transition: '0.2s' }} />}
+                                onClick={() => setShowFilter((prev) => !prev)}
+                                sx={{ borderRadius: 3, fontWeight: 500, marginLeft: '12px', textTransform: 'none' }}
+                            >
+                                <span className="ou-pl-3">{t('prescription:filter')}</span>
+                            </Button>
                         </div>
-                        <Box className="ou-w-full md:ou-w-auto">
-                            <DiagnosisFilter onSubmit={handleOnSubmitFilter}
-                            doctorName={paramsFilter.doctorName} createdDate={paramsFilter.createdDate} 
-                            patientName={paramsFilter.patientName} hasPrescription={paramsFilter.hasPrescription}
-                            hasPayment={paramsFilter.hasPayment}/>
-                        </Box>
                     </div>
+                        <Collapse in={showFilter}>
+                            <Paper elevation={3} sx={{ p: 2, mb: 2, borderRadius: 3, boxShadow: 2, width: '100%' }}>
+                            <Box className="ou-w-full md:ou-w-auto">
+                                <MemoizedDiagnosisFilter onSubmit={handleOnSubmitFilter}
+                                doctorName={paramsFilter.doctorName} createdDate={paramsFilter.createdDate} 
+                                patientName={paramsFilter.patientName} hasPrescription={paramsFilter.hasPrescription}
+                                hasPayment={paramsFilter.hasPayment}/>
+                            </Box>
+                            </Paper>
+                        </Collapse>
                     <Table size={isMobile ? "small" : "medium"}>
                         <TableHead>
                             <TableRow>

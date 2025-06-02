@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import useMedicine from "../../../lib/hooks/useMedicine"
-import { Box, Button, Divider, FilledInput, FormControl, Input, InputAdornment, InputLabel, MenuItem, OutlinedInput, Pagination, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Grid } from "@mui/material";
+import { Box, Button, Divider, FormControl, InputAdornment, InputLabel, MenuItem, OutlinedInput, Pagination, Paper, Select, Stack,
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Grid, Badge } from "@mui/material";
 import { Helmet } from "react-helmet";
-import Loading from "../../../modules/common/components/Loading";
 import MedicineUnitLineItem from "../../../modules/pages/MedicineComponent/MedicineUnitLineItem";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CustomModal from "../../../modules/common/components/Modal";
@@ -15,6 +15,12 @@ import SchemaModels from "../../../lib/schema";
 import BackdropLoading from "../../../modules/common/components/BackdropLoading";
 import MedicineFilter from "../../../modules/common/components/FIlterBar/MedicineFilter";
 import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useState, memo } from "react";
+import { Collapse } from "@mui/material";
+
+const MemoizedMedicineFilter = memo(MedicineFilter);
 
 const MedicineList = () => {
     const {page, pagination, handleChangePage, selectedImage, setSelectedImage, imageUrl, 
@@ -25,7 +31,7 @@ const MedicineList = () => {
     const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
 
     const { t, ready } = useTranslation(["medicine", "common", "modal"]);
-
+    const [showFilter, setShowFilter] = useState(false);
     const {medicineUnitSchema} = SchemaModels()
     
     const methods = useForm({
@@ -67,30 +73,41 @@ const MedicineList = () => {
             <TableContainer component={Paper} elevation={4}>
   
               <Box className="ou-flex ou-flex-col sm:ou-flex-row ou-items-start sm:ou-items-center ou-justify-between ou-p-4">
-                <Box className="ou-flex ou-flex-col sm:ou-flex-row ou-items-start sm:ou-items-end ou-mb-4 sm:ou-mb-0">
+                <Box className="ou-w-full ou-flex ou-items-center">
                   <Typography variant="h6" className="ou-text-xl">{t('medicine:listOfMedicines')}</Typography>
-                  <Typography variant="body2" className="ou-pl-2 ou-text-sm">{t('medicine:resultOfTotal', {result: pagination.count})}</Typography>
+                  <Button
+                    variant="outlined"
+                    startIcon={<Badge badgeContent={pagination.count} color="primary"> <FilterListIcon /> </Badge>}
+                    endIcon={<ExpandMoreIcon sx={{ transform: showFilter ? 'rotate(180deg)' : 'rotate(0deg)', transition: '0.2s' }} />}
+                    onClick={() => setShowFilter((prev) => !prev)}
+                    sx={{ borderRadius: 3, fontWeight: 500, marginLeft: '12px', textTransform: 'none' }}
+                  >
+                    <span className="ou-pl-3">{t('medicine:filter')}</span>
+                  </Button>
                 </Box>
-  
-                <Box className="ou-flex ou-flex-col sm:ou-flex-row ou-items-start sm:ou-items-center ou-gap-4 ou-w-full sm:ou-w-auto">
-                    <Button 
-                      color="success" 
-                      variant="contained"
-                      onClick={() => {handleOpenModal()}}
-                      className="ou-w-full sm:ou-w-auto !ou-py-4"
-                    >
-                        <AddCircleOutlineIcon className="ou-mr-1"/> {t('medicine:addMedicine')}
-                    </Button>
-                    {/* Filter area */}
-                    <MedicineFilter 
-                      onSubmit={handleOnSubmitFilter} 
-                      kw={paramsFilter.kw}
-                      categories={categories} 
-                      cateFilter={paramsFilter.cate}
-                      className="ou-w-full sm:ou-w-auto"
-                    />
-                </Box>
+
               </Box>
+                <Collapse in={showFilter}>
+                  <Paper elevation={3} sx={{ p: 2, mb: 2, borderRadius: 3, boxShadow: 2, width: '100%' }}>    
+                  <Box className="ou-flex ou-flex-col sm:ou-flex-row ou-items-start sm:ou-items-center ou-gap-4 ou-w-full sm:ou-w-auto">
+                      <Button 
+                        color="success" 
+                        variant="contained"
+                        onClick={() => {handleOpenModal()}}
+                        className="ou-w-full sm:ou-w-auto !ou-py-4"
+                      >
+                          <AddCircleOutlineIcon className="ou-mr-1"/> {t('medicine:addMedicine')}
+                      </Button>
+                      <MemoizedMedicineFilter 
+                        onSubmit={handleOnSubmitFilter} 
+                        kw={paramsFilter.kw}
+                        categories={categories} 
+                        cateFilter={paramsFilter.cate}
+                        className="ou-w-full sm:ou-w-auto"
+                      />
+                  </Box>
+                  </Paper>
+                </Collapse>
               
               {/* Content area */}
               <Box sx={{ overflowX: 'auto' }}>

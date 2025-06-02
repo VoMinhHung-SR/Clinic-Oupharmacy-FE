@@ -19,5 +19,6 @@
     "resultOfTotal": "({{result}} kết quả)",
     "all": "Tất cả",
     "search": "Tìm kiếm",
-    "medicineList": "Danh sách thuốc"
+    "medicineList": "Danh sách thuốc",
+    "filter": "Bộ lọc"
 }

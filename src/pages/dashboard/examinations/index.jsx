@@ -1,5 +1,11 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Badge,
   Box,
+  Button,
+  Collapse,
   Pagination,
   Paper,
   Stack,
@@ -19,6 +25,11 @@ import ExaminationCard from "../../../modules/common/components/card/Examination
 import ExaminationFilter from "../../../modules/common/components/FIlterBar/ExaminationFilter";
 import { Helmet } from "react-helmet";
 import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useState, memo } from "react";
+import FilterListIcon from '@mui/icons-material/FilterList';
+
+const MemoizedExaminationFilter = memo(ExaminationFilter);
 
 const Examinations = () => {
   const {
@@ -35,7 +46,7 @@ const Examinations = () => {
   } = useExaminationConfirm();
 
   const { t, ready } = useTranslation(["examinations", "common", "modal"]);
-
+  const [showFilter, setShowFilter] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
@@ -70,21 +81,33 @@ const Examinations = () => {
               gap: isMobile ? '1rem' : '0',
               padding: isMobile ? '1rem' : '0'
             }}>
-              <div className="ou-flex ou-items-end">
+              <div className="ou-flex ou-py-5 ou-items-center ou-justify-between">
                 <h1 className="ou-text-xl ou-pl-4" style={{ fontSize: isMobile ? '1rem' : '1.25rem' }}>
                   {t('listOfExaminations')}
                 </h1>
-                <span className="ou-pl-2 ou-text-sm">{t('resultOfTotal', {result: pagination.count})}</span>
+              <Button
+                variant="outlined"
+                startIcon={<Badge badgeContent={pagination.count} color="primary"> <FilterListIcon /> </Badge>}
+                endIcon={<ExpandMoreIcon sx={{ transform: showFilter ? 'rotate(180deg)' : 'rotate(0deg)', transition: '0.2s' }} />}
+                onClick={() => setShowFilter((prev) => !prev)}
+                sx={{ borderRadius: 3, fontWeight: 500, marginLeft: '12px', textTransform: 'none' }}
+              >
+                <span className="ou-pl-3">{t('examinations:filter')}</span>
+              </Button>
               </div>
-
-              <ExaminationFilter onSubmit={handleOnSubmitFilter} 
-                mailStatus={paramsFilter.mailStatus} 
-                createdDate={paramsFilter.createdDate} 
-                kw={paramsFilter.kw} 
-                hasDiagnosis={paramsFilter.hasDiagnosis}
-                isMobile={isMobile}
-              />
             </div>
+              <Collapse in={showFilter}>
+                <Paper elevation={3} sx={{ p: 2, mb: 2, borderRadius: 3, boxShadow: 2, width: '100%' }}>
+                  <MemoizedExaminationFilter
+                    onSubmit={handleOnSubmitFilter}
+                    mailStatus={paramsFilter.mailStatus}
+                    createdDate={paramsFilter.createdDate}
+                    kw={paramsFilter.kw}
+                    hasDiagnosis={paramsFilter.hasDiagnosis}
+                    isMobile={isMobile}
+                  />
+                </Paper>
+              </Collapse>
             
             <Table sx={{ 
               minWidth: isMobile ? 300 : 650,
