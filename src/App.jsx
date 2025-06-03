@@ -62,9 +62,8 @@ function App() {
   useEffect(()=> {
     const fetchData = async () => {
       try {
-        const [configData, listExamTodayData] = await Promise.all([
-          configDispatch(getAllConfig()).unwrap(),
-          getListExamToday(),
+        const [configData] = await Promise.all([
+          configDispatch(getAllConfig()).unwrap()
         ]);
       } catch (error) {
         console.log(error);
