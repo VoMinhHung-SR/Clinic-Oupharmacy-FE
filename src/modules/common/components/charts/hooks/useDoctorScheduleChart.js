@@ -7,7 +7,9 @@ const useDoctorScheduleChart = () => {
     const [dataChart, setDataChart] = useState([]);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
     const now = moment();
-    const [selectedWeek, setSelectedWeek] = useState(now.isoWeek());
+    const [selectedWeek, setSelectedWeek] = useState(
+        now.day() === 0 ? now.add(1, 'week').isoWeek() : now.isoWeek()
+    );
     const [weeksOfYear, setWeeksOfYear] = useState([]);
     
     const [q] = useSearchParams();

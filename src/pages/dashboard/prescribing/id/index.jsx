@@ -106,7 +106,7 @@ const PrescriptionDetail = () => {
                                         <Box className="ou-m-auto ou-mb-6" >
                                             <Grid container justifyContent="flex" className="ou-min-h-[160px] ou-p-5" component={Paper} elevation={5}> 
                                                 <Grid item xs={12} className="ou-pb-5" >
-                                                    <h1 className="ou-text-center ou-text-xl ou-font-bold">{t('common:basicInformation')}</h1>
+                                                    <h1 className="ou-text-center ou-text-xl">{t('common:basicInformation')}</h1>
                                                 </Grid>
                                                 <Grid item xs={12} className="ou-pb-5 ou-text-center" >
                                                     <PatientInfoModal patientData={prescriptionDetail.examination.patient}/>
@@ -122,7 +122,7 @@ const PrescriptionDetail = () => {
                                         <Grid item component={Paper} elevation={5}>
                                             <form
                                                 className="ou-p-5 ou-w-full">
-                                                <h1 className="ou-text-center ou-text-xl ou-pb-8 ou-font-semibold">{t('prescriptionDetail')}</h1>
+                                                <h1 className="ou-text-center ou-text-xl ou-pb-8">{t('prescriptionDetail')}</h1>
                                                 <Grid container className="ou-py-3">
                                                 {medicinesSubmit.length === 0 ?
                                                     (<>

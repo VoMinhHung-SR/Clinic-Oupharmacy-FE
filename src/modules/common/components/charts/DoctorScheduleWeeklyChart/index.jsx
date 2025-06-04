@@ -12,11 +12,26 @@ const DoctorScheduleWeeklyChart = () => {
   const { dataChart, handleYearChange, handleChangeWeek, weeksOfYear,
     selectedWeek, selectedYear } = useDoctorScheduleChart();
 
+  const COLORS = [
+    '#42A5F5', // Blue
+    '#66BB6A', // Green
+    '#FFA726', // Orange
+    '#AB47BC', // Purple
+    '#EC407A', // Pink
+    '#FF7043', // Red
+    '#26C6DA', // Cyan
+  ];
+
   const data = {
     labels: [t('doctor-schedule:monday'), t('doctor-schedule:tuesday'), 
       t('doctor-schedule:wednesday'), t('doctor-schedule:thursday'), 
       t('doctor-schedule:friday'), t('doctor-schedule:saturday')],
-    datasets: dataChart,
+    datasets: dataChart.map((dataset, idx) => ({
+      ...dataset,
+      backgroundColor: COLORS[idx % COLORS.length],
+      borderColor: COLORS[idx % COLORS.length],
+      fill: false,
+    })),
   };
 
   const options = {
@@ -42,7 +57,7 @@ const DoctorScheduleWeeklyChart = () => {
 
   return (
     <div>
-      <div className='ou-text-right ou-m-3'>
+      <div className='ou-text-right ou-mb-3'>
         <FormControl variant="outlined" className='!ou-mr-3'>
           <InputLabel>{t('doctor-schedule:week')}</InputLabel>
           <Select value={selectedWeek} onChange={handleChangeWeek}

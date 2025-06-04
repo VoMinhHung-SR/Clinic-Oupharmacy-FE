@@ -30,7 +30,7 @@ const DoctorScheduleForm = ({ doctor }) => {
 
     // Memoize week dates calculation
     const { startOfSelectedWeek, daysOfSelectedWeek, currentWeekDates } = useMemo(() => {
-        const start = moment().year(selectedYear).week(selectedWeek).startOf('isoWeek');
+        const start = moment().year(selectedYear).isoWeek(selectedWeek).startOf('isoWeek');
         return {
             startOfSelectedWeek: start,
             daysOfSelectedWeek: Array.from({ length: 6 }, (_, i) => 

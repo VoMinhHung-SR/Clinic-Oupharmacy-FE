@@ -11,10 +11,13 @@ import createToastMessage from "../../../../lib/utils/createToastMessage"
 const useDoctorSchedule = () => {
 
     const {t} = useTranslation(['modal', 'doctor-schedule']);
-
+    
+    const now = moment();     
     const {user} = useContext(UserContext);
-    const [selectedYear] = useState(new Date().getFullYear());
-    const [selectedWeek, setSelectedWeek] = useState(moment().isoWeek());
+    const [selectedYear] = useState(now.year());
+    const [selectedWeek, setSelectedWeek] = useState(
+        now.day() === 0 ? now.add(1, 'week').isoWeek() : now.isoWeek()
+    );
     const [isLoading, setIsLoading] = useState(false);
     const [flag, setFlag] = useState(false);
     const [existSchedule, setExistSchedule] = useState([]);

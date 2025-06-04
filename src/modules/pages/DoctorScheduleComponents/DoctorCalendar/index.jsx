@@ -50,7 +50,7 @@ const DoctorCalendar = ({scheduleData, selectedYear, selectedWeek}) => {
     ];
 
     const getDayDate = (index) => {
-        const startOfWeek = moment().year(selectedYear).week(selectedWeek).startOf('isoWeek');
+        const startOfWeek = moment().year(selectedYear).isoWeek(selectedWeek).startOf('isoWeek');
         return startOfWeek.clone().add(index, 'days').format('YYYY-MM-DD');
     };
 

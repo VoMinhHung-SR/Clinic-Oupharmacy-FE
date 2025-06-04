@@ -28,6 +28,7 @@
     "hasDiagnosis":"Diagnosed",
     "yes": "Yes",
     "no": "No",
+    "filter": "Filter",
 
     "filterUserLabel": "User email (optional)",
     "confirmDelete":"Confirm to delete this examination sheet",

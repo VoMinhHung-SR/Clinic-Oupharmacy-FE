@@ -19,5 +19,6 @@
     "resultOfTotal": "({{result}} results)",
     "all": "All",
     "search": "Search",
-    "medicineList": "Medicine List"
+    "medicineList": "Medicine List",
+    "filter": "Filter"
 }
