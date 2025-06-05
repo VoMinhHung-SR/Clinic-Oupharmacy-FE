@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Badge, Box, Button, Container, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material"
+import { AppBar, Avatar, Badge, Box, Button, Container, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Toolbar, Tooltip, Typography } from "@mui/material"
 import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from '@mui/icons-material/Menu';
 import Logout from '@mui/icons-material/Logout';
@@ -100,6 +100,17 @@ const Nav = () => {
             }}
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
+            <Link to="/profile" className="nav-link" style={{ "padding": "0px" }}>
+              <Box component={Paper} elevation={4} className="ou-px-2 ou-py-3 ou-mx-2 ou-mb-3"> 
+                <Box className="ou-flex ou-items-center">
+                  <Avatar alt={user.first_name + " " + user.last_name} src={user.avatar_path} className="!ou-ml-2"/>
+                  <Typography>
+                    | {user.first_name + " " + user.last_name}
+                  </Typography>
+                </Box>
+              </Box>
+            </Link>
+            <Divider className="!ou-m-[0px]" />
             <Link to="/profile" className="nav-link" style={{ "padding": "0px" }}>
                 <MenuItem style={{ "color": "#333" }}>
                    <AccountCircleIcon fontSize="small" />
