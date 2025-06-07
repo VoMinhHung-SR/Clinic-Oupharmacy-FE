@@ -118,10 +118,7 @@ const useRegister = () => {
 
         if (data.dob !== undefined)
             date = new Date(data.dob).toISOString()
-
-            
-  
-
+        
         const register = async (locationId) => {
             try {
                 let formData = new FormData()

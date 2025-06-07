@@ -3,5 +3,10 @@
     "addressInfo": "Address Info",
     "bookingList": "Booking List",
     "changeAvatar": "Change Avatar",
-    "patientManagement": "Patient Management"
+    "patientManagement": "Patient Management",
+    "submit": "Submit",
+    "uploadAvatar": "Upload Avatar",
+    "currentAvatar": "Current Avatar",
+    "selectedAvatar": "Selected Avatar",
+    "noImageSelected": "No Image Selected"
 }
