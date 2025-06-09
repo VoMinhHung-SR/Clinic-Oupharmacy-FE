@@ -17,7 +17,7 @@ import Logout from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import { changeLanguage } from "i18next";
 import useNav from '../../../pages/HomeComponents/hooks/useNav';
-import { ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
+import { AVATAR_DEFAULT, AVATAR_NULL, ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useState } from "react";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -234,7 +234,9 @@ const NavDashboard = ({ open, toggleDrawer }) => {
                 <Link to="/dashboard/profile" className="nav-link" style={{ "padding": "0px" }}>
                   <Box component={Paper} elevation={4} className="ou-px-2 ou-py-3 ou-mx-2 ou-mb-3"> 
                     <Box className="ou-flex ou-items-center">
-                      <Avatar alt={user.first_name + " " + user.last_name} src={user.avatar_path} className="!ou-ml-2"/>
+                      <Avatar 
+                        src={(user.avatar_path === ERROR_CLOUDINARY) ? AVATAR_DEFAULT : user.avatar_path} 
+                      className="!ou-ml-2"/>
                       <Typography>
                         | {user.first_name + " " + user.last_name}
                       </Typography>

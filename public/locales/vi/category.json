@@ -1,5 +1,6 @@
 {
     "id":"ID",
+    "categories": "Danh mục",
     "name": "Tên danh mục",
     "function": "Chức năng",
     "addCategory": "Thêm danh mục",

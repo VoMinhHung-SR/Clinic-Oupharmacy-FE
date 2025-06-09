@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState, useReducer } from 'react';
 import Cookies from 'js-cookie';
 import userReducer from '../reducer/userReducer';
 import { getCookieValue } from '../utils/getCookieValue';
+import { changeAvatar } from '../../modules/pages/ProfileComponents/services';
 
 export const UserContext = createContext();
 
@@ -11,6 +12,8 @@ export const UserProvider = ({ children }) => {
 
   const [imageUrl, setImageUrl] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setUserState(user);
@@ -25,17 +28,35 @@ export const UserProvider = ({ children }) => {
     Cookies.set('user', JSON.stringify(updatedData));
   };
 
-  const handleChangeAvatar = () => {
+  const handleChangeAvatar = async (onSuccess, onError) => {
+    setIsLoading(true);
     if (selectedImage) {
-      const formData = new FormData();
-      formData.append('avatar', selectedImage);
-      formData.append('user_id', user.id);
+      try {
+        const formData = new FormData();
+        formData.append('avatar_path', selectedImage);
+  
+        const res = await changeAvatar(user.id, formData);
+        if(res.status === 200) {
+          updateUser({...user, avatar_path: res.data.avatar});
+          onSuccess();
+        } else {
+          console.log(res);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      onError();
+      setIsLoading(false);
     }
   }
 
   return (
     <UserContext.Provider value={{ user: userState, dispatch, updateUser, 
-    imageUrl, selectedImage, setSelectedImage, setImageUrl, handleChangeAvatar }}>
+    imageUrl, selectedImage, isLoading,
+    setSelectedImage, setImageUrl, handleChangeAvatar }}>
       {children}
     </UserContext.Provider>
   );

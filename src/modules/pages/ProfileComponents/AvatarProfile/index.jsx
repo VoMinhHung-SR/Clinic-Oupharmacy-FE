@@ -1,14 +1,16 @@
 import { Avatar, Box, Button, Paper, Tooltip } from "@mui/material"
-import { AVATAR_DEFAULT, ERROR_CLOUDINARY } from "../../../../lib/constants"
+import { AVATAR_DEFAULT, AVATAR_NULL, ERROR_CLOUDINARY, TOAST_ERROR, TOAST_SUCCESS } from "../../../../lib/constants"
 import { useContext } from "react"
 import UserContext from "../../../../lib/context/UserContext"
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useTranslation } from "react-i18next";
 import CustomModal from "../../../common/components/Modal";
 import useCustomModal from "../../../../lib/hooks/useCustomModal";
-
+import createToastMessage from "../../../../lib/utils/createToastMessage";
+import PersonIcon from '@mui/icons-material/Person';
 const AvatarProfile = () => {
-    const {user, setSelectedImage, imageUrl, selectedImage, handleChangeAvatar } = useContext(UserContext)
+    const {user, setSelectedImage, imageUrl, 
+        selectedImage, handleChangeAvatar, isLoading } = useContext(UserContext)
     const {t} = useTranslation(['profile'])
     const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
     return (
@@ -18,7 +20,7 @@ const AvatarProfile = () => {
                     <Box className="ou-relative">
                         <Avatar
                             className="ou-m-auto ou-border-2 ou-border-[#007aff]"
-                            alt={user.first_name + user.last_name}
+                            alt={user.first_name + " " + user.last_name}
                             src={user.avatar_path === ERROR_CLOUDINARY ? AVATAR_DEFAULT : user.avatar_path}
                             sx={{ width: 128, height: 128 }}
                         />
@@ -49,7 +51,7 @@ const AvatarProfile = () => {
                                         ou-w-full ou-opacity-80 ou-text-center ou-mb-4">
                                         {t('profile:currentAvatar')}
                                     </p>
-                                    <img src={user.avatar_path} 
+                                    <img src={user.avatar_path === ERROR_CLOUDINARY ? AVATAR_DEFAULT : user.avatar_path} 
                                         alt="avatar_user_current" 
                                         width={240}
                                         className="ou-rounded-full ou-object-cover ou-mx-auto ou-h-[240px]
@@ -72,9 +74,10 @@ const AvatarProfile = () => {
                                     )}
                                     {(!imageUrl || !selectedImage) && (
                                         <Box className="ou-my-4 ou-border-solid" textAlign="center">
-                                            <p className="ou-text-sm ou-text-red-500    
-                                                ou-w-full ou-opacity-80 ou-text-center ou-mb-4">
-                                                {t('profile:noImageSelected')}
+                                            <p className="ou-text-sm ou-text-red-500 ou-mx-auto ou-rounded-full
+                                                ou-border-2 ou-border-gray-500 ou-flex ou-items-center ou-justify-center
+                                                ou-w-[240px] ou-h-[240px] ou-opacity-80 ou-text-center ou-mb-4">
+                                                <PersonIcon className="!ou-text-[120px] ou-pb-4 ou-text-gray-500"/>
                                             </p>
                                         </Box>
                                     )}
@@ -89,14 +92,24 @@ const AvatarProfile = () => {
                                     }}
                                 />
                                 <label htmlFor="select-image" className="ou-mb-4">
-                                    <Button className="!ou-min-w-[150px] ou-w-full !ou-mb-2"  variant="contained" 
+                                    <Button className="!ou-min-w-[150px] ou-w-full !ou-mb-2"  
+                                    variant="contained" disabled={isLoading}
                                     color="primary" component="span">
                                         {t('profile:uploadAvatar')}
                                     </Button>
                                 </label>
 
                                 <Button className="!ou-min-w-[150px] ou-w-full"  variant="contained" 
-                                    color="success" component="span" onClick={handleChangeAvatar}>
+                                    color="success" component="span" 
+                                    disabled={isLoading}
+                                    onClick={() => 
+                                        handleChangeAvatar(
+                                            () => {
+                                                createToastMessage({message:t('profile:changeAvatarSuccess'), type:TOAST_SUCCESS})
+                                                handleCloseModal();
+                                                setSelectedImage(null);
+                                            }, 
+                                            () => createToastMessage({message:t('profile:noImageSelected'), type:TOAST_ERROR}))}>
                                     {t('profile:submit')}
                                 </Button>
                             </Box>

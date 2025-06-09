@@ -8,5 +8,6 @@
     "uploadAvatar": "Tải ảnh",
     "currentAvatar": "Ảnh hiện tại",
     "selectedAvatar": "Ảnh chọn",
-    "noImageSelected": "Không có ảnh"
+    "noImageSelected": "Không có ảnh",
+    "changeAvatarSuccess": "Thay đổi ảnh đại diện thành công"
 }

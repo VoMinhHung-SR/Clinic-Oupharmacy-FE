@@ -30,7 +30,7 @@ export let endpoints = {
     'get-user-location':(userId) => `/users/${userId}/location-info/`,
     'booking-list':(userId) => `/users/${userId}/booking-list/`,
     'change-password': (userId) => `/users/${userId}/change-password/`,
-
+    'change-avatar': (userId) => `/users/${userId}/change-avatar/`,
     // Doctor-Schedule
     'doctor-schedules': '/doctor-schedules/',
     'doctor-schedules-by-date': '/doctor-schedules/schedule/',

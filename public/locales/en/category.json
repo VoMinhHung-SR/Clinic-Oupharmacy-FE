@@ -1,5 +1,6 @@
 {
     "id":"ID",
+    "categories": "Categories",
     "name": "Category name",
     "function": "Function",
     "addCategory": "Add new category",

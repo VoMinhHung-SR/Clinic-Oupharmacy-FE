@@ -20,10 +20,10 @@ const ProfileAddressInfo = () => {
     return(
         <Box className=" ou-m-auto ou-rounded">
         <Helmet>
-          <title>Address info</title>
+          <title>{t('register:addressInfo')}</title>
         </Helmet>
         <Box  className="ou-m-auto ou-px-8 ou-py-4 ">
-          <h2 className="ou-text-center ou-text-2xl ou-py-2 ou-pb-3 ou-uppercase ou-font-semibold">{t('addressInfo')}</h2>
+          <h2 className="ou-text-center ou-text-2xl ou-py-2 ou-pb-3 ou-uppercase">{t('addressInfo')}</h2>
 
             <AddressInfo locationData={user.locationGeo}/>
 

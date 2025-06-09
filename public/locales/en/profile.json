@@ -8,5 +8,6 @@
     "uploadAvatar": "Upload Avatar",
     "currentAvatar": "Current Avatar",
     "selectedAvatar": "Selected Avatar",
+    "changeAvatarSuccess": "Change Avatar Success",
     "noImageSelected": "No Image Selected"
 }
