@@ -13,3 +13,8 @@ export const updateLocation = async (locationID, data) => {
     const res = await authApi().patch(endpoints['location-detail'](locationID), data);
     return res;
 }
+
+export const changeAvatar = async (userID, data) => {
+    const res = await authApi().patch(endpoints['change-avatar'](userID), data);
+    return res;
+}

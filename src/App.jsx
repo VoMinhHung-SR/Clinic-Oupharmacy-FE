@@ -3,7 +3,7 @@ import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './modules/common/layout'
 import Login from './pages/login'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 import Home from './pages'
 import Register from './pages/register'
 import ExaminationList from './pages/profile/examinations'
@@ -52,131 +52,140 @@ import DoctorSchedules from './pages/dashboard/doctor-schedules'
 import PatientManagement from './pages/profile/patient-list'
 import OnlineWaitingRoom from './pages/waiting-room/sub'
 import DashboardWaitingRoom from './pages/dashboard/waiting-room'
-export const userContext = createContext()
-const queryClient = new QueryClient()
-function App() {
+import APIs, { endpoints } from './config/APIs'
 
+export const userContext = createContext()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      cacheTime: 10 * 60 * 1000, // 10 minutes
+    },
+  },
+})
+
+const ConfigLoader = ({ children }) => {
   const configDispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true)
   
-  useEffect(()=> {
-    const fetchData = async () => {
-      try {
-        const [configData] = await Promise.all([
-          configDispatch(getAllConfig()).unwrap()
-        ]);
-      } catch (error) {
-        console.log(error);
-      } finally {
+  const { data: configData, error: configError } = useQuery(
+    'config',
+    async () => {
+      const response = await APIs.get(endpoints['common-configs']);
+      return response.data;
+    },
+    {
+      onSuccess: (data) => {
+        configDispatch(getAllConfig.fulfilled(data));
         setIsLoading(false);
-      }
-    };
+      },
+      onError: (error) => {
+        setIsLoading(false);
+      },
+      retry: 1,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    }
+  );
 
-    fetchData()
-    // jobMidnight()
-    // jobEveryMinutes()
-  },[])
+  if (isLoading) {
+    return <Box className='ou-h-[100vh] ou-flex ou-place-content-center'><Loading/></Box>;
+  }
 
-    return isLoading ? <Box className='ou-h-[100vh] ou-flex ou-place-content-center'><Loading/></Box> :
-    <>
-      <QueryClientProvider client={queryClient}>
-        <I18nextProvider i18n={i18n}>
-          <BrowserRouter>
-            {/* <CookiesProvider> */}
-            <LocalizationProvider dateAdapter={AdapterMoment}>
-              <UserProvider>    
-                <BookingProvider>
-                  <PrescribingProvider>
-                    {/* <QueueStateProvider> */}
-                        <ScrollToTop />
-                          <Routes>
-                            <Route path='/' element={<Layout />}>
-                              <Route path='/' element={<Home />}/>
-                              
-                              <Route path='/waiting-room' element={<OnlineWaitingRoom/>}/>
-                              {/* <Route path='/products' element={<ProductList/>}/> */}
-                              {/* Accepted when user authorized */}
-                              <Route element={<ProtectedUserRoute/>}>
-                          
-                                <Route path='/booking' element={<Booking/>}/>
-                                
-                                <Route path='/profile' element={<Profile />} >
-                                  <Route path='/profile/address-info' element={<ProfileAddressInfo />} />
-                                  <Route path='/profile/examinations' element={<ExaminationList />} />
-                                  <Route path='/profile/patient-management' element={<PatientManagement />} />
-                                </Route>
+  return children;
+}
 
-                                <Route path='/conversations'  element={<ConversationList/>} >
-                                  <Route path='/conversations/:conversationId/:recipientId/message' element={<ChatWindow/>} />
-                                </Route>
-                              </Route>
-
-                              <Route path="/forbidden" element={<Forbidden />} />
-                              <Route path="*" element={<NotFound/>} />
-
-                              <Route path='/demo' element={<Demo/>}/>
-                                          
-                            </Route>
-                            <Route path='/dashboard/' element={<DashboardLayout/>}>
-                              <Route element={<ProtectedUserRoute/>}>
-                                  <Route path='/dashboard/' element={<DashBoard/>} />                          
-                                  {/* Accepted user.role = (ROLE_NURSE || ROLE_DOCTOR) */}
-                                  <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_DOCTOR, ROLE_NURSE]} />}>
-                                    <Route path='/dashboard/examinations' element={<Examinations/>}/> 
-                                    <Route path='/dashboard/categories' element={<CategoryList/>}/>
-                                    <Route path='/dashboard/doctor-schedules' element={<DoctorSchedules/>}/>  
-                                    <Route path='/dashboard/medicines' element={<MedicineList/>}/> 
-                                    <Route path='/dashboard/waiting-room' element={<DashboardWaitingRoom/>}/>
-                                  </Route>
-
-                                  {/* Accepted user.role = ROLE_DOCTOR */}
-                                  <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_DOCTOR]} />}>
-                                    <Route path='/dashboard/examinations/:examinationId/diagnosis' element={<Diagnosis />} />
-                                    <Route path='/dashboard/prescribing' element={<PrescriptionList/>} />
-                                    <Route path='/dashboard/prescribing/:prescribingId' element={<PrescriptionDetail/>} />
-                                  </Route>
-
-                                  {/* Accepted user.role = ROLE_NURSE */}
-                                  <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_NURSE]}/>}>
-                                    <Route path='/dashboard/payments' element={<PrescriptionList/>} />
-                                    <Route path='/dashboard/payments/examinations/:examinationId' element={<Payments />} />
-                                  </Route>
-
-                                  <Route path='/dashboard/profile' element={<DashboardProfile />} >
-                                    <Route path='/dashboard/profile/address-info' element={<ProfileAddressInfo />} />
-                                    <Route path='/dashboard/profile/examinations' element={<ExaminationList />} />
-                                    <Route path='/dashboard/profile/patient-management' element={<PatientManagement />} />
-                                  </Route>
-
-                                  <Route path='/dashboard/conversations'  element={<ConversationList/>} >
-                                    <Route path='/dashboard/conversations/:conversationId/:recipientId/message' element={<ChatWindow/>} />
-                                  </Route>
-
-                                  <Route path="/dashboard/forbidden" element={<Forbidden />} />
-                              </Route>
-                            </Route>
-
-                          <Route path="/login" element={<Login />} />
-                          <Route path="/register" element={<Register />} />
-                          </Routes>
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <I18nextProvider i18n={i18n}>
+        <BrowserRouter>
+          <LocalizationProvider dateAdapter={AdapterMoment}>
+            <UserProvider>    
+              <BookingProvider>
+                <PrescribingProvider>
+                  <ConfigLoader>
+                    <ScrollToTop />
+                    <Routes>
+                      <Route path='/' element={<Layout />}>
+                        <Route path='/' element={<Home />}/>
                         
-                    {/* </QueueStateProvider> */}
-                    {/* </CookiesProvider> */}   
-                  </PrescribingProvider>
-                </BookingProvider>
-              </UserProvider>
-            </LocalizationProvider>
-          </BrowserRouter>
-        </I18nextProvider>
-      </QueryClientProvider>
+                        <Route path='/waiting-room' element={<OnlineWaitingRoom/>}/>
+                        <Route element={<ProtectedUserRoute/>}>
+                          <Route path='/booking' element={<Booking/>}/>
+                          
+                          <Route path='/profile' element={<Profile />} >
+                            <Route path='/profile/address-info' element={<ProfileAddressInfo />} />
+                            <Route path='/profile/examinations' element={<ExaminationList />} />
+                            <Route path='/profile/patient-management' element={<PatientManagement />} />
+                          </Route>
+
+                          <Route path='/conversations'  element={<ConversationList/>} >
+                            <Route path='/conversations/:conversationId/:recipientId/message' element={<ChatWindow/>} />
+                          </Route>
+                        </Route>
+
+                        <Route path="/forbidden" element={<Forbidden />} />
+                        <Route path="*" element={<NotFound/>} />
+
+                        <Route path='/demo' element={<Demo/>}/>
+                                    
+                      </Route>
+                      <Route path='/dashboard/' element={<DashboardLayout/>}>
+                        <Route element={<ProtectedUserRoute/>}>
+                            <Route path='/dashboard/' element={<DashBoard/>} />                          
+                            <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_DOCTOR, ROLE_NURSE]} />}>
+                              <Route path='/dashboard/examinations' element={<Examinations/>}/> 
+                              <Route path='/dashboard/categories' element={<CategoryList/>}/>
+                              <Route path='/dashboard/doctor-schedules' element={<DoctorSchedules/>}/>  
+                              <Route path='/dashboard/medicines' element={<MedicineList/>}/> 
+                              <Route path='/dashboard/waiting-room' element={<DashboardWaitingRoom/>}/>
+                            </Route>
+
+                            <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_DOCTOR]} />}>
+                              <Route path='/dashboard/examinations/:examinationId/diagnosis' element={<Diagnosis />} />
+                              <Route path='/dashboard/prescribing' element={<PrescriptionList/>} />
+                              <Route path='/dashboard/prescribing/:prescribingId' element={<PrescriptionDetail/>} />
+                            </Route>
+
+                            <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_NURSE]}/>}>
+                              <Route path='/dashboard/payments' element={<PrescriptionList/>} />
+                              <Route path='/dashboard/payments/examinations/:examinationId' element={<Payments />} />
+                            </Route>
+
+                            <Route path='/dashboard/profile' element={<DashboardProfile />} >
+                              <Route path='/dashboard/profile/address-info' element={<ProfileAddressInfo />} />
+                              <Route path='/dashboard/profile/examinations' element={<ExaminationList />} />
+                              <Route path='/dashboard/profile/patient-management' element={<PatientManagement />} />
+                            </Route>
+
+                            <Route path='/dashboard/conversations'  element={<ConversationList/>} >
+                              <Route path='/dashboard/conversations/:conversationId/:recipientId/message' element={<ChatWindow/>} />
+                            </Route>
+
+                            <Route path="/dashboard/forbidden" element={<Forbidden />} />
+                        </Route>
+                      </Route>
+
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    </Routes>
+                  </ConfigLoader>
+                </PrescribingProvider>
+              </BookingProvider>
+            </UserProvider>
+          </LocalizationProvider>
+        </BrowserRouter>
+      </I18nextProvider>
       <div>
         <ToastContainer
           position="bottom-left"
           theme='colored'
         />
       </div>
-      {/* <OUPharmacyChatBot/> */}
-    </>  
+    </QueryClientProvider>
+  )
 }
 
 export default App

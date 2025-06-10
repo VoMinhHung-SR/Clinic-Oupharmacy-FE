@@ -1,4 +1,6 @@
 {
+    "register": "Register",
+    "profile": "Profile",
     "firstName": "First name",
     "lastName": "Last name",
     "phoneNumber": "Phone number",

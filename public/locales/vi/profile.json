@@ -2,5 +2,12 @@
     "profile": "Trang cá nhân",
     "addressInfo": "Thông tin địa chỉ",
     "bookingList": "Danh sách đặt lịch",
-    "patientManagement": "Quản lý hồ sơ bệnh nhân"
+    "changeAvatar": "Thay đổi ảnh đại diện",
+    "patientManagement": "Quản lý hồ sơ bệnh nhân",
+    "submit": "Gửi",
+    "uploadAvatar": "Tải ảnh",
+    "currentAvatar": "Ảnh hiện tại",
+    "selectedAvatar": "Ảnh chọn",
+    "noImageSelected": "Không có ảnh",
+    "changeAvatarSuccess": "Thay đổi ảnh đại diện thành công"
 }

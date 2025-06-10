@@ -8,7 +8,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useTranslation } from 'react-i18next';
 import { ListItemIcon, ListItemButton, ListItemText, Toolbar,
-    MenuItem, Tooltip, Button, Box, List, Menu, Avatar, useMediaQuery } from '@mui/material';
+    MenuItem, Tooltip, Button, Box, List, Menu, Avatar, useMediaQuery, 
+    Paper} from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import FlagUK from '../../../../../public/flagUK';
 import FlagVN from '../../../../../public/flagVN';
@@ -16,7 +17,7 @@ import Logout from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import { changeLanguage } from "i18next";
 import useNav from '../../../pages/HomeComponents/hooks/useNav';
-import { ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
+import { AVATAR_DEFAULT, AVATAR_NULL, ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useState } from "react";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -230,6 +231,18 @@ const NavDashboard = ({ open, toggleDrawer }) => {
                 }}
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
+                <Link to="/dashboard/profile" className="nav-link" style={{ "padding": "0px" }}>
+                  <Box component={Paper} elevation={4} className="ou-px-2 ou-py-3 ou-mx-2 ou-mb-3"> 
+                    <Box className="ou-flex ou-items-center">
+                      <Avatar 
+                        src={(user.avatar_path === ERROR_CLOUDINARY) ? AVATAR_DEFAULT : user.avatar_path} 
+                      className="!ou-ml-2"/>
+                      <Typography>
+                        | {user.first_name + " " + user.last_name}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Link>
                 <Link to="/dashboard/profile" className="nav-link" style={{ "padding": "0px" }}>
                     <MenuItem style={{ "color": "#333" }}>
                         <AccountCircleIcon fontSize="small" />

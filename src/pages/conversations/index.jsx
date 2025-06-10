@@ -72,7 +72,7 @@ const ConversationList = () => {
                                                 <IconRecipientChatPlaceholder size={500}/>
                                             </Tooltip>
                                         </Box>
-                                        <Box className="ou-semi">{t('conversation:selectUser')}</Box>
+                                        <Box>{t('conversation:selectUser')}</Box>
                                     </Box>
                                 </Grid>
                             }

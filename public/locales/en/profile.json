@@ -2,5 +2,12 @@
     "profile": "Profile",
     "addressInfo": "Address Info",
     "bookingList": "Booking List",
-    "patientManagement": "Patient Management"
+    "changeAvatar": "Change Avatar",
+    "patientManagement": "Patient Management",
+    "submit": "Submit",
+    "uploadAvatar": "Upload Avatar",
+    "currentAvatar": "Current Avatar",
+    "selectedAvatar": "Selected Avatar",
+    "changeAvatarSuccess": "Change Avatar Success",
+    "noImageSelected": "No Image Selected"
 }

@@ -47,7 +47,7 @@ const UpdateProfile = ({ userID ,email, firstName, lastName, dob, phoneNumber, g
   return (
     <Box className=" ou-m-auto ou-rounded !ou-h-full">
       <Helmet>
-        <title>Profile</title>
+        <title>{t('register:profile')}</title>
       </Helmet>
       <form
         onSubmit={methods.handleSubmit((data) => {
@@ -55,7 +55,7 @@ const UpdateProfile = ({ userID ,email, firstName, lastName, dob, phoneNumber, g
         })}
         className="ou-m-auto ou-px-8 ou-py-4  !ou-h-full"
       >
-        <h1 className="ou-text-center ou-text-2xl ou-py-2 ou-uppercase ou-font-semibold">{t('register:updateInformation')}</h1>
+        <h1 className="ou-text-center ou-text-2xl ou-py-2 ou-uppercase">{t('register:updateInformation')}</h1>
         <Grid container justifyContent="flex" className="ou-mt-6">
           <Grid item xs={4} className="ou-pr-2">
             <TextField

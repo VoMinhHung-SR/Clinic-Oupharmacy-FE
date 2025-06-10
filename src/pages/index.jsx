@@ -93,7 +93,7 @@ const Home = () => {
       {/* Services section */}
       <section className="ou-mb-10">
           <Box className="ou-text-center !ou-py-10" component={Container}>
-          <h3 className="  ou-text-3xl ou-font-semibold ou-pb-10">{t('home:ourServices')}</h3>
+          <h3 className="ou-text-3xl ou-pb-10">{t('home:ourServices')}</h3>
 
 
           <Grid container spacing={3}>
@@ -203,7 +203,7 @@ const Home = () => {
    
       {/* Map area */}
       <Box className="ou-text-center !ou-py-10" component={Container}>
-        <h3 className=" ou-text-3xl ou-font-semibold">{t('home:contactUs')}</h3>
+        <h3 className=" ou-text-3xl">{t('home:contactUs')}</h3>
         <p className="ou-py-5 ou-mb-5">{t('home:contactDescription')}</p>
         <Grid container spacing={3} className="ou-mb-10">
             <Grid item xs={12} sm={12} md={6}>

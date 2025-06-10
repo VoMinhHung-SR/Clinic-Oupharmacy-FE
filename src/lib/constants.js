@@ -42,6 +42,7 @@ export const MAX_EXAM_PER_DAY = 30
 export const BACKEND_BASEURL = import.meta.env.VITE_SERVER
 
 export const ERROR_CLOUDINARY = 'https://res.cloudinary.com/dl6artkyb/null'
+export const AVATAR_NULL = 'https://res.cloudinary.com/dl6artkyb/users/avatar/null'
 export const AVATAR_DEFAULT = 'https://res.cloudinary.com/dl6artkyb/image/upload/v1666353307/OUPharmacy/logo_oupharmacy_kz2yzd.png'
 export const ORIGIN_LAT = 10.816905962180005
 export const ORIGIN_LNG = 106.6786961439645

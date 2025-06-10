@@ -76,7 +76,7 @@ const Register = () => {
     return (
         <>
             <Helmet>
-                <title>Register</title>
+                <title>{t('register:register')}</title>
             </Helmet>
 
             {openBackdrop === true ?
@@ -93,7 +93,7 @@ const Register = () => {
                     })} 
                     className="ou-m-auto ou-px-8 ou-py-4 "
                     >
-                        <h1 className="ou-text-center ou-text-2xl ou-py-2 ou-uppercase ou-font-semibold">{t('registerUser')}</h1>
+                        <h1 className="ou-text-center ou-text-2xl ou-py-2 ou-uppercase">{t('registerUser')}</h1>
                         <Grid container justifyContent="flex" className="ou-mt-6" >
                             <Grid item xs={4} className="ou-pr-2" >
                                 <TextField
@@ -226,7 +226,7 @@ const Register = () => {
                             </Grid>
                         </Grid>
 
-                        <h2 className="ou-text-center ou-text-2xl ou-pt-8 ou-pb-3 ou-uppercase ou-font-semibold">{t('addressInfo')}</h2>
+                        <h2 className="ou-text-center ou-text-2xl ou-pt-8 ou-pb-3 ou-uppercase">{t('addressInfo')}</h2>
                         <Typography className="ou-text-center !ou-text-sm ou-pb-3">({t('correctAddress')})</Typography>
                         <Grid container justifyContent="flex">
                             
