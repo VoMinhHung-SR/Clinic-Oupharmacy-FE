@@ -1,10 +1,10 @@
-import { Autocomplete, Box, Button, Container, createFilterOptions, FormControl, FormHelperText, Grid, InputLabel, MenuItem, Paper, Select, TextField, Tooltip, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Container, createFilterOptions, FormControl, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Paper, Select, TextField, Tooltip, Typography } from "@mui/material";
 import { set, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import BackdropLoading from "../../modules/common/components/BackdropLoading";
 import useRegister from "../../modules/pages/RegisterComponents/hooks/useRegister";
 import {yupResolver} from "@hookform/resolvers/yup"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../../modules/common/components/Loading";
 import { useSelector } from 'react-redux'; 
 import { useTranslation } from "react-i18next";
@@ -13,17 +13,24 @@ import useAddressInfo from "../../modules/pages/RegisterComponents/hooks/useAddr
 import { Helmet } from "react-helmet";
 import { CURRENT_DATE } from "../../lib/constants";
 import moment from "moment";
+import SchemaModels from "../../lib/schema";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Register = () => {
     const {t, tReady} = useTranslation(['register', 'common', "yup-validate"]) 
 
-    const {imageUrl, setImageUrl, openBackdrop, dob, setDOB, isLoadingUserRole, registerSchema,
+    const {imageUrl, setImageUrl, openBackdrop, dob, setDOB, isLoadingUserRole,
         selectedImage, setSelectedImage, userRoleID, gender, setGender ,onSubmit
     } = useRegister();
 
+    const {registerSchema} = SchemaModels()
+
     const {districts, setAddressInput, setCityId, handleGetPlaceByID, handleSetLocation,
         listPlace, setSelectedOption, locationGeo} = useAddressInfo()
-        
+    
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPass, setShowConfirmPass] = useState(false)
+    
     const methods = useForm({
         mode:"onSubmit", 
         resolver: yupResolver(registerSchema),
@@ -103,7 +110,7 @@ const Register = () => {
                                     id="firstName"
                                     name="firstName"
                                     type="text"
-                                    label={t('firstName')}
+                                    label={<>{t('firstName')}<span style={{color: 'red'}}>*</span></>}
                                     error={methods.formState.errors.firstName}
                                     helperText={methods.formState.errors.firstName ? methods.formState.errors.firstName.message : ""}
                                     {...methods.register("firstName")}
@@ -116,7 +123,7 @@ const Register = () => {
                                     id="lastName"
                                     name="lastName"
                                     type="text"
-                                    label={t('lastName')}
+                                    label={<>{t('lastName')}<span style={{color: 'red'}}>*</span></>}
                                     error={methods.formState.errors.lastName}
                                     helperText={methods.formState.errors.lastName ? methods.formState.errors.lastName.message : ""}
                                     {...methods.register("lastName")} />
@@ -128,7 +135,7 @@ const Register = () => {
                                     id="phoneNumber"
                                     name="phoneNumber"
                                     type="text"
-                                    label={t('phoneNumber')}
+                                    label={<>{t('phoneNumber')}<span style={{color: 'red'}}>*</span></>}
                                     error={methods.formState.errors.phoneNumber}
                                     helperText={methods.formState.errors.phoneNumber ? methods.formState.errors.phoneNumber.message : ""}
                                     {...methods.register("phoneNumber")} />
@@ -143,7 +150,7 @@ const Register = () => {
                                         id="email"
                                         name="email"
                                         type="text"
-                                        label={t('email')}
+                                        label={<>{t('email')}<span style={{color: 'red'}}>*</span></>}
                                         error={methods.formState.errors.email}
                                         {...methods.register("email")}
                                     />
@@ -195,34 +202,67 @@ const Register = () => {
 
                         <Grid container justifyContent="flex" className="ou-mt-4 ou-items-center">
                         <Grid item xs={6} className="ou-pr-1">
-                                <TextField
-                                    fullWidth
-                                    autoComplete="given-name"
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    label={t('password')}
-                                    error={methods.formState.errors.password}
-                                    helperText={methods.formState.errors.password ? methods.formState.errors.password.message : ""}
-                                    {...methods.register("password")}
-                                />
+                                <FormControl fullWidth variant="outlined" error={!!methods.formState.errors.password}>
+                                    <InputLabel htmlFor="password">
+                                        {t('password')}<span style={{color: 'red'}}>*</span>
+                                    </InputLabel>
+                                    <OutlinedInput
+                                        id="password"
+                                        name="password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        label={t('password')}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                edge="end"
+                                                >
+                                                {showPassword   ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                            }
+                                        {...methods.register("password")}
+                                    />
+                                    <FormHelperText>
+                                        {methods.formState.errors.password?.message}
+                                    </FormHelperText>
+                                </FormControl>
                             </Grid>
                             <Grid item xs={6} className="ou-pl-1">
-                                <TextField
-                                    fullWidth
-                                    autoComplete="given-name"
-                                    id="confirmPassword"
-                                    name="confirmPassword"
-                                    type="password"
-                                    label={t('confirmPassword')}
-                                    error={methods.formState.errors.confirmPassword}
-                                    helperText={
-                                        methods.formState.errors.confirmPassword
-                                            ? methods.formState.errors.confirmPassword.message
-                                            : ""
-                                    }
-                                    {...methods.register("confirmPassword")}
-                                />
+                                <FormControl fullWidth variant="outlined" error={!!methods.formState.errors.confirmPassword}>
+                                    <InputLabel htmlFor="confirmPassword">
+                                        {t('confirmPassword')}<span style={{color: 'red'}}>*</span>
+                                    </InputLabel>
+                                        <OutlinedInput
+                                        fullWidth
+                                        id="confirmPassword"
+                                        name="confirmPassword"
+                                        type={showConfirmPass ? 'text' : 'password'}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={() => setShowConfirmPass(!showConfirmPass)}
+                                                edge="end"
+                                                >
+                                                {showConfirmPass   ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                            }
+                                        label={<>{t('confirmPassword')}<span style={{color: 'red'}}>*</span></>}
+                                        error={methods.formState.errors.confirmPassword}
+                                        helperText={
+                                            methods.formState.errors.confirmPassword
+                                                ? methods.formState.errors.confirmPassword.message
+                                                : ""
+                                        }
+                                        {...methods.register("confirmPassword")}
+                                        />
+                                    <FormHelperText>
+                                        {methods.formState.errors.confirmPassword?.message}
+                                    </FormHelperText>
+                                </FormControl>
                             </Grid>
                         </Grid>
 

@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import * as Yup from 'yup';
 import SuccessfulAlert, { ErrorAlert } from '../../../../config/sweetAlert2';
-import { REGEX_EMAIL, REGEX_NAME, REGEX_PHONE_NUMBER, REGEX_STRONG_PASSWORD, ROLE_USER, TOAST_ERROR } from '../../../../lib/constants';
+import { ROLE_USER, TOAST_ERROR } from '../../../../lib/constants';
 import createToastMessage from '../../../../lib/utils/createToastMessage';
 import { fetchCreateLocation, fetchCreateUser, fetchDistrictsByCity,fetchCreateUserRole } from '../services';
 
@@ -62,46 +61,6 @@ const useRegister = () => {
         if(cityId)
             loadDistricts(cityId)
     },[userRoleID, cityId])
-
- 
-
-    const registerSchema = Yup.object().shape({
-        firstName: Yup.string().trim()
-            .required(t('yupFirstNameRequired'))
-            .max(254, t('yupFirstNameMaxLength'))
-            .matches(REGEX_NAME, t('yupFirstNameInvalid')),
-        lastName: Yup.string().trim()
-            .required((t('yupLastNameRequired')))
-            .max(254,  t('yupLastNameMaxLength'))
-            .matches(REGEX_NAME, t('yupLastNameInvalid')),
-        email: Yup.string().trim()
-            .required(t('yupEmailRequired'))
-            .max(254, t('yupEmailMaxLength'))
-            .matches(REGEX_EMAIL, t('yupEmailInvalid')),
-        dob:  Yup.string().trim()
-        .required(t('yupDOBRequired')), 
-        password: Yup.string().trim()
-            .required(t('yupPasswordRequired'))
-            .matches(REGEX_STRONG_PASSWORD, t('yupNewPasswordRegex'))
-            .max(128, t('yupPasswordMaxLength')),
-        confirmPassword: Yup.string().trim()
-            .required(t('yupConfirmPasswordRequire'))
-            .oneOf([Yup.ref("password")], t('yupConfirmPasswordMatch')),
-        phoneNumber: Yup.string().trim()
-            .required(t('yupPhoneNumberRequired'))
-            .matches(REGEX_PHONE_NUMBER, t('yupPhoneNumberInvalid')),
-        location: Yup.object().shape({
-            address: Yup.string().trim()
-                .required(t('yupAddressRequired')),
-            city: Yup
-                .number().moreThan(0, t('yupCityNumber'))
-                .required(t('yupCityRequired')),
-            district: Yup
-            .number().moreThan(0, t('yupDistrictNumber'))
-            .required(t('yupDistrictRequired')),
-        })
-        
-    });
     
     const onSubmit = (data, setError, locationGeo) => {
         if(locationGeo.lat === '' || locationGeo.lng === ''){
@@ -111,14 +70,7 @@ const useRegister = () => {
             })
             return;
         }
-
-        let date 
-
         setOpenBackdrop(true)
-
-        if (data.dob !== undefined)
-            date = new Date(data.dob).toISOString()
-        
         const register = async (locationId) => {
             try {
                 let formData = new FormData()
@@ -128,7 +80,7 @@ const useRegister = () => {
                 formData.append("email", data.email)
                 formData.append("address", data.address)
                 formData.append("phone_number", data.phoneNumber)
-                formData.append("date_of_birth", date)
+                formData.append("date_of_birth", data.dob ? new Date(data.dob).toISOString() : '')
                 formData.append("gender", gender)
                 formData.append("avatar", selectedImage)
                 formData.append("role", userRoleID)
@@ -199,7 +151,6 @@ const useRegister = () => {
         setImageUrl,
         setSelectedImage,
         setOpenBackdrop,
-        registerSchema
     }
 }
 
