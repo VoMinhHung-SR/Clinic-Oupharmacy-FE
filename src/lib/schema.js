@@ -110,7 +110,6 @@ const SchemaModels = () => {
             .max(254, t('yupEmailMaxLength'))
             .matches(REGEX_EMAIL, t('yupEmailInvalid')),
         dob:  Yup.string().trim(),
-        // .required(t('yupDOBRequired')), 
         password: Yup.string().trim()
             .required(t('yupPasswordRequired'))
             .matches(REGEX_STRONG_PASSWORD, t('yupNewPasswordRegex'))
@@ -122,8 +121,7 @@ const SchemaModels = () => {
             .required(t('yupPhoneNumberRequired'))
             .matches(REGEX_PHONE_NUMBER, t('yupPhoneNumberInvalid')),
         location: Yup.object().shape({
-            address: Yup.string().trim()
-                .required(t('yupAddressRequired')),
+            address: Yup.string().required(t('yupAddressRequired')),
             city: Yup
                 .number().moreThan(0, t('yupCityNumber'))
                 .required(t('yupCityRequired')),

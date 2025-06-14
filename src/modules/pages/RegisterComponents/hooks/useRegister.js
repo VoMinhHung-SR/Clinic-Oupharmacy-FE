@@ -63,11 +63,11 @@ const useRegister = () => {
     },[userRoleID, cityId])
     
     const onSubmit = (data, setError, locationGeo) => {
-        if(locationGeo.lat === '' || locationGeo.lng === ''){
-            setError('location.address',{
+        if (!data.location.lat || !data.location.lng) {
+            setError('location.address', {
                 type: "custom",
-                message:t('yupAddressMustBeSelected')
-            })
+                message: t('yupAddressMustBeSelected')
+            });
             return;
         }
         setOpenBackdrop(true)
