@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import { Autocomplete, TextField, CircularProgress } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-const AddressAutocomplete = forwardRef(({
+const AddressAutocomplete = React.memo(forwardRef(({
     value,
     onChange,
     onInputChange,
@@ -14,14 +14,13 @@ const AddressAutocomplete = forwardRef(({
 }, ref) => {
     const { t } = useTranslation(['register', 'common']);
 
-
     return (
         <Autocomplete
             freeSolo
-            inputValue={typeof value === 'string' ? value : ''}
-            options={options?.filter(Boolean) || []}
+            inputValue={value || ''}
+            options={options || []}
             loading={loading}
-            getOptionLabel={(option) => {
+            getOptionLabel={option => {
                 if (!option) return '';
                 if (typeof option === 'string') return option;
                 if (typeof option.description === 'string') return option.description;
@@ -36,7 +35,7 @@ const AddressAutocomplete = forwardRef(({
             noOptionsText={"No Option"}
             onInputChange={onInputChange}
             onChange={onChange}
-            renderInput={(params) => (
+            renderInput={params => (
                 <TextField
                     {...params}
                     label={t('address')}
@@ -56,6 +55,6 @@ const AddressAutocomplete = forwardRef(({
             {...props}
         />
     );
-});
+}));
 
 export default AddressAutocomplete; 

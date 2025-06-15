@@ -14,6 +14,7 @@ import moment from "moment";
 import SchemaModels from "../../lib/schema";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import AddressAutocomplete from '../../modules/pages/RegisterComponents/components/AddressAutocomplete';
+import BackdropLoading from "../../modules/common/components/BackdropLoading";
 
 const Register = () => {
     const {t, tReady} = useTranslation(['register', 'common', "yup-validate"]) 
@@ -59,14 +60,16 @@ const Register = () => {
 
     const { allConfig } = useSelector((state) => state.config);
 
-    const filterOptions = (options, state) => {
+    const filterByField = (field) => (options, state) => {
         return options.filter(option => {
-            const label = typeof option === 'string'
-                ? option
-                : (option && typeof option.description === 'string' ? option.description : '');
+            const label = option && typeof option[field] === 'string' ? option[field] : '';
             return label.toLowerCase().includes(state.inputValue.toLowerCase());
         });
     };
+
+    const filterCityOptions = filterByField('name');
+    const filterDistrictOptions = filterByField('name');
+    const filterAddressOptions = filterByField('description');
 
     if (tReady && isLoadingUserRole)
         return <Box sx={{ minHeight: "300px" }}>
@@ -74,20 +77,15 @@ const Register = () => {
                 <title>Register</title>
             </Helmet>
             <Box className='ou-p-5'>
-                <Loading></Loading>
+                <BackdropLoading></BackdropLoading>
             </Box>
         </Box>
 
     return (
         <>
-            <Helmet>
-                <title>{t('register:register')}</title>
-            </Helmet>
+            <Helmet><title>{t('register:register')}</title></Helmet>
 
-            {openBackdrop === true ?
-                (<BackdropLoading></BackdropLoading>)
-                : <></>
-            }
+            {openBackdrop === true ? <BackdropLoading></BackdropLoading> : <></>}
 
             <div style={{ "width": "100%"
             }}>
@@ -98,7 +96,7 @@ const Register = () => {
                         })} 
                         className="ou-m-auto ou-px-8 ou-py-4 "
                         >
-                            <h1 className="ou-text-center ou-text-2xl ou-py-2 ou-uppercase">{t('registerUser')}</h1>
+                            <h1 className="ou-text-center ou-text-xl ou-py-2">{t('registerUser')}</h1>
                             <Grid container justifyContent="flex" className="ou-mt-6" >
                                 <Grid item xs={4} className="ou-pr-2" >
                                     <TextField
@@ -259,104 +257,18 @@ const Register = () => {
                                 </Grid>
                             </Grid>
 
-                            <h2 className="ou-text-center ou-text-2xl ou-pt-8 ou-pb-3 ou-uppercase">{t('addressInfo')}</h2>
-                            <Typography className="ou-text-center !ou-text-sm ou-pb-3">({t('correctAddress')})</Typography>
-                            <Grid container justifyContent="flex">
-                                
-                                <Grid item xs={4} className={clsx('ou-pr-2 !ou-mt-4')} >
-                                    <FormControl fullWidth >
-                                        <Autocomplete
-                                            id="city"
-                                            options={allConfig.cityOptions}
-                                            getOptionLabel={(option) => option.name}
-                                            filterOptions={filterOptions}
-                                            isOptionEqualToValue={(option, value) => {
-                                                if (!option || !value) return false;
-                                                if (typeof option === 'string' && typeof value === 'string') return option === value;
-                                                if (typeof option === 'object' && typeof value === 'string') return option.description === value;
-                                                if (typeof option === 'string' && typeof value === 'object') return option === value.description;
-                                                return option?.id === value?.id || option?.description === value?.description;
-                                            }}
-                                            noOptionsText={t('noCityFound')}
-                                            onChange={(event, value) => {
-                                                methods.setValue('location.district', ' ')
-                                                setCityId(value.id)
-                                                methods.setValue("location.city",value.id)
-                                                methods.clearErrors('location.city')
-                                            }}
-                                            renderInput={(params) => <TextField {...params} label={t('city')} 
-                
-                                                error={methods.formState.errors.location?.city}
-                                                name="location.city"
-                                                />}
-                                        />
-                                           {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.location?.city?.message}</p>) : <></>}
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={8} className="!ou-mt-4 ou-pl-2" >
-                                    <FormControl fullWidth >
-                                        <Autocomplete
-                                            id="district"
-                                            options={districts}
-                                            getOptionLabel={(option) => option.name}
-                                            filterOptions={filterOptions}
-                                            isOptionEqualToValue={(option, value) => {
-                                                if (!option || !value) return false;
-                                                if (typeof option === 'string' && typeof value === 'string') return option === value;
-                                                if (typeof option === 'object' && typeof value === 'string') return option.description === value;
-                                                if (typeof option === 'string' && typeof value === 'object') return option === value.description;
-                                                return option?.id === value?.id || option?.description === value?.description;
-                                            }}
-                                            noOptionsText={t('noDistrictFound')}
-                                            onChange={(event, value) => {
-                                                
-                                                methods.setValue("location.district",value.id)
-                                                methods.clearErrors('location.district')
-                                            }}
-                                            renderInput={(params) => <TextField {...params} 
-                                                label={t('district')}
-                                                error={methods.formState.errors.location?.district}
-                                                name="location.district"
-                                            />}
-                                        />
-                                        {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.location?.district?.message}</p>) : <></>}
-                                       
-                                    </FormControl>
-                                </Grid>
-                            {/* address */}
-                            <Grid item xs={12} className="!ou-mt-4">
-                            <FormControl fullWidth>
-                                <Controller
-                                    name="location.address"
-                                    control={methods.control}
-                                    render={({ field }) => (
-                                        <AddressAutocomplete
-                                            value={field.value || ''}
-                                            options={listPlace}
-                                            loading={isLoadingUserRole}
-                                            onInputChange={(e, value, reason) => {
-                                                field.onChange(value);
-                                                if (reason === 'input') {
-                                                    handleInputChange(e, value);
-                                                }
-                                            }}
-                                            onChange={(e, value) => {
-                                                field.onChange(value ? (value.description || value) : '');
-                                                handleChange(e, value);
-                                            }}
-                                            filterOptions={filterOptions}
-                                            error={methods.formState.errors.location?.address}
-                                        />
-                                    )}
-                                />
-                                {methods.formState.errors.location?.address && (
-                                    <p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">
-                                        {methods.formState.errors.location?.address?.message}
-                                    </p>
-                                )}
-                            </FormControl>
-                                </Grid>
-                            </Grid>
+                            <AddressInfo t={t} allConfig={allConfig}
+                                methods={methods}
+                                districts={districts}
+                                filterCityOptions={filterCityOptions}
+                                filterDistrictOptions={filterDistrictOptions}
+                                filterAddressOptions={filterAddressOptions}
+                                setCityId={setCityId}
+                                listPlace={listPlace}
+                                isLoadingUserRole={isLoadingUserRole}
+                                handleInputChange={handleInputChange}
+                                handleChange={handleChange}
+                            />
 
                             <Grid container justifyContent="flex" className="ou-my-3">
                                 <Grid item xs={12}>
@@ -366,7 +278,7 @@ const Register = () => {
                                                     setSelectedImage(e.target.files[0]);
                                                 }}
                                             />
-                              
+                            
                                             <label htmlFor="select-image">
                                                 <Button className="!ou-min-w-[150px]"  variant="contained" color="primary" component="span">
                                                     {t('uploadAvatar')}
@@ -394,44 +306,148 @@ const Register = () => {
                                 </Grid>
                                   
                             </Grid>
-                          
-
                             </form>
 
-                                <Grid container>
-                                    <Grid item sx={{ margin: "0 auto", mb: 2 }}>
-                                        <Typography
-                                            variant="subtitle1"
-                                            gutterBottom
-                                            component={Link}
-                                            to="/"
-                                            style={{ textDecoration: "inherit" }}
-                                            color="grey.700"
-                                        >
-                                            {t('common:backToHomepage')}
-                                        </Typography>
-                                    </Grid>
+                            <Grid container>
+                                <Grid item sx={{ margin: "0 auto", mb: 2 }}>
+                                    <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                        component={Link}
+                                        to="/"
+                                        style={{ textDecoration: "inherit" }}
+                                        color="grey.700"
+                                    >
+                                        {t('common:backToHomepage')}
+                                    </Typography>
                                 </Grid>
-                                <Grid container justifyContent="flex-end">
-                                    <Grid item sx={{ margin: "0 auto", mb: 4 }}>
-                                        <Link
-                                            to="/login/"
-                                            style={{ textDecoration: "inherit", color: "#1976d2" }}
-                                        >
-                                        {t('common:haveAnCount')}
-                                        </Link>
-                                    </Grid>
-                                </Grid>
-                        </Box>
-                        
-                    
-                    </Container>
-                   
-                </div>
+                            </Grid>
 
+                            <Grid container justifyContent="flex-end">
+                                <Grid item sx={{ margin: "0 auto", mb: 4 }}>
+                                    <Link
+                                        to="/login/"
+                                        style={{ textDecoration: "inherit", color: "#1976d2" }}
+                                    >
+                                    {t('common:haveAnCount')}
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </Container>
+                </div>
             </>
         )
+}
 
+const AddressInfo = ( {t, allConfig, methods, districts, filterCityOptions, filterDistrictOptions,
+    filterAddressOptions, setCityId, listPlace, isLoadingUserRole, handleInputChange, handleChange} ) => {
+    return (
+        <Box>
+            <h2 className="ou-text-center ou-text-xl ou-pt-8 ou-pb-3">{t('addressInfo')}</h2>
+                <Typography className="ou-text-center !ou-text-sm ou-pb-3">({t('correctAddress')})</Typography>
+                    <Grid container justifyContent="flex">
+                        <Grid item xs={4} className={clsx('ou-pr-2 !ou-mt-4')} >
+                            <FormControl fullWidth >
+                                <Autocomplete
+                                    id="city"
+                                    options={allConfig.cityOptions}
+                                    getOptionLabel={(option) => option.name}
+                                    filterOptions={filterCityOptions}
+                                    isOptionEqualToValue={(option, value) => {
+                                        if (!option || !value) return false;
+                                        if (typeof option === 'string' && typeof value === 'string') return option === value;
+                                        if (typeof option === 'object' && typeof value === 'string') return option.description === value;
+                                        if (typeof option === 'string' && typeof value === 'object') return option === value.description;
+                                        return option?.id === value?.id || option?.description === value?.description;
+                                    }}
+                                    noOptionsText={t('noCityFound')}
+                                    onChange={(event, value) => {
+                                        methods.setValue('location.district', ' ')
+                                        setCityId(value.id)
+                                        methods.setValue("location.city",value.id)
+                                        methods.clearErrors('location.city')
+                                    }}
+                                    renderInput={(params) => <TextField {...params} label={t('city')} 
+        
+                                        error={methods.formState.errors.location?.city}
+                                        name="location.city"
+                                        />}
+                                />
+                                    {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.location?.city?.message}</p>) : <></>}
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={8} className="!ou-mt-4 ou-pl-2" >
+                            <FormControl fullWidth >
+                                <Autocomplete
+                                    id="district"
+                                    options={districts}
+                                    getOptionLabel={(option) => option.name}
+                                    filterOptions={filterDistrictOptions}
+                                    isOptionEqualToValue={(option, value) => {
+                                        if (!option || !value) return false;
+                                        if (typeof option === 'string' && typeof value === 'string') return option === value;
+                                        if (typeof option === 'object' && typeof value === 'string') return option.description === value;
+                                        if (typeof option === 'string' && typeof value === 'object') return option === value.description;
+                                        return option?.id === value?.id || option?.description === value?.description;
+                                    }}
+                                    noOptionsText={t('noDistrictFound')}
+                                    onChange={(event, value) => {
+                                        
+                                        methods.setValue("location.district",value.id)
+                                        methods.clearErrors('location.district')
+                                    }}
+                                    renderInput={(params) => <TextField {...params} 
+                                        label={t('district')}
+                                        error={methods.formState.errors.location?.district}
+                                        name="location.district"
+                                    />}
+                                />
+                                {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.location?.district?.message}</p>) : <></>}
+                                
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} className="!ou-mt-4">
+                            <FormControl fullWidth>
+                                <Controller
+                                    name="location.address"
+                                    control={methods.control}
+                                    render={({ field }) => (
+                                        <AddressAutocomplete
+                                            value={field.value || ''}
+                                            options={listPlace}
+                                            loading={isLoadingUserRole}
+                                            onInputChange={(e, value, reason) => {
+                                                field.onChange(value);
+                                                if (reason === 'input') {
+                                                    handleInputChange(e, value);
+                                                }
+                                            }}
+                                            onChange={(e, value) => {
+                                                if (typeof value === 'string') {
+                                                    field.onChange(value);
+                                                } else if (value && typeof value.description === 'string') {
+                                                    field.onChange(value.description);
+                                                } else {
+                                                    field.onChange('');
+                                                }
+                                                handleChange(e, value);
+                                            }}
+                                            filterOptions={filterAddressOptions}
+                                            error={methods.formState.errors.location?.address}
+                                        />
+                                    )}
+                                />
+                                {methods.formState.errors.location?.address && (
+                                    <p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">
+                                        {methods.formState.errors.location?.address?.message}
+                                    </p>
+                                )}
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+        </Box>
+    )
 }
 
 export default Register

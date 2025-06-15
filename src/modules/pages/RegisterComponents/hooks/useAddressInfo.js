@@ -63,8 +63,7 @@ const useAddressInfo = () => {
     const handleInputChange = useCallback((event, value) => {
         setAddressState(prev => ({
             ...prev,
-            addressInput: value,
-            selectedOption: null
+            addressInput: value
         }));
     }, []);
 
