@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Grid, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
 import { Helmet } from 'react-helmet';
-import useRegister from '../../RegisterComponents/hooks/useRegister';
 import { CURRENT_DATE } from '../../../../lib/constants';
 import useUpdateProfile from '../hooks/useUpdateProfile';
 

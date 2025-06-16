@@ -317,7 +317,7 @@ const Nav = () => {
       </Container>
 
       <CustomModal
-          className="ou-w-[900px]"
+          className="ou-w-[600px]"
           open={isOpen}
           onClose={handleCloseModal}
           content={<FormChangePassword callBack={handleCloseModal}/>}
