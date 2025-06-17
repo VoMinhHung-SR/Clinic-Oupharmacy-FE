@@ -1,79 +1,107 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import useDebounce from '../../../../lib/hooks/useDebounce';
-import { fetchPlaceById, fetchPlaceByInput } from '../../../common/components/Mapbox/services';
+import { fetchPlaceById } from '../../../common/components/Mapbox/services';
 import { fetchDistrictsByCity } from '../services';
-
+import useAddressSearch from './useAddressSearch';
+import { createFilterOptions } from '@mui/material';
 
 const useAddressInfo = () => {
-    const [districts, setDistricts] = useState([])
-    const [cityId, setCityId] = useState(null)
-    const [cityName, setCityName] = useState('')
-    const [districtName, setDistrictName] = useState('')
-    const [addressInput, setAddressInput] = useState('')
-    const [listPlace, setListPlace] = useState([])
-    const [loading, setLoading] = useState(false)
-    const [location, setLocation] = useState({
-        lat: "",
-        lng: ""
-    })
-    const debouncedValue = useDebounce(addressInput,500)
-    const handleSetLocation = () => 
-        setLocation({
-            lat: "",
-            lng: ""
-        })
-    
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [addressState, setAddressState] = useState({
+        districts: [],
+        cityId: null,
+        cityName: '',
+        districtName: '',
+        addressInput: '',
+        location: { lat: "", lng: "" },
+        selectedOption: null
+    });
 
-    useEffect(()=> {
+    const debouncedValue = useDebounce(addressState.addressInput, 500);
+    const { listPlace, loading } = useAddressSearch(debouncedValue);
 
+    const handleSetLocation = useCallback(() => {
+        setAddressState(prev => ({
+            ...prev,
+            location: { lat: "", lng: "" }
+        }));
+    }, []);
+
+    useEffect(() => {
         const loadDistricts = async (cityId) => {
-            const res = await fetchDistrictsByCity(cityId)
-            if(res.status === 200){
-  
-                setDistricts(res.data)
+            const res = await fetchDistrictsByCity(cityId);
+            if (res.status === 200) {
+                setAddressState(prev => ({
+                    ...prev,
+                    districts: res.data
+                }));
+            } else {
+                setAddressState(prev => ({
+                    ...prev,
+                    districts: []
+                }));
             }
-            else{
-                setDistricts([])
-            }
+        };
+
+        if (addressState.cityId) {
+            loadDistricts(addressState.cityId);
         }
+    }, [addressState.cityId]);
 
-        if(cityId)
-            loadDistricts(cityId)
-    },[cityId])
-
-    useEffect(()=> {
-        const loadMapInput = async () => {
-            try{
-                setLoading(true)
-                const res = await fetchPlaceByInput(debouncedValue)
-                if(res.status === 200){
-         
-                    setListPlace(res.data.predictions)
+    const handleGetPlaceByID = useCallback(async (placeId) => {
+        const res = await fetchPlaceById(placeId);
+        if (res.status === 200) {
+            setAddressState(prev => ({
+                ...prev,
+                location: {
+                    lat: res.data.result.geometry.location.lat,
+                    lng: res.data.result.geometry.location.lng
                 }
-            }catch (err){
-                setListPlace([])
-            }finally{
-                setLoading(false)
-            }
+            }));
         }
-        if(debouncedValue)
-            loadMapInput()
-    }, [debouncedValue])
+    }, []);
 
-    const handleGetPlaceByID = async (placeId) =>{
-        const res = await fetchPlaceById(placeId)
-        if(res.status === 200){
-            setLocation({lat: res.data.result.geometry.location.lat,
-            lng:  res.data.result.geometry.location.lng})
+    const handleInputChange = useCallback((event, value) => {
+        setAddressState(prev => ({
+            ...prev,
+            addressInput: value
+        }));
+    }, []);
+
+    const handleChange = useCallback((event, value) => {
+        if (value) {
+            handleGetPlaceByID(value.place_id);
+            setAddressState(prev => ({
+                ...prev,
+                selectedOption: value,
+                addressInput: value.description
+            }));
+        } else {
+            setAddressState(prev => ({
+                ...prev,
+                selectedOption: null,
+                addressInput: '',
+                location: { lat: "", lng: "" }
+            }));
         }
-    }
+    }, [handleGetPlaceByID]);
+
+    const memoizedFilterOptions = useMemo(() => createFilterOptions({
+        matchFrom: 'start',
+        stringify: (option) => option?.description || ""
+    }), []);
 
     return {
-        setCityId, addressInput,loading, listPlace, handleGetPlaceByID, handleSetLocation,
-        setAddressInput, districts, setSelectedOption, selectedOption, locationGeo: location,
-        setCityName, setDistrictName, cityName, districtName
-    }
-}
+        ...addressState,
+        listPlace,
+        loading,
+        handleInputChange,
+        handleChange,
+        handleSetLocation,
+        filterOptions: memoizedFilterOptions,
+        setCityId: (id) => setAddressState(prev => ({ ...prev, cityId: id })),
+        setCityName: (name) => setAddressState(prev => ({ ...prev, cityName: name })),
+        setDistrictName: (name) => setAddressState(prev => ({ ...prev, districtName: name }))
+    };
+};
 
-export default useAddressInfo
+export default useAddressInfo;
