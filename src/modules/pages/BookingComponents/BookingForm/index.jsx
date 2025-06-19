@@ -78,13 +78,19 @@ const BookingForm = ({doctorInfo}) => {
         if(!slideRight)
             return  (<>
                 <CustomCollapseListItemButton isOpen={true} title={
-                    <div className="ou-flex ou-justify-center ou-items-center">
-                        <div className="ou-mr-2">
+                    <div className="ou-flex ou-items-center">
+                        <Box className="ou-mr-2">
                             <Avatar>
                                 <StethoscopeIcon size={20}/>
                             </Avatar>
-                        </div>
-                    <p className="ou-w-full ou-text-blue-700 ou-font-bold">{doctor.first_name} {doctor.last_name}</p>
+                        </Box>
+        
+                        <p className="ou-w-full ou-text-blue-700 ou-font-bold">
+                            {doctor.first_name} {doctor.last_name}
+                        </p>
+                        <Box className="ou-mr-2">
+                            <SpecializationTag specialization={['tags','tags','tags','tags']}/>
+                        </Box>
                     </div>} 
                     loading={isLoading}
                     content={
@@ -198,4 +204,18 @@ const BookingForm = ({doctorInfo}) => {
         </>
     )
 }
+
+const SpecializationTag = ({specialization}) => {
+    return (
+        <Box className="ou-flex ou-items-center ou-justify-center ou-gap-2"  >
+            {specialization.map((tag, index) => (
+                <Box className="ou-flex ou-items-center ou-justify-center ou-bg-blue-100 ou-rounded ou-px-2 ou-py-1" key={index}>
+                        <p className="ou-text-xs ou-text-blue-700" key={index}>{tag}</p>
+                </Box>
+            ))}
+        </Box>
+    )
+}
+
+
 export default BookingForm
