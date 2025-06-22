@@ -15,14 +15,18 @@ export let endpoints = {
 
     // Role
     'roles': "/roles/",
+
     // Common District 
     'districts-by-city': '/common-districts/get-by-city/',
+
     // Common Location
     'location':'/common-locations/', 
     'location-detail':(locationID) => `/common-locations/${locationID}/`,
+
     //Category
     'categories': '/categories/',
     'category-detail':(cateID) => `/categories/${cateID}/`,
+
     // User
     'users':'/users/',
     'user-patients':(userId) => `/users/${userId}/get-patients/`,    
@@ -31,6 +35,7 @@ export let endpoints = {
     'booking-list':(userId) => `/users/${userId}/booking-list/`,
     'change-password': (userId) => `/users/${userId}/change-password/`,
     'change-avatar': (userId) => `/users/${userId}/change-avatar/`,
+
     // Doctor-Schedule
     'doctor-schedules': '/doctor-schedules/',
     'doctor-schedules-by-date': '/doctor-schedules/schedule/',
@@ -39,9 +44,18 @@ export let endpoints = {
     'doctor-schedule-detail':(doctorScheduleID) => `/doctor-schedules/${doctorScheduleID}/`,
     'doctor-check-weekly-schedule': '/doctor-schedules/check-weekly-schedule/',
     'doctor-update-schedule-weekly': '/doctor-schedules/update-weekly-schedule/',
+
+    // Doctor Profile
+    'doctor-profile': '/doctor-profiles/',
+    'doctor-profile-detail':(doctorProfileID) => `/doctor-profiles/${doctorProfileID}/`,
+
     // Time-slot
     'time-slots': '/time-slots/',
     'time-slot-detail':(timeSlotID) => `/time-slots/${timeSlotID}/`,
+
+    // Specialization
+    'specializations': '/specializations/',
+
     // Patient
     'get-patient-by-email':'/patients/get-patient-by-email/',
     'patient':'/patients/',

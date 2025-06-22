@@ -78,13 +78,19 @@ const BookingForm = ({doctorInfo}) => {
         if(!slideRight)
             return  (<>
                 <CustomCollapseListItemButton isOpen={true} title={
-                    <div className="ou-flex ou-justify-center ou-items-center">
-                        <div className="ou-mr-2">
+                    <div className="ou-flex ou-items-center">
+                        <Box className="ou-mr-2">
                             <Avatar>
                                 <StethoscopeIcon size={20}/>
                             </Avatar>
-                        </div>
-                    <p className="ou-w-full ou-text-blue-700 ou-font-bold">{doctor.first_name} {doctor.last_name}</p>
+                        </Box>
+        
+                        <p className="ou-w-full ou-text-blue-700 ou-font-bold">
+                            {doctor?.user_display?.first_name} {doctor?.user_display?.last_name}
+                        </p>
+                        <Box className="ou-mr-2">
+                            <SpecializationTag specialization={doctor?.specializations}/>
+                        </Box>
                     </div>} 
                     loading={isLoading}
                     content={
@@ -133,7 +139,7 @@ const BookingForm = ({doctorInfo}) => {
                 <div className="ou-mr-2">
                     <Avatar></Avatar>
                 </div>
-                <p className="ou-w-full ou-text-blue-700 ou-font-bold ou-text-left">{doctor.first_name} {doctor.last_name}</p>
+                <p className="ou-w-full ou-text-blue-700 ou-font-bold ou-text-left">{doctor?.user_display?.first_name} {doctor?.user_display?.last_name}</p>
                 <Divider />
             </div>
             <h5 className="ou-text-center ou-text-xl ou-py-2 ou-mt-2">{t('home:makeAnAppointMent')}</h5>
@@ -198,4 +204,18 @@ const BookingForm = ({doctorInfo}) => {
         </>
     )
 }
+
+const SpecializationTag = ({specialization}) => {
+    const {t} = useTranslation(['booking'])
+    if(!specialization)
+        return <></>
+    return (<div className="ou-flex ou-items-center ou-justify-end ou-w-full ou-ml-2 ou-gap-2">
+        {specialization.map((s, index) =>  
+            <Box key={`sp_tags`+index} className="ou-flex ou-items-center ou-justify-center 
+             ou-bg-blue-100 ou-rounded ou-px-2 ou-py-1" >{s.name}</Box>
+        )}
+    </div>)
+}
+
+
 export default BookingForm

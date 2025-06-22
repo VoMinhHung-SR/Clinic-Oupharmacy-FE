@@ -44,7 +44,7 @@ const ExaminationUpdate = ({examination, handleClose, onUpdateSuccess, ...props}
 
     const filterOptions = createFilterOptions({
         matchFrom: 'start',
-        stringify: (option) => option.name,
+        stringify: (option) => `${option?.user_display?.first_name} ${option?.user_display?.last_name}`,
     });
 
     if (tReady)
@@ -117,7 +117,7 @@ const ExaminationUpdate = ({examination, handleClose, onUpdateSuccess, ...props}
                                     <Autocomplete
                                         id="doctor"
                                         options={allConfig.doctors}
-                                        getOptionLabel={(option) => `${t('Dr')} ${option.first_name + " " +option.last_name}`}
+                                        getOptionLabel={(option) => `${t('Dr')} ${option?.user_display?.first_name} ${option?.user_display?.last_name}`}
                                         filterOptions={filterOptions}
                                         isOptionEqualToValue={(option, value) => option.id === value.id}
                                         defaultValue={allConfig.doctors.find((doctor) => doctor.id === examination?.schedule_appointment?.doctor_id)}
