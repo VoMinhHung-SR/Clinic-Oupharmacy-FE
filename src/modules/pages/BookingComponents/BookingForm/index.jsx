@@ -13,6 +13,10 @@ import CustomCollapseListItemButton from "../../../common/components/collapse/Li
 import BookingContext from "../../../../lib/context/BookingContext"
 import StethoscopeIcon from "../../../../lib/icon/StethoscopeIcon"
 import SchemaModels from "../../../../lib/schema"
+import useCustomModal from "../../../../lib/hooks/useCustomModal"
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import Tooltip from '@mui/material/Tooltip';
+
 const BookingForm = ({doctorInfo}) => {
     const {t , tReady} = useTranslation(['booking', 'yup-validate', 'modal', 'home'])
 
@@ -22,6 +26,7 @@ const BookingForm = ({doctorInfo}) => {
         handleSlideChange, setDoctorID, onSubmit} = useDoctorAvailability();
     
     const { timeSlotSchema } = SchemaModels()
+    const { handleCloseModal, handleOpenModal, isOpen } = useCustomModal();
 
     useEffect(()=>{setDoctorID(doctor.id)},[doctor.id])
 
@@ -68,7 +73,7 @@ const BookingForm = ({doctorInfo}) => {
             type="button" 
             onClick={handleSlideChange}
             disabled={(!methods.getValues('selectedDate') || !methods.getValues('selectedTime')) && true }
-            style={{"padding": "6px 40px", "marginLeft":"auto"}}
+            className="ou-py-2 ou-px-10 ou-ml-auto"
             >
             {t('booking:continue')}
         </Button>         
@@ -83,7 +88,21 @@ const BookingForm = ({doctorInfo}) => {
                             <StethoscopeIcon size={20}/>
                         </Avatar>
                         <div className="ou-flex ou-flex-col">
-                            <span className="ou-font-bold ou-text-blue-700">{doctor?.user_display?.first_name} {doctor?.user_display?.last_name}</span>
+                            <div className="ou-flex ou-items-center ou-gap-2">
+                                <span className="ou-font-bold ou-text-blue-700">
+                                    {doctor?.user_display?.first_name} {doctor?.user_display?.last_name}
+                                </span>
+                                <Tooltip title={t('booking:viewDoctorDetail')}>
+                                    <Button
+                                        variant="text"
+                                        size="small"
+                                        onClick={handleOpenModal}
+                                        className="ou-min-w-0 ou-px-0 ou-ml-1 ou-z-10 ou-relative"
+                                    >
+                                        <InfoOutlinedIcon fontSize="small" />
+                                    </Button>
+                                </Tooltip>
+                            </div>
                             <SpecializationTag specialization={doctor?.specializations}/>
                         </div>
                     </div>} 
@@ -173,20 +192,20 @@ const BookingForm = ({doctorInfo}) => {
                             {renderPatientInformationForm(slideRight)}
                             {/* Area button */}
                 
-                            <Grid item className="ou-flex !ou-mb-3">
+                            <Grid item className="ou-flex !ou-my-3">
                                 {!slideRight ?  disableButton(): <>
                                     <Button variant="contained" 
                                         color="primary" 
                                         type="button" 
                                         onClick={handleSlideChange}
-                                        style={{"padding": "6px 40px", "marginRight": "8px", "marginLeft":"auto"}}
+                                        className="ou-py-2 ou-px-10 ou-mr-2 ou-ml-auto"
                                         >
                                         {t('booking:goBack')}
                                     </Button> 
                                     <Button variant="contained" 
                                     color="success" 
                                     type="submit" 
-                                    style={{"padding": "6px 40px"}}
+                                    className="ou-py-2 ou-px-10"
                                     >
                                     {t('submit')}
                                 </Button>
@@ -196,6 +215,15 @@ const BookingForm = ({doctorInfo}) => {
                     </div>
                 </Box>
             </Container>
+
+            {/* Doctor Detail Modal */}
+            {isOpen && (
+                <DoctorDetailModal 
+                    open={isOpen} 
+                    onClose={handleCloseModal} 
+                    doctor={doctor}
+                />
+            )}
         </>
     )
 }
@@ -214,5 +242,70 @@ const SpecializationTag = ({specialization}) => {
     )
 }
 
+const DoctorDetailModal = ({ open, onClose, doctor }) => {
+    const { t } = useTranslation(['booking', 'common']);
+
+    return (
+        <div className={`ou-fixed ou-inset-0 ou-bg-black ou-bg-opacity-50 ou-flex ou-items-center ou-justify-center ou-z-50 ${open ? 'ou-block' : 'ou-hidden'}`}>
+            <div className="ou-bg-white ou-rounded-lg ou-shadow-lg ou-max-w-lg ou-w-full ou-mx-4 ou-max-h-[90vh] ou-overflow-y-auto">
+                <div className="ou-p-6">
+                    <div className="ou-flex ou-justify-between ou-items-center ou-mb-4">
+                        <h2 className="ou-text-xl ou-text-gray-800">
+                            {t('booking:doctorDetail')}
+                        </h2>
+                        <button 
+                            onClick={onClose}
+                            className="ou-text-gray-500 hover:ou-text-gray-700 ou-text-2xl"
+                        >
+                            ×
+                        </button>
+                    </div>
+                    
+                    <div className="ou-flex ou-items-center ou-mb-4">
+                        <Avatar className="ou-mr-4 ou-w-16 ou-h-16">
+                            <StethoscopeIcon size={32}/>
+                        </Avatar>
+                        <div>
+                            <h3 className="ou-text-lg ou-font-semibold ou-text-blue-700">
+                                {t('Dr')} {doctor?.user_display?.first_name} {doctor?.user_display?.last_name}
+                            </h3>
+                            <p className="ou-text-gray-600">{doctor?.email}</p>
+                        </div>
+                    </div>
+
+                    {doctor?.specializations && doctor.specializations.length > 0 && (
+                        <div className="ou-mb-4">
+                            <h4 className="ou-text-gray-800 ou-mb-2">{t('booking:specializations')}</h4>
+                            <div className="ou-flex ou-flex-wrap ou-gap-2">
+                                {doctor.specializations.map((spec, index) => (
+                                    <span key={index} className="ou-bg-blue-50 ou-text-blue-700 ou-px-3 ou-py-1 ou-rounded ou-text-sm">
+                                        {spec.name}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {doctor?.description && (
+                        <div className="ou-mb-4">
+                            <h4 className="ou-text-gray-800 ou-mb-2">{t('booking:description')}</h4>
+                            <p className="ou-text-gray-600 ou-text-sm">{doctor.description}</p>
+                        </div>
+                    )}
+
+                    <div className="ou-flex ou-justify-end ou-gap-2">
+                        <Button 
+                            variant="outlined" 
+                            onClick={onClose}
+                            className="ou-px-4"
+                        >
+                            {t('common:close')}
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export default BookingForm

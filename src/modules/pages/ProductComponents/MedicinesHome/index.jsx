@@ -1,10 +1,8 @@
 
 import { useSelector } from "react-redux";
 import { Box, Container, Grid, Paper } from "@mui/material";
-import ProductHomeLeft from "../LeftSide";
 import ProductHomeRight from "../RightSide";
 import { useTranslation } from "react-i18next";
-import MedicineFilter from "../../../common/components/FIlterBar/MedicineFilter";
 
 const MedicinesHome = ({actionButton, onAddMedicineLineItem}) => {
    
