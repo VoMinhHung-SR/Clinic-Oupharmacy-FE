@@ -73,7 +73,7 @@ const BookingForm = ({doctorInfo}) => {
             type="button" 
             onClick={handleSlideChange}
             disabled={(!methods.getValues('selectedDate') || !methods.getValues('selectedTime')) && true }
-            className="ou-py-2 ou-px-10 ou-ml-auto"
+            className="ou-py-2 ou-px-10 !ou-ml-auto"
             >
             {t('booking:continue')}
         </Button>         
@@ -93,14 +93,15 @@ const BookingForm = ({doctorInfo}) => {
                                     {doctor?.user_display?.first_name} {doctor?.user_display?.last_name}
                                 </span>
                                 <Tooltip title={t('booking:viewDoctorDetail')}>
-                                    <Button
-                                        variant="text"
-                                        size="small"
-                                        onClick={handleOpenModal}
-                                        className="ou-min-w-0 ou-px-0 ou-ml-1 ou-z-10 ou-relative"
+                                    <span
+                                        onClick={e => {
+                                            e.stopPropagation();
+                                            handleOpenModal();
+                                        }}
+                                        className="ou-cursor-pointer ou-text-blue-700 ou-pb-1"
                                     >
                                         <InfoOutlinedIcon fontSize="small" />
-                                    </Button>
+                                    </span>
                                 </Tooltip>
                             </div>
                             <SpecializationTag specialization={doctor?.specializations}/>
@@ -192,13 +193,13 @@ const BookingForm = ({doctorInfo}) => {
                             {renderPatientInformationForm(slideRight)}
                             {/* Area button */}
                 
-                            <Grid item className="ou-flex !ou-my-3">
+                            <Grid item className="ou-flex ou-items-end !ou-my-3">
                                 {!slideRight ?  disableButton(): <>
                                     <Button variant="contained" 
                                         color="primary" 
                                         type="button" 
                                         onClick={handleSlideChange}
-                                        className="ou-py-2 ou-px-10 ou-mr-2 ou-ml-auto"
+                                        className="ou-py-2 ou-px-10 !ou-mr-2 ou-ml-auto"
                                         >
                                         {t('booking:goBack')}
                                     </Button> 
@@ -251,7 +252,7 @@ const DoctorDetailModal = ({ open, onClose, doctor }) => {
                 <div className="ou-p-6">
                     <div className="ou-flex ou-justify-between ou-items-center ou-mb-4">
                         <h2 className="ou-text-xl ou-text-gray-800">
-                            {t('booking:doctorDetail')}
+                            {t('booking:doctorInfo')}
                         </h2>
                         <button 
                             onClick={onClose}
