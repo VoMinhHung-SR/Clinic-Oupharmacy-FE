@@ -41,7 +41,7 @@ const CategoryList = () => {
         <Helmet>
             <title>Categories</title>
         </Helmet>
-        <Box component={Paper} elevation={4} className="ou-text-center ou-p-10 ou-h-[30vh]">
+        <Box component={Paper} elevation={4} className="ou-text-center ou-p-10">
             <SkeletonListLineItem count={5} className="ou-w-full"/>
         </Box>
     </Box>
@@ -83,19 +83,24 @@ const CategoryList = () => {
                         </TableHead>
                         <TableBody>
                         {isLoading && 
-                            <TableCell colSpan={12} component="th" scope="row">
-                                <Box className="ou-text-center">
-                                    <SkeletonListLineItem count={4} className="ou-w-full" />
-                                </Box>
-                            </TableCell>}
-                        {!isLoading && categories.length === 0 &&
-                            <TableCell colSpan={12} component="th" scope="row">
-                                <Typography> 
-                                    <Box className="ou-text-center ou-p-10 ou-text-red-700">
-                                        {t('category:errNullCate')}
+                            <TableRow>
+                                <TableCell colSpan={3}>
+                                    <Box className="ou-text-center">
+                                        <SkeletonListLineItem count={4} className="ou-w-full" />
                                     </Box>
-                                </Typography>
-                            </TableCell>}
+                                </TableCell>
+                            </TableRow>
+                        }
+                        {!isLoading && Array.isArray(categories) && categories.length === 0 &&
+                            <TableRow>
+                                <TableCell colSpan={3}>
+                                    <Typography> 
+                                        <Box className="ou-text-center ou-p-10 ou-text-red-700">
+                                            {t('category:errNullCate')}
+                                        </Box>
+                                    </Typography>
+                                </TableCell>
+                            </TableRow>}
             
                         {!isLoading && categories.length > 0 && categories.map(c => (
                             <TableRow key={c.id}
