@@ -34,6 +34,11 @@ const Nav = () => {
       id: 'waiting-room',
       name: t('waitingRoom'),
       link: '/waiting-room'
+    },
+    {
+      id: 'contact',
+      name: t('contact'),
+      link: '/contact'
     }
   ];
   // State trigger menu open
