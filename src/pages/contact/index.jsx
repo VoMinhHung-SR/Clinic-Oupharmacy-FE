@@ -17,6 +17,7 @@ import {Phone, Email, LocationOn, AccessTime, Send} from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../modules/common/components/Loading';
 import { EMAIL_SUPPORT } from '../../lib/constants';
+import MapGL from '../../modules/common/components/Mapbox';
 
 const Contact = () => {
     const {t, tReady} = useTranslation(['contact', 'common']);
@@ -31,6 +32,11 @@ const Contact = () => {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [severity, setSeverity] = useState('success');
 
+    const [viewport, setViewport] = useState({
+        latitude: 10.816800580111298,
+        longitude: 106.67855666909755,
+        zoom: 16,
+      });
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -102,7 +108,7 @@ const Contact = () => {
         {
             icon: <LocationOn sx={{ fontSize: 40, color: 'primary.main' }} />,
             title: t('contact:address'),
-            content: '123 Đường ABC, Quận 1, TP.HCM',
+            content: '371 Nguyễn Kiệm, Gò Vấp, TP.HCM',
             subtitle: t('common:Vietnam')
         },
         {
@@ -244,26 +250,29 @@ const Contact = () => {
                 {/* Map Section */}
                 <Box sx={{ mt: 6 }}>
                     <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', mb: 3, textAlign: 'center' }}>
-                        Vị Trí Của Chúng Tôi
+                        {t('contact:address')}
                     </Typography>
                     <Paper elevation={3} sx={{ p: 2, textAlign: 'center', backgroundColor: '#e3f2fd' }}>
                         <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
-                            📍 123 Đường ABC, Quận 1, TP.HCM, Việt Nam
+                            📍  371 Nguyễn Kiệm, Gò Vấp, TP.HCM, Việt Nam
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
-                            (Bản đồ sẽ được tích hợp ở đây)
+                            ({t('contact:workingHours')}: {t('contact:workingHoursDescription')})
                         </Typography>
                         <Box sx={{ 
-                            height: 300, 
+                            height: 450, 
                             backgroundColor: '#f0f0f0', 
                             display: 'flex', 
                             alignItems: 'center', 
                             justifyContent: 'center',
-                            mt: 2,
-                            borderRadius: 1
+                            border: '2px solid #e0e0e0',
+                            mt: 2, borderRadius: 2, overflow: 'hidden'
                         }}>
-                            <Typography variant="h6" color="text.secondary">
-                                🗺️ Bản đồ Google Maps
+                            <Typography variant="h6" color="text.secondary" width={'100%'}>
+                                <MapGL longitude={viewport.longitude} latitude={viewport.latitude} 
+                                zoom={viewport.zoom}
+                                style={{width: '100%', borderRadius: 2}}
+                                />
                             </Typography>
                         </Box>
                     </Paper>
