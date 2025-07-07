@@ -1,97 +1,61 @@
 import React, { useState } from 'react';
-import { 
-    Box,
-    Container,
-    Typography,
-    Grid,
+import { Box, Container, Typography, Grid,
     Card,
     CardContent,
     TextField,
     Button,
     Paper,
-    IconButton,
-    Alert,
-    Snackbar
+    CircularProgress
 } from '@mui/material';
 import {Phone, Email, LocationOn, AccessTime, Send} from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../modules/common/components/Loading';
-import { EMAIL_SUPPORT } from '../../lib/constants';
+import { EMAIL_SUPPORT, TOAST_ERROR, TOAST_SUCCESS } from '../../lib/constants';
 import MapGL from '../../modules/common/components/Mapbox';
+import SuccessfulAlert from '../../config/sweetAlert2';
+import { fetchContactAdmin } from '../../modules/pages/ContactComponents/services';
+import SchemaModels from '../../lib/schema';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import createToastMessage from '../../lib/utils/createToastMessage';
 
 const Contact = () => {
     const {t, tReady} = useTranslation(['contact', 'common']);
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: ''
-    });
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [severity, setSeverity] = useState('success');
 
+    const [isLoading, setIsLoading] = useState(false);
     const [viewport, setViewport] = useState({
         latitude: 10.816800580111298,
         longitude: 106.67855666909755,
         zoom: 16,
       });
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
+    
     
     if (tReady) return <Box className="!ou-mt-2">
         <Loading/>
     </Box>;
 
+    const {contactSchema} = SchemaModels();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        
-        // Validate form
-        if (!formData.name || !formData.email || !formData.message) {
-            setSnackbarMessage('Vui lòng điền đầy đủ thông tin bắt buộc');
-            setSeverity('error');
-            setOpenSnackbar(true);
-            return;
+    const methods = useForm({
+        resolver: yupResolver(contactSchema)
+    });
+
+    const onSubmit = async (data) => {
+        try {
+            setIsLoading(true);
+            const response = await fetchContactAdmin(data);
+            if(response.status === 200){
+                SuccessfulAlert(t('contact:sendSuccess'), t('common:ok'), () => {
+                    createToastMessage({message: t('contact:thanksDescription'), type: TOAST_SUCCESS});
+                });
+            }
+        } catch (error) {
+            createToastMessage({message: t('contact:sendFailed'), type: TOAST_ERROR});
+        } finally {
+            methods.reset();
+            setIsLoading(false);
         }
-
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.email)) {
-            setSnackbarMessage('Email không hợp lệ');
-            setSeverity('error');
-            setOpenSnackbar(true);
-            return;
-        }
-
-        // Simulate form submission
-        console.log('Form submitted:', formData);
-        
-        // Show success message
-        setSnackbarMessage('Tin nhắn đã được gửi thành công! Chúng tôi sẽ phản hồi sớm nhất có thể.');
-        setSeverity('success');
-        setOpenSnackbar(true);
-        
-        // Reset form
-        setFormData({
-            name: '',
-            email: '',
-            phone: '',
-            subject: '',
-            message: ''
-        });
-    };
-
-    const handleCloseSnackbar = () => {
-        setOpenSnackbar(false);
-    };
-
+    }
     const contactInfo = [
         {
             icon: <Phone sx={{ fontSize: 40, color: 'primary.main' }} />,
@@ -124,7 +88,8 @@ const Contact = () => {
             <Container maxWidth="lg" component={Paper} sx={{py: 4}}>
                 {/* Header */}
                 <Box sx={{ textAlign: 'center', mb: 6 }}>
-                    <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+                    <Typography gutterBottom 
+                    sx={{ fontWeight: 'bold', color: 'primary.main', fontSize: '2rem' }}>
                         {t('contact:contact')}
                     </Typography>
                     <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
@@ -163,67 +128,90 @@ const Contact = () => {
                     {/* Contact Form */}
                     <Grid item xs={12} md={8}>
                         <Paper elevation={3} sx={{ p: 4 }}>
-                            <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
+                            <Typography gutterBottom 
+                            sx={{ fontSize: '1.5rem', mb: 3 }}>
                                 {t('contact:send')}
                             </Typography>
                             
-                            <form onSubmit={handleSubmit}>
+                            <form onSubmit={methods.handleSubmit(onSubmit)}>
                                 <Grid container spacing={3}>
                                     <Grid item xs={12} sm={6}>
                                         <TextField
                                             fullWidth
-                                            label={t('contact:name')}
+                                            label={t('contact:name') + ' *'}
                                             name="name"
-                                            value={formData.name}
-                                            onChange={handleInputChange}
-                                            required
+                                            {...methods.register('name')}
                                             variant="outlined"
+                                            error={!!methods.formState.errors.name}
                                         />
+                                        {methods.formState.errors.name && (
+                                            <Typography variant="body2" color="error">
+                                                {methods.formState.errors.name.message}
+                                            </Typography>
+                                        )}
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <TextField
                                             fullWidth
-                                            label={t('contact:email')}
+                                            label={t('contact:email') + ' *'}
                                             name="email"
                                             type="email"
-                                            value={formData.email}
-                                            onChange={handleInputChange}
-                                            required
+                                            {...methods.register('email')}
                                             variant="outlined"
+                                            error={!!methods.formState.errors.email}
                                         />
+                                        {methods.formState.errors.email && (
+                                            <Typography variant="body2" color="error">
+                                                {methods.formState.errors.email.message}
+                                            </Typography>
+                                        )}
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <TextField
                                             fullWidth
                                             label={t('contact:phone')}
                                             name="phone"
-                                            value={formData.phone}
-                                            onChange={handleInputChange}
+                                            {...methods.register('phone')}
                                             variant="outlined"
+                                            error={!!methods.formState.errors.phone}
                                         />
+                                        {methods.formState.errors.phone && (
+                                            <Typography variant="body2" color="error">
+                                                {methods.formState.errors.phone.message}
+                                            </Typography>
+                                        )}
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <TextField
                                             fullWidth
                                             label={t('contact:subject')}
                                             name="subject"
-                                            value={formData.subject}
-                                            onChange={handleInputChange}
+                                            {...methods.register('subject')}
                                             variant="outlined"
+                                            error={!!methods.formState.errors.subject}
                                         />
+                                        {methods.formState.errors.subject && (
+                                            <Typography variant="body2" color="error">
+                                                {methods.formState.errors.subject.message}
+                                            </Typography>
+                                        )}
                                     </Grid>
                                     <Grid item xs={12}>
                                         <TextField
                                             fullWidth
-                                            label={t('contact:message')}
+                                            label={t('contact:message') + ' *'}
                                             name="message"
-                                            value={formData.message}
-                                            onChange={handleInputChange}
-                                            required
+                                            {...methods.register('message')}
                                             multiline
                                             rows={6}
                                             variant="outlined"
-                                        />
+                                            error={!!methods.formState.errors.message}
+                                            />
+                                        {methods.formState.errors.message && (
+                                            <Typography variant="body2" color="error">
+                                                {methods.formState.errors.message.message}
+                                            </Typography>
+                                        )}
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Button
@@ -237,8 +225,9 @@ const Contact = () => {
                                                 fontSize: '1.1rem',
                                                 fontWeight: 'bold'
                                             }}
+                                            disabled={isLoading}
                                         >
-                                                {t('contact:send')}
+                                                {isLoading ? <CircularProgress size={20} /> : t('contact:send')}
                                         </Button>
                                     </Grid>
                                 </Grid>
@@ -249,7 +238,8 @@ const Contact = () => {
 
                 {/* Map Section */}
                 <Box sx={{ mt: 6 }}>
-                    <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', mb: 3, textAlign: 'center' }}>
+                    <Typography gutterBottom 
+                    sx={{ fontWeight: 'bold', mb: 3, textAlign: 'center', fontSize: '2rem' }}>
                         {t('contact:address')}
                     </Typography>
                     <Paper elevation={3} sx={{ p: 2, textAlign: 'center', backgroundColor: '#e3f2fd' }}>
@@ -278,18 +268,6 @@ const Contact = () => {
                     </Paper>
                 </Box>
             </Container>
-
-            {/* Snackbar for notifications */}
-            <Snackbar
-                open={openSnackbar}
-                autoHideDuration={6000}
-                onClose={handleCloseSnackbar}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            >
-                <Alert onClose={handleCloseSnackbar} severity={severity} sx={{ width: '100%' }}>
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
         </Box>
     );
 };

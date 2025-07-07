@@ -99,6 +99,9 @@ export let endpoints = {
     // Common Config:
     'common-configs': '/common-configs/',
 
+    // Contact
+    'contact-admin': '/contact-admin/',
+
     //Dashboard---API
     'dashboard-booking-stats': 'dashboard/stats/get-booking-stats/',
     'dashboard-medicine-stats': 'dashboard/stats/get-medicine-stats/',
