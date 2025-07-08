@@ -1,0 +1,20 @@
+{
+    "contact": "Liên hệ",
+    "contactInfo": "Thông tin liên hệ",
+    "contactDescription": "Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn. Hãy liên hệ với chúng tôi để được tư vấn tốt nhất.",
+    "phone": "Điện thoại",
+    "email": "Email",
+    "address": "Địa chỉ",
+    "workingHours": "Giờ làm việc",
+    "feedback": "Phản hồi trong vòng 24h",
+    "workingHoursDescription": "Thứ 2 - Thứ 7: 8:00 - 18:00",
+    "Vietnam": "Việt Nam",
+    "workingSchedule":"Thứ 2 - Thứ 7",
+    "send": "Gửi tin nhắn",
+    "name": "Họ và tên",
+    "subject": "Chủ đề",
+    "message": "Nội dung",
+    "sendSuccess": "Gửi tin nhắn thành công",
+    "sendFailed": "Gửi tin nhắn thất bại",
+    "thanksDescription": "Cảm ơn bạn đã liên hệ với chúng tôi. Chúng tôi sẽ phản hồi sớm nhất có thể."
+}

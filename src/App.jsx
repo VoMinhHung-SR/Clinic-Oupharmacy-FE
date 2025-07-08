@@ -53,6 +53,7 @@ import PatientManagement from './pages/profile/patient-list'
 import OnlineWaitingRoom from './pages/waiting-room/sub'
 import DashboardWaitingRoom from './pages/dashboard/waiting-room'
 import APIs, { endpoints } from './config/APIs'
+import Contact from './pages/contact'
 
 export const userContext = createContext()
 const queryClient = new QueryClient({
@@ -112,9 +113,10 @@ function App() {
                         <Route path='/' element={<Home />}/>
                         
                         <Route path='/waiting-room' element={<OnlineWaitingRoom/>}/>
+                        <Route path='/contact' element={<Contact/>}/>
+                        
                         <Route element={<ProtectedUserRoute/>}>
                           <Route path='/booking' element={<Booking/>}/>
-                          
                           <Route path='/profile' element={<Profile />} >
                             <Route path='/profile/address-info' element={<ProfileAddressInfo />} />
                             <Route path='/profile/examinations' element={<ExaminationList />} />

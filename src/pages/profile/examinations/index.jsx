@@ -10,6 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CustomModal from "../../../modules/common/components/Modal";
 import ExaminationUpdate from "../../../modules/pages/ExaminationListComponents/ExaminationUpdate";
 import useCustomModal from "../../../lib/hooks/useCustomModal";
+import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem";
 
 const ExaminationList = () =>{
     const { isLoading, examinationList, handleDeleteExamination, 
@@ -48,11 +49,13 @@ const ExaminationList = () =>{
                     </TableHead>
                     <TableBody>
                         {isLoading && (
-                            <Box sx={{ minHeight: "300px" }}>
-                                <Box className='ou-p-5'>
-                                    <Loading></Loading>
-                                </Box>
-                            </Box>
+                            <TableRow>
+                                <TableCell colSpan={6}>
+                                    <Box className="ou-text-center">
+                                        <SkeletonListLineItem count={4} className="ou-w-full" />
+                                    </Box>
+                                </TableCell>
+                            </TableRow>
                         )}
                           {!isLoading && examinationList.length === 0 && (
                             <TableCell colSpan={12} component="th" scope="row">

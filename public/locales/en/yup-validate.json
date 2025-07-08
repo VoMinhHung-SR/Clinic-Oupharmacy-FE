@@ -90,6 +90,14 @@
     "yupMedicineExist": "Medicine name is already existed",
 
     "yupPriceRequired":"Price was required",
-    "yupPriceNumber":"Price must be a number"
+    "yupPriceNumber":"Price must be a number",
+
+    "yupNameRequired":"Name was required",
+    "yupNameMaxLength":"Name exceeds the allowed length",
+    "yupNameInvalid":"Invalid name",
+
+    "yupMessageRequired":"Message was required",
+    "yupMessageMaxLength":"Message exceeds the allowed length",
+    "yupMessageInvalid":"Invalid message"
 
 }

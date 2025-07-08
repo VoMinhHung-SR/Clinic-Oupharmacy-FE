@@ -132,9 +132,29 @@ const SchemaModels = () => {
         
     });
 
+    const contactSchema = Yup.object().shape({
+
+        name: Yup.string().trim()
+            .required(t('yupNameRequired'))
+            .max(254, t('yupNameMaxLength'))
+            .matches(REGEX_NAME, t('yupNameInvalid')),
+            
+        email: Yup.string().trim()
+            .required(t('yupEmailRequired'))
+            .max(254, t('yupEmailMaxLength'))
+            .matches(REGEX_EMAIL, t('yupEmailInvalid')),
+        phone: Yup.string().trim(),
+        subject: Yup.string().trim(),
+        message: Yup.string().trim()
+            .required(t('yupMessageRequired'))
+            .max(254, t('yupMessageMaxLength'))
+            .matches(REGEX_NOTE, t('yupMessageInvalid')),
+    });
+
     return {
         medicineSubmitUpdateSchema, timeSlotSchema,
-        addingPatientSchema, medicineUnitSchema, registerSchema 
+        addingPatientSchema, medicineUnitSchema, 
+        registerSchema, contactSchema
     }
 }
 

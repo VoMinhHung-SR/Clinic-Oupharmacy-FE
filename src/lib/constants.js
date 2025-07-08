@@ -58,3 +58,5 @@ export const WAITING_STATUS_DONE = 'done'
 
 export const WAITING_SESSION_MORNING = 'morning'
 export const WAITING_SESSION_AFTERNOON = 'afternoon'
+
+export const EMAIL_SUPPORT = 'oupharmacymanagement@gmail.com'

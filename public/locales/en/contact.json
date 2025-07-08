@@ -1,0 +1,20 @@
+{
+    "contact": "Contact",
+    "contactDescription": "We are always ready to listen and support you. Please contact us for the best advice.",
+    "contactInfo": "Contact Info",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "workingHours": "Working Hours",
+    "feedback": "Feedback within 24 hours",
+    "workingHoursDescription": "Monday - Saturday: 8:00 - 18:00",
+    "Vietnam": "Vietnam",
+    "workingSchedule":"Monday - Saturday",
+    "send": "Send Message",
+    "name": "Full Name",
+    "subject": "Subject",
+    "message": "Message",
+    "sendSuccess": "Message sent successfully",
+    "sendFailed": "Message sending failed",
+    "thanksDescription": "Thank you for contacting us. We will respond as soon as possible."
+}

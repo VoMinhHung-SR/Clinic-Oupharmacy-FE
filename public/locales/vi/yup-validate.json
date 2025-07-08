@@ -90,6 +90,13 @@
     "yupMedicineExist": "Tên thuốc này đã tồn tại",
 
     "yupPriceRequired": "Giá là bắt buộc.",
-    "yupPriceNumber": "Giá phải là một số."
+    "yupPriceNumber": "Giá phải là một số.",
 
+    "yupNameRequired":"Tên là bắt buộc",
+    "yupNameMaxLength":"Tên vượt quá độ dài cho phép",
+    "yupNameInvalid":"Tên không hợp lệ",
+
+    "yupMessageRequired":"Tin nhắn là bắt buộc",
+    "yupMessageMaxLength":"Tin nhắn vượt quá độ dài cho phép",
+    "yupMessageInvalid":"Tin nhắn không hợp lệ"
 }

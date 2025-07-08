@@ -12,18 +12,18 @@ const useCategory = () => {
     const {t} = useTranslation(['modal', 'category'])
 
     useEffect(() => {
-        try{
-            const getCategories = async () =>{
-                const res = await fetchCategoryList()
+        const getCategories = async () => {
+            try {
+                const res = await fetchCategoryList();
                 if (res.status === 200)
-                    setCategories(res.data)
+                    setCategories(res.data);
+            } catch (err) {
+                console.log(err);
+            } finally {
+                setIsLoading(false);
             }
-            getCategories()
-        }catch(err){
-            console.log(err)
-        } finally {
-            setIsLoading(false)
-        }
+        };
+        getCategories();
     }, [flag])
     
     const onSubmit = (data, callbackOnSuccess) => {
