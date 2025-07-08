@@ -113,9 +113,10 @@ function App() {
                         <Route path='/' element={<Home />}/>
                         
                         <Route path='/waiting-room' element={<OnlineWaitingRoom/>}/>
+                        <Route path='/contact' element={<Contact/>}/>
+                        
                         <Route element={<ProtectedUserRoute/>}>
                           <Route path='/booking' element={<Booking/>}/>
-                          <Route path='/contact' element={<Contact/>}/>
                           <Route path='/profile' element={<Profile />} >
                             <Route path='/profile/address-info' element={<ProfileAddressInfo />} />
                             <Route path='/profile/examinations' element={<ExaminationList />} />

@@ -1,18 +1,10 @@
-import { useState } from "react";
 import { Map, Marker } from "react-map-gl"
 import { MAPGL_TOKEN } from "../../../../lib/constants"
-// import ReactMapGL from '@goongmaps/goong-map-react';
-// import { GOONGMAP_MAPTOKEN } from "../../../../lib/constants";
 import { ORIGIN_LAT } from "../../../../lib/constants";
 import { ORIGIN_LNG } from "../../../../lib/constants";
 
 const MapGL = (props) => {
       return (
-        // <ReactMapGL
-        //   {...viewport}
-        //   goongApiAccessToken={GOONGMAP_MAPTOKEN}
-        //   onViewportChange={nextViewport => setViewport(nextViewport)}
-        // />   
         <Map        
           mapboxAccessToken={MAPGL_TOKEN}  
           initialViewState={  

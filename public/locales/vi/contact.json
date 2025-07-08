@@ -13,5 +13,8 @@
     "send": "Gửi tin nhắn",
     "name": "Họ và tên",
     "subject": "Chủ đề",
-    "message": "Nội dung"
+    "message": "Nội dung",
+    "sendSuccess": "Gửi tin nhắn thành công",
+    "sendFailed": "Gửi tin nhắn thất bại",
+    "thanksDescription": "Cảm ơn bạn đã liên hệ với chúng tôi. Chúng tôi sẽ phản hồi sớm nhất có thể."
 }

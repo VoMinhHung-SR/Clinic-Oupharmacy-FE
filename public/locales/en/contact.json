@@ -13,5 +13,8 @@
     "send": "Send Message",
     "name": "Full Name",
     "subject": "Subject",
-    "message": "Message"
+    "message": "Message",
+    "sendSuccess": "Message sent successfully",
+    "sendFailed": "Message sending failed",
+    "thanksDescription": "Thank you for contacting us. We will respond as soon as possible."
 }
