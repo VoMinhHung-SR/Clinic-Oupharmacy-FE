@@ -36,6 +36,11 @@ const Nav = () => {
       link: '/waiting-room'
     },
     {
+      id: 'about-us',
+      name: t('aboutUs'),
+      link: '/about-us'
+    }, 
+    {
       id: 'contact',
       name: t('contact'),
       link: '/contact'

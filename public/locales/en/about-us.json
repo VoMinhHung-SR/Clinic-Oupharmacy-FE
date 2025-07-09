@@ -1,0 +1,90 @@
+{
+    "title": "About Us",
+    "subtitle": "Your Trusted Healthcare Partner",
+    "description": "Learn more about OUPharmacy and our commitment to providing exceptional healthcare services",
+    
+    "mission": "Our Mission",
+    "missionDescription": "To provide accessible, high-quality healthcare services that improve the well-being of our community through innovative technology and compassionate care.",
+    
+    "vision": "Our Vision",
+    "visionDescription": "To be the leading healthcare provider that sets the standard for excellence in patient care, technology integration, and community health improvement.",
+    
+    "values": "Our Values",
+    "valuesDescription": "The core principles that guide everything we do",
+    
+    "value1": {
+        "title": "Patient-Centered Care",
+        "description": "Every decision we make is focused on what's best for our patients and their families."
+    },
+    "value2": {
+        "title": "Excellence",
+        "description": "We strive for excellence in every aspect of our service, from medical care to customer experience."
+    },
+    "value3": {
+        "title": "Innovation",
+        "description": "We embrace new technologies and methods to provide better, more efficient healthcare services."
+    },
+    "value4": {
+        "title": "Integrity",
+        "description": "We maintain the highest standards of professional ethics and transparency in all our operations."
+    },
+    "value5": {
+        "title": "Community",
+        "description": "We are committed to serving and improving the health of our local community."
+    },
+    "value6": {
+        "title": "Accessibility",
+        "description": "We ensure our services are accessible to all members of our community, regardless of their circumstances."
+    },
+    
+    "story": "Our Story",
+    "storyDescription": "Founded with a vision to revolutionize healthcare delivery, OUPharmacy has grown from a small local pharmacy to a comprehensive healthcare provider serving thousands of patients across the region.",
+    
+    "team": "Our Team",
+    "teamDescription": "Meet the dedicated professionals who make OUPharmacy a trusted healthcare partner",
+    
+    "doctors": "Qualified Doctors",
+    "doctorsDescription": "Our team of experienced physicians and specialists are committed to providing the highest quality medical care.",
+    
+    "pharmacists": "Expert Pharmacists",
+    "pharmacistsDescription": "Our licensed pharmacists ensure safe medication management and provide expert pharmaceutical advice.",
+    
+    "nurses": "Caring Nurses",
+    "nursesDescription": "Our nursing staff provides compassionate care and support throughout your healthcare journey.",
+    
+    "support": "Support Staff",
+    "supportDescription": "Our administrative and support teams work behind the scenes to ensure smooth operations and excellent service.",
+    
+    "facilities": "Our Facilities",
+    "facilitiesDescription": "State-of-the-art facilities designed for your comfort and care",
+    
+    "modernEquipment": "Modern Medical Equipment",
+    "modernEquipmentDescription": "We invest in the latest medical technology to provide accurate diagnoses and effective treatments.",
+    
+    "comfortableEnvironment": "Comfortable Environment",
+    "comfortableEnvironmentDescription": "Our facilities are designed with patient comfort in mind, creating a welcoming and relaxing atmosphere.",
+    
+    "digitalIntegration": "Digital Integration",
+    "digitalIntegrationDescription": "Our digital systems streamline processes and improve communication between patients and healthcare providers.",
+    
+    "achievements": "Our Achievements",
+    "achievementsDescription": "Recognition of our commitment to excellence in healthcare",
+    
+    "patientsServed": "Patients Served",
+    "patientsServedDescription": "Thousands of patients trust us with their healthcare needs",
+    
+    "yearsExperience": "Years of Experience",
+    "yearsExperienceDescription": "Decades of combined experience in healthcare delivery",
+    
+    "satisfactionRate": "Patient Satisfaction Rate",
+    "satisfactionRateDescription": "High satisfaction rates from our valued patients",
+    
+    "certifications": "Professional Certifications",
+    "certificationsDescription": "All our staff maintain current professional certifications and licenses",
+    
+    "contactUs": "Get in Touch",
+    "contactUsDescription": "Ready to experience exceptional healthcare? Contact us today to schedule your appointment or learn more about our services.",
+    
+    "makeAppointment": "Make an Appointment",
+    "learnMore": "Learn More"
+} 

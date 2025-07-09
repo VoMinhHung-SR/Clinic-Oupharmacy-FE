@@ -1,0 +1,90 @@
+{
+    "title": "Về Chúng Tôi",
+    "subtitle": "Đối Tác Chăm Sóc Sức Khỏe Đáng Tin Cậy",
+    "description": "Tìm hiểu thêm về OUPharmacy và cam kết của chúng tôi trong việc cung cấp dịch vụ chăm sóc sức khỏe xuất sắc",
+    
+    "mission": "Sứ Mệnh Của Chúng Tôi",
+    "missionDescription": "Cung cấp dịch vụ chăm sóc sức khỏe chất lượng cao, dễ tiếp cận để cải thiện sức khỏe cộng đồng thông qua công nghệ tiên tiến và sự chăm sóc tận tâm.",
+    
+    "vision": "Tầm Nhìn Của Chúng Tôi",
+    "visionDescription": "Trở thành nhà cung cấp dịch vụ chăm sóc sức khỏe hàng đầu, thiết lập tiêu chuẩn xuất sắc trong chăm sóc bệnh nhân, tích hợp công nghệ và cải thiện sức khỏe cộng đồng.",
+    
+    "values": "Giá Trị Cốt Lõi",
+    "valuesDescription": "Những nguyên tắc cơ bản hướng dẫn mọi hoạt động của chúng tôi",
+    
+    "value1": {
+        "title": "Chăm Sóc Lấy Bệnh Nhân Làm Trung Tâm",
+        "description": "Mọi quyết định chúng tôi đưa ra đều tập trung vào điều tốt nhất cho bệnh nhân và gia đình họ."
+    },
+    "value2": {
+        "title": "Sự Xuất Sắc",
+        "description": "Chúng tôi phấn đấu đạt được sự xuất sắc trong mọi khía cạnh dịch vụ, từ chăm sóc y tế đến trải nghiệm khách hàng."
+    },
+    "value3": {
+        "title": "Sự Đổi Mới",
+        "description": "Chúng tôi áp dụng các công nghệ và phương pháp mới để cung cấp dịch vụ chăm sóc sức khỏe tốt hơn, hiệu quả hơn."
+    },
+    "value4": {
+        "title": "Sự Liêm Chính",
+        "description": "Chúng tôi duy trì các tiêu chuẩn đạo đức nghề nghiệp và tính minh bạch cao nhất trong mọi hoạt động."
+    },
+    "value5": {
+        "title": "Cộng Đồng",
+        "description": "Chúng tôi cam kết phục vụ và cải thiện sức khỏe của cộng đồng địa phương."
+    },
+    "value6": {
+        "title": "Khả Năng Tiếp Cận",
+        "description": "Chúng tôi đảm bảo dịch vụ của mình có thể tiếp cận được với tất cả thành viên cộng đồng, bất kể hoàn cảnh của họ."
+    },
+    
+    "story": "Câu Chuyện Của Chúng Tôi",
+    "storyDescription": "Được thành lập với tầm nhìn cách mạng hóa việc cung cấp dịch vụ chăm sóc sức khỏe, OUPharmacy đã phát triển từ một nhà thuốc nhỏ địa phương thành một nhà cung cấp dịch vụ chăm sóc sức khỏe toàn diện phục vụ hàng nghìn bệnh nhân trên toàn khu vực.",
+    
+    "team": "Đội Ngũ Của Chúng Tôi",
+    "teamDescription": "Gặp gỡ những chuyên gia tận tâm biến OUPharmacy thành đối tác chăm sóc sức khỏe đáng tin cậy",
+    
+    "doctors": "Bác Sĩ Có Chuyên Môn",
+    "doctorsDescription": "Đội ngũ bác sĩ và chuyên gia có kinh nghiệm của chúng tôi cam kết cung cấp dịch vụ chăm sóc y tế chất lượng cao nhất.",
+    
+    "pharmacists": "Dược Sĩ Chuyên Nghiệp",
+    "pharmacistsDescription": "Các dược sĩ có giấy phép của chúng tôi đảm bảo quản lý thuốc an toàn và cung cấp tư vấn dược phẩm chuyên môn.",
+    
+    "nurses": "Điều Dưỡng Tận Tâm",
+    "nursesDescription": "Đội ngũ điều dưỡng của chúng tôi cung cấp sự chăm sóc và hỗ trợ tận tâm trong suốt hành trình chăm sóc sức khỏe của bạn.",
+    
+    "support": "Nhân Viên Hỗ Trợ",
+    "supportDescription": "Các đội ngũ hành chính và hỗ trợ của chúng tôi làm việc phía sau để đảm bảo hoạt động mượt mà và dịch vụ xuất sắc.",
+    
+    "facilities": "Cơ Sở Vật Chất",
+    "facilitiesDescription": "Cơ sở vật chất hiện đại được thiết kế cho sự thoải mái và chăm sóc của bạn",
+    
+    "modernEquipment": "Thiết Bị Y Tế Hiện Đại",
+    "modernEquipmentDescription": "Chúng tôi đầu tư vào công nghệ y tế mới nhất để cung cấp chẩn đoán chính xác và điều trị hiệu quả.",
+    
+    "comfortableEnvironment": "Môi Trường Thoải Mái",
+    "comfortableEnvironmentDescription": "Cơ sở của chúng tôi được thiết kế với sự thoải mái của bệnh nhân, tạo ra bầu không khí chào đón và thư giãn.",
+    
+    "digitalIntegration": "Tích Hợp Kỹ Thuật Số",
+    "digitalIntegrationDescription": "Hệ thống kỹ thuật số của chúng tôi tối ưu hóa quy trình và cải thiện giao tiếp giữa bệnh nhân và nhà cung cấp dịch vụ chăm sóc sức khỏe.",
+    
+    "achievements": "Thành Tựu Của Chúng Tôi",
+    "achievementsDescription": "Sự công nhận về cam kết xuất sắc trong chăm sóc sức khỏe của chúng tôi",
+    
+    "patientsServed": "Bệnh Nhân Được Phục Vụ",
+    "patientsServedDescription": "Hàng nghìn bệnh nhân tin tưởng chúng tôi với nhu cầu chăm sóc sức khỏe của họ",
+    
+    "yearsExperience": "Năm Kinh Nghiệm",
+    "yearsExperienceDescription": "Hàng thập kỷ kinh nghiệm kết hợp trong việc cung cấp dịch vụ chăm sóc sức khỏe",
+    
+    "satisfactionRate": "Tỷ Lệ Hài Lòng",
+    "satisfactionRateDescription": "Tỷ lệ hài lòng cao từ những bệnh nhân quý giá của chúng tôi",
+    
+    "certifications": "Chứng Chỉ Chuyên Môn",
+    "certificationsDescription": "Tất cả nhân viên của chúng tôi duy trì chứng chỉ và giấy phép chuyên môn hiện tại",
+    
+    "contactUs": "Liên Hệ Với Chúng Tôi",
+    "contactUsDescription": "Sẵn sàng trải nghiệm dịch vụ chăm sóc sức khỏe xuất sắc? Liên hệ với chúng tôi ngay hôm nay để đặt lịch hẹn hoặc tìm hiểu thêm về dịch vụ của chúng tôi.",
+    
+    "makeAppointment": "Đặt Lịch Hẹn",
+    "learnMore": "Tìm Hiểu Thêm"
+} 
