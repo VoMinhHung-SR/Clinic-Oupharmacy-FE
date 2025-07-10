@@ -12,30 +12,18 @@
     "values": "Our Values",
     "valuesDescription": "The core principles that guide everything we do",
     
-    "value1": {
-        "title": "Patient-Centered Care",
-        "description": "Every decision we make is focused on what's best for our patients and their families."
-    },
-    "value2": {
-        "title": "Excellence",
-        "description": "We strive for excellence in every aspect of our service, from medical care to customer experience."
-    },
-    "value3": {
-        "title": "Innovation",
-        "description": "We embrace new technologies and methods to provide better, more efficient healthcare services."
-    },
-    "value4": {
-        "title": "Integrity",
-        "description": "We maintain the highest standards of professional ethics and transparency in all our operations."
-    },
-    "value5": {
-        "title": "Community",
-        "description": "We are committed to serving and improving the health of our local community."
-    },
-    "value6": {
-        "title": "Accessibility",
-        "description": "We ensure our services are accessible to all members of our community, regardless of their circumstances."
-    },
+    "value1title": "Patient-Centered Care",
+    "value1Description": "We are committed to providing accessible, high-quality healthcare services that improve the well-being of our community through innovative technology and compassionate care.",
+    "value2title": "Excellence",
+    "value2Description": "We strive for excellence in every aspect of our service, from medical care to customer experience.",
+    "value3title": "Innovation",
+    "value3Description": "We embrace new technologies and methods to provide better, more efficient healthcare services.",
+    "value4title": "Integrity",
+    "value4Description": "We maintain the highest standards of professional ethics and transparency in all our operations.",
+    "value5title": "Community",
+    "value5Description": "We are committed to serving and improving the health of our local community.",
+    "value6title": "Accessibility",
+    "value6Description": "We ensure our services are accessible to all members of our community, regardless of their circumstances.",
     
     "story": "Our Story",
     "storyDescription": "Founded with a vision to revolutionize healthcare delivery, OUPharmacy has grown from a small local pharmacy to a comprehensive healthcare provider serving thousands of patients across the region.",

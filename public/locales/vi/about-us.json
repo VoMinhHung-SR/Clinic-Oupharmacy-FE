@@ -12,30 +12,18 @@
     "values": "Giá Trị Cốt Lõi",
     "valuesDescription": "Những nguyên tắc cơ bản hướng dẫn mọi hoạt động của chúng tôi",
     
-    "value1": {
-        "title": "Chăm Sóc Lấy Bệnh Nhân Làm Trung Tâm",
-        "description": "Mọi quyết định chúng tôi đưa ra đều tập trung vào điều tốt nhất cho bệnh nhân và gia đình họ."
-    },
-    "value2": {
-        "title": "Sự Xuất Sắc",
-        "description": "Chúng tôi phấn đấu đạt được sự xuất sắc trong mọi khía cạnh dịch vụ, từ chăm sóc y tế đến trải nghiệm khách hàng."
-    },
-    "value3": {
-        "title": "Sự Đổi Mới",
-        "description": "Chúng tôi áp dụng các công nghệ và phương pháp mới để cung cấp dịch vụ chăm sóc sức khỏe tốt hơn, hiệu quả hơn."
-    },
-    "value4": {
-        "title": "Sự Liêm Chính",
-        "description": "Chúng tôi duy trì các tiêu chuẩn đạo đức nghề nghiệp và tính minh bạch cao nhất trong mọi hoạt động."
-    },
-    "value5": {
-        "title": "Cộng Đồng",
-        "description": "Chúng tôi cam kết phục vụ và cải thiện sức khỏe của cộng đồng địa phương."
-    },
-    "value6": {
-        "title": "Khả Năng Tiếp Cận",
-        "description": "Chúng tôi đảm bảo dịch vụ của mình có thể tiếp cận được với tất cả thành viên cộng đồng, bất kể hoàn cảnh của họ."
-    },
+    "value1title": "Chăm Sóc Lấy Bệnh Nhân Làm Trung Tâm",
+    "value1Description": "Mọi quyết định chúng tôi đưa ra đều tập trung vào điều tốt nhất cho bệnh nhân và gia đình họ.",
+    "value2title": "Sự Xuất Sắc",
+    "value2Description": "Chúng tôi phấn đấu đạt được sự xuất sắc trong mọi khía cạnh dịch vụ, từ chăm sóc y tế đến trải nghiệm khách hàng.",
+    "value3title": "Sự Đổi Mới",
+    "value3Description": "Chúng tôi áp dụng các công nghệ và phương pháp mới để cung cấp dịch vụ chăm sóc sức khỏe tốt hơn, hiệu quả hơn.",
+    "value4title": "Sự Liêm Chính",
+    "value4Description": "Chúng tôi duy trì các tiêu chuẩn đạo đức nghề nghiệp và tính minh bạch cao nhất trong mọi hoạt động.",
+    "value5title": "Cộng Đồng",
+    "value5Description": "Chúng tôi cam kết phục vụ và cải thiện sức khỏe của cộng đồng địa phương.",
+    "value6title": "Khả Năng Tiếp Cận",
+    "value6Description": "Chúng tôi đảm bảo dịch vụ của mình có thể tiếp cận được với tất cả thành viên cộng đồng, bất kể hoàn cảnh của họ.",
     
     "story": "Câu Chuyện Của Chúng Tôi",
     "storyDescription": "Được thành lập với tầm nhìn cách mạng hóa việc cung cấp dịch vụ chăm sóc sức khỏe, OUPharmacy đã phát triển từ một nhà thuốc nhỏ địa phương thành một nhà cung cấp dịch vụ chăm sóc sức khỏe toàn diện phục vụ hàng nghìn bệnh nhân trên toàn khu vực.",
