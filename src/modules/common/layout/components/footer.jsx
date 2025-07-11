@@ -1,8 +1,9 @@
-import { Avatar, Container, Grid, Stack } from '@mui/material';
+import { Avatar, Container, Grid, Stack, Typography, IconButton, Divider } from '@mui/material';
 import { Link } from 'react-router-dom';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { useTranslation } from 'react-i18next';
 import IconFaceBook from '../../../../lib/assets/iconFaceBook';
+import { EMAIL_SUPPORT } from '../../../../lib/constants';
 
 
 const Footer = () => {
@@ -12,95 +13,69 @@ const Footer = () => {
         return <Box></Box>
 
     return(
-        <>
-            
-            <footer id="footer">
-                <div style={{ backgroundColor: '#1E40AF', color: 'white', padding: '50px' }}>
-                    <Container maxWidth="lg">
-                    <Grid container spacing={4}>
-                        <Grid item xs={12} sm={12} md={3}>
-                        <div className="ou-justify-center ou-flex">
-                            <Avatar
-                            sx={{ width: '200px', height: '50px' }}
-                            display={{xs:"flex", sm:"block"}}
-                            variant="square"
-                            src="https://res.cloudinary.com/dl6artkyb/image/upload/v1666357910/OUPharmacy/bg_Oupharmacy_3x4_jicpdp.png"
-                            />
-                      
-                        </div>
-                        <p className='ou-mt-5 ou-text-center'>
-                            '{t('quote')}'
-                        </p>
+        <footer style={{
+            background: 'linear-gradient(90deg, #1e3a8a 0%, #2563eb 100%)',
+            color: '#fff',
+            padding: '48px 0 16px 0',
+            }}>
+            <Container maxWidth="lg">
+                <Grid container spacing={4}>
+                <Grid item xs={12} md={3}>
+                    <Stack spacing={2}>
+                    <Avatar
+                    sx={{ width: '200px', height: '50px' }}
+                    display={{xs:"flex", sm:"block"}}
+                    variant="square"
+                    src="https://res.cloudinary.com/dl6artkyb/image/upload/v1666357910/OUPharmacy/bg_Oupharmacy_3x4_jicpdp.png"
+                    />
+                    <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                        {t('home:quote')}
+                    </Typography>
+                    <Stack direction="row" spacing={1}>
+                        {/* <IconButton><FacebookIcon /></IconButton> */}
+                    </Stack>
+                    </Stack>
+                </Grid>
 
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={3}>
-                        <div className="ou-text-left">
-                            <h4 className="ou-text-green-500 ou-uppercase">{t('aboutUs')}</h4>
-                            <Stack direction="column" spacing={1}>
-                            <Link to="#">{t('introduce')}</Link>
-                            <Link to="#">{t('businessLicense')}</Link>
-                            </Stack>
-                        </div>
-                        <div className="ou-text-left" style={{ marginTop: '20px' }}>
-                            <h4 className="ou-text-green-500 ou-uppercase">{t('categories')}</h4>
-                            <Stack direction="column" spacing={1}>
-                            <Link to="#">{t('prescriptionDrugs')}</Link>
-                            <Link to="#">{t('otcDrugs')}</Link>
-                            <Link to="#">{t('functionalFoods')}</Link>
-                            </Stack>
-                        </div>
-                        </Grid>
-                        <Grid item xs={12} sm={4} md={3}>
-                        <div className="ou-text-left">
-                            <h4 className="ou-text-green-500 ou-uppercase">
-                            {t('pharmacySystem')}
-                            </h4>
-                            <Stack direction="column" spacing={1}>
-                            <Link to="#">{t('drugSystem')}</Link>
-                            <Link to="#">{t('pharmacyRules')}</Link>
-                            <Link to="#">{t('serviceQuality')}</Link>
-                            <Link to="#">{t('returnPolicy')}</Link>
-                            <Link to="#">{t('warrantyPolicy')}</Link>
-                            </Stack>
-                        </div>
-                        <div className="ou-text-left" style={{ marginTop: '20px' }}>
-                            <h4 className="ou-text-green-500 ou-uppercase">{t('terms')}</h4>
-                            <Stack direction="column" spacing={1}>
-                            <Link to="#">{t('security')}</Link>
-                            <Link to="#">{t('support')}</Link>
-                            <Link to="#">{t('privacy')}</Link>
-                            </Stack>
-                        </div>
-                        </Grid>
-                                    
-                        <Grid item  xs={12} sm={4} md={3}>
-                            <div className='ou-text-left '>
-                                <h4 className='ou-text-green-500 ou-uppercase '>{t('contactUs')}</h4>
-                                <Stack direction="row"  style={{ "flexDirection":"column"}} className='ou-mt-2'>
-                                    <Link className='ou-my-0.5' to="#">{t('hotline')}: 0382590839</Link>
-                                    <Link className='ou-my-0.5' to="#">{t('support')}</Link>
-                                </Stack> 
-                            </div>
-
-                            <div className='ou-text-left ou-mt-5'>
-                                <h4 className='ou-text-green-500 ou-uppercase '>{t('operatingTime')}</h4>
-                                <Stack direction="row"  style={{ "flexDirection":"column"}} className='ou-mt-2'>
-                                    <Link className='ou-my-0.5' to="#">{t('examinationSchedule')}</Link>
-                                    <Link className='ou-my-0.5' to="#">{t('onlineConsultation')}: 24/24</Link>
-                                </Stack> 
-                            </div>
-                         
-                        </Grid>
-                    </Grid>
-                  
-                </Container>
+                <Grid item xs={12} md={3}>
+                    <Typography variant="h6" sx={{ mb: 1 }}>{t('home:aboutUs')}</Typography>
+                    <Stack spacing={1}>
+                    <Link to="/about-us">{t('home:introduce')}</Link>
+                    <Link to="#">{t('home:businessLicense')}</Link>
+                    </Stack>
+                </Grid>
                 
-            </div>
-
-        </footer>            
-                
-        </>
-         
+                <Grid item xs={12} md={3}>
+                    <Typography variant="h6" sx={{ mb: 1 }}>{t('categories')}</Typography>
+                    <Stack spacing={1}>
+                    <Link to="#">{t('prescriptionDrugs')}</Link>
+                    <Link to="#">{t('otcDrugs')}</Link>
+                    <Link to="#">{t('functionalFoods')}</Link>
+                    </Stack>
+                </Grid>
+                {/* Cột 4: Liên hệ */}
+                <Grid item xs={12} md={3}>
+                    <Typography variant="h6" sx={{ mb: 1 }}>{t('home:contactUs')}</Typography>
+                    <Stack spacing={1}>
+                    <Typography>{t('home:hotline')}: 0382590839</Typography>
+                    <Typography>{t('home:emailAddress')}:
+                        <a href={`mailto:${EMAIL_SUPPORT}`} style={{color: '#fff'}}>
+                            {" "} {t('home:team')}
+                        </a>
+                    </Typography>
+                    </Stack>
+                    <Typography sx={{ mt: 2, fontSize: 13, opacity: 0.7 }}>
+                    {t('home:operatingTime')}<br />
+                    {t('home:onlineConsultation')}
+                    </Typography>
+                </Grid>
+                </Grid>
+                <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
+                <Typography align="center" sx={{ fontSize: 13, opacity: 0.7 }}>
+                ©  {new Date().getFullYear()} {t('home:copyright')}
+                </Typography>
+            </Container>
+        </footer>
     )
 }
 export default Footer

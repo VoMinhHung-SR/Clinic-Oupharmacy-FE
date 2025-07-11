@@ -140,15 +140,13 @@ const AboutUs = () => {
     ];
 
     return (
-        <Box sx={{ background: '#fff', minHeight: '100vh', py: 5  }}>
+        <Box sx={{ background: '#fff', minHeight: '100vh', py: 6  }}>
             <Helmet>
                 <title>About Us - OUPharmacy</title>
             </Helmet>
             {/* Hero Section */}
             <Box
                 sx={{
-                    background: 'linear-gradient(135deg, #e3eafc 0%, #b6c8f9 100%)',
-                    py: { xs: 3, md: 4 },
                     mb: 5, 
                     borderRadius: 2,
                     mx: { xs: 0, md: 3 }
