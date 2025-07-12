@@ -38,9 +38,9 @@ const Footer = () => {
                 </Grid>
 
                 <Grid item xs={12} md={3}>
-                    <Typography variant="h6" sx={{ mb: 1 }}>{t('home:aboutUs')}</Typography>
+                    <Typography variant="h6" sx={{ mb: 1, fontSize: { xs: '1.1rem', md: '1.25rem' } }}>{t('home:aboutUs')}</Typography>
                     <Stack spacing={1}>
-                    <Link to="/about-us">{t('home:introduce')}</Link>
+                    <Link to="/about-us" style={{ fontSize: '1rem', color: '#fff' }}>{t('home:introduce')}</Link>
                     <Link to="#">{t('home:businessLicense')}</Link>
                     </Stack>
                 </Grid>
@@ -64,7 +64,7 @@ const Footer = () => {
                         </a>
                     </Typography>
                     </Stack>
-                    <Typography sx={{ mt: 2, fontSize: 13, opacity: 0.7 }}>
+                    <Typography sx={{ mt: 2, fontSize: { xs: '0.93rem', md: '1rem' }, opacity: 0.7 }}>
                     {t('home:operatingTime')}<br />
                     {t('home:onlineConsultation')}
                     </Typography>

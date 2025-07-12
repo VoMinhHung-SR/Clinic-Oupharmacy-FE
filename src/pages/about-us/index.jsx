@@ -140,9 +140,9 @@ const AboutUs = () => {
     ];
 
     return (
-        <Box sx={{ background: '#fff', minHeight: '100vh', py: 6  }}>
+        <Box sx={{ background: '#fff', py: 4  }}>
             <Helmet>
-                <title>About Us - OUPharmacy</title>
+                <title>{t('about-us:title')} - OUPharmacy</title>
             </Helmet>
             {/* Hero Section */}
             <Box
@@ -158,7 +158,7 @@ const AboutUs = () => {
                             variant="h4"
                             component="h1"
                             gutterBottom
-                            sx={{ fontWeight: 500, color: 'primary.main', mb: 1, fontSize: { xs: '2rem', md: '2.5rem' } }}
+                            sx={{ fontWeight: 500, color: 'primary.main', mb: 1, fontSize: { xs: '1.5rem', md: '2rem' } }}
                         >
                             {t('about-us:title')}
                         </Typography>
@@ -171,17 +171,16 @@ const AboutUs = () => {
                         </Typography>
                         <Typography
                             variant="body1"
-                            sx={{ maxWidth: 600, mx: 'auto', opacity: 0.85, color: 'text.secondary', fontSize: { xs: '0.95rem', md: '1.05rem' } }}
+                            sx={{ maxWidth: 600, mx: 'auto', opacity: 0.85, color: 'text.secondary', fontSize: { xs: '0.97rem', md: '1rem' } }}
                         >
                             {t('about-us:description')}
                         </Typography>
                     </Box>
                 </Container>
             </Box>
-
-            <Container maxWidth="lg">
-                {/* Mission & Vision Section (bg #f7fafd) */}
-                <Box sx={{ background: '#f7fafd', borderRadius: 2, boxShadow: 1, p: { xs: 2, md: 4 }, mb: 6 }}>
+            {/* Mission & Vision Section */}
+            <Container maxWidth="lg" >
+                <Box sx={{ background: '#f7fafd', borderRadius: 2, boxShadow: 1, p: { xs: 2, md: 4 }}}>
                     <Grid container spacing={4}>
                         <Grid item xs={12} md={6}>
                             <Card sx={{ height: '100%', boxShadow: 0, background: 'transparent' }}>
@@ -192,7 +191,7 @@ const AboutUs = () => {
                                             {t('about-us:mission')}
                                         </Typography>
                                     </Box>
-                                    <Typography variant="body2" sx={{ lineHeight: 1.7, fontSize: { xs: '0.97rem', md: '1.05rem' } }}>
+                                    <Typography variant="body2" sx={{ fontSize: { xs: '0.97rem', md: '1rem' } }}>
                                         {t('about-us:missionDescription')}
                                     </Typography>
                                 </CardContent>
@@ -207,7 +206,7 @@ const AboutUs = () => {
                                             {t('about-us:vision')}
                                         </Typography>
                                     </Box>
-                                    <Typography variant="body2" sx={{ lineHeight: 1.7, fontSize: { xs: '0.97rem', md: '1.05rem' } }}>
+                                    <Typography variant="body2" sx={{ fontSize: { xs: '0.97rem', md: '1rem' } }}>
                                         {t('about-us:visionDescription')}
                                     </Typography>
                                 </CardContent>
@@ -216,12 +215,12 @@ const AboutUs = () => {
                     </Grid>
                 </Box>
 
-                {/* Values Section (bg trắng) */}
+                {/* Values Section */}
                 <Box sx={{ background: '#fff', borderRadius: 2, boxShadow: 1, p: { xs: 2, md: 4 }, mb: 6 }}>
-                    <Typography variant="h5" component="h2" sx={{ textAlign: 'center', mb: 2, fontWeight: 600, fontSize: { xs: '1.5rem', md: '1.8rem' } }}>
+                    <Typography variant="h5" component="h2" sx={{ textAlign: 'center', mb: 2, fontWeight: 600, fontSize: { xs: '1.3rem', md: '1.5rem' } }}>
                         {t('about-us:values')}
                     </Typography>
-                    <Typography variant="body2" sx={{ textAlign: 'center', mb: 5, color: 'text.secondary', fontSize: { xs: '1rem', md: '1.08rem' } }}>
+                    <Typography variant="body2" sx={{ textAlign: 'center', mb: 5, color: 'text.secondary', fontSize: { xs: '0.97rem', md: '1rem' } }}>
                         {t('about-us:valuesDescription')}
                     </Typography>
                     <Grid container spacing={3}>
@@ -235,7 +234,7 @@ const AboutUs = () => {
                                         <Typography variant="subtitle1" component="h3" gutterBottom sx={{ fontWeight: 500, fontSize: { xs: '1.05rem', md: '1.15rem' } }}>
                                             {value.title}
                                         </Typography>
-                                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.93rem', md: '1rem' } }}>
+                                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.97rem', md: '1rem' } }}>
                                             {value.description}
                                         </Typography>
                                     </CardContent>
@@ -245,7 +244,7 @@ const AboutUs = () => {
                     </Grid>
                 </Box>
 
-                {/* Story Section (bg #f7fafd) */}
+                {/* Story Section */}
                 <Box sx={{ mb: 6, background: '#f7fafd', borderRadius: 2, boxShadow: 1, p: { xs: 2, md: 4 } }}>
                     <Paper sx={{
                         p: 5,
@@ -253,7 +252,7 @@ const AboutUs = () => {
                         boxShadow: 'none',
                         textAlign: 'center',
                     }}>
-                        <Typography variant="h5" component="h2" sx={{ textAlign: 'center', mb: 2, fontWeight: 700, color: 'primary.main', fontSize: { xs: '1.3rem', md: '1.5rem' } }}>
+                        <Typography variant="h5" component="h2" sx={{ textAlign: 'center', mb: 2, fontWeight: 600, color: 'primary.main', fontSize: { xs: '1.3rem', md: '1.5rem' } }}>
                             {t('about-us:story')}
                         </Typography>
                         <Typography variant="body1" sx={{ textAlign: 'center', lineHeight: 1.7, fontSize: { xs: '1.08rem', md: '1.15rem' }, color: 'text.primary', fontWeight: 500 }}>
@@ -262,12 +261,12 @@ const AboutUs = () => {
                     </Paper>
                 </Box>
 
-                {/* Team Section (bg trắng) */}
+                {/* Team Section */}
                 <Box sx={{ background: '#fff', borderRadius: 2, boxShadow: 1, p: { xs: 2, md: 4 }, mb: 6 }}>
-                    <Typography variant="h5" component="h2" sx={{ textAlign: 'center', mb: 2, fontWeight: 600, fontSize: { xs: '1.5rem', md: '1.8rem' } }}>
+                    <Typography variant="h5" component="h2" sx={{ textAlign: 'center', mb: 2, fontWeight: 600, fontSize: { xs: '1.3rem', md: '1.5rem' } }}>
                         {t('about-us:team')}
                     </Typography>
-                    <Typography variant="body2" sx={{ textAlign: 'center', mb: 5, color: 'text.secondary', fontSize: { xs: '1rem', md: '1.08rem' } }}>
+                    <Typography variant="body2" sx={{ textAlign: 'center', mb: 5, color: 'text.secondary', fontSize: { xs: '0.97rem', md: '1rem' } }}>
                         {t('about-us:teamDescription')}
                     </Typography>
                     <Grid container spacing={3}>
@@ -281,7 +280,7 @@ const AboutUs = () => {
                                         <Typography variant="subtitle1" component="h3" gutterBottom sx={{ fontWeight: 500, fontSize: { xs: '1.05rem', md: '1.15rem' } }}>
                                             {member.title}
                                         </Typography>
-                                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.93rem', md: '1rem' } }}>
+                                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.97rem', md: '1rem' } }}>
                                             {member.description}
                                         </Typography>
                                     </CardContent>
@@ -291,12 +290,12 @@ const AboutUs = () => {
                     </Grid>
                 </Box>
 
-                {/* Facilities Section (bg #f7fafd) */}
+                {/* Facilities Section */}
                 <Box sx={{ background: '#f7fafd', borderRadius: 2, boxShadow: 1, p: { xs: 2, md: 4 }, mb: 6 }}>
-                    <Typography variant="h5" component="h2" sx={{ textAlign: 'center', mb: 2, fontWeight: 600, fontSize: { xs: '1.5rem', md: '1.8rem' } }}>
+                    <Typography variant="h5" component="h2" sx={{ textAlign: 'center', mb: 2, fontWeight: 600, fontSize: { xs: '1.3rem', md: '1.5rem' } }}>
                         {t('about-us:facilities')}
                     </Typography>
-                    <Typography variant="body2" sx={{ textAlign: 'center', mb: 5, color: 'text.secondary', fontSize: { xs: '1rem', md: '1.08rem' } }}>
+                    <Typography variant="body2" sx={{ textAlign: 'center', mb: 5, color: 'text.secondary', fontSize: { xs: '0.97rem', md: '1rem' } }}>
                         {t('about-us:facilitiesDescription')}
                     </Typography>
                     <Grid container spacing={3}>
@@ -310,7 +309,7 @@ const AboutUs = () => {
                                         <Typography variant="subtitle1" component="h3" gutterBottom sx={{ fontWeight: 500, fontSize: { xs: '1.05rem', md: '1.15rem' } }}>
                                             {facility.title}
                                         </Typography>
-                                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.93rem', md: '1rem' } }}>
+                                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.97rem', md: '1rem' } }}>
                                             {facility.description}
                                         </Typography>
                                     </CardContent>
@@ -320,12 +319,12 @@ const AboutUs = () => {
                     </Grid>
                 </Box>
 
-                {/* Achievements Section (bg trắng) */}
+                {/* Achievements Section */}
                 <Box sx={{ background: '#fff', borderRadius: 2, boxShadow: 1, p: { xs: 2, md: 4 }, mb: 6 }}>
-                    <Typography variant="h5" component="h2" sx={{ textAlign: 'center', mb: 2, fontWeight: 600, fontSize: { xs: '1.5rem', md: '1.8rem' } }}>
+                    <Typography variant="h5" component="h2" sx={{ textAlign: 'center', mb: 2, fontWeight: 600, fontSize: { xs: '1.3rem', md: '1.5rem' } }}>
                         {t('about-us:achievements')}
                     </Typography>
-                    <Typography variant="body2" sx={{ textAlign: 'center', mb: 5, color: 'text.secondary', fontSize: { xs: '1rem', md: '1.08rem' } }}>
+                    <Typography variant="body2" sx={{ textAlign: 'center', mb: 5, color: 'text.secondary', fontSize: { xs: '0.97rem', md: '1rem' } }}>
                         {t('about-us:achievementsDescription')}
                     </Typography>
                     <Grid container spacing={3}>
@@ -339,7 +338,7 @@ const AboutUs = () => {
                                         <Typography variant="subtitle1" component="h3" gutterBottom sx={{ fontWeight: 500, fontSize: { xs: '1.05rem', md: '1.15rem' } }}>
                                             {achievement.title}
                                         </Typography>
-                                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.93rem', md: '1rem' } }}>
+                                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.97rem', md: '1rem' } }}>
                                             {achievement.description}
                                         </Typography>
                                     </CardContent>
@@ -349,7 +348,7 @@ const AboutUs = () => {
                     </Grid>
                 </Box>
 
-                {/* Call to Action giữ gradient đậm như hiện tại */}
+                {/* Call to Action Section */}
                 <Box sx={{ 
                     textAlign: 'center', 
                     py: 5, 
@@ -358,10 +357,10 @@ const AboutUs = () => {
                     color: 'white',
                     boxShadow: '0 4px 24px 0 rgba(30,64,175,0.10)'
                 }}>
-                    <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 700, fontSize: { xs: '1.3rem', md: '1.5rem' }, color: 'white' }}>
+                    <Typography variant="h6" component="h2" gutterBottom sx={{ fontWeight: 700, fontSize: { xs: '1.1rem', md: '1.25rem' }, color: 'white' }}>
                         {t('about-us:contactUs')}
                     </Typography>
-                    <Typography variant="body1" sx={{ mb: 4, maxWidth: 600, mx: 'auto', fontSize: { xs: '1.08rem', md: '1.15rem' }, color: 'white', opacity: 0.95 }}>
+                    <Typography variant="body1" sx={{ mb: 4, maxWidth: 600, mx: 'auto', fontSize: { xs: '0.97rem', md: '1rem' }, color: 'white', opacity: 0.95 }}>
                         {t('about-us:contactUsDescription')}
                     </Typography>
                     <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
