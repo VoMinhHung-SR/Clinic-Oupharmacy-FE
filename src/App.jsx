@@ -54,6 +54,7 @@ import OnlineWaitingRoom from './pages/waiting-room/sub'
 import DashboardWaitingRoom from './pages/dashboard/waiting-room'
 import APIs, { endpoints } from './config/APIs'
 import Contact from './pages/contact'
+import AboutUs from './pages/about-us'
 
 export const userContext = createContext()
 const queryClient = new QueryClient({
@@ -112,6 +113,7 @@ function App() {
                       <Route path='/' element={<Layout />}>
                         <Route path='/' element={<Home />}/>
                         
+                        <Route path='/about-us' element={<AboutUs />}/>
                         <Route path='/waiting-room' element={<OnlineWaitingRoom/>}/>
                         <Route path='/contact' element={<Contact/>}/>
                         
