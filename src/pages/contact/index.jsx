@@ -89,10 +89,10 @@ const Contact = () => {
                 {/* Header */}
                 <Box sx={{ textAlign: 'center', mb: 6 }}>
                     <Typography gutterBottom 
-                    sx={{ fontWeight: 'bold', color: 'primary.main', fontSize: '2rem' }}>
+                    sx={{ color: 'primary.main', fontSize: { xs: '1.5rem', md: '2rem' } }}>
                         {t('contact:contact')}
                     </Typography>
-                    <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
+                    <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto', fontSize: { xs: '0.97rem', md: '1rem' } }}>
                         {t('contact:contactDescription')}
                     </Typography>
                 </Box>
@@ -108,13 +108,13 @@ const Contact = () => {
                                         <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
                                             {info.icon}
                                             <Box>
-                                                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
+                                                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, fontSize: { xs: '1.05rem', md: '1.15rem' } }}>
                                                     {info.title}
                                                 </Typography>
-                                                <Typography variant="body1" color="primary" sx={{ fontWeight: 'medium' }}>
+                                                <Typography variant="body1" color="primary" sx={{ fontWeight: 'medium', fontSize: { xs: '0.97rem', md: '1rem' } }}>
                                                     {info.content}
                                                 </Typography>
-                                                <Typography variant="body2" color="text.secondary">
+                                                <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.93rem', md: '1rem' } }}>
                                                     {info.subtitle}
                                                 </Typography>
                                             </Box>
@@ -129,7 +129,7 @@ const Contact = () => {
                     <Grid item xs={12} md={8}>
                         <Paper elevation={3} sx={{ p: 4 }}>
                             <Typography gutterBottom 
-                            sx={{ fontSize: '1.5rem', mb: 3 }}>
+                            sx={{ fontSize: { xs: '1.1rem', md: '1.25rem' }, fontWeight: 600 }}>
                                 {t('contact:send')}
                             </Typography>
                             
@@ -239,14 +239,14 @@ const Contact = () => {
                 {/* Map Section */}
                 <Box sx={{ mt: 6 }}>
                     <Typography gutterBottom 
-                    sx={{ fontWeight: 'bold', mb: 3, textAlign: 'center', fontSize: '2rem' }}>
+                    sx={{ mb: 3, textAlign: 'center', fontSize: { xs: '1.5rem', md: '2rem' } }}>
                         {t('contact:address')}
                     </Typography>
                     <Paper elevation={3} sx={{ p: 2, textAlign: 'center', backgroundColor: '#e3f2fd' }}>
-                        <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
+                        <Typography variant="h6" color="primary" sx={{ mb: 2, fontSize: { xs: '1.05rem', md: '1.15rem' } }}>
                             📍  371 Nguyễn Kiệm, Gò Vấp, TP.HCM, Việt Nam
                         </Typography>
-                        <Typography variant="body1" color="text.secondary">
+                        <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: '0.97rem', md: '1rem' } }}>
                             ({t('contact:workingHours')}: {t('contact:workingHoursDescription')})
                         </Typography>
                         <Box sx={{ 

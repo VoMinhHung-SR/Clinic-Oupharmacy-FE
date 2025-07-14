@@ -13,7 +13,7 @@
 
     "address": "Address",
     "contactNumber": "Contact Number",
-    "emailAddress": "Email Address",
+    "emailAddress": "Email",
     "website": "Website",
 
     "categories": "Categories",
@@ -40,9 +40,9 @@
     "contactUs": "Contact Us",
     "hotline": "Hotline",
 
-    "operatingTime": "Operating time",
+    "operatingTime": "Operating time: 07:00 - 17:00 (Mon - Sat)",
     "examinationSchedule": "Examination schedule (2-7): 7AM-5PM",
-    "onlineConsultation": "Online consultation",
+    "onlineConsultation": "Online consultation: 24/24",
 
     "welcomeOUPharmacy": "Welcome to OUPharmacy",
     "welcomeTitle":"We are here for your Care",
@@ -54,5 +54,9 @@
     "scriptOutdoorsCheckup": "Enjoy the great outdoors with peace of mind knowing that you can receive medical care right where you are. Our outdoors checkup service is perfect for hikers, campers, and anyone else who wants to enjoy nature without worrying about medical care.",
     "scriptTwentyFourHoursService": "Our medical services are available to you around the clock. Whether you need medical attention in the middle of the night or on a holiday, our staff is always here to provide the care you need.",
     "scriptMessageAndNotification": "Stay connected with our team through our messaging and notification system. Receive important updates and reminders about your medical care, and communicate directly with our staff to get the answers you need.",
-    "scriptWaitingRoom": "Our waiting room allows you to watch your exam online and notifies you when it's your turn."
+    "scriptWaitingRoom": "Our waiting room allows you to watch your exam online and notifies you when it's your turn.",
+
+    "copyright": "OUPharmacy. All rights reserved.",
+
+    "team": "OUPharmacy Team"
 }

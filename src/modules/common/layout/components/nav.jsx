@@ -36,6 +36,11 @@ const Nav = () => {
       link: '/waiting-room'
     },
     {
+      id: 'about-us',
+      name: t('aboutUs'),
+      link: '/about-us'
+    }, 
+    {
       id: 'contact',
       name: t('contact'),
       link: '/contact'
@@ -229,7 +234,7 @@ const Nav = () => {
       )
   }
   return (
-    <AppBar position="fixed" className="!ou-bg-blue-600" >
+    <AppBar position="fixed" className="!ou-bg-gradient-to-r from-blue-600 to-cyan-500">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
             <Link to="/" className="ou-flex ou-items-center" >
