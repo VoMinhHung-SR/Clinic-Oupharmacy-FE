@@ -69,13 +69,26 @@ const Nav = () => {
   //  Hooks useNav
   const {user, handleLogout} = useNav();
   let btn = <>
-      <ul className="ou-flex ou-text-white ou-items-center">
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Link to="/login">
-            <MenuItem style={{ "color": "inherit" }} >
-                  <LoginIcon style={{ "marginRight": "5px" }} />{t('login')}
-            </MenuItem>
+            <Button 
+              sx={{ 
+                color: 'inherit',
+                fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                px: { xs: 1, sm: 2 },
+                py: { xs: 0.5, sm: 1 }
+              }}
+            >
+              <LoginIcon sx={{ mr: 0.5, fontSize: { xs: '16px', sm: '20px' } }} />
+              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                {t('common:logInAndRegister')}
+              </Box>
+              <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
+                {t('login')}
+              </Box>
+            </Button>
           </Link>
-      </ul>
+      </Box>
   </>
 
   if (user){
@@ -147,11 +160,11 @@ const Nav = () => {
         </Menu>
         
         {/* Show nav menu */}
-        <ul className="ou-flex ou-justify-center ou-items-center">
-          <Link to="/conversations" className="ou-pr-3">
-            <Box>
-              <MailIcon color="#f3f3f3" sx={{fontSize:"24px"}} />    
-            </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 } }}>
+          <Link to="/conversations">
+            <IconButton sx={{ color: '#fff', p: { xs: 0.5, sm: 1 } }}>
+              <MailIcon sx={{ fontSize: { xs: "20px", sm: "24px" } }} />    
+            </IconButton>
           </Link>
           <Box className="hover:ou-cursor-pointer">
               <NotificationButton
@@ -163,18 +176,29 @@ const Nav = () => {
           </Box>
        
           <Tooltip followCursor title={t('openSettings')}>
-            <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}
+            <IconButton 
+              onClick={handleClick} 
+              size="small" 
+              sx={{ 
+                ml: { xs: 0.5, sm: 1 },
+                p: { xs: 0.5, sm: 1 }
+              }}
               aria-controls={open ? 'account-menu' : undefined}
               aria-haspopup="true"
-              aria-expanded={open ? 'true' : undefined}>
-              <Avatar sx={{ width: 32, height: 32 }} 
-              className="ou-bg-cyan-50"
-              src={(user.avatar_path && user.avatar_path != ERROR_CLOUDINARY) ? user.avatar_path : "https://res.cloudinary.com/dl6artkyb/image/upload/v1666353307/OUPharmacy/logo_oupharmacy_kz2yzd.png"} 
-              alt={user.first_name + " " + user.last_name}/> 
+              aria-expanded={open ? 'true' : undefined}
+            >
+              <Avatar 
+                sx={{ 
+                  width: { xs: 28, sm: 32 }, 
+                  height: { xs: 28, sm: 32 } 
+                }} 
+                className="ou-bg-cyan-50"
+                src={(user.avatar_path && user.avatar_path != ERROR_CLOUDINARY) ? user.avatar_path : "https://res.cloudinary.com/dl6artkyb/image/upload/v1666353307/OUPharmacy/logo_oupharmacy_kz2yzd.png"} 
+                alt={user.first_name + " " + user.last_name}
+              /> 
             </IconButton>
           </Tooltip>
-         
-        </ul>
+        </Box>
         {/* End nav menu */}
     </>
   }
@@ -234,11 +258,15 @@ const Nav = () => {
       )
   }
   return (
-    <AppBar position="fixed" className="!ou-bg-gradient-to-r from-blue-600 to-cyan-500">
+    <AppBar position="fixed" sx={{
+      background: 'linear-gradient(90deg, #1e3a8a 0%, #2563eb 100%)',
+      color: '#fff'
+    }}>
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar disableGutters sx={{ minHeight: { xs: '56px', sm: '64px' } }}>
+            {/* Logo and Brand - Desktop */}
             <Link to="/" className="ou-flex ou-items-center" >
-                <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
+                <Box sx={{ display: { xs: 'none', lg: 'flex' }, mr: 1 }}>
                     <Logo width={50} height={50} className="ou-text-white ou-mr-2" color={'white'}/>
                 </Box>
                 <Typography variant="h6" noWrap
@@ -246,85 +274,122 @@ const Nav = () => {
                       mr: 2,
                       my: 0,
                       py: 2,
-                      display: { xs: 'none', md: 'flex' },
+                      display: { xs: 'none', lg: 'flex' },
                       fontWeight: 700,
                       letterSpacing: '.3rem',
                       color: 'inherit',
                       textDecoration: 'none',
+                      fontSize: { lg: '1.25rem', xl: '1.5rem' }
                     }}
                 >
                     OUPHARMACY
                 </Typography>
             </Link>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu id="menu-appbar" anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none'},
-              }}
-            >
-                {pages.map((page) => renderElementNav(page.id+"-mb", page.link, page.name, true, page.id+"-mb"))}
-            </Menu>
-          </Box>
-          <Box  sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-          <Link to="/" className=" ou-flex ou-justify-center ou-items-center">
-            <Avatar alt="OUPharmacy-Logo"  
-                sx={{
-                    mr: 2,
-                    display: { xs: 'flex', md: 'none' },
-                    flexGrow: 1,
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
-                    color: 'inherit',
-                    textDecoration: 'none',
-                }}
-                src="https://res.cloudinary.com/dl6artkyb/image/upload/v1666354767/OUPharmacy/logo_oupharmacy_1x1_zks7t4.png" />
-               
-            </Link>
-          </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => renderElementNav(page.id, page.link, page.name, false, page.id+"-dek"))}
-          </Box>
+            {/* Mobile Menu Button */}
+            <Box sx={{ display: { xs: 'flex', lg: 'none' }, flexGrow: 0 }}>
+              <IconButton
+                size="large"
+                aria-label="menu"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+                sx={{ p: 1 }}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Box>
+
+            {/* Mobile Logo */}
+            <Box sx={{ display: { xs: 'flex', lg: 'none' }, flexGrow: 1, justifyContent: 'center' }}>
+              <Link to="/" className="ou-flex ou-justify-center ou-items-center">
+                <Avatar 
+                  alt="OUPharmacy-Logo"  
+                  sx={{
+                    width: { xs: 40, sm: 45 },
+                    height: { xs: 40, sm: 45 },
+                    display: { xs: 'flex', lg: 'none' }
+                  }}
+                  src="https://res.cloudinary.com/dl6artkyb/image/upload/v1666354767/OUPharmacy/logo_oupharmacy_1x1_zks7t4.png" 
+                />
+              </Link>
+            </Box>
+
+            {/* Desktop Navigation */}
+            <Box sx={{ 
+              flexGrow: 1, 
+              display: { xs: 'none', lg: 'flex' },
+              justifyContent: 'flex-start',
+              gap: 1,
+              ml: 2
+            }}>
+              {pages.map((page) => renderElementNav(page.id, page.link, page.name, false, page.id+"-dek"))}
+            </Box>
                 
-          <Box sx={{ flexGrow: 0 }} className="ou-flex">
-            {i18n.language === 'en' ? 
-              <Tooltip followCursor title={t('changeLanguage')}>
-                <Button className="!ou-text-white" onClick={()=> changeLanguage('vi')}>
-                  <FlagUK width={30} height={30}/>
-                </Button> 
-              </Tooltip>
-              :
-              <Tooltip followCursor title={t('changeLanguage')}>
-                <Button className="!ou-text-white" onClick={()=> changeLanguage('en')}>
-                  <FlagVN width={30} height={30}/>
-                </Button>
-              </Tooltip>
-            }
-            {btn}
-          </Box>
-        </Toolbar>
-      </Container>
+            {/* Right Side Actions */}
+            <Box sx={{ 
+              flexGrow: 0, 
+              display: 'flex', 
+              alignItems: 'center',
+              gap: { xs: 0.5, sm: 1, md: 1.5 }
+            }}>
+              {/* Language Toggle */}
+              <Box>
+                {i18n.language === 'en' ? 
+                  <Tooltip followCursor title={t('changeLanguage')}>
+                    <Button 
+                      className="!ou-text-white" 
+                      onClick={()=> changeLanguage('vi')}
+                      sx={{ minWidth: 'auto', p: { xs: 1, sm: 1.5 } }}
+                    >
+                      <FlagUK width={24} height={24}/>
+                    </Button> 
+                  </Tooltip>
+                  :
+                  <Tooltip followCursor title={t('changeLanguage')}>
+                    <Button 
+                      className="!ou-text-white" 
+                      onClick={()=> changeLanguage('en')}
+                      sx={{ minWidth: 'auto', p: { xs: 1, sm: 1.5 } }}
+                    >
+                      <FlagVN width={24} height={24}/>
+                    </Button>
+                  </Tooltip>
+                }
+              </Box>
+
+              {/* User Actions */}
+              {btn}
+            </Box>
+          </Toolbar>
+
+          {/* Mobile Menu */}
+          <Menu 
+            id="menu-appbar" 
+            anchorEl={anchorElNav}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            open={Boolean(anchorElNav)}
+            onClose={handleCloseNavMenu}
+            sx={{
+              display: { xs: 'block', lg: 'none'},
+              '& .MuiPaper-root': {
+                minWidth: '200px',
+                mt: 1
+              }
+            }}
+          >
+            {pages.map((page) => renderElementNav(page.id+"-mb", page.link, page.name, true, page.id+"-mb"))}
+          </Menu>
+        </Container>
 
       <CustomModal
           className="ou-w-[600px]"

@@ -67,8 +67,8 @@ const StyledDrawer = styled(MuiDrawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
     position: 'relative',
     whiteSpace: 'nowrap',
-    color: 'white',
-    backgroundColor: '#1976d2',
+    color: '#fff',
+    background: 'linear-gradient(180deg, #1e3a8a 0%, #2563eb 100%)',
     width: drawerWidth,
     boxSizing: 'border-box',
   },

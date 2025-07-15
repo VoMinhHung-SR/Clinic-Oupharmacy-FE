@@ -72,8 +72,8 @@ const Contact = () => {
         {
             icon: <LocationOn sx={{ fontSize: 40, color: 'primary.main' }} />,
             title: t('contact:address'),
-            content: '371 Nguyễn Kiệm, Gò Vấp, TP.HCM',
-            subtitle: t('common:Vietnam')
+            content: '371 Nguyễn Kiệm, Gò Vấp',
+            subtitle: t('contact:city')
         },
         {
             icon: <AccessTime sx={{ fontSize: 40, color: 'primary.main' }} />,

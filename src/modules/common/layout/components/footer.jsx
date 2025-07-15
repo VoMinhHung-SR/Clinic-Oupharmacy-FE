@@ -66,6 +66,7 @@ const Footer = () => {
                     </Stack>
                     <Typography sx={{ mt: 2, fontSize: { xs: '0.93rem', md: '1rem' }, opacity: 0.7 }}>
                     {t('home:operatingTime')}<br />
+                    ({t('home:workingSchedule')})<br />
                     {t('home:onlineConsultation')}
                     </Typography>
                 </Grid>
