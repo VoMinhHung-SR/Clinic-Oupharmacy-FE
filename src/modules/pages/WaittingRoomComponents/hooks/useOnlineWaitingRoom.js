@@ -29,11 +29,11 @@ const useOnlineWaitingRoom = (date = CURRENT_DATE) => {
                     if (data && data.schedules && Array.isArray(data.schedules)) {
                         setSchedules(data.schedules);
                     } else {
-                        console.log("Document exists but no valid schedules array found:", data);
+                        // console.log("Document exists but no valid schedules array found:", data);
                         setSchedules([]);
                     }
                 } else {
-                    console.log("No document found for date:", formattedDate);
+                    // console.log("No document found for date:", formattedDate);
                     setSchedules([]);
                 }
                 setLoading(false);

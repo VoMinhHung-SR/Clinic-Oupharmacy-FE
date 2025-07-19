@@ -15,24 +15,42 @@ const OnlineWaitingRoom = () => {
   if (loading) 
     return(
   <Container>
-    <Paper elevation={3}>
-    <Box sx={{ p: 2, bgcolor: '#1D4ED8', color: '#fff', textAlign: 'center' }}>
-          <Typography variant="h6">{t('title')} - {moment(CURRENT_DATE).format('DD/MM/YYYY')}</Typography>
-        </Box>
-      <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9', p: '10px' }}>{t('morning')}</Box>
+    <Paper elevation={3} sx={{ borderRadius: '8px' }}>
+    <Box sx={{ p: 2, bgcolor: '#2563eb', color: '#fff', textAlign: 'center', borderRadius: '8px 8px 0 0' }}>
+      <Typography variant="h6">{t('title')} - {moment(CURRENT_DATE).format('DD/MM/YYYY')}</Typography>
+    </Box>
+
+      <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9'}} className="ou-py-4">{t('morning')}</Box>
+      
       <Grid container>
-        <SkeletonListLineItem height="200px" width="25%" />
-        <SkeletonListLineItem height="200px" width="25%"/>
-        <SkeletonListLineItem height="200px" width="25%"/>
-        <SkeletonListLineItem height="200px" width="25%"/>
+        <Grid item xs={6} md={3} sx={{ p: 2  }}>
+          <SkeletonListLineItem height="200px" />
+        </Grid>
+        <Grid item xs={6} md={3} sx={{ p: 2  }}>
+          <SkeletonListLineItem height="200px" />
+        </Grid>
+        <Grid item xs={6} md={3} sx={{ p: 2  }}>
+          <SkeletonListLineItem height="200px" />
+        </Grid>
+        <Grid item xs={6} md={3} sx={{ p: 2  }}>
+          <SkeletonListLineItem height="200px" />
+        </Grid>
       </Grid>
 
-      <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9', p: '10px' }}>{t('afternoon')}</Box>
+      <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9'}} className="ou-py-4">{t('afternoon')}</Box>
       <Grid container>
-        <SkeletonListLineItem height="200px" width="25%"/>
-        <SkeletonListLineItem height="200px" width="25%"/>
-        <SkeletonListLineItem height="200px" width="25%"/>
-        <SkeletonListLineItem height="200px" width="25%"/>
+        <Grid item xs={6} md={3} sx={{ p: 2  }}>
+          <SkeletonListLineItem height="200px" />
+        </Grid>
+        <Grid item xs={6} md={3} sx={{ p: 2  }}>
+          <SkeletonListLineItem height="200px" />
+        </Grid>
+        <Grid item xs={6} md={3} sx={{ p: 2  }}>
+          <SkeletonListLineItem height="200px" />
+        </Grid>
+        <Grid item xs={6} md={3} sx={{ p: 2  }}>
+          <SkeletonListLineItem height="200px" />
+        </Grid>
       </Grid>
     </Paper>
   </Container>
@@ -75,26 +93,29 @@ const OnlineWaitingRoom = () => {
         <title>{t('title')} </title>
       </Helmet>
       
-      <Paper elevation={3}>
-        <Box sx={{ p: 2, bgcolor: '#1976d2', color: '#fff', textAlign: 'center' }}>
+      <Paper elevation={3} sx={{ borderRadius: '8px' }}>
+        <Box sx={{ p: 2, bgcolor: '#2563eb', color: '#fff', textAlign: 'center', borderRadius: '8px 8px 0 0' }}>
           <Typography variant="h6">{t('title')} - {moment(CURRENT_DATE).format('DD/MM/YYYY')}</Typography>
         </Box>
-        <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9', p: '10px' }}>{t('morning')}</Box>
+
+        <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9'}} className="ou-py-4">{t('morning')}</Box>
+
         <Grid container>
           {timeSlots.slice(0, 4).map((timeSlot, index) => (
             <TimeSlotGrid 
-              key={timeSlot} 
+              key={timeSlot}
               timeSlot={timeSlot} 
               tickets={getTicketsForTimeSlot(timeSlot)} 
             />
           ))}
         </Grid>
 
-        <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9', p: '10px' }}>{t('afternoon')}</Box>
+        <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9'}} className="ou-py-4">{t('afternoon')}</Box>
+
         <Grid container>
           {timeSlots.slice(4).map((timeSlot, index) => (
             <TimeSlotGrid 
-              key={timeSlot} 
+              key={timeSlot}
               timeSlot={timeSlot} 
               tickets={getTicketsForTimeSlot(timeSlot)} 
             />

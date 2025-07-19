@@ -103,12 +103,14 @@ const TimeSlotGrid = ({ timeSlot, tickets, onTicketMove }) => {
     return(
       <Grid 
         item 
-        xs={3} 
+        xs={6} 
+        md={3}
         sx={{ 
           borderRight: '1px solid #e0e0e0', 
           borderBottom: '1px solid #e0e0e0',
           backgroundColor: isDraggingOver ? '#f5f5f5' : 'transparent',
-          transition: 'background-color 0.2s ease'
+          transition: 'background-color 0.2s ease',
+          width: '100%'
         }}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}

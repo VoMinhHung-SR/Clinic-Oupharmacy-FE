@@ -40,8 +40,9 @@
     "contactUs": "Contact Us",
     "hotline": "Hotline",
 
-    "operatingTime": "Operating time: 07:00 - 17:00 (Mon - Sat)",
-    "examinationSchedule": "Examination schedule (2-7): 7AM-5PM",
+    "operatingTime": "Operating time: 08:00 - 17:00",
+    "workingSchedule": "Monday - Saturday",
+    "examinationSchedule": "Examination schedule: 08:00 - 17:00",
     "onlineConsultation": "Online consultation: 24/24",
 
     "welcomeOUPharmacy": "Welcome to OUPharmacy",
