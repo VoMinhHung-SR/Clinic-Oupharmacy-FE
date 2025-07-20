@@ -38,6 +38,8 @@
     "warrantyPolicy": "Warranty policy",
 
     "contactUs": "Contact Us",
+    "getInTouch": "Get in touch",
+    "readyToContact" : "Our team is always ready to support you",
     "hotline": "Hotline",
 
     "operatingTime": "Operating time: 08:00 - 17:00",
@@ -58,6 +60,6 @@
     "scriptWaitingRoom": "Our waiting room allows you to watch your exam online and notifies you when it's your turn.",
 
     "copyright": "OUPharmacy. All rights reserved.",
-
+    
     "team": "OUPharmacy Team"
 }

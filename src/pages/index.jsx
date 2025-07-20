@@ -1,7 +1,7 @@
-import { Box, Button, Container, Grid, Paper, Tooltip, Typography, makeStyles } from "@mui/material";
+import { Box, Button, Container, Grid, Paper, Tooltip, Typography, Fade, Slide, Grow } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MapGL from "../modules/common/components/Mapbox";
 import { useNavigate } from "react-router";
 import useConversationList from "../modules/pages/ConversationListComponents/hooks/useConversationList";
@@ -24,14 +24,19 @@ import { APP_ENV } from "../lib/constants";
 const Home = () => {
   const { t, tReady } = useTranslation(["home", "common"]);
   const { user } = useConversationList();
-
   const router = useNavigate();
+  
   const [viewport, setViewport] = useState({
     latitude: 10.816800580111298,
     longitude: 106.67855666909755,
     zoom: 16,
   });
 
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   const { allConfig } = useSelector((state) => state.config);
 
@@ -43,261 +48,408 @@ const Home = () => {
       <Loading/>
   </Box>
 
+  const services = [
+    {
+      icon: <MedicalServicesIcon />,
+      title: t('home:emergencyServices'),
+      description: t('home:scriptEmergencyServices'),
+    },
+    {
+      icon: <PeopleIcon />,
+      title: t('home:qualifiedDoctors'),
+      description: t('home:scriptQualifiedDoctors'),
+    },
+    {
+      icon: <FitnessCenterIcon />,
+      title: t('home:outdoorsCheckup'),
+      description: t('home:scriptOutdoorsCheckup'),
+    },
+    {
+      icon: <SupportAgentIcon />,
+      title: t('home:service24h'),
+      description: t('home:scriptTwentyFourHoursService'),
+    },
+    {
+      icon: <NotificationsActiveIcon />,
+      title: t('home:messageAndNotification'),
+      description: t('home:scriptMessageAndNotification'),
+    },
+    {
+      icon: <MeetingRoomIcon />,
+      title: t('home:waitingRoom'),
+      description: t('home:scriptWaitingRoom'),
+    },
+  ];
+
+  const contactInfo = [
+    {
+      icon: <LocationCityIcon />,
+      title: t('home:address'),
+      content: "371 Nguyễn Kiệm, Gò Vấp, Thành phố Hồ Chí Minh",
+      link: null,
+    },
+    {
+      icon: <PhoneIcon />,
+      title: t('home:contactNumber'),
+      content: "0382 590 839",
+      link: "tel:0382590839",
+    },
+    {
+      icon: <AlternateEmailIcon />,
+      title: t('home:emailAddress'),
+      content: "oupharmacymanagement@gmail.com",
+      link: "mailto:oupharmacymanagement@gmail.com",
+    },
+    {
+      icon: <PublicIcon />,
+      title: t('home:website'),
+      content: "OUPharmacy",
+      link: "https://www.facebook.com/Shiray.h/",
+    },
+  ];
+
   return (
     <>
-    <Helmet>
-      <title>OUPharmacy</title>
-    </Helmet>
-    {/* Banner 1 section */}
-    <section>
-      <Box>
-          <Box className="!ou-relative">
-            <img className="!ou-w-full ou-h-[100vh] ou-object-cover"  
-            src="https://res.cloudinary.com/dl6artkyb/image/upload/v1681561779/OUPharmacy/bg_3.jpg_fj95tb.webp" alt="banner">
-
-
-            </img>
-            <Box sx={{
-              position: 'absolute',
-              top: '50%',
-              left: { xs: "50%", sm: '5%', md: '10%', lg:"15%", xl:"20%" },
-              transform: {xs: "translate(-50%, -50%)", sm: 'translateY(-50%)'},
-              maxWidth: { xs: '100%', sm:"60%", md: '600px' },
-              textAlign: {xs: 'center', sm:"left"}
+      <Helmet>
+        <title>OUPharmacy</title>
+      </Helmet>
+      
+      {/* Hero Section */}
+      <section className="ou-relative ou-min-h-screen ou-flex ou-items-center ou-bg-gradient-to-br ou-from-blue-50 ou-to-blue-100 ou-overflow-hidden">
+        <img 
+          className="ou-w-full ou-h-screen ou-object-cover ou-brightness-70 ou-transition-all ou-duration-300"
+          src="https://res.cloudinary.com/dl6artkyb/image/upload/v1681561779/OUPharmacy/bg_3.jpg_fj95tb.webp" 
+          alt="OUPharmacy Hero"
+        />
+        <Fade in={isVisible} timeout={1000}>
+          <Box sx={{
+            position: 'absolute',
+            top: '50%',
+            left: { xs: '50%', md: '10%' },
+            transform: { xs: 'translate(-50%, -50%)', md: 'translateY(-50%)' },
+            textAlign: { xs: 'center', md: 'left' },
+            color: 'white',
+            zIndex: 2,
+            width: { xs: '90%', md: '50%' },
+            maxWidth: '800px',
+          }}>
+            <Typography variant="overline" sx={{ 
+              fontWeight: 600, 
+              textTransform: 'uppercase',
+              fontSize: '1rem',
+              letterSpacing: '2px',
+              textShadow: '1px 1px 2px rgba(0,0,0,0.3)',
+              marginBottom: 2,
             }}>
-              <Typography variant="overline" sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>
-                {t('home:welcomeOUPharmacy')}
-              </Typography>
-              <h1 className="ou-text-blue-600 ou-text-3xl md:ou-text-7xl ou-font-bold">
-                  {t('home:welcomeTitle')}
-              </h1>
-              <Typography variant="body1" sx={{ mt: 3 }}>
-                {t('home:scriptWelcome')}
-              </Typography>
-              <Button variant="contained" sx={{ 
-                mt: 3,
-                bgcolor: 'blue.600', 
-                px: 5, 
-                py: 2, 
-                borderRadius: 'full', 
-                color: 'white' }} component={Link} to='/booking'>
-                  {t('home:makeAnAppointMent')}
-              </Button>
+              {t('home:welcomeOUPharmacy')}
+            </Typography>
+            <Typography sx={{
+              fontSize: { xs: '2.5rem', md: '3rem', lg: '4.3rem' },
+              fontWeight: 700,
+              color: '#1d4ed8',
+              marginBottom: 2,
+              textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+            }}>
+              {t('home:welcomeTitle')}
+            </Typography>
+            <Typography sx={{
+              fontSize: { xs: '1.1rem', md: '1.3rem' },
+              marginBottom: 3,
+              textShadow: '1px 1px 2px rgba(0,0,0,0.3)',
+            }}>
+              {t('home:scriptWelcome')}
+            </Typography>
+            <Button 
+              sx={{
+                background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                color: 'white',
+                padding: '12px 32px',
+                borderRadius: '12px',
+                fontSize: '1.1rem',
+                fontWeight: 600,
+                textTransform: 'none',
+                boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 8px 25px rgba(59, 130, 246, 0.4)',
+                  background: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)',
+                },
+              }}
+              component={Link} 
+              to='/booking'
+              variant="contained"
+            >
+              {t('home:makeAnAppointMent')}
+            </Button>
           </Box>
-        
-          </Box>
-
-        </Box>
-
+        </Fade>
       </section>
-      {/* Services section */}
-      <section className="ou-mb-10">
-          <Box className="ou-text-center !ou-py-10" component={Container}>
-          <h3 className="ou-text-3xl ou-pb-10">{t('home:ourServices')}</h3>
 
-
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} md={4}>
-              <Paper style={{height: '100%'}}>
-              <Box className="ou-bg-slate-100  ou-h-full ou-p-5">
-                  <p className="ou-my-5">
-                    <span className="ou-p-5 ou-rounded-full ou-bg-white">
-                      <MedicalServicesIcon className="ou-text-blue-600"  sx={{width:"24px", height:"24px"}}/>
-                    </span>
-                  </p>  
-                  <h3 className="ou-my-5 ou-mt-8">{t('home:emergencyServices')}</h3>
-                  <p className="ou-text-slate-400 ou-mb-5">{t('home:scriptEmergencyServices')}</p>
-                </Box>
-                
-              </Paper>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Paper style={{height: '100%'}}>
-                <Box className="ou-bg-slate-100 ou-p-5 ou-h-full">
-                    <p className="ou-my-5">
-                      <span className="ou-p-5 ou-rounded-full ou-bg-white">
-                        <PeopleIcon className="ou-text-blue-600"  sx={{width:"24px", height:"24px"}}/>
-                      </span>
-                    </p>  
-                    <h3 className="ou-my-5 ou-mt-8">{t('home:qualifiedDoctors')}</h3>
-                    <span className="ou-text-slate-400 ou-mb-5 ">{t('home:scriptQualifiedDoctors')}</span>
-                  </Box>
-              </Paper>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Paper style={{height: '100%'}}>
-                <Box className="ou-bg-slate-100   ou-h-full ou-p-5">
-                    <p className="ou-my-5">
-                      <span className="ou-p-5 ou-rounded-full ou-bg-white">
-                        <FitnessCenterIcon className="ou-text-blue-600"  sx={{width:"24px", height:"24px"}}/>
-                      </span>
-                    </p>  
-                    <h3 className="ou-my-5 ou-mt-8">{t('home:outdoorsCheckup')}</h3>
-                    <span className="ou-text-slate-400 ou-mb-5">{t('home:scriptOutdoorsCheckup')}</span>
-                  </Box>
-              </Paper>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={4}>
-              <Paper style={{height: '100%'}}>  
-              <Box className="ou-bg-slate-100   ou-h-full ou-p-5">
-                  <p className="ou-my-5">
-                    <span className="ou-p-5 ou-rounded-full ou-bg-white ou-m-auto">
-                      <SupportAgentIcon className="!ou-text-blue-600"  sx={{width:"24px", height:"24px"}} />
-                    </span>
-                  </p>  
-                  <h3 className="ou-my-5 ou-mt-8">{t('home:service24h')}</h3>
-                  <span className="ou-text-slate-400 ou-mb-5">{t('home:scriptTwentyFourHoursService')}</span>
-                </Box>
-              </Paper>
-
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Paper style={{height: '100%'}}>  
-              <Box className="ou-bg-slate-100   ou-h-full ou-p-5">
-                  <p className="ou-my-5">
-                    <span className="ou-p-5 ou-rounded-full ou-bg-white ou-m-auto">
-                      <NotificationsActiveIcon className="!ou-text-blue-600"  sx={{width:"24px", height:"24px"}} />
-                    </span>
-                  </p>  
-                  <h3 className="ou-my-5 ou-mt-8">{t('home:messageAndNotification')}</h3>
-                  <span className="ou-text-slate-400 ou-mb-5">{t('home:scriptMessageAndNotification')}</span>
-                </Box>
-              </Paper>
-              
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Paper style={{height: '100%'}}>  
-              <Box className="ou-bg-slate-100   ou-h-full ou-p-5">
-                  <p className="ou-my-5">
-                    <span className="ou-p-5 ou-rounded-full ou-bg-white ou-m-auto">
-                      <MeetingRoomIcon className="!ou-text-blue-600"  sx={{width:"24px", height:"24px"}} />
-                    </span>
-                  </p>  
-                  <h3 className="ou-my-5 ou-mt-8">{t('home:waitingRoom')}</h3>
-                  <span className="ou-text-slate-400 ou-mb-5">{t('home:scriptWaitingRoom')}</span>
-                </Box>
-              </Paper>
-              
-            </Grid>
+      {/* Services Section */}
+      <section className="ou-py-20 ou-bg-slate-50">
+        <Container maxWidth="lg">
+          <Slide direction="up" in={isVisible} timeout={800}>
+            <Typography sx={{
+              fontSize: { xs: '2.5rem', md: '3rem' },
+              fontWeight: 700,
+              textAlign: 'center',
+              marginBottom: 4,
+              background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>
+              {t('home:ourServices')}
+            </Typography>
+          </Slide>
+          
+          <Grid container spacing={4}>
+            {services.map((service, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <Grow in={isVisible} timeout={800 + index * 200}>
+                  <Paper sx={{
+                    height: '100%',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      transform: 'translateY(-8px)',
+                      boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                    },
+                  }} elevation={2}>
+                    <Box sx={{ p: 4, textAlign: 'center', height: '100%' }}>
+                      <Box sx={{
+                        width: '60px',
+                        height: '60px',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                        color: 'white',
+                        margin: '0 auto 16px',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          transform: 'scale(1.1)',
+                        },
+                      }}>
+                        {service.icon}
+                      </Box>
+                      <Typography variant="h6" sx={{ 
+                        fontWeight: 600, 
+                        mb: 2,
+                        color: '#1e293b'
+                      }}>
+                        {service.title}
+                      </Typography>
+                      <Typography variant="body2" sx={{ 
+                        color: '#64748b',
+                        lineHeight: 1.6
+                      }}>
+                        {service.description}
+                      </Typography>
+                    </Box>
+                  </Paper>
+                </Grow>
+              </Grid>
+            ))}
           </Grid>
-      </Box>
-       
+        </Container>
       </section>
 
-      {/* Banner 2 section */}
-      <section>
-        <Box className="!ou-relative">
-          <img 
-          className="ou-h-[400px] ou-w-full ou-object-cover" 
-          src="https://res.cloudinary.com/dl6artkyb/image/upload/v1681593849/OUPharmacy/bg_2.jpg_vasoqe.webp" alt="banner2">
-          </img>
-          <div className="ou-absolute ou-top-1/2 ou-left-1/2 -ou-translate-y-1/2 -ou-translate-x-1/2 ou-text-center">
-            <h3 className=" ou-text-blue-600  ou-text-3xl ou-font-bold">{t('home:title2')}</h3>
-          </div>
+      {/* Banner 2 Section */}
+      <section className="ou-relative ou-h-96">
+        <img 
+          className="ou-w-full ou-h-full ou-object-cover ou-brightness-60"
+          src="https://res.cloudinary.com/dl6artkyb/image/upload/v1681593849/OUPharmacy/bg_2.jpg_vasoqe.webp" 
+          alt="OUPharmacy Banner"
+        />
+        <Box sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.4)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <Fade in={isVisible} timeout={1200}>
+            <Typography 
+              variant="h3" 
+              sx={{ 
+                color: 'white',
+                fontWeight: 700,
+                textAlign: 'center',
+                textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+                fontSize: { xs: '2rem', md: '3rem' }
+              }}
+            >
+              {t('home:title2')}
+            </Typography>
+          </Fade>
         </Box>
       </section>
 
-      {/* Contact section */}
-      <section className="ou-yb-10">
-   
-      {/* Map area */}
-      <Box className="ou-text-center !ou-py-10" component={Container}>
-        <h3 className=" ou-text-3xl">{t('home:contactUs')}</h3>
-        <p className="ou-py-5 ou-mb-5">{t('home:contactDescription')}</p>
-        <Grid container spacing={3} className="ou-mb-10">
-            <Grid item xs={12} sm={12} md={6}>
-              <Paper style={{height: '100%'}}>
-              <Box
-              component={Paper} elevation={5}
-                className=" ou-rounded  ou-min-w-[300px]"
-              >
-                <MapGL longitude={viewport.longitude} latitude={viewport.latitude} zoom={viewport.zoom}/>
-              </Box>
-                
-              </Paper>
+      {/* Contact Section */}
+      <section className="ou-py-20 ou-bg-white">
+        <Container maxWidth="lg">
+          <Slide direction="up" in={isVisible} timeout={1000}>
+            <Typography sx={{
+              fontSize: { xs: '2.5rem', md: '3rem' },
+              fontWeight: 700,
+              textAlign: 'center',
+              marginBottom: 4,
+              background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>
+              {t('home:contactUs')}
+            </Typography>
+          </Slide>
+          
+          <Typography variant="body1" sx={{ 
+            textAlign: 'center', 
+            mb: 6,
+            color: '#64748b',
+            fontSize: '1.1rem',
+            maxWidth: '600px',
+            mx: 'auto'
+          }}>
+            {t('home:contactDescription')}
+          </Typography>
+
+          {/* Map and CTA */}
+          <Grid container spacing={4} sx={{ mb: 8 }}>
+            <Grid item xs={12} md={6}>
+              <Grow in={isVisible} timeout={1200}>
+                <Box sx={{
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                }}>
+                  <MapGL 
+                    longitude={viewport.longitude} 
+                    latitude={viewport.latitude} 
+                    zoom={viewport.zoom}
+                  />
+                </Box>
+              </Grow>
             </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-              <Box
-                style={{height: '100%'}}
-                className="ou-items-center ou-justify-center 
-                           ou-grid place-content-center"
-              >
+            <Grid item xs={12} md={6}>
+              <Box sx={{ 
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                textAlign: 'center'
+              }}>
+                <Typography variant="h5" sx={{ 
+                  mb: 3,
+                  fontWeight: 600,
+                  color: '#1e293b'
+                }}>
+                  {t('home:readyToContact')}
+                </Typography>
                 <Button
-                  className="!ou-p-2 !ou-px-5 !ou-bg-blue-600 !ou-text-white ou-max-w-[200px]"
-                  onClick={() => router("/booking")}
+                  sx={{
+                    background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                    color: 'white',
+                    padding: '12px 32px',
+                    borderRadius: '12px',
+                    fontSize: '1.1rem',
+                    fontWeight: 600,
+                    textTransform: 'none',
+                    boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 8px 25px rgba(59, 130, 246, 0.4)',
+                      background: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)',
+                    },
+                  }}
+                  onClick={() => router("/contact")}
+                  size="large"
                 >
-                   {t('home:makeAnAppointMent')}
+                  {t('home:getInTouch')}
                 </Button>
               </Box>
             </Grid>
-          
           </Grid>
 
-          {/* Contact area */}
-          <Box className="ou-py-10">
+          {/* Contact Info Cards */}
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} md={3}>
-              <Paper style={{height: '100%'}}>
-              <Box className="ou-bg-slate-100  ou-h-full ou-p-5">
-                  <p className="ou-my-5">
-                    <span className="ou-p-5 ou-rounded-full ou-bg-white">
-                      <LocationCityIcon className="ou-text-blue-600"  sx={{width:"24px", height:"24px"}}/>
-                    </span>
-                  </p>  
-                  <h3 className="ou-my-5 ou-mt-8">{t('home:address')}</h3>
-                  <p className="ou-text-slate-400 ou-mb-5">371 Nguyễn Kiệm, Gò Vấp, Thành phố Hồ Chí Minh</p>
-                </Box>
-                
-              </Paper>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Paper style={{height: '100%'}}>
-                <Box className="ou-bg-slate-100 ou-p-5 ou-h-full">
-                    <p className="ou-my-5">
-                      <span className="ou-p-5 ou-rounded-full ou-bg-white">
-                        <PhoneIcon className="ou-text-blue-600"  sx={{width:"24px", height:"24px"}}/>
-                      </span>
-                    </p>  
-                    <h3 className="ou-my-5 ou-mt-8">{t('home:contactNumber')}</h3>
-                    <span className="ou-text-slate-400 ou-mb-5 ">0382 590 839</span>
-                  </Box>
-              </Paper>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Paper style={{height: '100%'}}>
-                <Box className="ou-bg-slate-100   ou-h-full ou-p-5">
-                    <p className="ou-my-5">
-                      <span className="ou-p-5 ou-rounded-full ou-bg-white">
-                        <AlternateEmailIcon className="ou-text-blue-600"  sx={{width:"24px", height:"24px"}}/>
-                      </span>
-                    </p>  
-                    <h3 className="ou-my-5 ou-mt-8">{t('home:emailAddress')}</h3>
-                    <span className="ou-text-slate-400 ou-mb-5"><a href="mailto:oupharmacymanagement@gmail.com" className="ou-break-words">oupharmacymanagement@gmail.com</a></span>
-                  </Box>
-              </Paper>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Paper style={{height: '100%'}}>  
-              <Box className="ou-bg-slate-100   ou-h-full ou-p-5">
-                  <p className="ou-my-5">
-                    <span className="ou-p-5 ou-rounded-full ou-bg-white ou-m-auto">
-                      <PublicIcon className="!ou-text-blue-600"  sx={{width:"24px", height:"24px"}} />
-                    </span>
-                  </p>  
-                  <h3 className="ou-my-5 ou-mt-8">{t('home:website')}</h3>
-                  <span className="ou-text-slate-400 ou-mb-5"><a href="https://www.facebook.com/Shiray.h/" target="_blank" className="ou-break-words">OUPharmacy</a></span>
-                </Box>
-              </Paper>
-            </Grid>
+            {contactInfo.map((contact, index) => (
+              <Grid item xs={12} sm={6} md={3} key={index}>
+                <Grow in={isVisible} timeout={1400 + index * 200}>
+                  <Paper sx={{
+                    height: '100%',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0 12px 24px rgba(0,0,0,0.1)',
+                    },
+                  }} elevation={2}>
+                    <Box sx={{ p: 4, textAlign: 'center', height: '100%' }}>
+                      <Box sx={{
+                        width: '60px',
+                        height: '60px',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                        color: 'white',
+                        margin: '0 auto 16px',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          transform: 'scale(1.1)',
+                        },
+                      }}>
+                        {contact.icon}
+                      </Box>
+                      <Typography variant="h6" sx={{ 
+                        fontWeight: 600, 
+                        mb: 2,
+                        color: '#1e293b'
+                      }}>
+                        {contact.title}
+                      </Typography>
+                      {contact.link ? (
+                        <Typography 
+                          component="a"
+                          href={contact.link}
+                          target={contact.link.startsWith('http') ? '_blank' : undefined}
+                          sx={{ 
+                            color: '#3b82f6',
+                            textDecoration: 'none',
+                            wordBreak: 'break-word',
+                            '&:hover': {
+                              textDecoration: 'underline'
+                            }
+                          }}
+                        >
+                          {contact.content}
+                        </Typography>
+                      ) : (
+                        <Typography sx={{ 
+                          color: '#64748b',
+                          wordBreak: 'break-word'
+                        }}>
+                          {contact.content}
+                        </Typography>
+                      )}
+                    </Box>
+                  </Paper>
+                </Grow>
+              </Grid>
+            ))}
           </Grid>
-          </Box>
-        
-      </Box>
-    
+        </Container>
       </section>
-     
     </>
   );
 };
+
 export default Home;
