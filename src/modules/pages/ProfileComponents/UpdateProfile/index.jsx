@@ -4,7 +4,7 @@ import moment from 'moment';
 import TextField from '@mui/material/TextField';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Grid, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
+import { Box, Grid, FormControl, InputLabel, Select, MenuItem, Button, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet';
 import { CURRENT_DATE } from '../../../../lib/constants';
 import useUpdateProfile from '../hooks/useUpdateProfile';
@@ -46,7 +46,7 @@ const UpdateProfile = ({ userID ,email, firstName, lastName, dob, phoneNumber, g
   return (
     <Box className=" ou-m-auto ou-rounded !ou-h-full">
       <Helmet>
-        <title>{t('register:profile')}</title>
+        <title>{t('register:profile')} - OUPharmacy</title>
       </Helmet>
       <form
         onSubmit={methods.handleSubmit((data) => {
@@ -54,7 +54,10 @@ const UpdateProfile = ({ userID ,email, firstName, lastName, dob, phoneNumber, g
         })}
         className="ou-m-auto ou-px-8 ou-py-4  !ou-h-full"
       >
-        <h1 className="ou-text-center ou-text-2xl ou-py-2 ou-uppercase">{t('register:updateInformation')}</h1>
+        <Typography gutterBottom 
+          sx={{ color: 'primary.main', fontSize: { xs: '1.5rem', md: '2rem' }, textAlign: 'center' }}>
+            {t('register:updateInformation')}
+        </Typography>
         <Grid container justifyContent="flex" className="ou-mt-6">
           <Grid item xs={4} className="ou-pr-2">
             <TextField

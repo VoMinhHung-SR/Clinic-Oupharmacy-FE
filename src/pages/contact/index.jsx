@@ -18,6 +18,7 @@ import SchemaModels from '../../lib/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import createToastMessage from '../../lib/utils/createToastMessage';
+import { Helmet } from 'react-helmet';
 
 const Contact = () => {
     const {t, tReady} = useTranslation(['contact', 'common']);
@@ -85,6 +86,9 @@ const Contact = () => {
 
     return (
         <Box sx={{minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
+            <Helmet>
+                <title>{t('common:contact')} - OUPharmacy</title>
+            </Helmet>
             <Container maxWidth="lg" component={Paper} sx={{py: 4}}>
                 {/* Header */}
                 <Box sx={{ textAlign: 'center', mb: 6 }}>

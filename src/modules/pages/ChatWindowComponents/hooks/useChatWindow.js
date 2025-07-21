@@ -2,7 +2,6 @@ import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, serverTimesta
 import { useContext, useEffect, useRef, useState } from "react"
 import { useCollection } from "react-firebase-hooks/firestore"
 import { useParams } from "react-router"
-import { userContext } from "../../../../App"
 import { db } from "../../../../config/firebase"
 import { ErrorAlert } from "../../../../config/sweetAlert2"
 import { generateQueryGetMessages, transformMessage } from "../../../../lib/utils/getMessagesInConversation"

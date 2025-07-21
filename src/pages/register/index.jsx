@@ -83,7 +83,7 @@ const Register = () => {
 
     return (
         <>
-            <Helmet><title>{t('register:register')}</title></Helmet>
+            <Helmet><title>{t('register:register')} - OUPharmacy</title></Helmet>
 
             {openBackdrop === true ? <BackdropLoading></BackdropLoading> : <></>}
 

@@ -32,7 +32,7 @@ const ExaminationList = () =>{
     return(
     <>
         <Helmet>
-            <title>{t('examinations:appointmentList')}</title>
+            <title>{t('examinations:appointmentList')} - OUpharmacy</title>
         </Helmet>
         <Box sx={{ minHeight: "300px" }}>
             <TableContainer className="md:ou-min-w-0">

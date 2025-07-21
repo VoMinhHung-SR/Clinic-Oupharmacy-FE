@@ -1,7 +1,7 @@
 import { Box, Container, Paper, Typography, Grid } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
-import React, { useMemo } from "react";
+import React from "react";
 import useOnlineWaitingRoom from "../../modules/pages/WaittingRoomComponents/hooks/useOnlineWaitingRoom";
 import TimeSlotGrid from "../../modules/pages/WaittingRoomComponents/TimeSlotGrid";
 import { CURRENT_DATE } from "../../lib/constants";
@@ -10,17 +10,18 @@ import SkeletonListLineItem from "../../modules/common/components/skeletons/list
 
 
 const OnlineWaitingRoom = () => {
-  const { t } = useTranslation(['waiting-room']);
+  const { t, tReady } = useTranslation(['waiting-room']);
   const { schedules, loading, error } = useOnlineWaitingRoom();;
-  if (loading) 
+
+  if (tReady || loading) 
     return(
   <Container>
     <Paper elevation={3} sx={{ borderRadius: '8px' }}>
     <Box sx={{ p: 2, bgcolor: '#2563eb', color: '#fff', textAlign: 'center', borderRadius: '8px 8px 0 0' }}>
-      <Typography variant="h6">{t('title')} - {moment(CURRENT_DATE).format('DD/MM/YYYY')}</Typography>
+      <Typography variant="h6">Online Waiting Room - {moment(CURRENT_DATE).format('DD/MM/YYYY')}</Typography>
     </Box>
 
-      <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9'}} className="ou-py-4">{t('morning')}</Box>
+      <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9'}} className="ou-py-4">Morning</Box>
       
       <Grid container>
         <Grid item xs={6} md={3} sx={{ p: 2  }}>
@@ -37,7 +38,7 @@ const OnlineWaitingRoom = () => {
         </Grid>
       </Grid>
 
-      <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9'}} className="ou-py-4">{t('afternoon')}</Box>
+      <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9'}} className="ou-py-4">Afternoon</Box>
       <Grid container>
         <Grid item xs={6} md={3} sx={{ p: 2  }}>
           <SkeletonListLineItem height="200px" />
@@ -90,7 +91,7 @@ const OnlineWaitingRoom = () => {
   return (
     <Container>
       <Helmet>
-        <title>{t('title')} </title>
+        <title>{t('waiting-room:title')} - OUPharmacy</title>
       </Helmet>
       
       <Paper elevation={3} sx={{ borderRadius: '8px' }}>
