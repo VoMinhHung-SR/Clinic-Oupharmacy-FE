@@ -44,7 +44,7 @@ const ConversationList = () => {
     return (
         <>
             <Helmet>
-                <title>{t('common:conversations')}</title>
+                <title>{t('common:conversations')} - OUPharmacy</title>
             </Helmet>
             <div>
                 <Box>

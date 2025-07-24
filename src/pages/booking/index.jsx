@@ -189,7 +189,7 @@ const Booking = () => {
     return (
         <>
             <Helmet>
-                <title>{t('common:booking')}</title>
+                <title>{t('common:booking')} - OUPharmacy</title>
             </Helmet>
             {openBackdrop === true ?
                 (<BackdropLoading />)

@@ -35,7 +35,7 @@ const Login = () =>{
     return (
         <>
          <Helmet>
-          <title>{t('login:login')}</title>
+          <title>{t('login:login')} - OUPharmacy</title>
         </Helmet>
 
         {openBackdrop === true ?

@@ -10,9 +10,9 @@ import { Helmet } from "react-helmet";
 import { useEffect, useRef } from "react";
 
 const ChatWindow = () => {
-    const {recipient, messagesLoading, newMessage, setNewMessage, 
+    const {recipient, newMessage, setNewMessage, 
         // refEndMessage,
-        sendMessageOnClick, sendMessageOnEnter, messagesInCoversation, messagesSnapshot} = useChatWindow()
+        sendMessageOnClick, sendMessageOnEnter, messagesSnapshot} = useChatWindow()
     const {t} = useTranslation(['conversation', 'common'])
 
     const chatWindowRef = useRef(null);
@@ -58,7 +58,7 @@ const ChatWindow = () => {
 
     return (<>
         <Helmet>
-            <title>{t('common:conversations')}</title>
+            <title>{t('common:conversations')} - OUPharmacy</title>
         </Helmet>
 
         <Grid item >

@@ -155,13 +155,13 @@ const PatientManagement = () => {
         <>
         
             <Helmet>
-                <title>{t('common:patientManagement')}</title>
+                <title>{t('common:patientManagement')} - OUpharmacy</title>
             </Helmet>
             <Box className="ou-relative ou-py-8 ou-flex">
                 <Box className="ou-relative ou-w-full
                             ou-m-auto ou-flex ou-items-center ou-justify-center">        
                     {/* Main content */}
-                    <div className="ou-text-center ou-py-20 ou-w-[80%]">           
+                    <div className="ou-text-center ou-py-20 ou-w-[100%]">           
                         {step === 1 && renderFirstState()}
                         {step === 2 && renderSecondState()}
                     </div>

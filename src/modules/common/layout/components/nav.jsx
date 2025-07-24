@@ -122,21 +122,21 @@ const Nav = () => {
             }}
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
-            <Link to="/profile" className="nav-link" style={{ "padding": "0px" }}>
+          <Link to="/profile" className="nav-link">
               <Box component={Paper} elevation={4} className="ou-px-2 ou-py-3 ou-mx-2 ou-mb-3"> 
-                <Box className="ou-flex ou-items-center">
-                  <Avatar 
-                  src={(user.avatar_path === ERROR_CLOUDINARY) ? AVATAR_DEFAULT : user.avatar_path} 
-                  className="!ou-ml-2"/>
-                  <Typography>
-                    | {user.first_name + " " + user.last_name}
-                  </Typography>
+                  <Box className="ou-flex ou-items-center">
+                    <Avatar 
+                    src={(user.avatar_path === ERROR_CLOUDINARY) ? AVATAR_DEFAULT : user.avatar_path} 
+                    className="!ou-ml-2"/>
+                    <Typography>
+                      | {user.first_name + " " + user.last_name}
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
             </Link>
             <Divider className="!ou-m-[0px]" />
-            <Link to="/profile" className="nav-link" style={{ "padding": "0px" }}>
-                <MenuItem style={{ "color": "#333" }}>
+            <Link to="/profile" className="nav-link">
+                <MenuItem style={{ "color": "#333" }} className="!ou-py-3">
                    <AccountCircleIcon fontSize="small" />
                     <Typography marginLeft={2}>
                       {t("common:profile")}
@@ -144,19 +144,20 @@ const Nav = () => {
                 </MenuItem>
             </Link>
             <Divider className="!ou-m-[0px]" />
-            <MenuItem style={{ "color": "#333" }} className="!ou-py-2" onClick={handleOpenModal}>
+            <MenuItem style={{ "color": "#333" }} className="!ou-py-3" onClick={handleOpenModal}>
                    <KeyIcon fontSize="small" />
                     <Typography marginLeft={2}>
                     {t("common:changePassword")}
                     </Typography>
             </MenuItem>
-            <Divider className="!ou-m-[0px]"/>
-            <MenuItem onClick={handleLogout} >
+            <Divider className="!ou-m-[0px]" />
+            <MenuItem onClick={handleLogout} className="!ou-py-3 !ou-text-red-500">
                 <Logout fontSize="small" />
                 <Typography marginLeft={2}>
                     {t('logout')}
                 </Typography>
             </MenuItem>
+            <Divider className="!ou-m-[0px]" />
         </Menu>
         
         {/* Show nav menu */}
