@@ -17,6 +17,7 @@
     "diagnosed": "Chấn đoán",
     "uses": "Liều dùng",
     "quantity": "Số lượng",
+    "availableQuantity": "Số lượng thực tế",
     "medicineName": "Tên thuốc",
     "prescriptionDetail": "Phiếu kê toa",
     "nullMedicine": "Hiện tại chưa có thuốc",

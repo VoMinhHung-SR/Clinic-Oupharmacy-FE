@@ -124,7 +124,7 @@ const useMedicine = () => {
         handleMedicine()
     }
 
-    const removeMedicine = (medicineID, medicineUnitID, callBackSuccess) => {
+    const deleteMedicine = (medicineID, medicineUnitID, callBackSuccess) => {
         const handleRemove = async () => {
             try{
                 const medicineUnitRes = await fetchDeletedMedicineUnit(medicineUnitID)
@@ -198,7 +198,7 @@ const useMedicine = () => {
         imageUrl, paramsFilter,
         medicines, handleOnSubmitFilter,
         pagination, updateMedicine,
-        selectedImage, removeMedicine,
+        selectedImage, deleteMedicine,
         medicineLoading, backdropLoading,
         setSelectedImage, setImageUrl,
         handleChangePage, addMedicine

@@ -4,7 +4,7 @@ import { Box, Container, Grid, Paper } from "@mui/material";
 import ProductHomeRight from "../RightSide";
 import { useTranslation } from "react-i18next";
 
-const MedicinesHome = ({actionButton, onAddMedicineLineItem}) => {
+const MedicinesHome = ({actionButton, onAddMedicineLineItem, medicinesSubmit}) => {
    
     const { t, tReady } = useTranslation(['product'])
     const { allConfig } = useSelector((state) => state.config);
@@ -18,7 +18,7 @@ const MedicinesHome = ({actionButton, onAddMedicineLineItem}) => {
                 <Grid item xs={12}>
                     <Box className="ou-w-full"> 
                        <ProductHomeRight actionButton={actionButton} categories={allConfig.categories} 
-                       onAddMedicineLineItem={onAddMedicineLineItem}/>
+                       onAddMedicineLineItem={onAddMedicineLineItem} medicinesSubmit={medicinesSubmit}/>
                     </Box>
                 </Grid>
         

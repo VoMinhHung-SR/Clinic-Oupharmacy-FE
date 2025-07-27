@@ -243,8 +243,9 @@ const NavDashboard = ({ open, toggleDrawer }) => {
                     </Box>
                   </Box>
                 </Link>
-                <Link to="/dashboard/profile" className="nav-link" style={{ "padding": "0px" }}>
-                    <MenuItem style={{ "color": "#333" }}>
+                <Divider className="!ou-m-[0px]" />
+                <Link to="/dashboard/profile" className="nav-link">
+                    <MenuItem className="!ou-py-2">
                         <AccountCircleIcon fontSize="small" />
                         <Typography marginLeft={2}>
                         {t("common:profile")}
@@ -252,14 +253,14 @@ const NavDashboard = ({ open, toggleDrawer }) => {
                     </MenuItem>
                 </Link>
                 <Divider className="!ou-m-[0px]" />
-                <MenuItem style={{ "color": "#333" }} className="!ou-py-2" onClick={handleOpenModal}>
+                <MenuItem className="!ou-py-2" onClick={handleOpenModal}>
                     <KeyIcon fontSize="small" />
                       <Typography marginLeft={2}>
                         {t("common:changePassword")}
                       </Typography>
                 </MenuItem>
                 <Divider className="!ou-m-[0px]"/>
-                <MenuItem onClick={handleLogout} >
+                <MenuItem onClick={handleLogout} className="!ou-text-red-500 !ou-py-2" >
                     <Logout fontSize="small" />
                     <Typography marginLeft={2}>
                         {t('logout')}

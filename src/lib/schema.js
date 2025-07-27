@@ -151,10 +151,21 @@ const SchemaModels = () => {
             .matches(REGEX_NOTE, t('yupMessageInvalid')),
     });
 
+    const medicineLineItemSchema = Yup.object().shape({
+        uses: Yup.string().trim()
+            .required(t('yupUsesRequired'))
+            .max(100, t('yupUsesMaxLength'))
+            .matches(REGEX_ADDRESS,t('yupUsesInvalid')),
+        quantity: Yup.string(t('yupQuantityNumber')).trim()
+            .max(3, t('yupQuantityMax'))
+            .required(t('yupQuantityRequired'))
+            .matches(REGEX_NUMBER999,t('yupQuantityInvalid')),
+    });
+
     return {
         medicineSubmitUpdateSchema, timeSlotSchema,
         addingPatientSchema, medicineUnitSchema, 
-        registerSchema, contactSchema
+        registerSchema, contactSchema, medicineLineItemSchema
     }
 }
 

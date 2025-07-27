@@ -16,6 +16,11 @@
     "errPrescribingNotOwner": "Cannot diagnose from another doctor's appointment.",
     "pleaseTryAgain": "Please try again",
     "pleaseDoubleCheck": "Please double check the form information",
-    "noThrowBack": "This action can not be throwback, continue"
-
+    "noThrowBack": "This action can not be throwback, continue",
+    
+    "unsavedChangesTitle": "Are you sure you want to leave this page?",
+    "unsavedChangesMessage": "Form will be cleared when leaving.",
+    "returnedToUnsavedChanges": "You returned to a page with unsaved data",
+    "unsavedChangesStillExist": "Form data still exists. Do you want to continue?",
+    "clear": "Clear"
 }

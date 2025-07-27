@@ -61,6 +61,7 @@
     "yupQuantityRequired": "Quantity was required",
     "yupQuantityMax": "Quantity does not accept",
     "yupQuantityOverRaw": "Over raw quantity",
+    "yupQuantityOverStock": "Quantity exceeds the available stock",
     "yupQuantityInvalid":"Invalid quantity",
 
     "yupCityRequired": "City was required",
