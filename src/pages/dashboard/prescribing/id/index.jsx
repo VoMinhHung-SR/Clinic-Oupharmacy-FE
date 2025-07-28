@@ -12,6 +12,7 @@ import PrescribingContext from "../../../../lib/context/PrescribingContext"
 import UserContext from "../../../../lib/context/UserContext"
 import EditPrescriptionModal from "../../../../modules/pages/PrescriptionDetailComponents/EditPrescriptionModal"
 import MedicinesHome from "../../../../modules/pages/ProductComponents/MedicinesHome"
+import useLeaveGuard from "../../../../lib/hooks/useLeaveGuard"
 
 const PrescriptionDetail = () => {
     const {user} = useContext(UserContext)
@@ -23,6 +24,7 @@ const PrescriptionDetail = () => {
 
     const {t, ready} = useTranslation(['prescription-detail','common', 'modal'])
 
+    useLeaveGuard(hasUnsavedChanges, clearForm)   
     const handleOnEdit = (medicineUpdate, deletedArrayItems) => {
         if (deletedArrayItems.length === medicinesSubmit.length)
             return handleUpdateMedicinesSubmit([])
