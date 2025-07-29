@@ -25,7 +25,7 @@ const MemoizedMedicineFilter = memo(MedicineFilter);
 const MedicineList = () => {
     const {page, pagination, handleChangePage, selectedImage, setSelectedImage, imageUrl, 
     setImageUrl, medicineLoading, medicines, updateMedicine, handleOnSubmitFilter, paramsFilter,
-    addMedicine, backdropLoading, removeMedicine} = useMedicine()
+    addMedicine, backdropLoading, deleteMedicine} = useMedicine()
 
     const {categories, isLoading} = useCategory()
     const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
@@ -142,7 +142,7 @@ const MedicineList = () => {
                         categories={categories} 
                         updateMedicine={updateMedicine}
                         data={medicine} 
-                        removeMedicine={removeMedicine}/>
+                        removeMedicine={deleteMedicine}/>
                     ))}
 
                     {!medicineLoading && medicines.length === 0 &&  

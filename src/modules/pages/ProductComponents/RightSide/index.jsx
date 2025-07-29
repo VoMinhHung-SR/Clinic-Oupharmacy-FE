@@ -4,18 +4,22 @@ import Loading from "../../../common/components/Loading";
 import { formatNumberCurrency } from "../../../../lib/utils/helper";
 import { useLocation } from "react-router";
 import UserContext from "../../../../lib/context/UserContext";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { ROLE_DOCTOR } from "../../../../lib/constants";
 import { useTranslation } from "react-i18next";
 import PrescribingMedicine from "./prescribingMedicine";
 import usePrescriptionDetailCard from "../../../common/components/card/PrescriptionDetailCard/hooks/usePrescriptionDetailCard";
 import MedicineFilter from "../../../common/components/FIlterBar/MedicineFilter";
 import SkeletonListLineItem from "../../../common/components/skeletons/listLineItem";
+import SchemaModels from "../../../../lib/schema";
 
-const ProductHomeRight = ({actionButton, onAddMedicineLineItem, categories, callback}) => {
-    const { medicines, page, handleChangePage, pagination, medicineLoading, paramsFilter, handleOnSubmitFilter } = useMedicine();
+const ProductHomeRight = ({actionButton, onAddMedicineLineItem, categories, medicinesSubmit}) => {
+    const { medicines, page, handleChangePage, pagination, 
+        medicineLoading, paramsFilter, handleOnSubmitFilter } = useMedicine();
+        
     const {user} = useContext(UserContext);
-    const {prescriptionDetailSchema} = usePrescriptionDetailCard();
+
+    const {medicineLineItemSchema} = SchemaModels();
     
     const {t, ready} = useTranslation(['prescription-detail', 'yup-validate', 'modal', 'medicine'])
 
@@ -24,6 +28,20 @@ const ProductHomeRight = ({actionButton, onAddMedicineLineItem, categories, call
     const handleAddToPrescription = (medicine, data) => {
         onAddMedicineLineItem(medicine, data)
     };
+
+    // Memoize the available stock map to prevent unnecessary re-renders
+    const availableStockMap = useMemo(() => {
+        const map = new Map();
+        medicines.forEach(medicine => {
+          const existing = medicinesSubmit?.find(item => item.id === medicine.id);
+          const stock = existing
+            ? Math.max(0, medicine.in_stock - existing.quantity)
+            : medicine.in_stock;
+          map.set(medicine.id, stock);
+        });
+        return map;
+      }, [medicines, medicinesSubmit]);
+
 
     if (!ready && medicineLoading)
         return (
@@ -60,8 +78,9 @@ const ProductHomeRight = ({actionButton, onAddMedicineLineItem, categories, call
 
                         {!medicineLoading && medicines.length > 0 && medicines.map(medicine => (
                             <PrescribingMedicine key={medicine.id} 
-                            medicine={medicine} schema={prescriptionDetailSchema}
-                            onAddToPrescription={handleAddToPrescription} />
+                            medicine={medicine} schema={medicineLineItemSchema}
+                            onAddToPrescription={handleAddToPrescription} 
+                            availableStock={availableStockMap.get(medicine.id)} />
                           ))}
 
                         {!medicineLoading && medicines.length === 0 &&  

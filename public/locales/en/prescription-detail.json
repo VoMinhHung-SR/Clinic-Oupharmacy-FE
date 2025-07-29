@@ -18,6 +18,7 @@
     "diagnosed": "Diagnosed",
     "uses": "Uses",
     "quantity": "Quantity",
+    "availableQuantity": "Available Quantity",
     "medicineName": "Medicine name",
     "prescriptionDetail": "Prescription detail",
     "nullMedicine": "There is no medicine in this form",
