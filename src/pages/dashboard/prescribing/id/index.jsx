@@ -12,6 +12,7 @@ import PrescribingContext from "../../../../lib/context/PrescribingContext"
 import UserContext from "../../../../lib/context/UserContext"
 import EditPrescriptionModal from "../../../../modules/pages/PrescriptionDetailComponents/EditPrescriptionModal"
 import MedicinesHome from "../../../../modules/pages/ProductComponents/MedicinesHome"
+import useCustomNavigate from "../../../../lib/hooks/useCustomNavigate"
 import useLeaveGuard from "../../../../lib/hooks/useLeaveGuard"
 
 const PrescriptionDetail = () => {
@@ -20,11 +21,17 @@ const PrescriptionDetail = () => {
         resetMedicineStore, addMedicineItem, clearForm, hasUnsavedChanges} = useContext(PrescribingContext)
     
     const {isLoadingPrescriptionDetail, prescriptionDetail} = usePrescriptionDetail()
-    const router = useNavigate()
+    // const router = useNavigate()
 
     const {t, ready} = useTranslation(['prescription-detail','common', 'modal'])
 
-    useLeaveGuard(hasUnsavedChanges, clearForm)   
+    // const {navigate} = useCustomNavigate({
+    //     isDirty: hasUnsavedChanges,
+    //     onClearForm: () => {
+    //         clearForm();
+    //     }
+    // })
+    useLeaveGuard(hasUnsavedChanges, clearForm)
     const handleOnEdit = (medicineUpdate, deletedArrayItems) => {
         if (deletedArrayItems.length === medicinesSubmit.length)
             return handleUpdateMedicinesSubmit([])
@@ -89,7 +96,7 @@ const PrescriptionDetail = () => {
                         </h2>
                         <Typography className='text-center'>
                             <h3>{t('common:goToBooking')} </h3>
-                            <Button onClick={() => { router('/booking') }}>{t('common:here')}!</Button>
+                            <Button onClick={() => { navigate('/booking') }}>{t('common:here')}!</Button>
                         </Typography>
                     </Box>
                     </Box>)

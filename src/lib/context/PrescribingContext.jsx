@@ -5,6 +5,8 @@ import SuccessfulAlert, { ConfirmAlert, ErrorAlert } from "../../config/sweetAle
 import { fetchAddPrescriptionDetail, fetchCreatePrescribing } from "../../modules/common/components/card/PrescriptionDetailCard/services";
 import createToastMessage from "../utils/createToastMessage";
 import { TOAST_SUCCESS } from "../constants";
+import useNav from "../../modules/pages/HomeComponents/hooks/useNav";
+import useCustomNavigate from "../hooks/useCustomNavigate";
 
 const PrescribingContext = createContext();
 
@@ -14,11 +16,12 @@ export const PrescribingProvider = ({children}) => {
     const {t} = useTranslation(['yup-validate', 'modal', 'prescription-detail', 'common']);
 
     const [medicinesSubmit, setMedicinesSubmit] = useState([]);
-    const router = useNavigate();
     const [flag, setFlag] = useState(false);
     const [isLoadingButton, setIsLoadingButton] = useState(false)
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
- 
+    const navigate = useNavigate();
+
+    
     const addMedicineItem = (medicineUnitId, medicineName, uses, quantity, inStock) => { 
         const newItem = {
             id: medicineUnitId,
@@ -44,8 +47,8 @@ export const PrescribingProvider = ({children}) => {
     };
     // Clear without alert
     const clearForm = () => {
-        setMedicinesSubmit([]);
         setHasUnsavedChanges(false);
+        setMedicinesSubmit([]);
         createToastMessage({type:TOAST_SUCCESS,message: t('common:updateSuccess')});
     };
 
@@ -131,7 +134,7 @@ export const PrescribingProvider = ({children}) => {
                         })
                     );
                     setMedicinesSubmit([]);
-                    SuccessfulAlert(t('modal:createSuccess'), t('modal:ok'), () => router('/dashboard/prescribing'));
+                    SuccessfulAlert(t('modal:createSuccess'), t('modal:ok'), () => navigate('/dashboard/prescribing'));
                 } else {
                     ErrorAlert(t('modal:errSomethingWentWrong'), t('modal:pleaseTryAgain'), t('modal:ok'));
                 }
