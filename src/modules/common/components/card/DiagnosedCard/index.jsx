@@ -1,9 +1,8 @@
 import { Button, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import moment from "moment";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { ROLE_DOCTOR, ROLE_NURSE, TOAST_ERROR } from "../../../../../lib/constants";
+import { ROLE_DOCTOR, ROLE_NURSE } from "../../../../../lib/constants";
 import { Link, useNavigate } from "react-router-dom";
-import AssignmentIcon from '@mui/icons-material/Assignment';
 import PaidIcon from "@mui/icons-material/Paid";
 import { useTranslation } from "react-i18next";
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';

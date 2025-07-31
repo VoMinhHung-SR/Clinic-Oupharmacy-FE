@@ -53,9 +53,16 @@ export const UserProvider = ({ children }) => {
     }
   }
 
+  const handleLogout = () => {
+    Cookies.remove('token');
+    Cookies.remove('user');
+    Cookies.remove('refresh_token');
+    dispatch({ type: 'logout', payload: null });
+  }
+
   return (
     <UserContext.Provider value={{ user: userState, dispatch, updateUser, 
-    imageUrl, selectedImage, isLoading,
+    imageUrl, selectedImage, isLoading, handleLogout,
     setSelectedImage, setImageUrl, handleChangeAvatar }}>
       {children}
     </UserContext.Provider>

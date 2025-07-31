@@ -5,8 +5,6 @@ import SuccessfulAlert, { ConfirmAlert, ErrorAlert } from "../../config/sweetAle
 import { fetchAddPrescriptionDetail, fetchCreatePrescribing } from "../../modules/common/components/card/PrescriptionDetailCard/services";
 import createToastMessage from "../utils/createToastMessage";
 import { TOAST_SUCCESS } from "../constants";
-import useNav from "../../modules/pages/HomeComponents/hooks/useNav";
-import useCustomNavigate from "../hooks/useCustomNavigate";
 
 const PrescribingContext = createContext();
 

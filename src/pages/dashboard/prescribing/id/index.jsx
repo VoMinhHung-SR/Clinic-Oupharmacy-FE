@@ -1,7 +1,7 @@
-import { Button, Container, FormControl, Grid, Paper, TextField, Tooltip, Typography } from "@mui/material"
+import { Button, FormControl, Grid, Paper, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { useTranslation } from "react-i18next"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import Loading from "../../../../modules/common/components/Loading"
 import usePrescriptionDetail from "../../../../modules/pages/PrescriptionDetailComponents/hooks/usePrescriptionDetail"
 import { Helmet } from "react-helmet"
@@ -13,7 +13,6 @@ import UserContext from "../../../../lib/context/UserContext"
 import EditPrescriptionModal from "../../../../modules/pages/PrescriptionDetailComponents/EditPrescriptionModal"
 import MedicinesHome from "../../../../modules/pages/ProductComponents/MedicinesHome"
 import useCustomNavigate from "../../../../lib/hooks/useCustomNavigate"
-import useLeaveGuard from "../../../../lib/hooks/useLeaveGuard"
 
 const PrescriptionDetail = () => {
     const {user} = useContext(UserContext)
@@ -21,17 +20,16 @@ const PrescriptionDetail = () => {
         resetMedicineStore, addMedicineItem, clearForm, hasUnsavedChanges} = useContext(PrescribingContext)
     
     const {isLoadingPrescriptionDetail, prescriptionDetail} = usePrescriptionDetail()
-    // const router = useNavigate()
 
     const {t, ready} = useTranslation(['prescription-detail','common', 'modal'])
 
-    // const {navigate} = useCustomNavigate({
-    //     isDirty: hasUnsavedChanges,
-    //     onClearForm: () => {
-    //         clearForm();
-    //     }
-    // })
-    useLeaveGuard(hasUnsavedChanges, clearForm)
+    const {navigate} = useCustomNavigate({
+        shouldBlock: hasUnsavedChanges,
+        onClearForm: () => {
+            clearForm();
+        }
+    })
+
     const handleOnEdit = (medicineUpdate, deletedArrayItems) => {
         if (deletedArrayItems.length === medicinesSubmit.length)
             return handleUpdateMedicinesSubmit([])

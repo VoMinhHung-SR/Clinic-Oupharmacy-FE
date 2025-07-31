@@ -12,7 +12,6 @@ import { ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
 
 const useLogin = () => {
     const {t} = useTranslation(['yup-validate'])
-    // const [user, dispatch] = useContext(userContext);
     const {user,dispatch} = useContext(UserContext)
     const [openError, setOpenError] = useState(false);
     const [openBackdrop, setOpenBackdrop] = useState(false);

@@ -1,11 +1,10 @@
-import { AppBar, Avatar, Badge, Box, Button, Container, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Toolbar, Tooltip, Typography } from "@mui/material"
+import { AppBar, Avatar, Box, Button, Container, Divider, IconButton, Menu, MenuItem, Paper, Toolbar, Tooltip, Typography } from "@mui/material"
 import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from '@mui/icons-material/Menu';
 import Logout from '@mui/icons-material/Logout';
 import { Link } from "react-router-dom"
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Logo from "../../../../../public/logo";
-import useNav from "../../../pages/HomeComponents/hooks/useNav";
 import MailIcon from '@mui/icons-material/Mail';
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
@@ -13,17 +12,17 @@ import { changeLanguage } from "i18next";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FlagUK from "../../../../../public/flagUK";
 import FlagVN from "../../../../../public/flagVN";
-import { AVATAR_DEFAULT, AVATAR_NULL, ERROR_CLOUDINARY, ROLE_DOCTOR, ROLE_NURSE } from "../../../../lib/constants";
+import { AVATAR_DEFAULT, ERROR_CLOUDINARY, ROLE_DOCTOR, ROLE_NURSE } from "../../../../lib/constants";
 import useNotification from "../../../../lib/hooks/useNotification";
 import NotificationButton from "../../components/button/Notification";
 import CustomModal from "../../components/Modal";
 import useCustomModal from "../../../../lib/hooks/useCustomModal";
 import KeyIcon from '@mui/icons-material/Key';
 import FormChangePassword from "../../../pages/HomeComponents/FormChangePassword";
+import UserContext from "../../../../lib/context/UserContext";
 const Nav = () => {
   
   const { t, i18n } = useTranslation(['common', 'modal']);
-  // Page nav 
   const pages = [
     {
       id: 'booking',
@@ -46,7 +45,7 @@ const Nav = () => {
       link: '/contact'
     }
   ];
-  // State trigger menu open
+  
   const {isLoading, notifyListContent, updateNotifications} = useNotification();
   const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -66,8 +65,9 @@ const Nav = () => {
   const handleClose = () => {
       setAnchorEl(null);
   };
-  //  Hooks useNav
-  const {user, handleLogout} = useNav();
+
+  const {user, handleLogout} = useContext(UserContext);
+
   let btn = <>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Link to="/login">
@@ -205,7 +205,6 @@ const Nav = () => {
   }
 
   const renderElementNav = (pageID, pageLink, pageName, isMobile = false, keyPage) => {
-    // Render for doctor
       if(pageID === 'prescribing'|| pageID === 'prescribing-mb')
         if(user && user.role === ROLE_DOCTOR)
           return(
@@ -242,7 +241,6 @@ const Nav = () => {
               </Link>
           )  
         else return
-      // Render Default
       return (
         <Link to={pageLink}  key={keyPage}>
           <Button 

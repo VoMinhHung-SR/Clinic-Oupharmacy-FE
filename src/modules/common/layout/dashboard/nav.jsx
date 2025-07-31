@@ -16,10 +16,9 @@ import FlagVN from '../../../../../public/flagVN';
 import Logout from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import { changeLanguage } from "i18next";
-import useNav from '../../../pages/HomeComponents/hooks/useNav';
-import { AVATAR_DEFAULT, AVATAR_NULL, ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
+import { AVATAR_DEFAULT, ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import PaymentIcon from '@mui/icons-material/Payment';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
@@ -34,6 +33,8 @@ import NotificationButton from '../../components/button/Notification';
 import PillsIcon from '../../../../lib/icon/PillsIcon';
 import CategoryIcon from '@mui/icons-material/Category';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import UserContext from '../../../../lib/context/UserContext';
+import useCustomNavigate from '../../../../lib/hooks/useCustomNavigate';
 
 const drawerWidth = 240;
 
@@ -148,7 +149,8 @@ const NavDashboard = ({ open, toggleDrawer }) => {
       }
     ]
       
-    const {user, handleLogout, handleChangingPage} = useNav();
+    const {user, handleLogout} = useContext(UserContext);
+    const {navigate} = useCustomNavigate();
     let btn = <>
         <ul className="ou-flex ou-items-center ou-text-[#070707]">
           <Link to="/login">
@@ -161,8 +163,8 @@ const NavDashboard = ({ open, toggleDrawer }) => {
 
     const handleNav = (role, link) => {
       if(role.includes(user.role))
-        return handleChangingPage(link)
-      handleChangingPage("/dashboard/forbidden")
+        return navigate(link)
+      navigate("/dashboard/forbidden")
     }
 
     const renderPage = (routingRole, role, isOpen, isMobile) => {

@@ -4,15 +4,15 @@ import { useTranslation } from "react-i18next";
 import { ConfirmAlert } from "../../config/sweetAlert2";
 
 /**
- * Hook để chặn routing và đi tiếp khi user confirm
- * @param {Object} options - Các options cho hook
- * @param {boolean} options.isDirty - Trạng thái form có thay đổi hay không
- * @param {Function} options.onClearForm - Hàm xử lý clear form
- * @param {Function} options.onBeforeNavigate - Hàm chạy trước khi chuyển trang
- * @param {Function} options.onAfterNavigate - Hàm chạy sau khi chuyển trang
+ * Hook to block routing and proceed when user confirms
+ * @param {Object} options - Options for the hook
+ * @param {Boolean} options.shouldBlock - Navigation blocking state
+ * @param {Function} options.onClearForm - Function to handle form clearing
+ * @param {Function} options.onBeforeNavigate - Function to run before navigation
+ * @param {Function} options.onAfterNavigate - Function to run after navigation
  */
 const useCustomNavigate = ({
-  isDirty = false,
+  shouldBlock = false,
   onClearForm = null,
   onBeforeNavigate = null,
   onAfterNavigate = null
@@ -20,104 +20,14 @@ const useCustomNavigate = ({
   const { t } = useTranslation('modal');
   const navigate = useNavigate();
   const location = useLocation();
-  const isInterceptingRef = useRef(false);
-
-  // Intercept history changes
-  useEffect(() => {
-    if (!isDirty) return;
-
-    const originalPushState = window.history.pushState;
-    const originalReplaceState = window.history.replaceState;
-
-    window.history.pushState = function(...args) {
-      if (isDirty && !isInterceptingRef.current) {
-        // Block navigation và hiển thị confirm
-        ConfirmAlert(
-          t('unsavedChangesTitle'),
-          t('unsavedChangesMessage'),
-          t('yes'),
-          t('cancel'),
-          () => {
-            // User confirm - cho phép navigation
-            if (onClearForm) {
-              onClearForm();
-            }
-            isInterceptingRef.current = true;
-            originalPushState.apply(this, args);
-            isInterceptingRef.current = false;
-          },
-          () => {
-            // User cancel - không làm gì
-          }
-        );
-        return;
-      }
-      originalPushState.apply(this, args);
-    };
-
-    window.history.replaceState = function(...args) {
-      if (isDirty && !isInterceptingRef.current) {
-        ConfirmAlert(
-          t('unsavedChangesTitle'),
-          t('unsavedChangesMessage'),
-          t('yes'),
-          t('cancel'),
-          () => {
-            if (onClearForm) {
-              onClearForm();
-            }
-            isInterceptingRef.current = true;
-            originalReplaceState.apply(this, args);
-            isInterceptingRef.current = false;
-          },
-          () => {}
-        );
-        return;
-      }
-      originalReplaceState.apply(this, args);
-    };
-
-    return () => {
-      window.history.pushState = originalPushState;
-      window.history.replaceState = originalReplaceState;
-    };
-  }, [isDirty, onClearForm, t]);
-
-  // Intercept popstate (back/forward buttons)
-  useEffect(() => {
-    if (!isDirty) return;
-
-    const handlePopState = (event) => {
-      if (isDirty && !isInterceptingRef.current) {
-        event.preventDefault();
-        
-        ConfirmAlert(
-          t('unsavedChangesTitle'),
-          t('unsavedChangesMessage'),
-          t('yes'),
-          t('cancel'),
-          () => {
-            if (onClearForm) {
-              onClearForm();
-            }
-            isInterceptingRef.current = true;
-            window.history.go(-1);
-            isInterceptingRef.current = false;
-          },
-          () => {
-            // Push current state back
-            window.history.pushState(null, '', location.pathname);
-          }
-        );
-      }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [isDirty, onClearForm, t, location.pathname]);
+  const isConfirmingRef = useRef(false);
 
   const customNavigate = useCallback((to, options = {}) => {
-    if (isDirty) {
+    if (isConfirmingRef.current) return;
+
+    if (shouldBlock) {
+      isConfirmingRef.current = true;
+      
       ConfirmAlert(
         t('unsavedChangesTitle'),
         t('unsavedChangesMessage'),
@@ -135,8 +45,12 @@ const useCustomNavigate = ({
           if (onAfterNavigate) {
             onAfterNavigate(to, options);
           }
+          isConfirmingRef.current = false;
         },
-        () => {}
+        () => {
+          // User cancel
+          isConfirmingRef.current = false;
+        }
       );
     } else {
       // Normal navigation
@@ -148,7 +62,77 @@ const useCustomNavigate = ({
         onAfterNavigate(to, options);
       }
     }
-  }, [isDirty, onClearForm, onBeforeNavigate, onAfterNavigate, navigate, t]);
+  }, [shouldBlock, onClearForm, onBeforeNavigate, onAfterNavigate, navigate, t]);
+
+  // Intercept history changes
+  useEffect(() => {
+    if (!shouldBlock) return;
+
+    const originalPushState = window.history.pushState;
+    const originalReplaceState = window.history.replaceState;
+
+    window.history.pushState = function(...args) {
+      if (shouldBlock && !isConfirmingRef.current) {
+        const targetPath = args[2];
+        
+        isConfirmingRef.current = true;
+        
+        ConfirmAlert(
+          t('unsavedChangesTitle'),
+          t('unsavedChangesMessage'),
+          t('yes'),
+          t('cancel'),
+          () => {
+            // User confirm
+            if (onClearForm) {
+              onClearForm();
+            }
+            // navigation
+            navigate(targetPath);
+            isConfirmingRef.current = false;
+          },
+          () => {
+            // User cancel
+            isConfirmingRef.current = false;
+          }
+        );
+        return;
+      }
+      originalPushState.apply(this, args);
+    };
+
+    window.history.replaceState = function(...args) {
+      if (shouldBlock && !isConfirmingRef.current) {
+        const targetPath = args[2];
+        
+        isConfirmingRef.current = true;
+        
+        ConfirmAlert(
+          t('unsavedChangesTitle'),
+          t('unsavedChangesMessage'),
+          t('yes'),
+          t('cancel'),
+          () => {
+            if (onClearForm) {
+              onClearForm();
+            }
+            navigate(targetPath, { replace: true });
+            isConfirmingRef.current = false;
+          },
+          () => {
+            isConfirmingRef.current = false;
+          }
+        );
+        return;
+      }
+      originalReplaceState.apply(this, args);
+    };
+
+    return () => {
+      window.history.pushState = originalPushState;
+      window.history.replaceState = originalReplaceState;
+    };
+  }, [shouldBlock, onClearForm, navigate, t]);
 
   return {
     navigate: customNavigate,
