@@ -19,11 +19,9 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import Loading from "../modules/common/components/Loading";
 import { Helmet } from "react-helmet";
-import { APP_ENV } from "../lib/constants";
 
 const Home = () => {
   const { t, tReady } = useTranslation(["home", "common"]);
-  const { user } = useConversationList();
   const router = useNavigate();
   
   const [viewport, setViewport] = useState({

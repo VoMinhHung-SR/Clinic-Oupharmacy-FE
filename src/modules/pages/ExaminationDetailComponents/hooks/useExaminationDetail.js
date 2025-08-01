@@ -3,7 +3,7 @@ import { fetchPatientExist } from "../../BookingComponents/services";
 import * as Yup from 'yup';
 import { REGEX_EMAIL } from "../../../../lib/constants";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useNavigation, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { fetchExaminationDetail } from "../services";
 
 const useExaminationDetail = () => {

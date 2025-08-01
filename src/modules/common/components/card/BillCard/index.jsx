@@ -4,7 +4,6 @@ import useBillCard from "./hooks/useBillCard"
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { calculateAmount } from "./utils/helper";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
 import { formatNumber, formatNumberCurrency } from "../../../../../lib/utils/helper";
 import useAppointment from "../../../../../firebase/hooks/useAppointment";
 import { WAITING_STATUS_DONE } from "../../../../../lib/constants";
@@ -23,8 +22,7 @@ const BillCard = (props) => {
     } = useBillCard(prescribingId);
     
     const { updateAppointmentStatus } = useAppointment(date, slotID);
-    const router = useNavigate();
-
+ 
     const renderPaymentButtons = () => {
         if (isLoadingButton) {
             return (

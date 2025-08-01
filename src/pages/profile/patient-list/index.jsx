@@ -1,10 +1,8 @@
 import { Box, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Typography, Button, Tooltip } from "@mui/material"
 import { Helmet } from "react-helmet"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router"
 import Loading from "../../../modules/common/components/Loading"
 import FormAddPatient from "../../../modules/pages/BookingComponents/FormAddPatient"
-import PatientCard from "../../../modules/common/components/card/PatientCard"
 import moment from "moment"
 import usePatient from "../../../lib/hooks/usePatient"
 import EditIcon from '@mui/icons-material/Edit';

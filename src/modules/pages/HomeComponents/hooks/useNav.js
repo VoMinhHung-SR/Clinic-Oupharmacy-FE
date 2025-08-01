@@ -2,9 +2,11 @@ import Cookies from "js-cookie";
 import { useContext } from "react";
 import { useNavigate } from "react-router";
 import UserContext from "../../../../lib/context/UserContext";
-const useNav = () =>{
+
+const useNav = ({shouldBlock = false} = {}) =>{
     const {user, dispatch} = useContext(UserContext);
     const router = useNavigate();
+
 
     const handleLogout = () =>{
         Cookies.remove('token')
@@ -18,13 +20,17 @@ const useNav = () =>{
 
         return router('/login')
     }
+
     const handleChangingPage = (address) => {
         router(address)
     }
 
+    
+
     return {
         user,
-        handleLogout, handleChangingPage
+        handleLogout, 
+        handleChangingPage
     }
 }
 export default useNav;
