@@ -1,25 +1,34 @@
-import { Button, Container, FormControl, Grid, Paper, TextField, Tooltip, Typography } from "@mui/material"
+import { Button, FormControl, Grid, Paper, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { useTranslation } from "react-i18next"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import Loading from "../../../../modules/common/components/Loading"
 import usePrescriptionDetail from "../../../../modules/pages/PrescriptionDetailComponents/hooks/usePrescriptionDetail"
 import { Helmet } from "react-helmet"
 import PatientInfoModal from "../../../../modules/pages/PrescriptionDetailComponents/PatientInfoModal"
 import MedicalRecordsModal from "../../../../modules/pages/PrescriptionDetailComponents/MedicalRecordsModal"
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import PrescribingContext from "../../../../lib/context/PrescribingContext"
 import UserContext from "../../../../lib/context/UserContext"
 import EditPrescriptionModal from "../../../../modules/pages/PrescriptionDetailComponents/EditPrescriptionModal"
 import MedicinesHome from "../../../../modules/pages/ProductComponents/MedicinesHome"
+import useCustomNavigate from "../../../../lib/hooks/useCustomNavigate"
 
 const PrescriptionDetail = () => {
     const {user} = useContext(UserContext)
     const {medicinesSubmit, handleAddPrescriptionDetail, handleUpdateMedicinesSubmit,
-        resetMedicineStore, addMedicine} = useContext(PrescribingContext)
+        resetMedicineStore, addMedicineItem, clearForm, hasUnsavedChanges} = useContext(PrescribingContext)
     
     const {isLoadingPrescriptionDetail, prescriptionDetail} = usePrescriptionDetail()
-    const router = useNavigate()
+
+    const {t, ready} = useTranslation(['prescription-detail','common', 'modal'])
+
+    const {navigate} = useCustomNavigate({
+        shouldBlock: hasUnsavedChanges,
+        onClearForm: () => {
+            clearForm();
+        }
+    })
 
     const handleOnEdit = (medicineUpdate, deletedArrayItems) => {
         if (deletedArrayItems.length === medicinesSubmit.length)
@@ -28,11 +37,11 @@ const PrescriptionDetail = () => {
         const dataWithoutNull = medicineUpdate.filter(item => item !== null);
         handleUpdateMedicinesSubmit(dataWithoutNull)
     }
+
     const { prescribingId } = useParams();
 
-    const {t, ready} = useTranslation(['prescription-detail','common']) 
     //TODO: add skeletons here
-    if(!ready)
+    if(!ready && !isLoadingPrescriptionDetail)
         return <Box sx={{ height: "300px" }}>
             <Helmet>
                 <title>Prescribing</title>
@@ -43,6 +52,7 @@ const PrescriptionDetail = () => {
             </Box>
         </Box>
 
+   
     const renderMedicinesSubmit = (medicineUnitInfo, index) =>  <Grid  key={'mdc-'+index} item xs={12} className="!ou-mt-2">
         <Grid id={medicineUnitInfo.id} 
             container justifyContent="flex" style={{ "margin": "0 auto" }}>
@@ -61,6 +71,7 @@ const PrescriptionDetail = () => {
             </Grid>
         </Grid>
     </Grid>
+
     return (
         <>
             <Helmet>
@@ -83,7 +94,7 @@ const PrescriptionDetail = () => {
                         </h2>
                         <Typography className='text-center'>
                             <h3>{t('common:goToBooking')} </h3>
-                            <Button onClick={() => { router('/booking') }}>{t('common:here')}!</Button>
+                            <Button onClick={() => { navigate('/booking') }}>{t('common:here')}!</Button>
                         </Typography>
                     </Box>
                     </Box>)
@@ -93,7 +104,8 @@ const PrescriptionDetail = () => {
                                 <Grid item xs={8} className="ou-pr-6">
                                     <Box>
                                     <MedicinesHome 
-                                        onAddMedicineLineItem={addMedicine} 
+                                        onAddMedicineLineItem={addMedicineItem} 
+                                        medicinesSubmit={medicinesSubmit}
                                         actionButton={
                                             <Button fullWidth className="!ou-p-3 !ou-bg-blue-600 !ou-text-white"> Prescribing 
                                             </Button>

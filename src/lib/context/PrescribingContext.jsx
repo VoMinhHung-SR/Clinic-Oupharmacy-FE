@@ -14,11 +14,13 @@ export const PrescribingProvider = ({children}) => {
     const {t} = useTranslation(['yup-validate', 'modal', 'prescription-detail', 'common']);
 
     const [medicinesSubmit, setMedicinesSubmit] = useState([]);
-    const router = useNavigate();
     const [flag, setFlag] = useState(false);
     const [isLoadingButton, setIsLoadingButton] = useState(false)
- 
-    const addMedicine = (medicineUnitId, medicineName, uses, quantity, inStock) => { 
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+    const navigate = useNavigate();
+
+    
+    const addMedicineItem = (medicineUnitId, medicineName, uses, quantity, inStock) => { 
         const newItem = {
             id: medicineUnitId,
             medicineName: medicineName,
@@ -30,24 +32,36 @@ export const PrescribingProvider = ({children}) => {
             const updatedState = [...prevMedicinesSubmit, newItem];
             return updatedState;
         });
+        setHasUnsavedChanges(true);
     };
-
+    // Clear with alert
     const resetMedicineStore = () => {
         return ConfirmAlert(t('prescription-detail:deletedPrescription'), t('modal:noThrowBack'), t('modal:ok'),t('modal:cancel'), 
             ()=> {
                 createToastMessage({type:TOAST_SUCCESS,message: t('common:updateSuccess')});
                 setMedicinesSubmit([]);
+                setHasUnsavedChanges(false);
             }, ()=>{})
+    };
+    // Clear without alert
+    const clearForm = () => {
+        setHasUnsavedChanges(false);
+        setMedicinesSubmit([]);
+        createToastMessage({type:TOAST_SUCCESS,message: t('common:updateSuccess')});
     };
 
     const handleUpdateMedicinesSubmit = (updatedData) => {
-        if(updatedData.length === 0)
-            return setMedicinesSubmit([])
+        if(updatedData.length === 0){
+            setMedicinesSubmit([])
+            setHasUnsavedChanges(false);
+            return
+        }
         const updatedMedicinesSubmit = medicinesSubmit.map(medicine => {
             const updatedMedicine = updatedData.find(item => item.medicineName === medicine.medicineName);
             return updatedMedicine ? { ...medicine, ...updatedMedicine } : null;
         }).filter(Boolean);
         setMedicinesSubmit(updatedMedicinesSubmit);
+        setHasUnsavedChanges(true);
     };
     
     const handleAddMedicineSubmit = (medicineUnit, data) => {
@@ -79,9 +93,9 @@ export const PrescribingProvider = ({children}) => {
                     if (medicineUpdated)
                         handleUpdateMedicinesSubmit(updatedMedicinesSubmit);
                     else 
-                        addMedicine(medicineUnit.id, medicineUnit.medicine.name, data.uses, data.quantity, medicineUnit.in_stock); 
+                        addMedicineItem(medicineUnit.id, medicineUnit.medicine.name, data.uses, data.quantity, medicineUnit.in_stock); 
                 }else 
-                    addMedicine(medicineUnit.id, medicineUnit.medicine.name, data.uses, data.quantity, medicineUnit.in_stock);  
+                    addMedicineItem(medicineUnit.id, medicineUnit.medicine.name, data.uses, data.quantity, medicineUnit.in_stock);  
             } catch (err) {
                 console.log(err);
                 ErrorAlert(t('modal:createFailed'), t('modal:pleaseDoubleCheck'), t('modal:ok'));
@@ -118,7 +132,7 @@ export const PrescribingProvider = ({children}) => {
                         })
                     );
                     setMedicinesSubmit([]);
-                    SuccessfulAlert(t('modal:createSuccess'), t('modal:ok'), () => router('/dashboard/prescribing'));
+                    SuccessfulAlert(t('modal:createSuccess'), t('modal:ok'), () => navigate('/dashboard/prescribing'));
                 } else {
                     ErrorAlert(t('modal:errSomethingWentWrong'), t('modal:pleaseTryAgain'), t('modal:ok'));
                 }
@@ -143,9 +157,11 @@ export const PrescribingProvider = ({children}) => {
             value={{
                 isLoadingButton: isLoadingButton,
                 medicinesSubmit: medicinesSubmit, setMedicinesSubmit,
-                addMedicine: handleAddMedicineSubmit, resetMedicineStore,
+                addMedicineItem: handleAddMedicineSubmit, resetMedicineStore,
                 handleUpdateMedicinesSubmit: handleUpdateMedicinesSubmit,
-                handleAddPrescriptionDetail: handleAddPrescriptionDetail
+                handleAddPrescriptionDetail: handleAddPrescriptionDetail,
+                clearForm: clearForm,
+                hasUnsavedChanges: hasUnsavedChanges
             }}
         >
             {children}

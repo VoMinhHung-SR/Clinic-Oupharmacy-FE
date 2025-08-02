@@ -61,6 +61,7 @@
     "yupQuantityRequired": "Số lượng không được để trống",
     "yupQuantityMax": "Số lượng phải vượt quá số lượng cho phép",
     "yupQuantityOverRaw": "Số lượng vượt quá ban đầu",
+    "yupQuantityOverStock": "Số lượng vượt quá số lượng tồn kho",
     "yupQuantityInvalid":"Số lượng không hợp lệ ",
 
     "yupCityRequired": "Tỉnh/Thành phố không được để trống",

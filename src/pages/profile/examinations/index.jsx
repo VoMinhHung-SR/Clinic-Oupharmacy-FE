@@ -1,5 +1,4 @@
 import { Box, Button, Pagination, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
-import { useNavigate } from "react-router";
 import Loading from "../../../modules/common/components/Loading";
 import useExaminationList from "../../../modules/pages/ExaminationListComponents/hooks/useExaminationList"
 import moment from "moment";
@@ -11,11 +10,12 @@ import CustomModal from "../../../modules/common/components/Modal";
 import ExaminationUpdate from "../../../modules/pages/ExaminationListComponents/ExaminationUpdate";
 import useCustomModal from "../../../lib/hooks/useCustomModal";
 import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem";
+import useCustomNavigate from "../../../lib/hooks/useCustomNavigate";
 
 const ExaminationList = () =>{
     const { isLoading, examinationList, handleDeleteExamination, 
         handleChangePage, page,pagination, handleChangeFlag} = useExaminationList();
-    const router = useNavigate();
+    const {navigate} = useCustomNavigate();
  
     const {t,ready} = useTranslation(['examinations','common'])   
     
@@ -64,7 +64,7 @@ const ExaminationList = () =>{
                                         {t('examinations:errExamsNull')}
                                         <br/>
                                         <br/>
-                                        <Button color="primary" onClick={() => router('/booking')}>
+                                        <Button color="primary" onClick={() => navigate('/booking')}>
                                             {t('common:goToBooking')}
                                         </Button>
                                     </Box>

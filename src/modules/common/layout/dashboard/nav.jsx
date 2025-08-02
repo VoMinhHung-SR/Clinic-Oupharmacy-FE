@@ -16,10 +16,9 @@ import FlagVN from '../../../../../public/flagVN';
 import Logout from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import { changeLanguage } from "i18next";
-import useNav from '../../../pages/HomeComponents/hooks/useNav';
-import { AVATAR_DEFAULT, AVATAR_NULL, ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
+import { AVATAR_DEFAULT, ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import PaymentIcon from '@mui/icons-material/Payment';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
@@ -34,6 +33,8 @@ import NotificationButton from '../../components/button/Notification';
 import PillsIcon from '../../../../lib/icon/PillsIcon';
 import CategoryIcon from '@mui/icons-material/Category';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import UserContext from '../../../../lib/context/UserContext';
+import useCustomNavigate from '../../../../lib/hooks/useCustomNavigate';
 
 const drawerWidth = 240;
 
@@ -148,7 +149,8 @@ const NavDashboard = ({ open, toggleDrawer }) => {
       }
     ]
       
-    const {user, handleLogout, handleChangingPage} = useNav();
+    const {user, handleLogout} = useContext(UserContext);
+    const {navigate} = useCustomNavigate();
     let btn = <>
         <ul className="ou-flex ou-items-center ou-text-[#070707]">
           <Link to="/login">
@@ -161,8 +163,8 @@ const NavDashboard = ({ open, toggleDrawer }) => {
 
     const handleNav = (role, link) => {
       if(role.includes(user.role))
-        return handleChangingPage(link)
-      handleChangingPage("/dashboard/forbidden")
+        return navigate(link)
+      navigate("/dashboard/forbidden")
     }
 
     const renderPage = (routingRole, role, isOpen, isMobile) => {
@@ -243,8 +245,9 @@ const NavDashboard = ({ open, toggleDrawer }) => {
                     </Box>
                   </Box>
                 </Link>
-                <Link to="/dashboard/profile" className="nav-link" style={{ "padding": "0px" }}>
-                    <MenuItem style={{ "color": "#333" }}>
+                <Divider className="!ou-m-[0px]" />
+                <Link to="/dashboard/profile" className="nav-link">
+                    <MenuItem className="!ou-py-2">
                         <AccountCircleIcon fontSize="small" />
                         <Typography marginLeft={2}>
                         {t("common:profile")}
@@ -252,14 +255,14 @@ const NavDashboard = ({ open, toggleDrawer }) => {
                     </MenuItem>
                 </Link>
                 <Divider className="!ou-m-[0px]" />
-                <MenuItem style={{ "color": "#333" }} className="!ou-py-2" onClick={handleOpenModal}>
+                <MenuItem className="!ou-py-2" onClick={handleOpenModal}>
                     <KeyIcon fontSize="small" />
                       <Typography marginLeft={2}>
                         {t("common:changePassword")}
                       </Typography>
                 </MenuItem>
                 <Divider className="!ou-m-[0px]"/>
-                <MenuItem onClick={handleLogout} >
+                <MenuItem onClick={handleLogout} className="!ou-text-red-500 !ou-py-2" >
                     <Logout fontSize="small" />
                     <Typography marginLeft={2}>
                         {t('logout')}
