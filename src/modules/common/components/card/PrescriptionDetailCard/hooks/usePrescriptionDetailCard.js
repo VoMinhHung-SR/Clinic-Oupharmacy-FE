@@ -54,7 +54,7 @@ const usePrescriptionDetailCard = () => {
             if (medicinesSubmit.length !== 0) {
                 medicinesSubmit.forEach((medicineUnit, i) => {
                     if (medicineUnit.id === itemId) {
-                        SuccessfulAlert(t('modal:deleteCompleted'),t('modal:ok'))
+                        SuccessfulAlert({title: t('modal:deleteCompleted'), confirmButtonText: t('modal:ok')})
                         medicinesSubmit.splice(i, 1)
                         setFlag(!flag)
                     }
@@ -75,7 +75,7 @@ const usePrescriptionDetailCard = () => {
                     if (medicineUnit.id === itemID) {
                         medicinesSubmit.quantity = data.quantity
                         medicineUnit.uses = data.uses
-                        SuccessfulAlert(t('modal:deleteCompleted'),t('modal:ok'))
+                        SuccessfulAlert({title: t('modal:deleteCompleted'), confirmButtonText: t('modal:ok')})
                         setFlag(!flag)
                     }
                 })
@@ -115,7 +115,9 @@ const usePrescriptionDetailCard = () => {
                         createNotificationRealtime(recipientID, examID)
                         await keyUpdateExam(examID, "isCommitted", true)
                     }
-                    return SuccessfulAlert(t('modal:createSuccess'), t('modal:ok'), () => router('/'))
+                    return SuccessfulAlert({title: t('modal:createSuccess'), 
+                        confirmButtonText: t('modal:ok'),
+                        callbackSuccess: () => router('/')})
                 }
                    
                 else{

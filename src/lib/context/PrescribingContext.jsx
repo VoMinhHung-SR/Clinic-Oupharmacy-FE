@@ -19,7 +19,6 @@ export const PrescribingProvider = ({children}) => {
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const navigate = useNavigate();
 
-    
     const addMedicineItem = (medicineUnitId, medicineName, uses, quantity, inStock) => { 
         const newItem = {
             id: medicineUnitId,
@@ -131,8 +130,19 @@ export const PrescribingProvider = ({children}) => {
                             await fetchAddPrescriptionDetail(formData);
                         })
                     );
-                    setMedicinesSubmit([]);
-                    SuccessfulAlert(t('modal:createSuccess'), t('modal:ok'), () => navigate('/dashboard/prescribing'));
+                    
+                    SuccessfulAlert({title: t('modal:createSuccess'), 
+                        description: "Do you want to go to the Homepage? or Continue to add prescription?",
+                        confirmButtonText: t('modal:ok'), 
+                        showCancelButton: true,
+                        cancelButtonText: t('modal:cancel'), 
+                        callbackSuccess: () =>{
+                            setHasUnsavedChanges(false);
+                            navigate('/dashboard/prescribing');
+                        },
+                        callbackCancel: () => {
+                            setMedicinesSubmit([]);
+                        }});
                 } else {
                     ErrorAlert(t('modal:errSomethingWentWrong'), t('modal:pleaseTryAgain'), t('modal:ok'));
                 }

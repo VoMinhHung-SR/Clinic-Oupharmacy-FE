@@ -40,7 +40,7 @@ const useBillCard = (prescribingID) => {
                     if (updatedRes.status === 200) {
                         setPrescriptionDetail(updatedRes.data)
                     }
-                    return SuccessfulAlert(t('paidCompleted'), t('modal:ok'))                 
+                    return SuccessfulAlert({title: t('paidCompleted'), confirmButtonText: t('modal:ok')});                 
                 }
             } catch (err) {
                 setIsLoadingButton(false)

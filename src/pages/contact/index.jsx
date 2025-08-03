@@ -46,9 +46,10 @@ const Contact = () => {
             setIsLoading(true);
             const response = await fetchContactAdmin(data);
             if(response.status === 200){
-                SuccessfulAlert(t('contact:sendSuccess'), t('common:ok'), () => {
+                SuccessfulAlert({title: t('contact:sendSuccess'), confirmButtonText: t('common:ok'),
+                    callbackSuccess: () => {
                     createToastMessage({message: t('contact:thanksDescription'), type: TOAST_SUCCESS});
-                });
+                }});
             }
         } catch (error) {
             createToastMessage({message: t('contact:sendFailed'), type: TOAST_ERROR});

@@ -1,15 +1,27 @@
 import Swal from 'sweetalert2'
 
-const SuccessfulAlert = (title, confirmButtonText = 'Okay', callback) => {
+const SuccessfulAlert = ({title, description = '', confirmButtonText = 'Okay', showCancelButton = false,
+    cancelButtonText = 'Cancel', callbackSuccess = () => {}, callbackCancel = () => {}}) => {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
-            confirmButton: 'ou-px-8 ou-py-3 ou-ml-3 !ou-bg-green-700 !ou-text-white !ou-rounded'
+            confirmButton: 'ou-px-8 ou-py-3 ou-ml-3 !ou-bg-green-700 !ou-text-white !ou-rounded',
+            cancelButton: '!ou-rounded ou-px-8 ou-py-3 ou-p5 !ou-bg-red-700 ou-mr-5 !ou-text-white',
         }, buttonsStyling: true
     });
 
     swalWithBootstrapButtons.fire({
-        position: 'center', icon: 'success', title: title, showConfirmButton: true, confirmButtonText: confirmButtonText
-    }).then(callback);
+        position: 'center', icon: 'success', 
+        title: `<span style="font-size: 1.5em;">${title}</span>`,
+        text: description || '',
+        showConfirmButton: true, confirmButtonText: confirmButtonText,
+        showCancelButton: showCancelButton, cancelButtonText: cancelButtonText,
+        reverseButtons: true,
+    }).then(function (result){
+        if(result.isConfirmed)
+            callbackSuccess();
+        else
+            callbackCancel();
+    });
 };
 
 export const ErrorAlert = (title, text, confirmButtonText = 'Okay') => {

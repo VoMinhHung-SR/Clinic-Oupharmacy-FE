@@ -62,7 +62,7 @@ const useExaminationList = () => {
         const deleteExamination = async () =>{
             const res = await fetchDeleteAnExamination(examinationID)
             if (res.status === 204){
-                SuccessfulAlert(t('modal:deleteCompleted'), t('modal:ok'))
+                SuccessfulAlert({title: t('modal:deleteCompleted'), confirmButtonText: t('modal:ok')})
                 setFlag(!flag)
             }else{
                 ErrorAlert(t('modal:deleteFailed'), t('modal:errSomethingWentWrong'), t('modal:ok'))
