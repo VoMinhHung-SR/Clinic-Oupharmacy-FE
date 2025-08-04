@@ -33,6 +33,9 @@
     "diagnosedSheet": "The diagnosis sheet",
     "at": "at",
 
+    "prescriptionCreated": "Prescription created",
+    "prescriptionCreatedDescription": "Do you want to go to the Homepage? or Continue to add prescription?",
+    
     "patientInfo": "Patient information",
     "gender": "Gender",
     "address": "Address",

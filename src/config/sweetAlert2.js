@@ -5,7 +5,7 @@ const SuccessfulAlert = ({title, description = '', confirmButtonText = 'Okay', s
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'ou-px-8 ou-py-3 ou-ml-3 !ou-bg-green-700 !ou-text-white !ou-rounded',
-            cancelButton: '!ou-rounded ou-px-8 ou-py-3 ou-p5 !ou-bg-red-700 ou-mr-5 !ou-text-white',
+            cancelButton: '!ou-rounded ou-px-8 ou-py-3 ou-p5 !ou-bg-[#6e7881] ou-mr-5 !ou-text-[#f5f5f5]',
         }, buttonsStyling: true
     });
 

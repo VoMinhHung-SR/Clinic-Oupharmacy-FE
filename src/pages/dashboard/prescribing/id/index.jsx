@@ -22,12 +22,12 @@ const PrescriptionDetail = () => {
     const {isLoadingPrescriptionDetail, prescriptionDetail} = usePrescriptionDetail()
 
     const {t, ready} = useTranslation(['prescription-detail','common', 'modal'])
-
+    
     const {navigate} = useCustomNavigate({
-        shouldBlock: hasUnsavedChanges,
-        onClearForm: () => {
-            clearForm();
-        }
+        // shouldBlock: hasUnsavedChanges,
+        // onClearForm: () => {
+        //     clearForm();
+        // }
     })
 
     const handleOnEdit = (medicineUpdate, deletedArrayItems) => {

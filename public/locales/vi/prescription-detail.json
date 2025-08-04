@@ -33,6 +33,9 @@
     "at": "vào ngày",
     "patientInfo": "Thông tin bệnh nhân",
 
+    "prescriptionCreated": "Đã tạo phiếu kê toa",
+    "prescriptionCreatedDescription": "Bạn có muốn quay về trang chủ? hoặc tiếp tục thêm thuốc?",
+
     "email": "Email",
     "gender": "Giới tính",
     "address": "Địa chỉ",

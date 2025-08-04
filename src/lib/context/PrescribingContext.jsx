@@ -130,19 +130,25 @@ export const PrescribingProvider = ({children}) => {
                             await fetchAddPrescriptionDetail(formData);
                         })
                     );
-                    
-                    SuccessfulAlert({title: t('modal:createSuccess'), 
-                        description: "Do you want to go to the Homepage? or Continue to add prescription?",
-                        confirmButtonText: t('modal:ok'), 
-                        showCancelButton: true,
-                        cancelButtonText: t('modal:cancel'), 
-                        callbackSuccess: () =>{
-                            setHasUnsavedChanges(false);
-                            navigate('/dashboard/prescribing');
-                        },
-                        callbackCancel: () => {
-                            setMedicinesSubmit([]);
-                        }});
+                    createToastMessage({type:TOAST_SUCCESS,message: t('prescription-detail:prescriptionCreated')});
+                    setHasUnsavedChanges(false);
+                
+                
+                    // TODO: Should show a print prescription modal
+                    // and sent it to the medicine store  
+
+                    // SuccessfulAlert({title: t('prescription-detail:prescriptionCreated'), 
+                    //     description: t('prescription-detail:prescriptionCreatedDescription'),
+                    //     confirmButtonText: t('modal:ok'), 
+                    //     showCancelButton: true,
+                    //     cancelButtonText: t('modal:cancel'), 
+                    //     callbackSuccess: () =>{
+                    //         setHasUnsavedChanges(false);
+                    //         navigate('/dashboard/prescribing');
+                    //     },
+                    //     callbackCancel: () => {
+                    //         setMedicinesSubmit([]);
+                    //     }});
                 } else {
                     ErrorAlert(t('modal:errSomethingWentWrong'), t('modal:pleaseTryAgain'), t('modal:ok'));
                 }
@@ -151,6 +157,8 @@ export const PrescribingProvider = ({children}) => {
                 ErrorAlert(t('modal:createFailed'), t('modal:pleaseDoubleCheck'), t('modal:ok'));
             } finally {
                 setIsLoadingButton(false)
+                setMedicinesSubmit([]);
+                navigate('/dashboard/prescribing');
             }
 
         }
