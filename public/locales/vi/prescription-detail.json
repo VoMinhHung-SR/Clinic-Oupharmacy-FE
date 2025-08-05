@@ -41,5 +41,10 @@
     "address": "Địa chỉ",
     "male": "Nam",
     "female": "Nữ",
-    "secret": "Bí mật"
+    "secret": "Bí mật",
+
+    "note": "Ghi chú",
+    "totalAmount": "Tổng cộng",
+    "price": "Đơn giá",
+    "amount": "Thành tiền"
 }

@@ -42,5 +42,11 @@
     "email": "Email",
     "male": "Male",
     "female": "Female",
-    "secret": "Secret"
+    "secret": "Secret",
+
+    "note": "Note",
+    "totalAmount": "Total amount",
+    "price": "Price",
+    "amount": "Amount"
+
 }
