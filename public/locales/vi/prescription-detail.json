@@ -46,5 +46,12 @@
     "note": "Ghi chú",
     "totalAmount": "Tổng cộng",
     "price": "Đơn giá",
-    "amount": "Thành tiền"
+    "amount": "Thành tiền",
+    "serviceFee": "Phí dịch vụ",
+
+    "prescriptionDetailExist": "Phiếu kê toa đã tồn tại",
+    "prescriptionDetailExistDescription": "Tiếp tục tạo phiếu kê toa mới?",
+    
+    "existingPrescriptions": "Các phiếu kê toa đã có",
+    "newPrescriptionCreated": "Phiếu kê toa mới đã được tạo thành công"
 }

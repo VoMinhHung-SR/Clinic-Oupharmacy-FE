@@ -47,6 +47,12 @@
     "note": "Note",
     "totalAmount": "Total amount",
     "price": "Price",
-    "amount": "Amount"
+    "amount": "Amount",
+    "serviceFee": "Service fee",
 
+    "prescriptionDetailExist": "Prescription detail already exists",
+    "prescriptionDetailExistDescription": "Continue to create new prescription?",
+    
+    "existingPrescriptions": "Existing prescriptions",
+    "newPrescriptionCreated": "New prescription created successfully"
 }

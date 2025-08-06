@@ -2,6 +2,8 @@
     "ok":"OK",
     "yes": "Đồng ý",
     "cancel": "Hủy",
+    "continue": "Tiếp tục",
+    "back": "Quay lại",
 
     "createSuccess": "Tạo thành công",
     "createFailed": "Tạo thất bại",

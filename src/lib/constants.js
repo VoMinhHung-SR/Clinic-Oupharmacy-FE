@@ -60,3 +60,4 @@ export const WAITING_SESSION_MORNING = 'morning'
 export const WAITING_SESSION_AFTERNOON = 'afternoon'
 
 export const EMAIL_SUPPORT = 'oupharmacymanagement@gmail.com'
+export const SERVICE_FEE = 20000

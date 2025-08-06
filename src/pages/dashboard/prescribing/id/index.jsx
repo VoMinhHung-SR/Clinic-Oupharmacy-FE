@@ -7,22 +7,24 @@ import usePrescriptionDetail from "../../../../modules/pages/PrescriptionDetailC
 import { Helmet } from "react-helmet"
 import PatientInfoModal from "../../../../modules/pages/PrescriptionDetailComponents/PatientInfoModal"
 import MedicalRecordsModal from "../../../../modules/pages/PrescriptionDetailComponents/MedicalRecordsModal"
-import { useContext } from "react"
+import { useContext, useState, useEffect, useRef } from "react"
 import PrescribingContext from "../../../../lib/context/PrescribingContext"
 import UserContext from "../../../../lib/context/UserContext"
 import EditPrescriptionModal from "../../../../modules/pages/PrescriptionDetailComponents/EditPrescriptionModal"
 import MedicinesHome from "../../../../modules/pages/ProductComponents/MedicinesHome"
 import useCustomNavigate from "../../../../lib/hooks/useCustomNavigate"
 import PrescriptionDetailCard from "../../../../modules/common/components/card/PrescriptionDetailCard"
+import { ConfirmAlert } from "../../../../config/sweetAlert2"
 
 const PrescriptionDetail = () => {
     const {user} = useContext(UserContext)
     const {medicinesSubmit, handleAddPrescriptionDetail, handleUpdateMedicinesSubmit,
         resetMedicineStore, addMedicineItem, clearForm, hasUnsavedChanges} = useContext(PrescribingContext)
     
-    const {isLoadingPrescriptionDetail, prescriptionDetail} = usePrescriptionDetail()
+    const {isLoadingPrescriptionDetail, prescriptionDetail, refetch} = usePrescriptionDetail()
 
     const {t, ready} = useTranslation(['prescription-detail','common', 'modal'])
+    
     
     const {navigate} = useCustomNavigate({
         // shouldBlock: hasUnsavedChanges,
@@ -30,6 +32,55 @@ const PrescriptionDetail = () => {
         //     clearForm();
         // }
     })
+    const [confirm, setConfirm] = useState(false)
+    const hasShownDialog = useRef(false)
+    const [showPrescriptionCard, setShowPrescriptionCard] = useState(false)
+    
+    const handlePrescriptionDetailExist = () => {
+        if(prescriptionDetail?.prescribing_info.length > 0 && !hasShownDialog.current){
+            hasShownDialog.current = true;
+            ConfirmAlert(
+                t('prescription-detail:prescriptionDetailExist'), 
+                t('prescription-detail:prescriptionDetailExistDescription'), 
+                t('modal:continue'),t('modal:back'), 
+                () => {
+                    setConfirm(true);
+                }, 
+                () => {
+                    navigate('/dashboard/prescribing/');
+                }
+            );
+        }
+    }
+
+    useEffect(() => {
+        if (!isLoadingPrescriptionDetail && 
+            prescriptionDetail && 
+            prescriptionDetail.prescribing_info.length > 0 && 
+            !confirm &&
+            !hasShownDialog.current) {
+            handlePrescriptionDetailExist();
+        }
+    }, [isLoadingPrescriptionDetail, prescriptionDetail]);
+
+    const handleSubmitSuccess = async () => {
+        try {
+            resetMedicineStore();
+            await refetch();
+            setShowPrescriptionCard(true);
+        } catch (error) {
+            console.error('Error reloading prescription detail:', error);
+        }
+    }
+
+    const handleSubmitPrescription = async () => {
+        try {
+            await handleAddPrescriptionDetail(user.id, prescribingId);
+            await handleSubmitSuccess();
+        } catch (error) {
+            console.error('Error submitting prescription:', error);
+        }
+    }
 
     const handleOnEdit = (medicineUpdate, deletedArrayItems) => {
         if (deletedArrayItems.length === medicinesSubmit.length)
@@ -41,19 +92,24 @@ const PrescriptionDetail = () => {
 
     const { prescribingId } = useParams();
 
-    //TODO: add skeletons here
-    if(!ready || isLoadingPrescriptionDetail)
-        return <Box sx={{ height: "300px" }}>
-            <Helmet>
-                <title>Prescribing</title>
-            </Helmet>
-            
-            <Box className='ou-p-5'>
-                <Loading/>
-            </Box>
-        </Box>
+    const getLatestPrescriptionDetail = () => {
+        if (!prescriptionDetail?.prescribing_info || prescriptionDetail.prescribing_info.length === 0) {
+            return null;
+        }
+        
+        // Sort by created_date to get the latest one
+        const sortedPrescriptions = prescriptionDetail.prescribing_info.sort((a, b) => 
+            new Date(b.created_date) - new Date(a.created_date)
+        );
+        
+        return sortedPrescriptions[0];
+    }
 
-   
+    const latestPrescription = getLatestPrescriptionDetail();
+
+    // Check if there are existing prescriptions
+    const hasExistingPrescriptions = prescriptionDetail?.prescribing_info && prescriptionDetail.prescribing_info.length > 0;
+
     const renderMedicinesSubmit = (medicineUnitInfo, index) =>  <Grid  key={'mdc-'+index} item xs={12} className="!ou-mt-2">
         <Grid id={medicineUnitInfo.id} 
             container justifyContent="flex" style={{ "margin": "0 auto" }}>
@@ -73,44 +129,71 @@ const PrescriptionDetail = () => {
         </Grid>
     </Grid>
 
+    //TODO: add skeletons here
+    if(!ready || isLoadingPrescriptionDetail)
+        return <Box sx={{ height: "300px" }}>
+            <Helmet>
+                <title>Prescribing</title>
+            </Helmet>
+            
+            <Box className='ou-p-5'>
+                <Loading/>
+            </Box>
+        </Box>
+
     return (
         <>
             <Helmet>
                 <title>{t('prescription-detail:prescriptionDetail')}</title>
             </Helmet>
 
-            {!hasUnsavedChanges && ( <PrescriptionDetailCard 
-                prescriptionData={{
-                  id: 123,
-                  patient: {
-                    full_name: "Nguyễn Văn A",
-                    date_of_birth: "1990-01-01",
-                    phone_number: "0123456789",
-                    email: "example@email.com",
-                    address: "123 Đường ABC, Quận 1, TP.HCM"
-                  },
-                  doctor: {
-                    full_name: "Bác sĩ Trần Thị B"
-                  },
-                  created_at: "2024-01-15T10:30:00Z",
-                  diagnosis_date: "2024-01-15",
-                  medicines: [
-                    {
-                      id: 1,
-                      medicine_name: "Paracetamol 500mg",
-                      uses: "Uống 2 viên/lần, 3 lần/ngày",
-                      quantity: 20,
-                      available_quantity: 20,
-                      unit_price: 5000
-                    }
-                  ],
-                  total_amount: 100000,
-                  status: "completed"
-                }}
-              />
-            )}
+            {/* Show existing prescriptions if any */}
+            
+            {/* {hasExistingPrescriptions && (
+                <Box className="ou-mb-6">
+                    <Typography variant="h5" className="ou-font-bold ou-mb-4 ou-text-center">
+                        {t('prescription-detail:existingPrescriptions')} ({prescriptionDetail.prescribing_info.length})
+                    </Typography>
+                    {prescriptionDetail.prescribing_info.map((prescription, index) => (
+                        <Box key={prescription.id} className="ou-mb-4">
+                            <PrescriptionDetailCard 
+                                prescriptionData={{
+                                    ...prescription,
+                                    medicines: [],
+                                    examination: prescriptionDetail.examination,
+                                    patient: prescriptionDetail.patient,
+                                    user: prescriptionDetail.user
+                                }} 
+                            />
+                        </Box>
+                    ))}
+                </Box>
+            )} */}
 
-       
+            {/* Show latest prescription after successful submit */}
+            {showPrescriptionCard && latestPrescription && (
+                <Box className="ou-mb-6">
+                    <Typography variant="h5" className="ou-font-bold ou-mb-4 ou-text-center ou-text-green-600">
+                        {t('prescription-detail:newPrescriptionCreated')}
+                    </Typography>
+                    <PrescriptionDetailCard 
+                        prescriptionData={{
+                            ...latestPrescription,
+                            examination: prescriptionDetail.examination,
+                            patient: prescriptionDetail.patient,
+                            user: prescriptionDetail.user
+                        }} 
+                    />
+                    <Box className="ou-flex ou-justify-center ou-mt-4">
+                        <Button 
+                            variant="outlined" 
+                            onClick={() => setShowPrescriptionCard(false)}
+                        >
+                            {t('common:back')}
+                        </Button>
+                    </Box>
+                </Box>
+            )}
 
             {/* TODO: Add skeleton here */}
             {!isLoadingPrescriptionDetail && prescriptionDetail === null && (
@@ -129,7 +212,7 @@ const PrescriptionDetail = () => {
                </Box>
             )}
 
-            {!isLoadingPrescriptionDetail && prescriptionDetail !== null &&
+            {!isLoadingPrescriptionDetail && prescriptionDetail !== null && !showPrescriptionCard &&
                 <>
                     <Grid container className="ou-p-8">
                         <Grid item xs={8} className="ou-pr-6">
@@ -196,7 +279,7 @@ const PrescriptionDetail = () => {
 
                                                     <Grid item xs={12}>
                                                         <Button className="ou-w-full" variant="contained" color="success"
-                                                                onClick={() =>handleAddPrescriptionDetail(user.id, prescribingId)} 
+                                                                onClick={handleSubmitPrescription} 
                                                             >
                                                                 {t('prescribing')}
                                                         </Button>

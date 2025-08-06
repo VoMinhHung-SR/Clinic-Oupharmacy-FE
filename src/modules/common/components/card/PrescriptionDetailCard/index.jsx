@@ -1,13 +1,13 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Grid, Chip, Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import PersonIcon from '@mui/icons-material/Person';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { SERVICE_FEE } from "../../../../../lib/constants";
 
 const PrescriptionDetailCard = ({ prescriptionData }) => {
     const { t, tReady } = useTranslation(['prescription-detail', 'common']);
@@ -30,13 +30,16 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
 
     const {
         id,
-        patient,
-        doctor,
-        created_at,
-        diagnosis_date,
+        created_date,
+        updated_date,
+        active,
+        diagnosis,
+        user,
         medicines = [],
-        total_amount = 0,
-        status = 'completed'
+        bill_status,
+        examination,
+        patient,
+        user: doctor
     } = prescriptionData;
 
     const formatCurrency = (amount) => {
@@ -46,31 +49,8 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
         }).format(amount);
     };
 
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'completed':
-                return 'success';
-            case 'pending':
-                return 'warning';
-            case 'cancelled':
-                return 'error';
-            default:
-                return 'default';
-        }
-    };
-
-    const getStatusText = (status) => {
-        switch (status) {
-            case 'completed':
-                return 'Hoàn tất';
-            case 'pending':
-                return 'Đang xử lý';
-            case 'cancelled':
-                return 'Đã hủy';
-            default:
-                return 'Không xác định';
-        }
-    };
+    // Get bill amount if available
+    const billAmount = bill_status?.amount || 0;
 
     return (
         <Box className="ou-my-5 ou-mb-8 ou-w-[100%] ou-m-auto">
@@ -80,26 +60,23 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                     <Box className="ou-flex ou-items-center ou-gap-3">
                         <LocalHospitalIcon className="ou-text-blue-600" sx={{ fontSize: 32 }} />
                         <Typography variant="h4" className="ou-font-bold ou-text-gray-800">
-                            {t('prescription-detail:prescriptionDetail')}
+                            {t('prescription-detail:prescriptionDetail')} #{id}
                         </Typography>
                     </Box>
-                    {/* TODO: add status */}
-                    {/* <Chip
-                        icon={<CheckCircleOutlineIcon />}
-                        label={getStatusText(status)}
-                        color={getStatusColor(status)}
+                    <Chip
+                        label={bill_status ? "Đã thanh toán" : "Chưa thanh toán"}
+                        color={bill_status ? "success" : "warning"}
                         variant="filled"
                         size="large"
-                    /> */}
+                    />
                 </Box>
 
                 <Divider className="ou-mb-6" />
 
                 {/* Basic Information */}
-                <Grid container className="ou-mb-6">
+                <Grid container spacing={3} className="ou-mb-6">
                     <Grid item xs={12} md={6}>
-                        <Typography variant="h6" className="ou-font-semibold ou-mb-4 
-                        ou-flex ou-items-center ou-gap-2 ou-py-2">
+                        <Typography variant="h6" className="ou-font-semibold ou-mb-4 ou-flex ou-items-center ou-gap-2">
                             <PersonIcon className="ou-text-blue-600" />
                             {t('prescription-detail:patientInfo')}
                         </Typography>
@@ -108,7 +85,8 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                                 <Typography className="ou-font-medium ou-min-w-24">
                                     {t('prescription-detail:patientFullName')}:
                                 </Typography>
-                                <Typography>{patient?.full_name || 'N/A'}</Typography>
+                                <Typography>{patient?.first_name && patient?.last_name ? 
+                                    `${patient.first_name} ${patient.last_name}` : 'N/A'}</Typography>
                             </Box>
                             <Box className="ou-flex ou-items-center ou-gap-2">
                                 <CalendarTodayIcon className="ou-text-gray-500" />
@@ -144,8 +122,8 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                     </Grid>
 
                     <Grid item xs={12} md={6}>
-                        <Typography variant="h6" className="ou-font-semibold ou-mb-4 ou-flex ou-items-center ou-gap-2 ou-py-2">
-                            <LocalHospitalIcon className="ou-text-green-600 " />
+                        <Typography variant="h6" className="ou-font-semibold ou-mb-4 ou-flex ou-items-center ou-gap-2">
+                            <LocalHospitalIcon className="ou-text-green-600" />
                             {t('prescription-detail:basicInformation')}
                         </Typography>
                         <Box className="ou-space-y-3">
@@ -160,7 +138,7 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                                     {t('prescription-detail:createdDate')}:
                                 </Typography>
                                 <Typography>
-                                    {created_at ? moment(created_at).format('DD/MM/YYYY HH:mm') : 'N/A'}
+                                    {created_date ? moment(created_date).format('DD/MM/YYYY HH:mm') : 'N/A'}
                                 </Typography>
                             </Box>
                             <Box className="ou-flex ou-items-center ou-gap-2">
@@ -168,14 +146,17 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                                     {t('prescription-detail:diagnosisDate')}:
                                 </Typography>
                                 <Typography>
-                                    {diagnosis_date ? moment(diagnosis_date).format('DD/MM/YYYY') : 'N/A'}
+                                    {examination?.created_date ? moment(examination.created_date).format('DD/MM/YYYY') : 'N/A'}
                                 </Typography>
                             </Box>
                             <Box className="ou-flex ou-items-center ou-gap-2">
                                 <Typography className="ou-font-medium ou-min-w-24">
                                     {t('prescription-detail:doctorName')}:
                                 </Typography>
-                                <Typography className="ou-font-semibold">{doctor?.full_name || 'N/A'}</Typography>
+                                <Typography className="ou-font-semibold">
+                                    {doctor?.first_name && doctor?.last_name ? 
+                                        `${doctor.first_name} ${doctor.last_name}` : 'N/A'}
+                                </Typography>
                             </Box>
                         </Box>
                     </Grid>
@@ -213,9 +194,6 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                                             {t('prescription-detail:quantity')}
                                         </TableCell>
                                         <TableCell align="center" className="ou-font-semibold">
-                                            {t('prescription-detail:availableQuantity')}
-                                        </TableCell>
-                                        <TableCell align="center" className="ou-font-semibold">
                                             {t('prescription-detail:price')} (VND)
                                         </TableCell>
                                         <TableCell align="center" className="ou-font-semibold">
@@ -235,9 +213,6 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                                             </TableCell>
                                             <TableCell align="center">
                                                 {medicine.quantity}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {medicine.available_quantity || medicine.quantity}
                                             </TableCell>
                                             <TableCell align="center">
                                                 {formatCurrency(medicine.unit_price || 0)}
@@ -265,10 +240,16 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                 {/* Total Amount */}
                 {medicines.length > 0 && (
                     <Box className="ou-flex ou-justify-end ou-mt-6">
-                        <Box className="ou-bg-blue-50 ou-p-4 ou-rounded-lg ou-border-2 ou-border-blue-200">
-                            <Typography variant="h6" className="ou-font-bold ou-text-blue-800">
-                                {t('prescription-detail:totalAmount')}: {formatCurrency(total_amount)}
-                            </Typography>
+                        <Box className="ou-flex ou-flex-col ou-items-end ou-gap-2">
+                            <Box className="ou-font-semibold ou-text-gray-500">
+                                {t('prescription-detail:serviceFee')} : {formatCurrency(SERVICE_FEE)}
+                            </Box>
+                        
+                            <Box className="ou-bg-blue-50 ou-p-4 ou-rounded-lg ou-border-2 ou-border-blue-200">
+                                <Typography variant="h6" className="ou-font-bold ou-text-blue-800">
+                                    {t('prescription-detail:totalAmount')}: {formatCurrency(total_amount + SERVICE_FEE)}
+                                </Typography>
+                            </Box>
                         </Box>
                     </Box>
                 )}

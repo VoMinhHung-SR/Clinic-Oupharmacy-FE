@@ -31,7 +31,10 @@ export const ErrorAlert = (title, text, confirmButtonText = 'Okay') => {
         }, buttonsStyling: true
     });
     swalWithBootstrapButtons.fire({
-        icon: 'error', title: title, text: text, showConfirmButton: true, confirmButtonText: confirmButtonText
+        icon: 'error', 
+        title: `<span style="font-size: 1.5em;">${title}</span>`, 
+        text: text,
+        showConfirmButton: true, confirmButtonText: confirmButtonText
     });
 };
 
