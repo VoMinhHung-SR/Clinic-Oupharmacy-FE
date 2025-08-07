@@ -5,7 +5,7 @@ import UserContext from "../../../../lib/context/UserContext"
 
 const usePrescriptionDetail = () => {
     const {user} = useContext(UserContext)
-    const { prescribingId } = useParams();
+    const {prescribingId} = useParams();
    
     const [prescriptionDetail, setPrescriptionDetail] = useState(null)
     const [isLoadingPrescriptionDetail, setIsLoadingPrescriptionDetail] = useState(true)

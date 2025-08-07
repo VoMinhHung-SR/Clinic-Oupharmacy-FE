@@ -7,8 +7,8 @@ import { authApi, endpoints } from "../../../../config/APIs"
 //      diagnosed, 
 //      userDotor...
 //  }
-export const fetchPrescriptionDetail = async (prescribingId) => {
-    const res = await authApi().get(endpoints['prescription'](prescribingId));
+export const fetchPrescriptionDetail = async (diagnosisId) => {
+    const res = await authApi().get(endpoints['prescription-by-diagnosis'](diagnosisId));
     return res;
 }
 
@@ -16,8 +16,3 @@ export const fetchMedicalRecords = async (patientID) => {
     const res = await authApi().post(endpoints['get-medical-records'],{patientId: patientID})
     return res;
 }
-
-// export const fetchPrescriptionDetail = async (prescribingId) => {
-//     const res = await authApi().get(endpoints['get-prescription-detail'](prescribingId));
-//     return res;
-// }

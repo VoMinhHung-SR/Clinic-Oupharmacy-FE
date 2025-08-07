@@ -31,12 +31,8 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
     const {
         id,
         created_date,
-        updated_date,
-        active,
-        diagnosis,
-        user,
-        medicines = [],
-        bill_status,
+        medicineUnits = [],
+        // bill_status,
         examination,
         patient,
         user: doctor
@@ -49,34 +45,41 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
         }).format(amount);
     };
 
+    const totalAmount = medicineUnits?.reduce((acc, prescribingDetail) => {
+        return acc + (prescribingDetail.medicine_unit.price || 0) * prescribingDetail.quantity;
+    }, 0) || 0;
+
     // Get bill amount if available
-    const billAmount = bill_status?.amount || 0;
+    // const billAmount = bill_status?.amount || 0;
 
     return (
-        <Box className="ou-my-5 ou-mb-8 ou-w-[100%] ou-m-auto">
+        <Box className="ou-mb-8 ou-w-[100%] ou-m-auto"
+        key={'prescription-detail-card-'+{id}}>
             <Paper elevation={4} className="ou-p-6">
                 {/* Header */}
                 <Box className="ou-flex ou-justify-between ou-items-center ou-mb-6">
                     <Box className="ou-flex ou-items-center ou-gap-3">
                         <LocalHospitalIcon className="ou-text-blue-600" sx={{ fontSize: 32 }} />
                         <Typography variant="h4" className="ou-font-bold ou-text-gray-800">
-                            {t('prescription-detail:prescriptionDetail')} #{id}
+                            {t('prescription-detail:prescriptionDetail')} 
+                            #{medicineUnits[0].prescribing.id.toString().padStart(3, '0')}
                         </Typography>
                     </Box>
-                    <Chip
+                    {/* <Chip
                         label={bill_status ? "Đã thanh toán" : "Chưa thanh toán"}
                         color={bill_status ? "success" : "warning"}
                         variant="filled"
                         size="large"
-                    />
+                    /> */}
                 </Box>
 
                 <Divider className="ou-mb-6" />
 
                 {/* Basic Information */}
-                <Grid container spacing={3} className="ou-mb-6">
+                <Grid container className="ou-mb-6">
                     <Grid item xs={12} md={6}>
-                        <Typography variant="h6" className="ou-font-semibold ou-mb-4 ou-flex ou-items-center ou-gap-2">
+                        <Typography variant="h6" className="ou-font-semibold ou-mb-4 ou-flex 
+                        ou-items-center ou-gap-2 ou-py-3">
                             <PersonIcon className="ou-text-blue-600" />
                             {t('prescription-detail:patientInfo')}
                         </Typography>
@@ -122,7 +125,8 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                     </Grid>
 
                     <Grid item xs={12} md={6}>
-                        <Typography variant="h6" className="ou-font-semibold ou-mb-4 ou-flex ou-items-center ou-gap-2">
+                        <Typography variant="h6" className="ou-font-semibold ou-mb-4 ou-flex 
+                        ou-items-center ou-gap-2 ou-py-3">
                             <LocalHospitalIcon className="ou-text-green-600" />
                             {t('prescription-detail:basicInformation')}
                         </Typography>
@@ -131,14 +135,16 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                                 <Typography className="ou-font-medium ou-min-w-24">
                                     {t('prescription-detail:prescriptionId')}:
                                 </Typography>
-                                <Typography className="ou-font-bold ou-text-blue-600">#{id}</Typography>
+                                <Typography className="ou-font-bold ou-text-blue-600">
+                                    #{examination.id.toString().padStart(3, '0')}
+                                </Typography>
                             </Box>
                             <Box className="ou-flex ou-items-center ou-gap-2">
                                 <Typography className="ou-font-medium ou-min-w-24">
                                     {t('prescription-detail:createdDate')}:
                                 </Typography>
                                 <Typography>
-                                    {created_date ? moment(created_date).format('DD/MM/YYYY HH:mm') : 'N/A'}
+                                    {examination?.created_date ? moment(examination.created_date).format('DD/MM/YYYY') : 'N/A'}
                                 </Typography>
                             </Box>
                             <Box className="ou-flex ou-items-center ou-gap-2">
@@ -146,7 +152,7 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                                     {t('prescription-detail:diagnosisDate')}:
                                 </Typography>
                                 <Typography>
-                                    {examination?.created_date ? moment(examination.created_date).format('DD/MM/YYYY') : 'N/A'}
+                                    {created_date ? moment(created_date).format('DD/MM/YYYY HH:mm') : 'N/A'}
                                 </Typography>
                             </Box>
                             <Box className="ou-flex ou-items-center ou-gap-2">
@@ -170,7 +176,7 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                         {t('prescription-detail:prescriptionDetail')}
                     </Typography>
                     
-                    {medicines.length === 0 ? (
+                    {medicineUnits.length === 0 ? (
                         <Box className="ou-text-center ou-py-8">
                             <Typography color="textSecondary" className="ou-text-lg">
                                 {t('prescription-detail:nullMedicine')}
@@ -202,23 +208,24 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {medicines.map((medicine, index) => (
-                                        <TableRow key={medicine.id} className="ou-hover:ou-bg-gray-50">
+                                    {medicineUnits.map((prescribingDetail, index) => (
+                                        <TableRow key={"m-unit-"+prescribingDetail.medicine_unit.id} className="ou-hover:ou-bg-gray-50">
                                             <TableCell align="center">{index + 1}</TableCell>
                                             <TableCell align="center" className="ou-font-medium">
-                                                {medicine.medicine_name}
+                                                {prescribingDetail.medicine_unit.medicine.name}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {medicine.uses}
+                                                {prescribingDetail.uses}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {medicine.quantity}
+                                                {prescribingDetail.quantity}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {formatCurrency(medicine.unit_price || 0)}
+                                                {formatCurrency(prescribingDetail.medicine_unit.price || 0)}
                                             </TableCell>
                                             <TableCell align="center" className="ou-font-semibold">
-                                                {formatCurrency((medicine.unit_price || 0) * medicine.quantity)}
+                                                {formatCurrency((prescribingDetail.medicine_unit.price || 0) 
+                                                * prescribingDetail.quantity)}
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -237,8 +244,9 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                     </Typography>
                 </Box>
                 <Divider className="ou-mb-6" />
+
                 {/* Total Amount */}
-                {medicines.length > 0 && (
+                {medicineUnits.length > 0 && (
                     <Box className="ou-flex ou-justify-end ou-mt-6">
                         <Box className="ou-flex ou-flex-col ou-items-end ou-gap-2">
                             <Box className="ou-font-semibold ou-text-gray-500">
@@ -247,7 +255,8 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                         
                             <Box className="ou-bg-blue-50 ou-p-4 ou-rounded-lg ou-border-2 ou-border-blue-200">
                                 <Typography variant="h6" className="ou-font-bold ou-text-blue-800">
-                                    {t('prescription-detail:totalAmount')}: {formatCurrency(total_amount + SERVICE_FEE)}
+                                    {t('prescription-detail:totalAmount')}: 
+                                    {formatCurrency(totalAmount + SERVICE_FEE)}
                                 </Typography>
                             </Box>
                         </Box>
