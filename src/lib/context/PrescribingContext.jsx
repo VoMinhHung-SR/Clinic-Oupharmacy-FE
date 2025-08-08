@@ -1,7 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
-import SuccessfulAlert, { ConfirmAlert, ErrorAlert } from "../../config/sweetAlert2";
+import { ConfirmAlert, ErrorAlert } from "../../config/sweetAlert2";
 import { fetchAddPrescriptionDetail, fetchCreatePrescribing, fetchGetPrescriptionDetailById } from "../../modules/common/components/card/PrescriptionDetailCard/services";
 import createToastMessage from "../utils/createToastMessage";
 import { TOAST_ERROR, TOAST_SUCCESS } from "../constants";

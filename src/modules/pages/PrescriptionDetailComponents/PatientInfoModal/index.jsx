@@ -29,13 +29,13 @@ const PatientInfoModal = ({patientData}) => {
             content={<Box component={Paper} elevation={5}>
                  <Grid container justifyContent="flex" className="ou-p-5" component={Paper} elevation={4}> 
                  
-                    <Grid item xs={7} className="!ou-mb-5">
+                    <Grid item xs={6} className="ou-p-2" >
                         <Typography>
                             <span >{t('patientFullName')}: </span>
                             {patientData?.first_name} {patientData?.last_name}
                         </Typography>
                     </Grid>
-                    <Grid item xs={5} className="!ou-mb-3">
+                    <Grid item xs={3} className="ou-p-2">
                         <Typography>
                             <span >{t('dateOfBirth')}: </span>
                             {patientData?.date_of_birth ?
@@ -43,26 +43,28 @@ const PatientInfoModal = ({patientData}) => {
                                 : t('common:undefined')}
                         </Typography>
                     </Grid>
-                    <Grid item xs={4} className="!ou-mb-5">
-                        <Typography>
-                            <span >{t('phoneNumber')}: </span>
-                            {patientData?.phone_number}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={4} >
-                        <Typography>
-                            <span >{t('email')}: </span>
-                            {patientData?.email}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={4} >
+                    <Grid item xs={3} className="ou-p-2">
                         <Typography>
                             <span >{t('gender')}: </span>
                             {patientData.gender === 0 ? t('male') : 
                                 patientData.gender === 1 ? t('female') :  t('secret')}
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} >
+                   <Grid item xs={6} className="ou-p-2">
+                        <Typography>
+                            <span >{t('email')}: </span>
+                            {patientData?.email}
+                        </Typography>
+                    </Grid> 
+
+                    <Grid item xs={6} className="ou-p-2">
+                        <Typography>
+                            <span >{t('phoneNumber')}: </span>
+                            {patientData?.phone_number}
+                        </Typography>
+                    </Grid>
+                 
+                    <Grid item xs={12} className="ou-p-2">
                         <Typography>
                             <span >{t('address')}: </span>
                             {patientData?.address}

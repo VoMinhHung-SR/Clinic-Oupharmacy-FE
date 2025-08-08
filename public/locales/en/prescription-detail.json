@@ -30,6 +30,8 @@
 
     "unDiagnosed": "This patient do not have any diagnosis sheets",
     "firstRecord": "The first record at",
+    "nextRecord": "The {{index}}th record at",
+    "lastRecord": "The newest record at",
     "diagnosedSheet": "The diagnosis sheet",
     "at": "at",
 

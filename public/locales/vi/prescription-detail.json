@@ -29,6 +29,8 @@
 
     "unDiagnosed": "Bệnh nhân này chưa tồn tại bất kỳ phiếu chẩn đoán",
     "firstRecord": "Phiếu chẩn đoán đầu tiên vào ngày",
+    "nextRecord": "Phiếu chẩn đoán thứ {{index}} vào ngày",
+    "lastRecord": "Phiếu chẩn đoán mới nhất vào ngày",
     "diagnosedSheet": "Phiếu chẩn đoán thứ",
     "at": "vào ngày",
     "patientInfo": "Thông tin bệnh nhân",

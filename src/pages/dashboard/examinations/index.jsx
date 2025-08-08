@@ -1,7 +1,4 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Badge,
   Box,
   Button,
@@ -67,8 +64,10 @@ const Examinations = () => {
       <Helmet>
           <title>{t('common:examinations')}</title>
       </Helmet>
-      <Box className="ou-flex ou-justify-center ou-flex-col" sx={{ width: '100%', overflowX: 'auto' }}>
-          <TableContainer component={Paper} elevation={4} sx={{ 
+      <Box className="ou-flex ou-justify-center ou-flex-col"
+      component={Paper} elevation={4}
+      sx={{ width: '100%', overflowX: 'auto' }}>
+          <TableContainer component={Paper} sx={{ 
             maxWidth: '100%',
             overflowX: 'auto',
             '& .MuiTableCell-root': {
