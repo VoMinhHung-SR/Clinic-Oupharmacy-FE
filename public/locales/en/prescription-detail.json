@@ -30,14 +30,31 @@
 
     "unDiagnosed": "This patient do not have any diagnosis sheets",
     "firstRecord": "The first record at",
+    "nextRecord": "The {{index}}th record at",
+    "lastRecord": "The newest record at",
     "diagnosedSheet": "The diagnosis sheet",
     "at": "at",
 
+    "prescriptionCreated": "Prescription created",
+    "prescriptionCreatedDescription": "Do you want to go to the Homepage? or Continue to add prescription?",
+    
     "patientInfo": "Patient information",
     "gender": "Gender",
     "address": "Address",
     "email": "Email",
     "male": "Male",
     "female": "Female",
-    "secret": "Secret"
+    "secret": "Secret",
+
+    "note": "Note",
+    "totalAmount": "Total amount",
+    "price": "Price",
+    "amount": "Amount",
+    "serviceFee": "Service fee",
+
+    "prescriptionDetailExist": "Prescription detail already exists",
+    "prescriptionDetailExistDescription": "Continue to create new prescription?",
+    
+    "existingPrescriptions": "Existing prescriptions",
+    "newPrescriptionCreated": "New prescription created successfully"
 }

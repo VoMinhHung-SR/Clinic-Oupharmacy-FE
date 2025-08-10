@@ -1,61 +1,59 @@
-import { Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
+import { Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { fetchReceipt } from "../../../../../../pages/PaymentComponents/services"
-import Loading from "../../../../Loading"
 import { fetchPrescriptionDetailBillCard } from "../../../BillCard/services"
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import SkeletonListLineItem from "../../../../skeletons/listLineItem"
+import SkePrescriptionDetailCard from "../../../../skeletons/card/SkePrescriptionDetailCard"
 
 
 const PrescribingCard = ({prescribing}) => {
     const {t, tReady} = useTranslation(['payment'])
     const [isLoading, setIsLoading] = useState(true)
-    const [receiptStatus, setReceiptStatus] = useState(false)
-    const [p , setP]  = useState([])
+    const [prescriptionDetail , setPrescriptionDetail]  = useState([])
+    const prescribingID = prescribing
     useEffect(()=> {
 
-        if(!prescribing) return;
-      
+        if(!prescribingID) return;
         const loadData = async () => {
             setIsLoading(true)
-
-            // Load Prescribing Data
             try{
-                const {data} = await fetchPrescriptionDetailBillCard(prescribing)
-                setP(data);
+                const {data} = await fetchPrescriptionDetailBillCard(prescribingID)
+                setPrescriptionDetail(data)
             }catch(err){
                 console.log(err)
-            }
-
-            // Load Receipt Data
-            try{
-                const {status} = await fetchReceipt(prescribing)
-                setReceiptStatus(status === 200) // will be true if status === 200 else is false
-            }catch(err){
-                setReceiptStatus(false);
             }
             setIsLoading(false);
         }
 
         loadData()
         
-    }, [prescribing])
+    }, [prescribingID])
 
-    if(isLoading || !prescribing || tReady) 
-        return <Box className="ou-mt-3"><Loading/></Box>
-
+    if(isLoading || !prescribingID || tReady) 
+        return <SkePrescriptionDetailCard key={`mini-load-prescribing-${prescribingID}`}/>
     return(
         <Box>
 
-        <Box component={Paper} elevation={4}>
-            <h1 className="ou-text-center ou-mt-5 ou-mb-4 ou-pt-4 ou-text-xl">{t('prescriptionDetail')}</h1>
-            <Box className="ou-p-3">
+        <Box component={Paper} elevation={4} className="ou-relative ou-mt-5"  >
+            {/* Header Area */}
+            <Box className="ou-text-center ou-p-5 ou-text-lg ">
+                <h3 className="">{t('prescriptionDetail', {id: prescriptionDetail[0]?.prescribing?.id})}</h3>
+                <Box className="ou-absolute ou-top-0 ou-right-0 ou-p-3 ou-text-sm ">
+                    <Chip
+                        label={prescriptionDetail[0]?.prescribing?.bill_status ? t('paid') : t('unpaid')}
+                        color={prescriptionDetail[0]?.prescribing?.bill_status ? "success" : "error"}
+                        variant="filled" 
+                        size="medium"
+                    />
+                </Box>
+            </Box>    
+            {/* Table Area */}
+            <Box >
                 <TableContainer >
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell colSpan={1} align="center">{t('prescriptionDetailId')}</TableCell>
                                 <TableCell colSpan={3} align="center">{t('medicineName')}</TableCell>
                                 <TableCell colSpan={1} align="center">{t('uses')}</TableCell>
                                 <TableCell colSpan={1} align="center">{t('quantity')}</TableCell>
@@ -64,20 +62,14 @@ const PrescribingCard = ({prescribing}) => {
                             </TableRow>
                         </TableHead>    
                         <TableBody>
-                            {p.map((p) => (
+                            {prescriptionDetail && prescriptionDetail.map((p, index) => (
                                 <TableRow
                                     key={p.medicine_unit.id}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
-                                    <TableCell component="th" scope="row" align="center" >
-                                        <Typography>
-                                            {p?.prescribing?.id}
-                                        </Typography>
-                                    </TableCell >
-
                                     <TableCell colSpan={3} align="left" className="ou-truncate" >
                                         <Typography>
-                                            {p.medicine_unit.medicine.name}
+                                            {index + 1}. {p.medicine_unit.medicine.name}
                                         </Typography>
                                     </TableCell>
                                     <TableCell align="center">
@@ -103,22 +95,9 @@ const PrescribingCard = ({prescribing}) => {
                                 </TableRow>
                             ))}
                         </TableBody>
-
                     </Table>
-
                 </TableContainer>
             </Box>
-        </Box>
-
-        <Box className="ou-mt-6 ou-text-xl ou-text-right">
-            {t('paymentStatus')}: {receiptStatus === true ? 
-            <span className="ou-text-xl ou-mt-4 ou-text-green-700 ou-font-bold">
-                {t('done')} <CheckCircleOutlineIcon />
-            </span>
-            : <span className="ou-text-xl ou-mt-4 ou-text-red-700 ou-font-bold">
-              {t('unDone')}
-            </span>
-            }
         </Box>
     </Box>
     )

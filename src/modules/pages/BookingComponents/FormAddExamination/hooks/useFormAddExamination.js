@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
-import SuccessfulAlert, { ConfirmAlert, ErrorAlert } from '../../../../../config/sweetAlert2';
-import { REGEX_ADDRESS, REGEX_EMAIL, REGEX_NAME, REGEX_NOTE, REGEX_PHONE_NUMBER, TOAST_ERROR, TOAST_SUCCESS } from '../../../../../lib/constants';
+import { ErrorAlert } from '../../../../../config/sweetAlert2';
+import { REGEX_NOTE, TOAST_ERROR, TOAST_SUCCESS } from '../../../../../lib/constants';
 import { fetchExamDateData, fetchUpdateExamination } from '../services';
 import useDebounce from '../../../../../lib/hooks/useDebounce';
 import { fetchCreateTimeSlot, fetchDeleteTimeSlot, fetchGetDoctorAvailability } from '../../services';

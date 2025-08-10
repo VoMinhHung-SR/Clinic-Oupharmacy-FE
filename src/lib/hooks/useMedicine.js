@@ -31,6 +31,8 @@ const useMedicine = () => {
     const [pagination, setPagination] = useState({ count: 0, sizeNumber: 0 });
     const [page, setPage] = useState(1);
 
+    const handleChangeFlag = () => setFlag(!flag)    
+
     const handleChangePage = (event, value) => {
         if(page === value)
             return
@@ -201,7 +203,8 @@ const useMedicine = () => {
         selectedImage, deleteMedicine,
         medicineLoading, backdropLoading,
         setSelectedImage, setImageUrl,
-        handleChangePage, addMedicine
+        handleChangePage, addMedicine,
+        handleChangeFlag
     }
 }
 

@@ -1,10 +1,9 @@
 import { createContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
-import SuccessfulAlert, { ConfirmAlert, ErrorAlert } from "../../config/sweetAlert2";
-import { fetchAddPrescriptionDetail, fetchCreatePrescribing } from "../../modules/common/components/card/PrescriptionDetailCard/services";
+import { ConfirmAlert, ErrorAlert } from "../../config/sweetAlert2";
+import { fetchAddPrescriptionDetail, fetchCreatePrescribing, fetchGetPrescriptionDetailById } from "../../modules/common/components/card/PrescriptionDetailCard/services";
 import createToastMessage from "../utils/createToastMessage";
-import { TOAST_SUCCESS } from "../constants";
+import { TOAST_ERROR, TOAST_SUCCESS } from "../constants";
 
 const PrescribingContext = createContext();
 
@@ -17,9 +16,9 @@ export const PrescribingProvider = ({children}) => {
     const [flag, setFlag] = useState(false);
     const [isLoadingButton, setIsLoadingButton] = useState(false)
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-    const navigate = useNavigate();
+    const [newestPrescriptionDetail, setNewestPrescriptionDetail] = useState([]);
+    const [isBackdropLoading, setIsBackdropLoading] = useState(false);
 
-    
     const addMedicineItem = (medicineUnitId, medicineName, uses, quantity, inStock) => { 
         const newItem = {
             id: medicineUnitId,
@@ -34,6 +33,7 @@ export const PrescribingProvider = ({children}) => {
         });
         setHasUnsavedChanges(true);
     };
+    
     // Clear with alert
     const resetMedicineStore = () => {
         return ConfirmAlert(t('prescription-detail:deletedPrescription'), t('modal:noThrowBack'), t('modal:ok'),t('modal:cancel'), 
@@ -110,14 +110,16 @@ export const PrescribingProvider = ({children}) => {
         // Add any necessary side effects here
     }, [medicinesSubmit, flag]);
 
-    const handleAddPrescriptionDetail = async (userID, prescribingID) => {
+    const handleAddPrescriptionDetail = async (userID, diagnosisID) => {
         const handleOnSubmit = async () => {
             try {
+
                 if (medicinesSubmit.length === 0) {
-                    return ErrorAlert(t('modal:createFailed'), t('modal:pleaseDoubleCheck'), t('modal:ok'));
+                    return createToastMessage({type:TOAST_ERROR,
+                        message: t('modal:createFailed')});
                 }
     
-                const prescribingData = { user: userID, diagnosis: parseInt(prescribingID) };
+                const prescribingData = { user: userID, diagnosis: parseInt(diagnosisID) };
                 const res = await fetchCreatePrescribing(prescribingData);
                 if (res.status === 201) {
                     await Promise.all(
@@ -131,23 +133,29 @@ export const PrescribingProvider = ({children}) => {
                             await fetchAddPrescriptionDetail(formData);
                         })
                     );
-                    setMedicinesSubmit([]);
-                    SuccessfulAlert(t('modal:createSuccess'), t('modal:ok'), () => navigate('/dashboard/prescribing'));
+                    const newPrescriptionDetail = await fetchGetPrescriptionDetailById(res.data.id);
+                    if(newPrescriptionDetail.status === 200){
+                        setNewestPrescriptionDetail(newPrescriptionDetail.data);
+                    }
+                    createToastMessage({type:TOAST_SUCCESS,message: t('prescription-detail:prescriptionCreated')});
                 } else {
-                    ErrorAlert(t('modal:errSomethingWentWrong'), t('modal:pleaseTryAgain'), t('modal:ok'));
+                    createToastMessage({type:TOAST_ERROR,message: t('modal:createFailed')});
                 }
             } catch (err) {
-                console.error(err);
-                ErrorAlert(t('modal:createFailed'), t('modal:pleaseDoubleCheck'), t('modal:ok'));
+                createToastMessage({type:TOAST_ERROR,message: t('modal:createFailed')});
             } finally {
+                setHasUnsavedChanges(false);
+                setMedicinesSubmit([]);
                 setIsLoadingButton(false)
+                setIsBackdropLoading(false);
             }
 
         }
-        return ConfirmAlert(t('prescription-detail:confirmAddPrescription'),t('modal:noThrowBack'),t('modal:yes'),t('modal:cancel'),
-        // this is callback function when user confirmed "Yes"
+        return ConfirmAlert(t('prescription-detail:confirmAddPrescription'),
+        t('modal:noThrowBack'),t('modal:yes'),t('modal:cancel'),
         ()=>{
             setIsLoadingButton(true)
+            setIsBackdropLoading(true);
             handleOnSubmit()
         }, () => { return; })
     };
@@ -160,8 +168,10 @@ export const PrescribingProvider = ({children}) => {
                 addMedicineItem: handleAddMedicineSubmit, resetMedicineStore,
                 handleUpdateMedicinesSubmit: handleUpdateMedicinesSubmit,
                 handleAddPrescriptionDetail: handleAddPrescriptionDetail,
-                clearForm: clearForm,
-                hasUnsavedChanges: hasUnsavedChanges
+                clearForm: clearForm, 
+                newestPrescriptionDetail: newestPrescriptionDetail,
+                hasUnsavedChanges: hasUnsavedChanges,
+                isBackdropLoading: isBackdropLoading
             }}
         >
             {children}

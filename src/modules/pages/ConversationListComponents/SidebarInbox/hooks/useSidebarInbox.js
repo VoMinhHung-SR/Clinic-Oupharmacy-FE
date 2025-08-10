@@ -2,7 +2,7 @@ import { addDoc, collection, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { db } from "../../../../../config/firebase";
-import SuccessfulAlert, { ErrorAlert } from "../../../../../config/sweetAlert2";
+import SuccessfulAlert from "../../../../../config/sweetAlert2";
 import { fetchRecipients } from "../services";
 import { useCollection } from "react-firebase-hooks/firestore"
 import createToastMessage from "../../../../../lib/utils/createToastMessage";
@@ -11,7 +11,6 @@ import useDebounce from "../../../../../lib/hooks/useDebounce";
 import { useTranslation } from "react-i18next";
 const useSidebarInbox = (user) => {
     const [isLoadingRecipients, setIsLoadingRecipients] = useState(true)
-    const [recipientList, setRecipientList] = useState([])
 
     const {t} = useTranslation(['conversation', 'modal'])
 
@@ -76,7 +75,7 @@ const useSidebarInbox = (user) => {
             await addDoc(collection(db, `${APP_ENV}_conversations`), {
                 members: [user.id, userId]
             })
-            SuccessfulAlert(t('conversation:addNewConversationSuccess'), t('modal:ok'))
+            SuccessfulAlert({title: t('conversation:addNewConversationSuccess'), confirmButtonText: t('modal:ok')})
         } else {
             return createToastMessage({type: TOAST_ERROR, message: t('conversation:addFailed')})
         }

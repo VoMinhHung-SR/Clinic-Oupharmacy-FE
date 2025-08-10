@@ -1,4 +1,3 @@
-
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Box, Button, TextField, Tooltip, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
@@ -6,8 +5,7 @@ import { useTranslation } from "react-i18next"
 import AddIcon from '@mui/icons-material/Add';
 import React from "react";
 
-// Memoize the component to prevent unnecessary re-renders (param: medicine)
-const PrescribingMedicine = ({medicine, onAddToPrescription, schema, availableStock}) => {
+const MedicineLineItem = ({medicine, onAddToPrescription, schema, availableStock}) => {
     const {t, ready} = useTranslation(['prescription-detail', 'yup-validate', 'modal'])
    
     const { register, handleSubmit, formState: { errors }, reset, setError } = useForm({
@@ -90,4 +88,4 @@ const PrescribingMedicine = ({medicine, onAddToPrescription, schema, availableSt
         </form>
     )
 }
-export default React.memo(PrescribingMedicine)
+export default React.memo(MedicineLineItem)

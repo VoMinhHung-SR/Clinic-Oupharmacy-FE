@@ -29,14 +29,31 @@
 
     "unDiagnosed": "Bệnh nhân này chưa tồn tại bất kỳ phiếu chẩn đoán",
     "firstRecord": "Phiếu chẩn đoán đầu tiên vào ngày",
+    "nextRecord": "Phiếu chẩn đoán thứ {{index}} vào ngày",
+    "lastRecord": "Phiếu chẩn đoán mới nhất vào ngày",
     "diagnosedSheet": "Phiếu chẩn đoán thứ",
     "at": "vào ngày",
     "patientInfo": "Thông tin bệnh nhân",
+
+    "prescriptionCreated": "Đã tạo phiếu kê toa",
+    "prescriptionCreatedDescription": "Bạn có muốn quay về trang chủ? hoặc tiếp tục thêm thuốc?",
 
     "email": "Email",
     "gender": "Giới tính",
     "address": "Địa chỉ",
     "male": "Nam",
     "female": "Nữ",
-    "secret": "Bí mật"
+    "secret": "Bí mật",
+
+    "note": "Ghi chú",
+    "totalAmount": "Tổng cộng",
+    "price": "Đơn giá",
+    "amount": "Thành tiền",
+    "serviceFee": "Phí dịch vụ",
+
+    "prescriptionDetailExist": "Phiếu kê toa đã tồn tại",
+    "prescriptionDetailExistDescription": "Tiếp tục tạo phiếu kê toa mới?",
+    
+    "existingPrescriptions": "Các phiếu kê toa đã có",
+    "newPrescriptionCreated": "Phiếu kê toa mới đã được tạo thành công"
 }

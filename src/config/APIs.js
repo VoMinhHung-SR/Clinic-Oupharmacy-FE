@@ -72,7 +72,7 @@ export let endpoints = {
     // Diagnosis
     'diagnosis':'/diagnosis/',
     'get-medical-records':'/diagnosis/get-medical-records/',
-    'prescription':(diagnosisId) => `/diagnosis/${diagnosisId}/`,
+    'prescription-by-diagnosis':(diagnosisId) => `/diagnosis/${diagnosisId}/`,
     
     // Prescribing:
     'prescribing': '/prescribing/',
