@@ -2,12 +2,11 @@ import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import { REGEX_EMAIL, REGEX_NAME, REGEX_PHONE_NUMBER, TOAST_ERROR, TOAST_SUCCESS } from '../../../../lib/constants';
 import createToastMessage from '../../../../lib/utils/createToastMessage';
-import { useContext, useEffect, useState } from 'react';
-import SuccessfulAlert, { ConfirmAlert } from '../../../../config/sweetAlert2';
+import { useContext, useState } from 'react';
+import { ConfirmAlert } from '../../../../config/sweetAlert2';
 import { useNavigate } from 'react-router';
 import { updateProfile } from '../services';
 import Cookies from 'js-cookie';
-import { userContext } from '../../../../App';
 import UserContext from '../../../../lib/context/UserContext';
 
 const useUpdateProfile = () =>{

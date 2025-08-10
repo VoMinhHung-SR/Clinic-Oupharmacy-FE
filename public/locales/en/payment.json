@@ -21,6 +21,8 @@
     "serviceFee": "Service fee",
     "amount": "Amount",
     "pay": "Pay",
+    "paid": "Paid",
+    "unpaid": "Unpaid",
     "momoPayment": "Momo payment",
     "zalopayPayment": "ZaloPay payment",
 

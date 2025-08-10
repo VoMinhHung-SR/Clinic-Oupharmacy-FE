@@ -21,6 +21,8 @@
     "serviceFee": "Phí dịch vụ",
     "amount": "Tổng tiền",
     "pay": "Thanh toán",
+    "paid": "Đã thanh toán",
+    "unpaid": "Chưa thanh toán",
     "momoPayment": "Thanh toán MoMo",
     "zalopayPayment": "Thanh toán ZaloPay",
     

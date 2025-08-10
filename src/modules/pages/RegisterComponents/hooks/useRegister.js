@@ -81,7 +81,8 @@ const useRegister = () => {
             const userRes = await fetchCreateUser(formData);
             if (userRes.status === 201) {
                 setOpenBackdrop(false);
-                SuccessfulAlert(t('modal:createSuccess'), t('modal:ok'), () => router('/login'));
+                SuccessfulAlert({title: t('modal:createSuccess'), confirmButtonText: t('modal:ok'),
+                    callbackSuccess: () => router('/login')});
             }
         } catch (err) {
             setOpenBackdrop(false);

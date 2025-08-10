@@ -19,12 +19,12 @@ const DiagnosisCard = ({id, sign, diagnosed, isLoading}) => {
     return <>
          <Box className="ou-mt-5" component={Paper} elevation={4}>
                 <form className="ou-pt-4" >
-                    <h1 className="ou-text-center ou-text-lg ">
+                    <h3 className="ou-text-center ou-text-lg ou-mb-4">
                         {t('prescriptionInformation')}
-                        </h1>
-                    <Grid container justifyContent="flex" style={{ "margin": "0 auto" }} spacing={3}>
-                        <Grid item xs={11} >
-                            <InputLabel htmlFor="diagnosed" className="ou-text-xs">{t('sign')}</InputLabel>
+                    </h3>
+                    <Grid container justifyContent="flex">
+                        <Grid item xs={12} className="ou-p-4">
+                            <InputLabel htmlFor="diagnosed" className="ou-text-xs ou-mb-2">{t('sign')}</InputLabel>
                             <TextField
                                 fullWidth
                                 autoComplete="given-name"
@@ -38,8 +38,8 @@ const DiagnosisCard = ({id, sign, diagnosed, isLoading}) => {
                             />
                         </Grid>
 
-                        <Grid item xs={11}>
-                            <InputLabel htmlFor="diagnosed" className="ou-text-xs">{t('diagnosed')}</InputLabel>
+                        <Grid item xs={12} className="ou-p-4">
+                            <InputLabel htmlFor="diagnosed" className="ou-text-xs ou-mb-2">{t('diagnosed')}</InputLabel>
                             <TextField
                                 fullWidth
                                 autoComplete="given-name"

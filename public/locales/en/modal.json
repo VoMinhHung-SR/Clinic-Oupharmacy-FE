@@ -2,6 +2,8 @@
     "ok":"OK",
     "yes": "Yes",
     "cancel": "Cancel",
+    "continue": "Continue",
+    "back": "Back",
 
     "createSuccess": "Create success",
     "createFailed": "Create failed",

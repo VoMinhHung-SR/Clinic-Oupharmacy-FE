@@ -33,7 +33,7 @@ const useDiagnosisForm = () => {
                 const res = await fetchCreateDiagnosis(prescriptionData)
                 if (res.status === 201){
                     callback()
-                    SuccessfulAlert(t('modal:createSuccess'), t("modal:ok"))
+                    SuccessfulAlert({title: t('modal:createSuccess'), confirmButtonText: t("modal:ok")})
                 }
             }catch(err){
                 ErrorAlert(t('modal:createFailed'), t('modal:pleaseDoubleCheck'), t("modal:ok"))
