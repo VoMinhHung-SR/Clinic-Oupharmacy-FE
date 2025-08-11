@@ -8,6 +8,7 @@ import MedicalRecordsModal from "../../../../../modules/pages/PrescriptionDetail
 import { useNavigate } from "react-router-dom"
 import SkeletonBasicInformationCard from "../../../../../modules/common/components/skeletons/card/BasicInformationCard"
 import SkeletonBillCard from "../../../../../modules/common/components/skeletons/card/BillCard"
+import PrescriptionDetailCard from "../../../../../modules/common/components/card/PrescriptionDetailCard"
 
 const Payments = () => {
     const {
@@ -90,14 +91,22 @@ const Payments = () => {
                 <Box key={`diagnosis-section-${diagnosis.id}`} className="ou-mb-4">
                     {prescribingData.map((prescribing, index) => (
                         <Box key={prescribing.id} className={`${prescribingData.length === index + 1 ? 'ou-mb-0' : 'ou-mb-4'}`}>    
-                            <BillCard 
+                            {/* <PrescriptionDetailCard
+                                id={prescribing.id}
+                                created_date={prescribing.created_date}
+                                medicineUnits={prescribing.medicine_units}
+                                examination={prescribing.examination}
+                                patient={prescribing.patient}
+                                user={prescribing.user}
+                            /> */}
+                            {/* <BillCard 
                                 slotID={examinationDetail.schedule_appointment.id}
                                 date={examinationDetail.schedule_appointment.day}
                                 id={prescribing.id} 
                                 wage={examinationDetail.wage}
                                 diagnosisId={diagnosis.id} 
                                 bill_status={prescribing.bill_status} 
-                            />
+                            /> */}
                         </Box>
                     ))}
                 </Box>
@@ -110,7 +119,7 @@ const Payments = () => {
             <Helmet><title>{t('common:payments')}</title></Helmet>
             <Box className='ou-container ou-mx-auto ou-m-auto ou-max-w-[1536px] ou-min-h-[550px]'>
                 {/* --- Basic Information Section --- */} 
-                <Box className='ou-mb-8'> 
+                {/* <Box className='ou-mb-8'> 
                     <Grid container justifyContent="center" className="ou-min-h-[160px] ou-p-5" component={Paper} elevation={5}> 
                         <Grid item xs={12} className="ou-pb-5" >
                             <h1 className="ou-text-center ou-text-2xl">{t('common:basicInformation')}</h1>
@@ -122,7 +131,7 @@ const Payments = () => {
                             <MedicalRecordsModal patientID={examinationDetail.patient.id}/>
                         </Grid>
                     </Grid>
-                </Box>
+                </Box> */}
                 
                 {/* --- Diagnosis & Prescriptions Section --- */} 
                 {renderDiagnosisSection()}
