@@ -1,12 +1,11 @@
 import { useTranslation } from "react-i18next";
 import useCustomModal from "../../../../lib/hooks/useCustomModal";
 import CustomModal from "../../../common/components/Modal";
-import { Box, Button, Paper, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import useMedicalRecordsModal from "../hooks/useMedicalRecordsModal";
 import Loading from "../../../common/components/Loading";
 import CustomCollapseListItemButton from "../../../common/components/collapse/ListItemButton";
 import moment from "moment";
-import DiagnosisForm from "../../DiagnosisComponents/DiagnosisForm";
 import MiniDiagnosisCard from "../../../common/components/card/ExaminationDetailCard/MiniDiagnosisCard";
 import MiniPrescribingCard from "../../../common/components/card/ExaminationDetailCard/MiniPrescribingCard";
 
@@ -34,7 +33,6 @@ const MedicalRecordsModal = ({patientID}) => {
                                     <MiniPrescribingCard prescribing={m.prescribing_info} isLoading={isLoading}/>
                                 </Box>
                             </Box>
-                            /* <DiagnosisForm id={medicalRecords[0].id} sign={medicalRecords[0].sign} diagnosed={medicalRecords[0].diagnosed} seen/> */
                         }
                     />
                 </Box>

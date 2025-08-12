@@ -146,17 +146,16 @@ function App() {
                               <Route path='/dashboard/doctor-schedules' element={<DoctorSchedules/>}/>  
                               <Route path='/dashboard/medicines' element={<MedicineList/>}/> 
                               <Route path='/dashboard/waiting-room' element={<DashboardWaitingRoom/>}/>
+                              <Route path='/dashboard/prescribing' element={<PrescriptionList/>} />
                             </Route>
 
                             <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_DOCTOR]} />}>
                               <Route path='/dashboard/examinations/:examinationId/diagnosis' element={<Diagnosis />} />
-                              <Route path='/dashboard/prescribing' element={<PrescriptionList/>} />
                               <Route path='/dashboard/prescribing/:prescribingId' element={<PrescriptionDetail/>} />
                             </Route>
 
                             <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_NURSE]}/>}>
-                              <Route path='/dashboard/payments' element={<PrescriptionList/>} />
-                              <Route path='/dashboard/payments/prescribing/:prescribingId' element={<Payments />} />
+                              <Route path='/dashboard/prescribing/:prescribingId/payments' element={<Payments />} />
                             </Route>
 
                             <Route path='/dashboard/profile' element={<DashboardProfile />} >

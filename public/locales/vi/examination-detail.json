@@ -14,5 +14,8 @@
     "prescribing": "Phiếu kê toa",
     "bill": "Phiếu thanh toán",
     "diagnosisExist":"Danh sách mã phiếu chẩn đoán của phiếu khám này là",
-    "doctor": "Bác sĩ"
+    "doctor": "Bác sĩ",
+
+    "errNullDiagnosis": "Phiếu khám chưa được chẩn đoán",
+    "errNullPrescribing": "Phiếu khám chưa được kê toa"
 }
