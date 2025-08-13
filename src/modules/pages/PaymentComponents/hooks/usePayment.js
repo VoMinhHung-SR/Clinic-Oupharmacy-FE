@@ -3,99 +3,71 @@ import { useParams } from "react-router"
 import { fetchDiagnosisByExaminationID, fetchPrescribingByDiagnosis } from "../services"
 import UserContext from "../../../../lib/context/UserContext"
 import { fetchExaminationDetail } from "../../ExaminationDetailComponents/services"
+import { fetchPrescriptionDetailBillCard } from "../../../common/components/card/BillCard/services"
+import { fetchPrescriptionDetail } from "../../PrescriptionDetailComponents/services"
 
 const usePayment = () => {
     const {user} = useContext(UserContext)
-    const {examinationId} = useParams()
-    const [examinationDetail, setExaminationDetail] = useState(null)
+    const {prescribingId} = useParams()
     const [diagnosisInfo, setDiagnosisInfo] = useState([])
-    const [prescribingList, setPrescribingList] = useState({})
-    const [loadingStates, setLoadingStates] = useState({
-        examination: true,
-        prescriptions: {}
-    })
+    const [prescriptionDetail, setPrescriptionDetail] = useState({})
+    const [loadingStates, setLoadingStates] = useState(true)
 
     useEffect(() => {
-        const loadDiagnosis = async () => {
-            try {
-                const res = await fetchExaminationDetail(examinationId)
-                if (res.status === 200) {
-                    if (res.data === null) {
-                        setExaminationDetail(null)
-                    } else {
-                        setExaminationDetail(res.data)
-                        if (res.data.diagnosis_info && Array.isArray(res.data.diagnosis_info)) {
-                            setDiagnosisInfo(res.data.diagnosis_info)
-                            const initialLoadingStates = {}
-                            res.data.diagnosis_info.forEach(diagnosis => {
-                                initialLoadingStates[diagnosis.id] = true
-                                loadPrescribing(diagnosis.id)
-                            })
-                            setLoadingStates(prev => ({
-                                ...prev,
-                                examination: false,
-                                prescriptions: initialLoadingStates
-                            }))
-                        }
-                    }
+
+        const loadDiagnosisInfo = async () => {
+            const res = await fetchPrescriptionDetail(prescribingId)
+            if (res.status === 200) {
+                setDiagnosisInfo(res.data)
+                
+                if(res.data.prescribing_info.length > 0){
+                    res.data.prescribing_info.forEach(prescribing => {
+                        loadPrescriptionDetail(prescribing.id)
+                    })
                 }
-            } catch (err) {
-                setExaminationDetail(null)
-                console.error('Error loading examination:', err)
-                setLoadingStates(prev => ({
-                    ...prev,
-                    examination: false
-                }))
             }
         }
-
-        const loadPrescribing = async (diagnosisId) => {
+        
+        const loadPrescriptionDetail = async (prescribingId) => {
             try {
-                const res = await fetchPrescribingByDiagnosis(diagnosisId)
+                const res = await fetchPrescriptionDetailBillCard(prescribingId)
                 if (res.status === 200) {
-                    setPrescribingList(prev => ({
+                    setPrescriptionDetail(prev => ({
                         ...prev,
-                        [diagnosisId]: res.data
+                        [prescribingId]: res.data
                     }))
                 }
             } catch (err) {
                 console.error(`Error loading prescribing for diagnosis ${diagnosisId}:`, err)
-                setPrescribingList(prev => ({
+                setPrescriptionDetail(prev => ({
                     ...prev,
-                    [diagnosisId]: []
+                    [prescribingId]: []
                 }))
             } finally {
-                setLoadingStates(prev => ({
-                    ...prev,
-                    prescriptions: {
-                        ...prev.prescriptions,
-                        [diagnosisId]: false
-                    }
-                }))
+                setLoadingStates(false)
             }
         }
 
-        if (user && examinationId) {
-            loadDiagnosis()
+        if (user && prescribingId) {
+            loadDiagnosisInfo()
         }
-    }, [user, examinationId])
+    }, [user, prescribingId])
 
-    const getPrescribingByDiagnosisId = (diagnosisId) => {
-        return prescribingList[diagnosisId] || []
-    }
+    // const getPrescribingByDiagnosisId = (prescribingId) => {
+    //     return setPrescriptionDetail[prescribingId] || []
+    // }
 
-    const isPrescribingLoading = (diagnosisId) => {
-        return loadingStates.prescriptions[diagnosisId] === true
-    }
+    // const isPrescribingLoading = (prescribingId) => {
+    //     return loadingStates === true
+    // }
 
     return {
-        prescribingList,
-        getPrescribingByDiagnosisId,
-        isLoadingExamination: loadingStates.examination,
-        isPrescribingLoading,
-        user,
-        examinationDetail,
-        examinationId,
+        prescriptionDetail,
+        // getPrescribingByDiagnosisId,
+        isLoadingPrescriptionDetail: loadingStates,
+        // isPrescribingLoading,
+        // user,
+        // prescribingId,
         diagnosisInfo,
     }
 }

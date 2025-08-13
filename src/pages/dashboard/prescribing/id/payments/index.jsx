@@ -12,16 +12,15 @@ import PrescriptionDetailCard from "../../../../../modules/common/components/car
 
 const Payments = () => {
     const {
-        isLoadingExamination, 
-        examinationDetail,
-        diagnosisInfo,
+        isLoadingPrescriptionDetail, 
+        prescriptionDetail,
         getPrescribingByDiagnosisId,
-        isPrescribingLoading
+        diagnosisInfo
+        // isPrescribingLoading,
     } = usePayment()
-    
     const {t, ready} = useTranslation(['payment','common', 'modal'])
     const router = useNavigate()    
-
+    
     // --- Skeleton Render Functions --- 
     const renderInitialPageSkeleton = () => (
         <Box>
@@ -36,6 +35,9 @@ const Payments = () => {
             </Box>
         </Box>
     );
+    
+    console.log(diagnosisInfo, "===diagnosisInfo")
+    console.log(prescriptionDetail, "===prescriptionDetail")
 
     const renderPrescriptionSkeleton = (key) => (
         <Box component={Paper} key={key} elevation={6} className="ou-p-5 ou-mb-4">
@@ -58,81 +60,66 @@ const Payments = () => {
     );
 
     // --- Main Render Logic --- 
-    if (!ready || isLoadingExamination) {
+    if (!ready || !diagnosisInfo) {
         return renderInitialPageSkeleton();
     }
 
-    if (!examinationDetail) {
+    if (!diagnosisInfo) {
         return renderErrorBox("examination-error", 'payment:errLoadExaminationDetailFailed', 'common:backToHomepage');
     }
 
     const renderDiagnosisSection = () => {
-        if (!diagnosisInfo || diagnosisInfo.length === 0) {
-             return renderErrorBox("no-diagnosis-error", 'payment:errNullPrescription', 'common:backToHomepage');
-        }
+            // if (!prescriptionDetail || prescriptionDetail.length === 0) {
+            //     return renderErrorBox("no-diagnosis-error", 'payment:errNullPrescription', 'common:backToHomepage');
+            // }
 
-        return diagnosisInfo.map(diagnosis => {
-            const isLoadingPrescriptions = isPrescribingLoading(diagnosis.id);
-            const prescribingData = getPrescribingByDiagnosisId(diagnosis.id);
+        // return prescriptionDetail.map(prescribing => {
+            // const isLoadingPrescriptions = isPrescribingLoading(prescribing.id);
+            // const prescribingData = getPrescribingByDiagnosisId(prescribing.id);
 
-            if (isLoadingPrescriptions) {
-                return renderPrescriptionSkeleton(`skeleton-${diagnosis.id}`);
-            }
+            // if (isLoadingPrescriptions) {
+            //     return renderPrescriptionSkeleton(`skeleton-${prescribing.id}`);
+            // }
 
-            if (!prescribingData || prescribingData.length === 0) {
-                return renderErrorBox(
-                    `error-${diagnosis.id}`, 
-                    'payment:errNullPrescriptionDetail', 
-                    'common:backToHomepage', 
-                    { diagnosisID: diagnosis.id }
-                );
-            }
+            // if (!prescribingData || prescribingData.length === 0) {
+            //     return renderErrorBox(
+            //         `error-${prescribing.id}`, 
+            //         'payment:errNullPrescriptionDetail', 
+            //         'common:backToHomepage', 
+            //         { prescribingID: prescribing.id }
+            //     );
+            // }
             return (
-                <Box key={`diagnosis-section-${diagnosis.id}`} className="ou-mb-4">
-                    {prescribingData.map((prescribing, index) => (
-                        <Box key={prescribing.id} className={`${prescribingData.length === index + 1 ? 'ou-mb-0' : 'ou-mb-4'}`}>    
-                            {/* <PrescriptionDetailCard
-                                id={prescribing.id}
-                                created_date={prescribing.created_date}
-                                medicineUnits={prescribing.medicine_units}
-                                examination={prescribing.examination}
-                                patient={prescribing.patient}
-                                user={prescribing.user}
-                            /> */}
-                            {/* <BillCard 
-                                slotID={examinationDetail.schedule_appointment.id}
-                                date={examinationDetail.schedule_appointment.day}
-                                id={prescribing.id} 
-                                wage={examinationDetail.wage}
-                                diagnosisId={diagnosis.id} 
-                                bill_status={prescribing.bill_status} 
-                            /> */}
-                        </Box>
-                    ))}
+                <Box key={`diagnosis-section-${diagnosisInfo.id}`} className="ou-mb-4">
+                    <Box>    
+                        <PrescriptionDetailCard
+                            prescriptionData={{
+                                listPrescribingId: diagnosisInfo.prescribing_info?.map(prescribing => prescribing.id),
+                                created_date: diagnosisInfo.prescribing_info[0]?.created_date,
+                                medicineUnits: prescriptionDetail[0],
+                                examination: diagnosisInfo.examination,
+                                patient: diagnosisInfo.patient,
+                                user: diagnosisInfo.user
+                            }}
+                        />
+                        {/* <BillCard 
+                            slotID={examinationDetail.schedule_appointment.id}
+                            date={examinationDetail.schedule_appointment.day}
+                            id={prescribing.id} 
+                            wage={examinationDetail.wage}
+                            diagnosisId={diagnosis.id} 
+                            bill_status={prescribing.bill_status} 
+                        /> */}
+                    </Box>
                 </Box>
             );
-        });
+        // });
     };
 
     return (
         <>
             <Helmet><title>{t('common:payments')}</title></Helmet>
             <Box className='ou-container ou-mx-auto ou-m-auto ou-max-w-[1536px] ou-min-h-[550px]'>
-                {/* --- Basic Information Section --- */} 
-                {/* <Box className='ou-mb-8'> 
-                    <Grid container justifyContent="center" className="ou-min-h-[160px] ou-p-5" component={Paper} elevation={5}> 
-                        <Grid item xs={12} className="ou-pb-5" >
-                            <h1 className="ou-text-center ou-text-2xl">{t('common:basicInformation')}</h1>
-                        </Grid>
-                        <Grid item xs={12} sm={6} className="ou-text-center ou-mb-4 sm:ou-mb-0" >
-                            <PatientInfoModal patientData={examinationDetail.patient}/>
-                        </Grid>
-                        <Grid item xs={12} sm={6} className="ou-text-center">
-                            <MedicalRecordsModal patientID={examinationDetail.patient.id}/>
-                        </Grid>
-                    </Grid>
-                </Box> */}
-                
                 {/* --- Diagnosis & Prescriptions Section --- */} 
                 {renderDiagnosisSection()}
             </Box>

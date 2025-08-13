@@ -29,7 +29,7 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
     }
 
     const {
-        id,
+        listPrescribingId,
         created_date,
         medicineUnits = [],
         // bill_status,
@@ -54,7 +54,7 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
 
     return (
         <Box className="ou-mb-8 ou-w-[100%] ou-m-auto"
-        key={'prescription-detail-card-'+{id}}>
+        key={'prescription-detail-card-'+listPrescribingId[0]}>
             <Paper elevation={4} className="ou-p-6">
                 {/* Header */}
                 <Box className="ou-flex ou-justify-between ou-items-center ou-mb-6">
@@ -62,7 +62,14 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                         <LocalHospitalIcon className="ou-text-blue-600" sx={{ fontSize: 32 }} />
                         <Typography variant="h4" className="ou-font-bold ou-text-gray-800">
                             {t('prescription-detail:prescriptionDetail')} 
-                            #{medicineUnits[0].prescribing.id.toString().padStart(3, '0')}
+                            {listPrescribingId && listPrescribingId.map((id, index) => {
+                                return (
+                                    <span key={id} className="ou-text-gray-500">
+                                        {index === 0 ? "" : " - "} #{id.toString().padStart(3, '0')}
+                                    </span>
+                                )
+                            })}
+                            
                         </Typography>
                     </Box>
                     {/* <Chip
