@@ -1,4 +1,4 @@
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Grid, Chip, Divider } from "@mui/material";
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Grid, Chip, Divider, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
@@ -7,10 +7,14 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { SERVICE_FEE } from "../../../../../lib/constants";
+import { ROLE_DOCTOR, ROLE_NURSE, SERVICE_FEE } from "../../../../../lib/constants";
+import { useContext } from "react";
+import UserContext from "../../../../../lib/context/UserContext";
 
 const PrescriptionDetailCard = ({ prescriptionData }) => {
     const { t, tReady } = useTranslation(['prescription-detail', 'common']);
+
+    const {user} = useContext(UserContext)
 
     if (tReady) {
         return (
@@ -32,7 +36,7 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
         listPrescribingId,
         created_date,
         medicineUnits = [],
-        // bill_status,
+        bill_status,
         examination,
         patient,
         user: doctor
@@ -51,7 +55,22 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
 
     // Get bill amount if available
     // const billAmount = bill_status?.amount || 0;
-
+    const renderButtons = () => {
+        return (
+            <Box className="ou-flex ou-items-center ou-gap-2">
+                {!bill_status && user.role === ROLE_NURSE && (
+                    <Button variant="contained" color="primary">
+                        {t('prescription-detail:pay')}
+                    </Button>
+                )}
+                {user.role === ROLE_DOCTOR && (
+                    <Button variant="contained" color="primary">
+                        {t('prescription-detail:print')}
+                    </Button>
+                )}
+            </Box>
+        )
+    }
     return (
         <Box className="ou-mb-8 ou-w-[100%] ou-m-auto"
         key={'prescription-detail-card-'+listPrescribingId[0]}>
@@ -72,12 +91,16 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                             
                         </Typography>
                     </Box>
-                    {/* <Chip
-                        label={bill_status ? "Đã thanh toán" : "Chưa thanh toán"}
-                        color={bill_status ? "success" : "warning"}
-                        variant="filled"
-                        size="large"
-                    /> */}
+                    {
+                        user.role === ROLE_NURSE && (
+                            <Chip
+                                label={bill_status ? "Đã thanh toán" : "Chưa thanh toán"}
+                                color={bill_status ? "success" : "warning"}
+                                variant="filled"
+                                size="large"
+                            />
+                        )
+                    }
                 </Box>
 
                 <Divider className="ou-mb-6" />
@@ -265,6 +288,10 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                                     {t('prescription-detail:totalAmount')}: 
                                     {formatCurrency(totalAmount + SERVICE_FEE)}
                                 </Typography>
+                            </Box>
+
+                            <Box className="ou-flex ou-items-center ou-gap-2">
+                               {renderButtons()}
                             </Box>
                         </Box>
                     </Box>

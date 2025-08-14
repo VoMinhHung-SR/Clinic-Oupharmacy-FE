@@ -1,10 +1,9 @@
 import { useContext, useEffect, useState } from "react"
 import { useParams } from "react-router"
-import { fetchDiagnosisByExaminationID, fetchPrescribingByDiagnosis } from "../services"
 import UserContext from "../../../../lib/context/UserContext"
-import { fetchExaminationDetail } from "../../ExaminationDetailComponents/services"
 import { fetchPrescriptionDetailBillCard } from "../../../common/components/card/BillCard/services"
 import { fetchPrescriptionDetail } from "../../PrescriptionDetailComponents/services"
+import moment from "moment/moment"
 
 const usePayment = () => {
     const {user} = useContext(UserContext)
@@ -32,13 +31,21 @@ const usePayment = () => {
             try {
                 const res = await fetchPrescriptionDetailBillCard(prescribingId)
                 if (res.status === 200) {
-                    setPrescriptionDetail(prev => ({
-                        ...prev,
-                        [prescribingId]: res.data
-                    }))
+                    setPrescriptionDetail(prev => {
+                        const date = moment(res.data.created_date).format("YYYY-MM-DD");
+                        return {
+                            ...prev,
+                            [date]: {
+                                ...prev[date],
+                                [prescribingId]: {
+                                    ...res.data,
+                                }
+                            }
+                        }
+                    })
                 }
             } catch (err) {
-                console.error(`Error loading prescribing for diagnosis ${diagnosisId}:`, err)
+                console.error(`Error loading prescribing for diagnosis :`, err)
                 setPrescriptionDetail(prev => ({
                     ...prev,
                     [prescribingId]: []
@@ -53,21 +60,10 @@ const usePayment = () => {
         }
     }, [user, prescribingId])
 
-    // const getPrescribingByDiagnosisId = (prescribingId) => {
-    //     return setPrescriptionDetail[prescribingId] || []
-    // }
-
-    // const isPrescribingLoading = (prescribingId) => {
-    //     return loadingStates === true
-    // }
 
     return {
         prescriptionDetail,
-        // getPrescribingByDiagnosisId,
         isLoadingPrescriptionDetail: loadingStates,
-        // isPrescribingLoading,
-        // user,
-        // prescribingId,
         diagnosisInfo,
     }
 }
