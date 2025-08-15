@@ -12,7 +12,9 @@ const Payments = () => {
     const {
         isLoadingPrescriptionDetail, 
         prescriptionDetail,
-        diagnosisInfo
+        diagnosisInfo,
+        handlePayment,
+        isLoadingButton,
         // isPrescribingLoading,
     } = usePayment()
     const {t, ready} = useTranslation(['payment','common', 'modal'])
@@ -44,7 +46,6 @@ const Payments = () => {
                 baseData: firstMedicineData
             });
         });
-        
         return result;
     };
     
@@ -89,6 +90,8 @@ const Payments = () => {
                                 <Box key={date}>
                                     <PrescriptionDetailCard 
                                         key={`date-${date}`}
+                                        handlePayment={handlePayment}
+                                        isLoadingButton={isLoadingButton}
                                         prescriptionData={{
                                             id: baseData.prescribing.id,
                                             medicineUnits: medicines,
@@ -98,7 +101,7 @@ const Payments = () => {
                                             patient: diagnosisInfo.patient,
                                             user: diagnosisInfo.user,
                                             // Thêm thông tin prescribing
-                                            // bill_status: baseData.prescribing.bill_status,
+                                            bill_status: baseData.prescribing.bill_status,
                                             // diagnosis: baseData.prescribing.diagnosis
                                         }} 
                                     />

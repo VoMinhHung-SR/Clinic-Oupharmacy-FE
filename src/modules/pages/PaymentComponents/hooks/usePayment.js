@@ -1,9 +1,13 @@
 import { useContext, useEffect, useState } from "react"
 import { useParams } from "react-router"
 import UserContext from "../../../../lib/context/UserContext"
-import { fetchPrescriptionDetailBillCard } from "../../../common/components/card/BillCard/services"
+import { fetchAddBill, fetchPrescriptionDetailBillCard } from "../../../common/components/card/BillCard/services"
 import { fetchPrescriptionDetail } from "../../PrescriptionDetailComponents/services"
 import moment from "moment/moment"
+import { useTranslation } from "react-i18next"
+import { SERVICE_FEE, TOAST_ERROR, TOAST_SUCCESS } from "../../../../lib/constants"
+import { ConfirmAlert } from "../../../../config/sweetAlert2"
+import createToastMessage from "../../../../lib/utils/createToastMessage"
 
 const usePayment = () => {
     const {user} = useContext(UserContext)
@@ -11,7 +15,10 @@ const usePayment = () => {
     const [diagnosisInfo, setDiagnosisInfo] = useState([])
     const [prescriptionDetail, setPrescriptionDetail] = useState({})
     const [loadingStates, setLoadingStates] = useState(true)
+    const [flag, setFlag] = useState(false)
+    const [isLoadingButton, setIsLoadingButton] = useState(false)
 
+    const {t} = useTranslation(['payment','modal'])
     useEffect(() => {
 
         const loadDiagnosisInfo = async () => {
@@ -58,13 +65,48 @@ const usePayment = () => {
         if (user && prescribingId) {
             loadDiagnosisInfo()
         }
-    }, [user, prescribingId])
+    }, [user, prescribingId, flag])
 
+    const handlePayment = ({amounts, onSuccess, onError}) => {
+        const wage = Math.floor(SERVICE_FEE / amounts.length)
+
+        const onSubmit = async () => {
+            try{
+                const responses = await Promise.all(amounts.map(async (amount) => {
+                    return await fetchAddBill({amount: amount.total + wage, prescribing: amount.prescribingId})
+                }))
+               
+                const allSuccess = responses.every(res => res.status === 201)
+                
+                if (allSuccess) {
+                    setFlag(prev => !prev)
+                    onSuccess && onSuccess()
+                    createToastMessage({type: TOAST_SUCCESS, message: t('payment:paidCompleted')})
+                } else {
+                    onError && onError()
+                    createToastMessage({type: TOAST_ERROR, message: t('payment:payFailed')})
+                }
+            }catch(err){
+                onError && onError()
+                createToastMessage({type: TOAST_ERROR, message: t('payment:payFailed')})
+            }finally{
+                setIsLoadingButton(false)
+            }
+        }
+        return ConfirmAlert(t('payment:confirmCreateBill'),
+            t('modal:noThrowBack'),t('modal:yes'),t('modal:cancel'),
+        ()=>{
+            setIsLoadingButton(true)
+            onSubmit()
+        }, () => { return; })
+    }
 
     return {
         prescriptionDetail,
         isLoadingPrescriptionDetail: loadingStates,
         diagnosisInfo,
+        handlePayment,
+        isLoadingButton,
     }
 }
 

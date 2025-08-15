@@ -11,8 +11,8 @@ import { ROLE_DOCTOR, ROLE_NURSE, SERVICE_FEE } from "../../../../../lib/constan
 import { useContext } from "react";
 import UserContext from "../../../../../lib/context/UserContext";
 
-const PrescriptionDetailCard = ({ prescriptionData }) => {
-    const { t, tReady } = useTranslation(['prescription-detail', 'common']);
+const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButton}) => {
+    const { t, tReady } = useTranslation(['prescription-detail', 'common', 'payment']);
 
     const {user} = useContext(UserContext)
 
@@ -53,14 +53,23 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
         return acc + (prescribingDetail.medicine_unit.price || 0) * prescribingDetail.quantity;
     }, 0) || 0;
 
-    // Get bill amount if available
-    // const billAmount = bill_status?.amount || 0;
+    const amounts = Object.entries(
+        medicineUnits.reduce((acc, { prescribing, medicine_unit, quantity }) => {
+          acc[prescribing.id] = (acc[prescribing.id] || 0) + medicine_unit.price * quantity;
+          return acc;
+        }, {})
+      ).map(([prescribingId, total]) => ({ prescribingId: Number(prescribingId), total }));
+      
     const renderButtons = () => {
         return (
             <Box className="ou-flex ou-items-center ou-gap-2">
                 {!bill_status && user.role === ROLE_NURSE && (
-                    <Button variant="contained" color="primary">
-                        {t('prescription-detail:pay')}
+                    <Button variant="contained" color="primary" 
+                        className="!ou-min-w-[160px] !ou-btn-base !ou-mt-3"   
+                        disabled={isLoadingButton}
+                        onClick={() => 
+                        handlePayment({amounts: amounts})}>
+                        {t('payment:pay')}
                     </Button>
                 )}
                 {user.role === ROLE_DOCTOR && (
@@ -94,7 +103,7 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                     {
                         user.role === ROLE_NURSE && (
                             <Chip
-                                label={bill_status ? "Đã thanh toán" : "Chưa thanh toán"}
+                                label={bill_status ? t('payment:paid') : t('payment:unpaid')}
                                 color={bill_status ? "success" : "warning"}
                                 variant="filled"
                                 size="large"
