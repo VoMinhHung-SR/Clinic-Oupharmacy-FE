@@ -1,6 +1,6 @@
 import { authApi, endpoints } from "../../../../../../config/APIs"
 
-// To: get all of medicine unit in the prescbing sheet
+// To: get all of medicine unit in the prescribing sheet
 export const fetchPrescriptionDetailBillCard = async (prescribingID) => {
     const res = await authApi().get(endpoints['get-prescription-detail'](prescribingID))
     return res;

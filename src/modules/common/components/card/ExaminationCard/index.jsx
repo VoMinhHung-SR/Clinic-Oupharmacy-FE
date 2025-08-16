@@ -21,62 +21,62 @@ import useCustomModal from "../../../../../lib/hooks/useCustomModal";
 import ExaminationDetailCard from "../ExaminationDetailCard";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { ErrorAlert } from "../../../../../config/sweetAlert2";
-const ExaminationCard = ({examinationData, user, disableOtherCards, loading, sendEmailConfirm}) => {
+const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => {
   const { t } = useTranslation(["examinations", "common", "modal", "examination-detail"]);
 
   const {id, description, created_date, mail_status, schedule_appointment, diagnosis_info} = examinationData
   const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
   const router = useNavigate()
 
-  const handleSendEmailConfirm = async () => {
+  const handleSendEmailConfirm = () => {
     sendEmailConfirm();
   };
 
-  const navigate = () => {
-    if (user.role === ROLE_NURSE)
-        return router (`/dashboard/payments/examinations/${examinationData.id}`)
-    if(user.role === ROLE_DOCTOR && user.id === examinationData.schedule_appointment.doctor_id){
+  const navigateDoctor = () => {
+    if(user.id === examinationData.schedule_appointment.doctor_id)
       return router(`/dashboard/examinations/${examinationData.id}/diagnosis`)
+    return ErrorAlert(t('modal:errPrescribingNotOwner'), t('modal:pleaseTryAgain'), t('modal:ok'));
+  }
+
+  const navigateNurse = () => {
+    if(examinationData.diagnosis_info.length > 0){
+      return router(`/dashboard/prescribing/${examinationData.diagnosis_info[0].id}/payments`)
     }
-    if(user.role === ROLE_DOCTOR && user.id !== examinationData.schedule_appointment.doctor_id)
-      return ErrorAlert(t('modal:errPrescribingNotOwner'), t('modal:pleaseTryAgain'), t('modal:ok'));
-    return
+    return ErrorAlert(t('examination-detail:errNullDiagnosis'), t('modal:pleaseTryAgain'), t('modal:ok'));
   }
  
   const renderButton = () => {
     if (mail_status){
       if(user.role === ROLE_DOCTOR)
         return (
-          <Box onClick={() => navigate()}>
-            <Tooltip followCursor title={t("diagnose")} className="hover:ou-cursor-pointer">
-              <span>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    className="!ou-min-w-[68px] !ou-min-h-[40px] !ou-p-2  hover:ou-cursor-pointer"
-                  >
-                      <MedicalServicesIcon />
-                  </Button>
-              </span>
-            </Tooltip>
-          </Box>
+          <Tooltip followCursor title={t("diagnose")} className="hover:ou-cursor-pointer">
+            <span>
+                <Button
+                  onClick={() => navigateDoctor()}
+                  variant="contained"
+                  color="success"
+                  className="!ou-min-w-[68px] !ou-min-h-[40px] !ou-p-2  hover:ou-cursor-pointer"
+                >
+                    <MedicalServicesIcon />
+                </Button>
+            </span>
+          </Tooltip>
       )
       if (user.role === ROLE_NURSE)
         return(
           <Tooltip followCursor title={t("pay")}>
-          <span>
-            <Box onClick={() => navigate()}>
-              <Button
-                variant="contained"
-                color="success"
-                size="small"
-                className="!ou-min-w-[68px] !ou-py-2  !ou-min-h-[40px]"
-              >
-                <PaidIcon />
-              </Button>
-            </Box>
-          </span>
-        </Tooltip>
+            <span>
+                <Button
+                  onClick={() => navigateNurse()}
+                  variant="contained"
+                  color="success"
+                  size="small"
+                  className="!ou-min-w-[68px] !ou-py-2  !ou-min-h-[40px]"
+                >
+                  <PaidIcon />
+                </Button>
+            </span>
+          </Tooltip>
       ) 
       return <></>
     }
@@ -99,7 +99,7 @@ const ExaminationCard = ({examinationData, user, disableOtherCards, loading, sen
           <Tooltip followCursor title={t("sendEmail")}>
             <Button
               onClick={handleSendEmailConfirm}
-              disabled={disableOtherCards}
+              disabled={loading}
               variant="contained"
               className="!ou-min-w-[68px] !ou-py-2"
             >
@@ -173,11 +173,7 @@ const ExaminationCard = ({examinationData, user, disableOtherCards, loading, sen
         className="ou-w-[900px]"
         open={isOpen}
         onClose={handleCloseModal}
-        content={<Box>
-          <div>
-            <ExaminationDetailCard examinationData={examinationData} />
-          </div> 
-        </Box>}
+        content={<ExaminationDetailCard examinationData={examinationData}/>}
         actions={[
           <Button key="cancel" onClick={handleCloseModal}>
             {t('modal:cancel')}

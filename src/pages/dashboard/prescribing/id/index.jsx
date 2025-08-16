@@ -125,7 +125,7 @@ const PrescriptionDetail = () => {
                     <Box className="ou-mb-4">
                         <PrescriptionDetailCard 
                             prescriptionData={{
-                                id: newestPrescriptionDetail[0].id,
+                                listPrescribingId: newestPrescriptionDetail.map(prescribing => prescribing.id),
                                 created_date: newestPrescriptionDetail[0].created_date,
                                 medicineUnits: newestPrescriptionDetail,
                                 // normal info

@@ -145,7 +145,7 @@ const NavDashboard = ({ open, toggleDrawer }) => {
         id: 'payments',
         name:t('payments'),
         icon: <PaymentIcon className='ou-text-white'/>,
-        link: '/dashboard/payments'
+        link: '/dashboard/prescribing'
       }
     ]
       
