@@ -93,16 +93,13 @@ const Payments = () => {
                                         handlePayment={handlePayment}
                                         isLoadingButton={isLoadingButton}
                                         prescriptionData={{
-                                            id: baseData.prescribing.id,
                                             medicineUnits: medicines,
                                             listPrescribingId: prescribingIds,
                                             created_date: date,
                                             examination: diagnosisInfo.examination,
                                             patient: diagnosisInfo.patient,
                                             user: diagnosisInfo.user,
-                                            // Thêm thông tin prescribing
                                             bill_status: baseData.prescribing.bill_status,
-                                            // diagnosis: baseData.prescribing.diagnosis
                                         }} 
                                     />
                                 </Box>

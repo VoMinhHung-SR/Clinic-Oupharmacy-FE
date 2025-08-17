@@ -10,12 +10,13 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { ROLE_DOCTOR, ROLE_NURSE, SERVICE_FEE } from "../../../../../lib/constants";
 import { useContext } from "react";
 import UserContext from "../../../../../lib/context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButton}) => {
     const { t, tReady } = useTranslation(['prescription-detail', 'common', 'payment']);
 
     const {user} = useContext(UserContext)
-
+    const router = useNavigate()
     if (tReady) {
         return (
             <Box className="ou-flex ou-justify-center ou-items-center ou-h-64">
@@ -73,7 +74,10 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
                     </Button>
                 )}
                 {user.role === ROLE_DOCTOR && (
-                    <Button variant="contained" color="primary">
+                    <Button variant="contained" color="primary" onClick={() => {
+                        // window.print();
+                        router('/dashboard/prescribing/');
+                    }}>
                         {t('prescription-detail:print')}
                     </Button>
                 )}

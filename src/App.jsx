@@ -9,7 +9,6 @@ import Register from './pages/register'
 import ExaminationList from './pages/profile/examinations'
 import PrescriptionList from './pages/dashboard/prescribing'
 import PrescriptionDetail from './pages/dashboard/prescribing/id'
-
 import ConversationList from './pages/conversations'
 import ChatWindow from './pages/conversations/id/recipientID/message'
 import { I18nextProvider } from 'react-i18next'
