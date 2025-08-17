@@ -14,5 +14,8 @@
     "prescribing": "Prescribing",
     "bill":"Receipt",
     "diagnosisExist":"The list diagnosis ID of this exam sheet",
-    "doctor": "Doctor"
+    "doctor": "Doctor",
+
+    "errNullDiagnosis": "Examination sheet has not been diagnosed",
+    "errNullPrescribing": "Examination sheet has not been prescribed"
 }

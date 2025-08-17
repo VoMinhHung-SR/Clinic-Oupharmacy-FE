@@ -39,7 +39,7 @@ const Examinations = () => {
     paramsFilter,
     handleChangeFlag,
     handleOnSubmitFilter,
-    disableOtherCards, handleSendEmailConfirm, loadingState
+    handleSendEmailConfirm, loadingState
   } = useExaminationConfirm();
 
   const { t, ready } = useTranslation(["examinations", "common", "modal"]);
@@ -148,7 +148,6 @@ const Examinations = () => {
                     <ExaminationCard key={`e-${e.id}`} 
                     examinationData={e} user={user} 
                     callback={handleChangeFlag}
-                    disableOtherCards={disableOtherCards}
                     loading={loadingState[e.id] || false} 
                     sendEmailConfirm={() => handleSendEmailConfirm(e.user.id, e.id, user.avatar_path)}
                     />       

@@ -2,11 +2,8 @@ import { doc, serverTimestamp, setDoc } from "firebase/firestore"
 import { useContext, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useSearchParams } from "react-router-dom"
-import { userContext } from "../../../../../App"
 import { db } from "../../../../../config/firebase"
-
 import { APP_ENV, STATUS_BOOKING_CONFIRMED, TOAST_SUCCESS } from "../../../../../lib/constants"
-
 import { fetchExaminationListConfirm, fetchSendEmailConfirmExamination } from "../services"
 import createToastMessage from "../../../../../lib/utils/createToastMessage"
 import { ConfirmAlert, ErrorAlert } from "../../../../../config/sweetAlert2"
@@ -98,41 +95,24 @@ const useExaminationConfirm = () =>{
 
     // Handle on children elements
     const [loadingState, setLoadingState] = useState({});
-    const [disableOtherCards, setDisableOtherCards] = useState(false);
 
-    const withLoadingAndDisableCards = (userID, examinationID, avatar, callback) => {
-        return async () => {
-          setDisableOtherCards(true); // disable other cards
-          setLoadingState((prevState) => ({ ...prevState, [examinationID]: true })); // set loading state for this card
-          try {
-            const res = await fetchSendEmailConfirmExamination(examinationID);
-            if (res.status === 200) {
-              createNotificationRealtime(userID, examinationID, avatar);
-              createToastMessage({ message: t('sendMailSuccesses'), type: TOAST_SUCCESS });
-              setFlag(!flag)
-            } else if (res.status === 400) {
-              ErrorAlert(t('modal:errSomethingWentWrong'), t('modal:pleaseTryAgain'), t('modal:ok'));
-            }
-          } catch (err) {
-            console.error(err);
-          } finally {
-            setLoadingState((prevState) => ({ ...prevState, [examinationID]: false })); // set loading state for this card
-            setDisableOtherCards(false); // enable other cards
+    const handleSendEmailConfirm = async (userID, examinationID, avatar, callback) => {
+        setLoadingState((prevState) => ({ ...prevState, [examinationID]: true }));
+        try {
+          const res = await fetchSendEmailConfirmExamination(examinationID);
+          if (res.status === 200) {
+            await createNotificationRealtime(userID, examinationID, avatar);
+            createToastMessage({ message: t('sendMailSuccesses'), type: TOAST_SUCCESS });
+            setFlag(!flag)
+          } else if (res.status === 400) {
+            ErrorAlert(t('modal:errSomethingWentWrong'), t('modal:pleaseTryAgain'), t('modal:ok'));
           }
-        };
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setLoadingState((prevState) => ({ ...prevState, [examinationID]: false }));
+        }
       };
-
-      const handleSendEmailConfirm = (userID, examinationID, avatar, callback) => {
-        return ConfirmAlert(
-          t('confirmSendEmail'),
-          t('modal:noThrowBack'),
-          t('modal:yes'),
-          t('modal:cancel'),
-          withLoadingAndDisableCards(userID, examinationID, avatar, callback),
-          () => { return; }
-        );
-      };
-      
 
       const createNotificationRealtime  = async (userID, examinationID, avatar) => {
         try{
@@ -159,7 +139,7 @@ const useExaminationConfirm = () =>{
         examinationList,
         isRequestSuccessful,
         isLoadingExamination,
-        loadingState, disableOtherCards,
+        loadingState,
         handleChangePage,
         handleChangeFlag,
         handleOnSubmitFilter, handleSendEmailConfirm,

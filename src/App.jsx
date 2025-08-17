@@ -9,7 +9,6 @@ import Register from './pages/register'
 import ExaminationList from './pages/profile/examinations'
 import PrescriptionList from './pages/dashboard/prescribing'
 import PrescriptionDetail from './pages/dashboard/prescribing/id'
-import Payments from './pages/dashboard/examinations/id/payments'
 import ConversationList from './pages/conversations'
 import ChatWindow from './pages/conversations/id/recipientID/message'
 import { I18nextProvider } from 'react-i18next'
@@ -55,6 +54,7 @@ import DashboardWaitingRoom from './pages/dashboard/waiting-room'
 import APIs, { endpoints } from './config/APIs'
 import Contact from './pages/contact'
 import AboutUs from './pages/about-us'
+import Payments from './pages/dashboard/prescribing/id/payments'
 
 export const userContext = createContext()
 const queryClient = new QueryClient({
@@ -145,17 +145,16 @@ function App() {
                               <Route path='/dashboard/doctor-schedules' element={<DoctorSchedules/>}/>  
                               <Route path='/dashboard/medicines' element={<MedicineList/>}/> 
                               <Route path='/dashboard/waiting-room' element={<DashboardWaitingRoom/>}/>
+                              <Route path='/dashboard/prescribing' element={<PrescriptionList/>} />
                             </Route>
 
                             <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_DOCTOR]} />}>
                               <Route path='/dashboard/examinations/:examinationId/diagnosis' element={<Diagnosis />} />
-                              <Route path='/dashboard/prescribing' element={<PrescriptionList/>} />
                               <Route path='/dashboard/prescribing/:prescribingId' element={<PrescriptionDetail/>} />
                             </Route>
 
                             <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_NURSE]}/>}>
-                              <Route path='/dashboard/payments' element={<PrescriptionList/>} />
-                              <Route path='/dashboard/payments/examinations/:examinationId' element={<Payments />} />
+                              <Route path='/dashboard/prescribing/:prescribingId/payments' element={<Payments />} />
                             </Route>
 
                             <Route path='/dashboard/profile' element={<DashboardProfile />} >

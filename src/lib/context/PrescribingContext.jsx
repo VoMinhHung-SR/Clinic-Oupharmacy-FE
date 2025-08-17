@@ -16,6 +16,7 @@ export const PrescribingProvider = ({children}) => {
     const [flag, setFlag] = useState(false);
     const [isLoadingButton, setIsLoadingButton] = useState(false)
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+    const [newPrescribing, setNewPrescribing] = useState(null);
     const [newestPrescriptionDetail, setNewestPrescriptionDetail] = useState([]);
     const [isBackdropLoading, setIsBackdropLoading] = useState(false);
 
@@ -122,6 +123,7 @@ export const PrescribingProvider = ({children}) => {
                 const prescribingData = { user: userID, diagnosis: parseInt(diagnosisID) };
                 const res = await fetchCreatePrescribing(prescribingData);
                 if (res.status === 201) {
+                    setNewPrescribing(res.data);
                     await Promise.all(
                         medicinesSubmit.map(async (m) => {
                             const formData = {
@@ -169,9 +171,8 @@ export const PrescribingProvider = ({children}) => {
                 handleUpdateMedicinesSubmit: handleUpdateMedicinesSubmit,
                 handleAddPrescriptionDetail: handleAddPrescriptionDetail,
                 clearForm: clearForm, 
-                newestPrescriptionDetail: newestPrescriptionDetail,
-                hasUnsavedChanges: hasUnsavedChanges,
-                isBackdropLoading: isBackdropLoading
+                newPrescribing, newestPrescriptionDetail,
+                hasUnsavedChanges, isBackdropLoading
             }}
         >
             {children}

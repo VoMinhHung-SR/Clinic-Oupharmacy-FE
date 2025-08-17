@@ -21,8 +21,8 @@
     "serviceFee": "Service fee",
     "amount": "Amount",
     "pay": "Pay",
-    "paid": "Paid",
-    "unpaid": "Unpaid",
+    "paid": "Payment Complete",
+    "unpaid": "Payment Pending",
     "momoPayment": "Momo payment",
     "zalopayPayment": "ZaloPay payment",
 
@@ -30,8 +30,9 @@
     "success": "Completed",
     "done":"Done",
     "unDone": "Undone",
-    "paidCompleted":"Success",
-    "payFailed":"Failed",
+    "paidCompleted":"Payment completed",
+    "payFailed":"Payment failed",
+    
     "confirmCreateBill": "Confirm to create this bill",
     "errLoadPrescriptionDetailFailed": "Failed to load prescription detail",
     "errLoadExaminationDetailFailed": "Failed to load examination detail"

@@ -105,7 +105,7 @@ const DiagnosedCard = ({ diagnosedInfo, user }) => {
               <span>
                 <Link
                   style={{ textDecoration: "none" }}
-                  to={`/dashboard/payments/examinations/${diagnosedInfo.examination.id}`}
+                  to={`/dashboard/prescribing/${diagnosedInfo.id}/payments`}
                 >
                   <Button
                     variant="contained"

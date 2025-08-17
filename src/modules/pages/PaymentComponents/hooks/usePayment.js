@@ -1,102 +1,112 @@
 import { useContext, useEffect, useState } from "react"
 import { useParams } from "react-router"
-import { fetchDiagnosisByExaminationID, fetchPrescribingByDiagnosis } from "../services"
 import UserContext from "../../../../lib/context/UserContext"
-import { fetchExaminationDetail } from "../../ExaminationDetailComponents/services"
+import { fetchAddBill, fetchPrescriptionDetailBillCard } from "../../../common/components/card/BillCard/services"
+import { fetchPrescriptionDetail } from "../../PrescriptionDetailComponents/services"
+import moment from "moment/moment"
+import { useTranslation } from "react-i18next"
+import { SERVICE_FEE, TOAST_ERROR, TOAST_SUCCESS } from "../../../../lib/constants"
+import { ConfirmAlert } from "../../../../config/sweetAlert2"
+import createToastMessage from "../../../../lib/utils/createToastMessage"
 
 const usePayment = () => {
     const {user} = useContext(UserContext)
-    const {examinationId} = useParams()
-    const [examinationDetail, setExaminationDetail] = useState(null)
+    const {prescribingId} = useParams()
     const [diagnosisInfo, setDiagnosisInfo] = useState([])
-    const [prescribingList, setPrescribingList] = useState({})
-    const [loadingStates, setLoadingStates] = useState({
-        examination: true,
-        prescriptions: {}
-    })
+    const [prescriptionDetail, setPrescriptionDetail] = useState({})
+    const [loadingStates, setLoadingStates] = useState(true)
+    const [flag, setFlag] = useState(false)
+    const [isLoadingButton, setIsLoadingButton] = useState(false)
 
+    const {t} = useTranslation(['payment','modal'])
     useEffect(() => {
-        const loadDiagnosis = async () => {
-            try {
-                const res = await fetchExaminationDetail(examinationId)
-                if (res.status === 200) {
-                    if (res.data === null) {
-                        setExaminationDetail(null)
-                    } else {
-                        setExaminationDetail(res.data)
-                        if (res.data.diagnosis_info && Array.isArray(res.data.diagnosis_info)) {
-                            setDiagnosisInfo(res.data.diagnosis_info)
-                            const initialLoadingStates = {}
-                            res.data.diagnosis_info.forEach(diagnosis => {
-                                initialLoadingStates[diagnosis.id] = true
-                                loadPrescribing(diagnosis.id)
-                            })
-                            setLoadingStates(prev => ({
-                                ...prev,
-                                examination: false,
-                                prescriptions: initialLoadingStates
-                            }))
-                        }
-                    }
+
+        const loadDiagnosisInfo = async () => {
+            const res = await fetchPrescriptionDetail(prescribingId)
+            if (res.status === 200) {
+                setDiagnosisInfo(res.data)
+                
+                if(res.data.prescribing_info.length > 0){
+                    res.data.prescribing_info.forEach(prescribing => {
+                        loadPrescriptionDetail(prescribing.id)
+                    })
                 }
-            } catch (err) {
-                setExaminationDetail(null)
-                console.error('Error loading examination:', err)
-                setLoadingStates(prev => ({
-                    ...prev,
-                    examination: false
-                }))
             }
         }
-
-        const loadPrescribing = async (diagnosisId) => {
+        
+        const loadPrescriptionDetail = async (prescribingId) => {
             try {
-                const res = await fetchPrescribingByDiagnosis(diagnosisId)
+                const res = await fetchPrescriptionDetailBillCard(prescribingId)
                 if (res.status === 200) {
-                    setPrescribingList(prev => ({
-                        ...prev,
-                        [diagnosisId]: res.data
-                    }))
+                    setPrescriptionDetail(prev => {
+                        const date = moment(res.data.created_date).format("YYYY-MM-DD");
+                        return {
+                            ...prev,
+                            [date]: {
+                                ...prev[date],
+                                [prescribingId]: {
+                                    ...res.data,
+                                }
+                            }
+                        }
+                    })
                 }
             } catch (err) {
-                console.error(`Error loading prescribing for diagnosis ${diagnosisId}:`, err)
-                setPrescribingList(prev => ({
+                console.error(`Error loading prescribing for diagnosis :`, err)
+                setPrescriptionDetail(prev => ({
                     ...prev,
-                    [diagnosisId]: []
+                    [prescribingId]: []
                 }))
             } finally {
-                setLoadingStates(prev => ({
-                    ...prev,
-                    prescriptions: {
-                        ...prev.prescriptions,
-                        [diagnosisId]: false
-                    }
-                }))
+                setLoadingStates(false)
             }
         }
 
-        if (user && examinationId) {
-            loadDiagnosis()
+        if (user && prescribingId) {
+            loadDiagnosisInfo()
         }
-    }, [user, examinationId])
+    }, [user, prescribingId, flag])
 
-    const getPrescribingByDiagnosisId = (diagnosisId) => {
-        return prescribingList[diagnosisId] || []
-    }
+    const handlePayment = ({amounts, onSuccess, onError}) => {
+        const wage = Math.floor(SERVICE_FEE / amounts.length)
 
-    const isPrescribingLoading = (diagnosisId) => {
-        return loadingStates.prescriptions[diagnosisId] === true
+        const onSubmit = async () => {
+            try{
+                const responses = await Promise.all(amounts.map(async (amount) => {
+                    return await fetchAddBill({amount: amount.total + wage, prescribing: amount.prescribingId})
+                }))
+               
+                const allSuccess = responses.every(res => res.status === 201)
+                
+                if (allSuccess) {
+                    setFlag(prev => !prev)
+                    onSuccess && onSuccess()
+                    createToastMessage({type: TOAST_SUCCESS, message: t('payment:paidCompleted')})
+                } else {
+                    onError && onError()
+                    createToastMessage({type: TOAST_ERROR, message: t('payment:payFailed')})
+                }
+            }catch(err){
+                onError && onError()
+                createToastMessage({type: TOAST_ERROR, message: t('payment:payFailed')})
+            }finally{
+                setIsLoadingButton(false)
+            }
+        }
+        return ConfirmAlert(t('payment:confirmCreateBill'),
+            t('modal:noThrowBack'),t('modal:yes'),t('modal:cancel'),
+        ()=>{
+            setIsLoadingButton(true)
+            onSubmit()
+        }, () => { return; })
     }
 
     return {
-        prescribingList,
-        getPrescribingByDiagnosisId,
-        isLoadingExamination: loadingStates.examination,
-        isPrescribingLoading,
-        user,
-        examinationDetail,
-        examinationId,
+        prescriptionDetail,
+        isLoadingPrescriptionDetail: loadingStates,
         diagnosisInfo,
+        handlePayment,
+        isLoadingButton,
     }
 }
 

@@ -1,4 +1,4 @@
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Grid, Chip, Divider } from "@mui/material";
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Grid, Chip, Divider, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
@@ -7,11 +7,16 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { SERVICE_FEE } from "../../../../../lib/constants";
+import { ROLE_DOCTOR, ROLE_NURSE, SERVICE_FEE } from "../../../../../lib/constants";
+import { useContext } from "react";
+import UserContext from "../../../../../lib/context/UserContext";
+import { useNavigate } from "react-router-dom";
 
-const PrescriptionDetailCard = ({ prescriptionData }) => {
-    const { t, tReady } = useTranslation(['prescription-detail', 'common']);
+const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButton}) => {
+    const { t, tReady } = useTranslation(['prescription-detail', 'common', 'payment']);
 
+    const {user} = useContext(UserContext)
+    const router = useNavigate()
     if (tReady) {
         return (
             <Box className="ou-flex ou-justify-center ou-items-center ou-h-64">
@@ -29,10 +34,10 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
     }
 
     const {
-        id,
+        listPrescribingId,
         created_date,
         medicineUnits = [],
-        // bill_status,
+        bill_status,
         examination,
         patient,
         user: doctor
@@ -49,12 +54,39 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
         return acc + (prescribingDetail.medicine_unit.price || 0) * prescribingDetail.quantity;
     }, 0) || 0;
 
-    // Get bill amount if available
-    // const billAmount = bill_status?.amount || 0;
-
+    const amounts = Object.entries(
+        medicineUnits.reduce((acc, { prescribing, medicine_unit, quantity }) => {
+          acc[prescribing.id] = (acc[prescribing.id] || 0) + medicine_unit.price * quantity;
+          return acc;
+        }, {})
+      ).map(([prescribingId, total]) => ({ prescribingId: Number(prescribingId), total }));
+      
+    const renderButtons = () => {
+        return (
+            <Box className="ou-flex ou-items-center ou-gap-2">
+                {!bill_status && user.role === ROLE_NURSE && (
+                    <Button variant="contained" color="primary" 
+                        className="!ou-min-w-[160px] !ou-btn-base !ou-mt-3"   
+                        disabled={isLoadingButton}
+                        onClick={() => 
+                        handlePayment({amounts: amounts})}>
+                        {t('payment:pay')}
+                    </Button>
+                )}
+                {user.role === ROLE_DOCTOR && (
+                    <Button variant="contained" color="primary" onClick={() => {
+                        // window.print();
+                        router('/dashboard/prescribing/');
+                    }}>
+                        {t('prescription-detail:print')}
+                    </Button>
+                )}
+            </Box>
+        )
+    }
     return (
         <Box className="ou-mb-8 ou-w-[100%] ou-m-auto"
-        key={'prescription-detail-card-'+{id}}>
+        key={'prescription-detail-card-'+listPrescribingId[0]}>
             <Paper elevation={4} className="ou-p-6">
                 {/* Header */}
                 <Box className="ou-flex ou-justify-between ou-items-center ou-mb-6">
@@ -62,15 +94,26 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                         <LocalHospitalIcon className="ou-text-blue-600" sx={{ fontSize: 32 }} />
                         <Typography variant="h4" className="ou-font-bold ou-text-gray-800">
                             {t('prescription-detail:prescriptionDetail')} 
-                            #{medicineUnits[0].prescribing.id.toString().padStart(3, '0')}
+                            {listPrescribingId && listPrescribingId.map((id, index) => {
+                                return (
+                                    <span key={id} className="ou-text-gray-500">
+                                        {index === 0 ? "" : " - "} #{id.toString().padStart(3, '0')}
+                                    </span>
+                                )
+                            })}
+                            
                         </Typography>
                     </Box>
-                    {/* <Chip
-                        label={bill_status ? "Đã thanh toán" : "Chưa thanh toán"}
-                        color={bill_status ? "success" : "warning"}
-                        variant="filled"
-                        size="large"
-                    /> */}
+                    {
+                        user.role === ROLE_NURSE && (
+                            <Chip
+                                label={bill_status ? t('payment:paid') : t('payment:unpaid')}
+                                color={bill_status ? "success" : "warning"}
+                                variant="filled"
+                                size="large"
+                            />
+                        )
+                    }
                 </Box>
 
                 <Divider className="ou-mb-6" />
@@ -258,6 +301,10 @@ const PrescriptionDetailCard = ({ prescriptionData }) => {
                                     {t('prescription-detail:totalAmount')}: 
                                     {formatCurrency(totalAmount + SERVICE_FEE)}
                                 </Typography>
+                            </Box>
+
+                            <Box className="ou-flex ou-items-center ou-gap-2">
+                               {renderButtons()}
                             </Box>
                         </Box>
                     </Box>

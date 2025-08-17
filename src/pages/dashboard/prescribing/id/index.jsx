@@ -19,7 +19,7 @@ import BackdropLoading from "../../../../modules/common/components/BackdropLoadi
 
 const PrescriptionDetail = () => {
     const {user} = useContext(UserContext)
-    const {medicinesSubmit, handleAddPrescriptionDetail, 
+    const {medicinesSubmit, handleAddPrescriptionDetail, newPrescribing,
         handleUpdateMedicinesSubmit, resetMedicineStore, 
         addMedicineItem, clearForm, hasUnsavedChanges, 
         newestPrescriptionDetail, isBackdropLoading} = useContext(PrescribingContext)
@@ -125,7 +125,7 @@ const PrescriptionDetail = () => {
                     <Box className="ou-mb-4">
                         <PrescriptionDetailCard 
                             prescriptionData={{
-                                id: newestPrescriptionDetail[0].id,
+                                listPrescribingId: [newPrescribing.id],
                                 created_date: newestPrescriptionDetail[0].created_date,
                                 medicineUnits: newestPrescriptionDetail,
                                 // normal info
