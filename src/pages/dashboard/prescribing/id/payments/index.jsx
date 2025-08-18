@@ -1,10 +1,8 @@
-import { Box, Button, Divider, Grid, Paper, Skeleton, Typography } from "@mui/material"
+import { Box, Button, Paper, Typography } from "@mui/material"
 import { useTranslation } from "react-i18next"
 import { Helmet } from "react-helmet"
 import usePayment from "../../../../../modules/pages/PaymentComponents/hooks/usePayment"
 import { useNavigate } from "react-router-dom"
-import SkeletonBasicInformationCard from "../../../../../modules/common/components/skeletons/card/BasicInformationCard"
-import SkeletonBillCard from "../../../../../modules/common/components/skeletons/card/BillCard"
 import PrescriptionDetailCard from "../../../../../modules/common/components/card/PrescriptionDetailCard"
 import SkeletonPayments from "../../../../../modules/common/components/skeletons/pages/payments"
 
@@ -15,15 +13,12 @@ const Payments = () => {
         diagnosisInfo,
         handlePayment,
         isLoadingButton,
-        // isPrescribingLoading,
     } = usePayment()
     const {t, ready} = useTranslation(['payment','common', 'modal'])
     const router = useNavigate()    
-    
-    // Helper function to group medicines by date
+
     const groupMedicinesByDate = (prescriptionData) => {
         const result = [];
-        
         Object.keys(prescriptionData).forEach(date => {
             const prescribingIds = Object.keys(prescriptionData[date]);
             
@@ -49,7 +44,6 @@ const Payments = () => {
         return result;
     };
     
-    // --- Skeleton Render Functions --- 
     const renderInitialPageSkeleton = () => (
         <Box>
             <Helmet><title>Payments</title></Helmet>
@@ -71,12 +65,11 @@ const Payments = () => {
         </Box>
     );
 
-    // --- Main Render Logic --- 
-    if (!ready || !diagnosisInfo) {
+    if (!ready || isLoadingPrescriptionDetail) {
         return renderInitialPageSkeleton();
     }
 
-    if (!diagnosisInfo) {
+    if (!isLoadingPrescriptionDetail && !diagnosisInfo) {
         return renderErrorBox("examination-error", 'payment:errLoadExaminationDetailFailed', 'common:backToHomepage');
     }
 
@@ -105,18 +98,9 @@ const Payments = () => {
                                 </Box>
                             ))
                         }
-                        {/* <BillCard 
-                            slotID={examinationDetail.schedule_appointment.id}
-                            date={examinationDetail.schedule_appointment.day}
-                            id={prescribing.id} 
-                            wage={examinationDetail.wage}
-                            diagnosisId={diagnosis.id} 
-                            bill_status={prescribing.bill_status} 
-                        /> */}
                     </Box>
                 </Box>
             );
-        // });
     };
 
     return (

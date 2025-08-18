@@ -1,4 +1,6 @@
-import { Badge, Button, Container, FormControl, Pagination, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Badge, Button, Pagination, Paper, Stack, Table, TableBody, 
+    TableCell, TableContainer, TableHead, TableRow, 
+    Typography, useMediaQuery, useTheme } from "@mui/material"
 import { Box } from "@mui/system"
 import usePrescriptionList from "../../../modules/pages/PrescriptionListComponents/hooks/usePrescription"
 import { useTranslation } from "react-i18next"
@@ -10,6 +12,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState, memo } from "react";
 import { Collapse } from "@mui/material";
+import SkeletonPrescribingList from "../../../modules/common/components/skeletons/pages/prescribing"
 
 const MemoizedDiagnosisFilter = memo(DiagnosisFilter);
 
@@ -22,14 +25,11 @@ const PrescriptionList = () => {
     const isTablet = useMediaQuery(theme.breakpoints.down('md'));
     const [showFilter, setShowFilter] = useState(false);
     if(!ready)
-        return <Box sx={{ height: "300px" }}>
+        return <Box className="ou-h-[80vh]">
             <Helmet>
                 <title>Prescribing</title>
             </Helmet>
-
-            <Box component={Paper} elevation={4} className="ou-text-center ou-p-10 ou-h-[30vh]">
-                <SkeletonListLineItem count={5} className="ou-w-full"/>
-            </Box>
+            <SkeletonPrescribingList />
         </Box>
 
     return (
@@ -83,7 +83,7 @@ const PrescriptionList = () => {
                             {isLoadingPrescriptionList && 
                              <TableCell colSpan={12} component="th" scope="row">
                                 <Box className="ou-text-center">
-                                    <SkeletonListLineItem count={4} className="ou-w-full"  />
+                                    <SkeletonListLineItem count={10} height="40px" className="ou-w-full"  />
                                 </Box>
                             </TableCell>
                             }
