@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, Button, Box, FormControl, InputLabel, Select, MenuItem, CircularProgress } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, Button, Box, FormControl, InputLabel, Select, MenuItem, CircularProgress, TableFooter } from '@mui/material';
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import moment from 'moment';
@@ -80,8 +80,8 @@ const DoctorScheduleForm = ({ doctor }) => {
     return (
         <Box>
             {/* Week Selector and Calendar */}
-            <Box sx={{ mb: 4, p: 2 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'end', mb: 2 }}>
+            <Box>
+                <Box className="ou-flex ou-justify-end ou-p-5">
                     <FormControl variant="outlined" size="small">
                         <InputLabel>{t('doctor-schedule:week')}</InputLabel>
                         <Select 
@@ -106,8 +106,8 @@ const DoctorScheduleForm = ({ doctor }) => {
             </Box>
             
             {/* Schedule Form */}
-            <form onSubmit={methods.handleSubmit(onSubmit)} className='ou-w-[90%] ou-mx-auto ou-mb-5'>
-                <TableContainer component={Paper}>
+            <form onSubmit={methods.handleSubmit(onSubmit)} className="ou-p-8">
+                <TableContainer component={Paper} className="ou-mb-5">
                     <Table>
                         <TableHead>
                             <TableRow>

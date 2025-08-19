@@ -19,6 +19,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState, memo } from "react";
 import { Collapse } from "@mui/material";
+import SkeletonMedicineList from "../../../modules/common/components/skeletons/pages/medicines";
 
 const MemoizedMedicineFilter = memo(MedicineFilter);
 
@@ -50,14 +51,9 @@ const MedicineList = () => {
 
   if (!ready && medicineLoading && isLoading)
       return (
-        <Box sx={{ height: "300px" }}>
-          <Helmet>
-            <title>Medicine List</title>
-          </Helmet>
-  
-          <Box component={Paper} elevation={4} className="ou-text-center ou-p-10 ou-h-[30vh]">
-            <SkeletonListLineItem count={5} className="ou-w-full"/>
-          </Box>
+        <Box>
+          <Helmet><title>Medicine List</title></Helmet>
+          <SkeletonMedicineList />
         </Box>
       )
 
@@ -132,7 +128,7 @@ const MedicineList = () => {
                     {medicineLoading && 
                       <TableCell colSpan={12} component="th" scope="row">
                         <Box className="ou-text-center">
-                            <SkeletonListLineItem count={4} className="ou-w-full" />
+                            <SkeletonListLineItem count={10} height="40px" className="ou-w-full" />
                         </Box>
                     </TableCell>}
 
