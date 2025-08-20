@@ -6,10 +6,11 @@ import { ROLE_DOCTOR } from '../../../../lib/constants';
 import useDoctorSchedule from '../hooks/useDoctorSchedule';
 import { useEffect, useMemo } from 'react';
 import DoctorCalendar from '../DoctorCalendar';
+import SkeletonDoctorScheduleList from '../../../common/components/skeletons/pages/doctor-schedules';
 
 const DoctorScheduleForm = ({ doctor }) => {
     const { onSubmit, setSelectedWeek, existSchedule, selectedWeek, selectedYear, isLoading } = useDoctorSchedule();
-    const { t } = useTranslation(['doctor-schedule', 'common']);
+    const { t, tReady } = useTranslation(['doctor-schedule', 'common']);
     
     const methods = useForm({
         mode: "onSubmit",
@@ -76,6 +77,14 @@ const DoctorScheduleForm = ({ doctor }) => {
             />
         );
     };
+
+    if (tReady || isLoading) {
+        return (
+            <Box>
+                <SkeletonDoctorScheduleList />
+            </Box>
+        );
+    }
 
     return (
         <Box>

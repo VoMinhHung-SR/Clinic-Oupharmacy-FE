@@ -15,7 +15,6 @@ const DoctorSchedules = () => {
             <Helmet>
                 <title>Doctor Schedules</title>
             </Helmet>
-            <SkeletonDoctorScheduleList />
         </Box>
 
     return (

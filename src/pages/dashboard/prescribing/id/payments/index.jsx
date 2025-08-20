@@ -69,16 +69,13 @@ const Payments = () => {
         return renderInitialPageSkeleton();
     }
 
-    if (!isLoadingPrescriptionDetail && !diagnosisInfo) {
-        return renderErrorBox("examination-error", 'payment:errLoadExaminationDetailFailed', 'common:backToHomepage');
-    }
-
     const renderDiagnosisSection = () => {
             return (
                 <Box key={`diagnosis-section-${diagnosisInfo.id}`} className="ou-mb-4">
                     <Box>    
-                        {
-                            prescriptionDetail && groupMedicinesByDate(prescriptionDetail).map(
+                        {(!isLoadingPrescriptionDetail && !diagnosisInfo) && renderErrorBox("examination-error", 'payment:errLoadExaminationDetailFailed', 'common:backToHomepage')}
+                        
+                        {(!isLoadingPrescriptionDetail && prescriptionDetail) && groupMedicinesByDate(prescriptionDetail).map(
                                 ({ date, prescribingIds, medicines, baseData }) => (
                                 <Box key={date}>
                                     <PrescriptionDetailCard 
