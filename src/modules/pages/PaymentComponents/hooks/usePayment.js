@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { useParams } from "react-router"
 import UserContext from "../../../../lib/context/UserContext"
-import { fetchAddBill, fetchPrescriptionDetailBillCard } from "../../../common/components/card/BillCard/services"
+import { fetchAddBill, fetchMomoPaymentURL, fetchPrescriptionDetailBillCard } from "../../../common/components/card/BillCard/services"
 import { fetchPrescriptionDetail } from "../../PrescriptionDetailComponents/services"
 import moment from "moment/moment"
 import { useTranslation } from "react-i18next"
@@ -67,7 +67,7 @@ const usePayment = () => {
         }
     }, [user, prescribingId, flag])
 
-    const handlePayment = ({amounts, onSuccess, onError}) => {
+    const handlePayment = ({amounts, onSuccess, onError, momoWallet = false}) => {
         const wage = Math.floor(SERVICE_FEE / amounts.length)
 
         const onSubmit = async () => {
@@ -93,11 +93,27 @@ const usePayment = () => {
                 setIsLoadingButton(false)
             }
         }
+        const momoPayment = async () => {
+            try{
+                let totalAmount = 0
+                amounts.forEach(amount => {totalAmount += amount.total})
+                const res = await fetchMomoPaymentURL({amount: totalAmount, prescribing: prescribingId})
+                if (res.status === 200) {
+                    window.location.replace(res.data.payUrl);
+                }
+            }catch(err){
+                createToastMessage({type: TOAST_ERROR, message: t('payment:payFailed')})
+            }
+        }
         return ConfirmAlert(t('payment:confirmCreateBill'),
             t('modal:noThrowBack'),t('modal:yes'),t('modal:cancel'),
         ()=>{
             setIsLoadingButton(true)
-            onSubmit()
+            if(momoWallet){
+                momoPayment()
+            }else {
+                onSubmit()
+            }
         }, () => { return; })
     }
 

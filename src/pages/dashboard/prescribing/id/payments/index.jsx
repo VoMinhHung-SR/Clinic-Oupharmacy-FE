@@ -80,7 +80,8 @@ const Payments = () => {
                                 <Box key={date}>
                                     <PrescriptionDetailCard 
                                         key={`date-${date}`}
-                                        handlePayment={handlePayment}
+                                        handlePayment={({amounts, onSuccess, onError, momoWallet = false}) =>
+                                            handlePayment({amounts, onSuccess, onError, momoWallet})}
                                         isLoadingButton={isLoadingButton}
                                         prescriptionData={{
                                             medicineUnits: medicines,

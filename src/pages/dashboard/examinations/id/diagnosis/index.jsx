@@ -2,7 +2,6 @@ import { Box, Button, Container, Grid, Paper, Typography, Alert, Chip } from "@m
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
 import { Helmet } from "react-helmet"
-import Loading from "../../../../../modules/common/components/Loading"
 import DiagnosisForm from "../../../../../modules/pages/DiagnosisComponents/DiagnosisForm"
 import PatientInfoModal from "../../../../../modules/pages/PrescriptionDetailComponents/PatientInfoModal"
 import MedicalRecordsModal from "../../../../../modules/pages/PrescriptionDetailComponents/MedicalRecordsModal"
@@ -17,7 +16,6 @@ const Diagnosis = () => {
     const router = useNavigate()
     const {t , ready} = useTranslation(['diagnosis','common'])
 
-    // Construct timeSlotId from examinationDetail
     const timeSlotId = examinationDetail?.schedule_appointment 
         ? examinationDetail.schedule_appointment.id
         : null;
@@ -31,7 +29,7 @@ const Diagnosis = () => {
         <Helmet>
             <title>Diagnosis</title>
         </Helmet>
-        <Box>
+        <Box className="ou-w-[80%] ou-mx-auto"  >
             <SkeletonDiagnosis />
         </Box>
     </Box>

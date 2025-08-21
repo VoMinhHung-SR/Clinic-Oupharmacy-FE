@@ -66,13 +66,24 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
         return (
             <Box className="ou-flex ou-items-center ou-gap-2">
                 {!bill_status && user.role === ROLE_NURSE && (
-                    <Button variant="contained" color="primary" 
-                        className="!ou-min-w-[160px] !ou-btn-base !ou-mt-3"   
-                        disabled={isLoadingButton}
-                        onClick={() => 
-                        handlePayment({amounts: amounts})}>
-                        {t('payment:pay')}
-                    </Button>
+                    <Box>
+                        <Button 
+                            variant="contained"  
+                            className="!ou-bg-[#a50064] !ou-min-w-[160px] !ou-btn-base !ou-mt-3 !ou-mr-2"
+                            onClick={() => 
+                            handlePayment({amounts: amounts, momoWallet: true})}
+                            disabled={isLoadingButton}
+                            >
+                            {t('momoPayment')}
+                        </Button>
+                        <Button variant="contained" color="primary" 
+                            className="!ou-min-w-[160px] !ou-btn-base !ou-mt-3"   
+                            disabled={isLoadingButton}
+                            onClick={() => 
+                            handlePayment({amounts: amounts})}>
+                            {t('payment:pay')}
+                        </Button>
+                    </Box>
                 )}
                 {/* TODO: Add print feature */}
                 {user.role === ROLE_DOCTOR && (
