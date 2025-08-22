@@ -16,18 +16,25 @@ export const fetchAddBill = async (prescriptionData) => {
 }
 
 // To: create a bill with momo payment methods
-export const fetchMomoPaymentURL = async (prescriptionData) => {
+export const fetchMomoPaymentURL = async ({diagnosisID}) => {
     const res = await authApi().post(endpoints['momoPayUrl'],{
-        amount: prescriptionData.amount,
-        prescribing: prescriptionData.prescribing
+        diagnosisID: diagnosisID
     })
     return res;
 }
 
-export const fetcZaloPayPaymentURL = async (prescriptionData) => {
+export const fetcZaloPayPaymentURL = async ({totalAmount, diagnosisID}) => {
     const res = await authApi().post(endpoints['zaloPayUrl'],{
-        amount: prescriptionData.amount,
-        prescribing: prescriptionData.prescribing
+        totalAmount: totalAmount,
+        diagnosisID: diagnosisID
+    })
+    return res;
+}
+
+// To: create bills for multiple prescribing of a diagnosis
+export const fetchBulkPayment = async ({diagnosisID}) => {
+    const res = await authApi().post(endpoints['bulkPayment'],{
+        diagnosisID: diagnosisID
     })
     return res;
 }

@@ -55,12 +55,12 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
         return acc + (prescribingDetail.medicine_unit.price || 0) * prescribingDetail.quantity;
     }, 0) || 0;
 
-    const amounts = Object.entries(
-        medicineUnits.reduce((acc, { prescribing, medicine_unit, quantity }) => {
-          acc[prescribing.id] = (acc[prescribing.id] || 0) + medicine_unit.price * quantity;
-          return acc;
-        }, {})
-      ).map(([prescribingId, total]) => ({ prescribingId: Number(prescribingId), total }));
+    // const amounts = Object.entries(
+    //     medicineUnits.reduce((acc, { prescribing, medicine_unit, quantity }) => {
+    //       acc[prescribing.id] = (acc[prescribing.id] || 0) + medicine_unit.price * quantity;
+    //       return acc;
+    //     }, {})
+    //   ).map(([prescribingId, total]) => ({ prescribingId: Number(prescribingId), total }));
       
     const renderButtons = () => {
         return (
@@ -69,18 +69,16 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
                     <Box>
                         <Button 
                             variant="contained"  
-                            className="!ou-bg-[#a50064] !ou-min-w-[160px] !ou-btn-base !ou-mt-3 !ou-mr-2"
-                            onClick={() => 
-                            handlePayment({amounts: amounts, momoWallet: true})}
+                            className="!ou-min-w-[160px] !ou-btn-momo !ou-mt-3 !ou-mr-2"
+                            onClick={() => handlePayment({momoWallet: true})}
                             disabled={isLoadingButton}
                             >
-                            {t('momoPayment')}
+                            {t('payment:momoPayment')}
                         </Button>
                         <Button variant="contained" color="primary" 
                             className="!ou-min-w-[160px] !ou-btn-base !ou-mt-3"   
                             disabled={isLoadingButton}
-                            onClick={() => 
-                            handlePayment({amounts: amounts})}>
+                            onClick={() => handlePayment({momoWallet: false})}>
                             {t('payment:pay')}
                         </Button>
                     </Box>
