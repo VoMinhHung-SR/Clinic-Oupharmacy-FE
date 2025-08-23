@@ -11,6 +11,7 @@ import { ROLE_DOCTOR, ROLE_NURSE, SERVICE_FEE } from "../../../../../lib/constan
 import { useContext } from "react";
 import UserContext from "../../../../../lib/context/UserContext";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../Loading";
 
 const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButton}) => {
     const { t, tReady } = useTranslation(['prescription-detail', 'common', 'payment']);
@@ -19,15 +20,15 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
     const router = useNavigate()
     if (tReady) {
         return (
-            <Box className="ou-flex ou-justify-center ou-items-center ou-h-64">
-                <Typography>Loading...</Typography>
+            <Box className="ou-flex ou-justify-center ou-items-center ou-h-64 ou-p-5">
+                <Loading />
             </Box>
         );
     }
 
     if (!prescriptionData) {
         return (
-            <Box className="ou-flex ou-justify-center ou-items-center ou-h-64">
+            <Box className="ou-flex ou-justify-center ou-items-center ou-h-64 ou-p-5">
                 <Typography color="error">{t('prescription-detail:errNullPrescription')}</Typography>
             </Box>
         );
@@ -54,25 +55,35 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
         return acc + (prescribingDetail.medicine_unit.price || 0) * prescribingDetail.quantity;
     }, 0) || 0;
 
-    const amounts = Object.entries(
-        medicineUnits.reduce((acc, { prescribing, medicine_unit, quantity }) => {
-          acc[prescribing.id] = (acc[prescribing.id] || 0) + medicine_unit.price * quantity;
-          return acc;
-        }, {})
-      ).map(([prescribingId, total]) => ({ prescribingId: Number(prescribingId), total }));
+    // const amounts = Object.entries(
+    //     medicineUnits.reduce((acc, { prescribing, medicine_unit, quantity }) => {
+    //       acc[prescribing.id] = (acc[prescribing.id] || 0) + medicine_unit.price * quantity;
+    //       return acc;
+    //     }, {})
+    //   ).map(([prescribingId, total]) => ({ prescribingId: Number(prescribingId), total }));
       
     const renderButtons = () => {
         return (
             <Box className="ou-flex ou-items-center ou-gap-2">
                 {!bill_status && user.role === ROLE_NURSE && (
-                    <Button variant="contained" color="primary" 
-                        className="!ou-min-w-[160px] !ou-btn-base !ou-mt-3"   
-                        disabled={isLoadingButton}
-                        onClick={() => 
-                        handlePayment({amounts: amounts})}>
-                        {t('payment:pay')}
-                    </Button>
+                    <Box>
+                        <Button 
+                            variant="contained"  
+                            className="!ou-min-w-[160px] !ou-btn-momo !ou-mt-3 !ou-mr-2"
+                            onClick={() => handlePayment({momoWallet: true})}
+                            disabled={isLoadingButton}
+                            >
+                            {t('payment:momoPayment')}
+                        </Button>
+                        <Button variant="contained" color="primary" 
+                            className="!ou-min-w-[160px] !ou-btn-base !ou-mt-3"   
+                            disabled={isLoadingButton}
+                            onClick={() => handlePayment({momoWallet: false})}>
+                            {t('payment:pay')}
+                        </Button>
+                    </Box>
                 )}
+                {/* TODO: Add print feature */}
                 {user.role === ROLE_DOCTOR && (
                     <Button variant="contained" color="primary" onClick={() => {
                         // window.print();

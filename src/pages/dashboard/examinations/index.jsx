@@ -1,20 +1,5 @@
-import {
-  Badge,
-  Box,
-  Button,
-  Collapse,
-  Pagination,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  useMediaQuery,
-  useTheme,
+import {Badge, Box, Button, Collapse, Pagination, Paper, Stack, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, Typography, useMediaQuery, useTheme
 } from "@mui/material";
 import useExaminationConfirm from "../../../modules/pages/ExaminationListComponents/ExaminationConfirm/hooks/useExaminationConfirm";
 import { useTranslation } from "react-i18next";
@@ -25,6 +10,7 @@ import SkeletonListLineItem from "../../../modules/common/components/skeletons/l
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useState, memo } from "react";
 import FilterListIcon from '@mui/icons-material/FilterList';
+import SkeletonExaminationList from "../../../modules/common/components/skeletons/pages/examinations";
 
 const MemoizedExaminationFilter = memo(ExaminationFilter);
 
@@ -48,15 +34,11 @@ const Examinations = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
-  if (!ready)
-    return <Box sx={{ height: "300px" }}>
-        <Helmet>
-          <title>Examinations</title>
-        </Helmet>
-
-        <Box component={Paper} elevation={4} className="ou-text-center ou-p-10 ou-h-[30vh]">
-            <SkeletonListLineItem count={5} className="ou-w-full"/>
-        </Box>
+  /* Initial loading */
+  if (!ready && isLoadingExamination)
+    return <Box>
+        <Helmet><title>Examinations</title></Helmet>
+        <SkeletonExaminationList />
       </Box>
 
   return (
@@ -138,7 +120,7 @@ const Examinations = () => {
                 {isLoadingExamination && 
                   <TableCell colSpan={12} component="th" scope="row">
                       <Box className="ou-text-center">
-                          <SkeletonListLineItem count={4} className="ou-w-full" />
+                          <SkeletonListLineItem count={10} height="40px" className="ou-w-full" />
                       </Box>
                   </TableCell>
                 }

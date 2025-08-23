@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react"
 import { useParams } from "react-router"
 import UserContext from "../../../../lib/context/UserContext"
-import { fetchAddBill, fetchPrescriptionDetailBillCard } from "../../../common/components/card/BillCard/services"
+import { fetchMomoPaymentURL, fetchPrescriptionDetailBillCard, fetchBulkPayment } from "../../../common/components/card/BillCard/services"
 import { fetchPrescriptionDetail } from "../../PrescriptionDetailComponents/services"
 import moment from "moment/moment"
 import { useTranslation } from "react-i18next"
-import { SERVICE_FEE, TOAST_ERROR, TOAST_SUCCESS } from "../../../../lib/constants"
+import { TOAST_ERROR, TOAST_SUCCESS } from "../../../../lib/constants"
 import { ConfirmAlert } from "../../../../config/sweetAlert2"
 import createToastMessage from "../../../../lib/utils/createToastMessage"
 
@@ -67,18 +67,13 @@ const usePayment = () => {
         }
     }, [user, prescribingId, flag])
 
-    const handlePayment = ({amounts, onSuccess, onError}) => {
-        const wage = Math.floor(SERVICE_FEE / amounts.length)
-
+    const handlePayment = ({onSuccess, onError, momoWallet = false}) => {
+        const diagnosisID = diagnosisInfo.id
         const onSubmit = async () => {
-            try{
-                const responses = await Promise.all(amounts.map(async (amount) => {
-                    return await fetchAddBill({amount: amount.total + wage, prescribing: amount.prescribingId})
-                }))
-               
-                const allSuccess = responses.every(res => res.status === 201)
+            try{  
+                const response = await fetchBulkPayment({diagnosisID: diagnosisID})
                 
-                if (allSuccess) {
+                if (response.status === 201) {
                     setFlag(prev => !prev)
                     onSuccess && onSuccess()
                     createToastMessage({type: TOAST_SUCCESS, message: t('payment:paidCompleted')})
@@ -93,11 +88,25 @@ const usePayment = () => {
                 setIsLoadingButton(false)
             }
         }
+        const momoPayment = async () => {
+            try{
+                const res = await fetchMomoPaymentURL({diagnosisID: diagnosisID})
+                if (res.status === 200) {
+                    window.location.replace(res.data.payUrl);
+                }
+            }catch(err){
+                createToastMessage({type: TOAST_ERROR, message: t('payment:payFailed')})
+            }
+        }
         return ConfirmAlert(t('payment:confirmCreateBill'),
             t('modal:noThrowBack'),t('modal:yes'),t('modal:cancel'),
         ()=>{
             setIsLoadingButton(true)
-            onSubmit()
+            if(momoWallet){
+                momoPayment()
+            }else {
+                onSubmit()
+            }
         }, () => { return; })
     }
 

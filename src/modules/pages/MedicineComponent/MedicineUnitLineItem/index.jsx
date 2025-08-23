@@ -67,13 +67,13 @@ const MedicineUnitLineItem = ({data, removeMedicine, categories, updateMedicine}
           </TableCell>
         
           <TableCell align="center">
-            <Box   className="ou-flex ou-justify-center ou-items-center">
+            <Box className="ou-flex ou-justify-center ou-items-center">
               <Typography>
                 <Tooltip followCursor title={t("common:seeDetail")} >
                   <span>
                     <Button
                         variant="contained"
-                        className="ou-bg-blue-700 !ou-min-w-[68px]  !ou-min-h-[40px] !ou-py-2 !ou-mx-2"
+                        className="ou-bg-blue-700 !ou-min-w-[68px]  !ou-min-h-[40px] !ou-py-2 !ou-m-2"
                         size="small"
                         onClick={()=>handleOpenModal()}
                       >
@@ -87,7 +87,7 @@ const MedicineUnitLineItem = ({data, removeMedicine, categories, updateMedicine}
                     <Button
                         variant="contained"
                         color="error"
-                        className=" !ou-min-w-[68px]  !ou-min-h-[40px] !ou-py-2 !ou-mx-2"
+                        className=" !ou-min-w-[68px]  !ou-min-h-[40px] !ou-py-2 !ou-m-2"
                         size="small"
                         onClick={()=>removeMedicine(medicineUnit.medicine.id, medicineUnit.id, () => {})}
                       >
@@ -114,9 +114,9 @@ const MedicineUnitLineItem = ({data, removeMedicine, categories, updateMedicine}
                   handleExitEditModal, methods.setError))}>
                     <h3 className="ou-text-center ou-pb-3 ou-text-xl">
                       {t('medicine:medicineInfo')}
-                      <Divider/>
                     </h3>
-                    <div className="ou-mb-3">
+                    <Divider/>
+                    <div className="ou-my-4">
                       <FormControl className="ou-w-full !ou-mb-2">
                         <TextField
                             className="ou-w-full"
@@ -167,10 +167,10 @@ const MedicineUnitLineItem = ({data, removeMedicine, categories, updateMedicine}
 
                       <h3 className="ou-text-center ou-pb-3 ou-text-xl">
                         {t('medicine:medicineInStock')}
-                        <Divider/>
                       </h3>
 
-                      <div className="ou-flex ou-mb-3">
+                      <Divider/>
+                      <div className="ou-flex ou-my-4">
                         <FormControl className="ou-w-[50%] !ou-mr-2">
                           <InputLabel htmlFor="medicine-form-price-label">{t('medicine:price')}</InputLabel>
                           <OutlinedInput

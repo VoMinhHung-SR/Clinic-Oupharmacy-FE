@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Outlet, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import UserContext from '../../../lib/context/UserContext';
 
 const ProtectedSpecialRoleRoute = ({allowedRoles = []}) => {

@@ -12,6 +12,7 @@ import { REGEX_NOTE, TOAST_ERROR } from "../../../lib/constants";
 import { useState } from "react";
 import createToastMessage from "../../../lib/utils/createToastMessage";
 import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem";
+import SkeletonCategoryList from "../../../modules/common/components/skeletons/pages/categories";
 const CategoryList = () => {
     const {categories, isLoading, onSubmit, handleOnDeleted, handleOnUpdate} = useCategory();
     const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
@@ -36,15 +37,12 @@ const CategoryList = () => {
         }
     })
 
-    if(!ready)
-        return <Box sx={{ minHeight: "300px" }}>
-        <Helmet>
-            <title>Categories</title>
-        </Helmet>
-        <Box component={Paper} elevation={4} className="ou-text-center ou-p-10">
-            <SkeletonListLineItem count={5} className="ou-w-full"/>
+    /* Initial loading */
+    if(!ready && isLoading)
+        return <Box>
+            <Helmet><title>Categories</title></Helmet>
+            <SkeletonCategoryList />
         </Box>
-    </Box>
 
     const onSubmitCreateOrUpdate = (data) => {
         if (createNotUpdate)
@@ -86,7 +84,7 @@ const CategoryList = () => {
                             <TableRow>
                                 <TableCell colSpan={3}>
                                     <Box className="ou-text-center">
-                                        <SkeletonListLineItem count={4} className="ou-w-full" />
+                                        <SkeletonListLineItem count={5} height="40px" className="ou-w-full" />
                                     </Box>
                                 </TableCell>
                             </TableRow>
