@@ -104,6 +104,15 @@
     .ou-btn-base:hover {
       background-color:#1D4ED8;
     }
+    .ou-btn-momo {
+      background-color: #a50064;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 12px;
+    }
+    .ou-btn-momo:hover {
+      background-color:#6e0343;
+    }
     .ou-btn-base__success {
       background-color: #15803d;
       color: #fff;

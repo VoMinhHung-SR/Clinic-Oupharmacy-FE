@@ -95,6 +95,7 @@ export let endpoints = {
     'receipt':'/bills/get-bill-by-pres/',
     'momoPayUrl':'/bills/momo-payments/',
     'zaloPayUrl':'/bills/zalo-payments/',
+    'bulkPayment':'/bills/bulk-payment/',
 
     // Common Config:
     'common-configs': '/common-configs/',
