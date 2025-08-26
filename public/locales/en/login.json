@@ -4,5 +4,8 @@
     "homePage": "Home page",
     "username": "Email",
     "password": "Password",
-    "incorrectInfo": "Your email or password was incorrect!"
+    "incorrectInfo": "Your email or password was incorrect!",
+    "orLoginWith": "Or login with",
+    "or": "Or",
+    "home": "Home"
 }
