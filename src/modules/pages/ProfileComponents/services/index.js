@@ -14,6 +14,11 @@ export const updateLocation = async (locationID, data) => {
     return res;
 }
 
+export const fetchCreateLocation = async (data) => {
+    const res = await authApi().post(endpoints['location'], data);
+    return res;
+}
+
 export const changeAvatar = async (userID, data) => {
     const res = await authApi().patch(endpoints['change-avatar'](userID), data);
     return res;

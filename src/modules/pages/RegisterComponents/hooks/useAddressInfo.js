@@ -63,7 +63,17 @@ const useAddressInfo = () => {
     const handleInputChange = useCallback((event, value) => {
         setAddressState(prev => ({
             ...prev,
-            addressInput: value
+            addressInput: value,
+            selectedOption: null // reset selected option when user types a new value
+        }));
+    }, []);
+
+    const handleClearAddress = useCallback(() => {
+        setAddressState(prev => ({
+            ...prev,
+            addressInput: '',
+            selectedOption: null,
+            location: { lat: "", lng: "" }
         }));
     }, []);
 
@@ -76,14 +86,9 @@ const useAddressInfo = () => {
                 addressInput: value.description
             }));
         } else {
-            setAddressState(prev => ({
-                ...prev,
-                selectedOption: null,
-                addressInput: '',
-                location: { lat: "", lng: "" }
-            }));
+            handleClearAddress();
         }
-    }, [handleGetPlaceByID]);
+    }, [handleGetPlaceByID, handleClearAddress]);
 
     const memoizedFilterOptions = useMemo(() => createFilterOptions({
         matchFrom: 'start',
@@ -96,11 +101,15 @@ const useAddressInfo = () => {
         loading,
         handleInputChange,
         handleChange,
+        handleGetPlaceByID,
         handleSetLocation,
+        handleClearAddress,
         filterOptions: memoizedFilterOptions,
+        locationGeo: addressState.location, // alias for location
         setCityId: (id) => setAddressState(prev => ({ ...prev, cityId: id })),
         setCityName: (name) => setAddressState(prev => ({ ...prev, cityName: name })),
-        setDistrictName: (name) => setAddressState(prev => ({ ...prev, districtName: name }))
+        setDistrictName: (name) => setAddressState(prev => ({ ...prev, districtName: name })),
+        setSelectedOption: (option) => setAddressState(prev => ({ ...prev, selectedOption: option }))
     };
 };
 

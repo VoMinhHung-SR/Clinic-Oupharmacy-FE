@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from "react"
-import { fetchUserLocation, updateLocation } from "../services"
-import { userContext } from "../../../../App"
+import { fetchCreateLocation, fetchUserLocation, updateLocation } from "../services"
 import { useTranslation } from "react-i18next"
-import * as Yup from 'yup';
 import createToastMessage from "../../../../lib/utils/createToastMessage";
 import { TOAST_SUCCESS } from "../../../../lib/constants";
 import { ErrorAlert } from "../../../../config/sweetAlert2";
@@ -11,25 +9,11 @@ import UserContext from "../../../../lib/context/UserContext";
 const useUpdateLocation = () => {
     const {t} = useTranslation(['yup-validate','modal'])
     const {user, updateUser} = useContext(UserContext)
-    const [locationData, setLocationData] = useState([])
-    
-    const locationSchema = Yup.object().shape({
-        location: Yup.object().shape({
-            address: Yup.string().trim()
-                .required(t('yupAddressRequired')),
-            city: Yup
-                .number().moreThan(0, t('yupCityNumber'))
-                .required(t('yupCityRequired')),
-            district: Yup
-            .number().moreThan(0, t('yupDistrictNumber'))
-            .required(t('yupDistrictRequired')),
-        })
-    })
+    const [isLoading, setIsLoading] = useState(true)
+    const [locationData, setLocationData] = useState(null)
     const [flag, setFlag] = useState(false)
+    const handleChangeFlag = () => setFlag(!flag)
 
-    const handleChangeFlag = () => {
-        setFlag(!flag)
-    }
     useEffect(()=> {
         const loadLocationData = async (userID) => {
             try{
@@ -39,13 +23,17 @@ const useUpdateLocation = () => {
                 }
             }catch (err) {
                 console.log(err)
-            }
+            }finally{
+                setIsLoading(false)
+            }   
         }
         if(user)
             loadLocationData(user.id)
     }, [user, flag])
 
-    const onSubmit = (data, setError, locationGeo, callBackSuccess, cityName, districtName) => {
+    const onSubmit = (data, setError, locationGeo, cityName,
+        districtName, callBackSuccess = () => {}) => {
+
         if(locationGeo.lat === '' || locationGeo.lng === ''){
             setError('location.address',{
                 type: "custom",
@@ -67,45 +55,51 @@ const useUpdateLocation = () => {
             })
             return;
         }
-        
 
-        const handleUpdateLocation = async () => {
-            try{
-                const locationDataSubmit = {
-                    lat:locationGeo.lat,
-                    lng:locationGeo.lng,
-                    city: data.location.city,
-                    district: data.location.district,
-                    address: data.location.address,
-                }
-                const res = await updateLocation(locationData.id,locationDataSubmit)
-                if(res.status === 200)
-                {
-                    const locationDataUpdate = {
-                        lat:locationGeo.lat,
-                        lng:locationGeo.lng,
-                        city:{id: data.location.city, name: cityName},
-                        district: {id: data.location.district, name: districtName},
-                        address: data.location.address,
-                    }
-                    updateUser({ ...user ,locationGeo: locationDataUpdate})
-                    createToastMessage({message:"OKE", type:TOAST_SUCCESS})
-                    callBackSuccess()
-                }
-                else{
-                 
-                    ErrorAlert(t('modal:createFailed'),t('modal:pleaseDoubleCheck'),t('modal:ok'))
-                }
-            }catch(err) {
-                ErrorAlert(t('modal:createFailed'),t('modal:pleaseDoubleCheck'),t('modal:ok'))
-            }
-           
+        const locationDataSubmit = {
+            lat:locationGeo.lat,
+            lng:locationGeo.lng,
+            city: data.location.city,
+            district: data.location.district,
+            address: data.location.address,
         }
-        handleUpdateLocation()
+
+        const handleCreateOrUpdateLocation = async () => {
+            try{
+                // Create Location
+                if(locationData === null){
+                    const res = await fetchCreateLocation(locationDataSubmit)
+                    if(res.status === 201){
+                        createToastMessage({message:t('modal:createSuccess'), type:TOAST_SUCCESS})
+                        handleChangeFlag()
+                        callBackSuccess()
+                    }
+                    else{
+                        ErrorAlert(t('modal:createFailed'),t('modal:pleaseDoubleCheck'),t('modal:ok'))
+                    }
+                }
+                // Update Location
+                else{
+                    const res = await updateLocation(locationData.id,locationDataSubmit)
+                    if(res.status === 200){
+                        createToastMessage({message:t('modal:updateSuccess'), type:TOAST_SUCCESS})
+                        handleChangeFlag()
+                        callBackSuccess()
+                    }
+                    else{
+                        ErrorAlert(t('modal:updateFailed'),t('modal:pleaseDoubleCheck'),t('modal:ok'))
+                    }
+                }
+            }
+            catch(err){
+                ErrorAlert(t('modal:updateFailed'),t('modal:pleaseDoubleCheck'),t('modal:ok'))
+            }
+        }    
+        handleCreateOrUpdateLocation()
     }
 
     return{
-        locationData, user,locationSchema,onSubmit,handleChangeFlag
+        locationData, onSubmit,handleChangeFlag, isLoading
     }
 }
 export default useUpdateLocation
