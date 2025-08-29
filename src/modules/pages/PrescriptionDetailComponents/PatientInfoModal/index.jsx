@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import useCustomModal from "../../../../lib/hooks/useCustomModal";
 import CustomModal from "../../../common/components/Modal";
-import { Box, Button, Grid, Paper, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import moment from "moment";
 
 const PatientInfoModal = ({patientData}) => {
@@ -22,7 +22,7 @@ const PatientInfoModal = ({patientData}) => {
         </Typography>
 
         <CustomModal
-            className="ou-w-[900px] ou-text-center"
+            className="ou-text-center"
             title={t('patientInfo')}
             open={isOpen}
             onClose={handleCloseModal}

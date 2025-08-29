@@ -171,7 +171,7 @@ const PatientManagement = () => {
             </Box>
         {patient && (
             <CustomModal
-                className="ou-w-[900px] ou-text-center"
+                className="ou-text-center"
                 open={isOpen}
                 onClose={handleCloseModal}
                 content={<Box>

@@ -103,7 +103,6 @@ const MedicineUnitLineItem = ({data, removeMedicine, categories, updateMedicine}
 
         <CustomModal
           title={t('medicine:updateMedicine')}
-          className="ou-w-[800px]"
           open={isOpen}
           onClose={handleExitEditModal}
           content={

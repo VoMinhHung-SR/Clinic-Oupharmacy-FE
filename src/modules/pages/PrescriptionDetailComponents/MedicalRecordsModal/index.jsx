@@ -55,7 +55,7 @@ const MedicalRecordsModal = ({patientID}) => {
 
         <CustomModal
             title={t('medicalRecords')}
-            className="ou-w-[900px] ou-text-center"
+            className="ou-text-center"
             open={isOpen}
             onClose={handleCloseModal}
             content={<Box>

@@ -1,8 +1,8 @@
-import { Alert, Avatar, Button, Collapse, Container, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, Paper, TextField, Divider, useTheme, useMediaQuery, Tooltip } from "@mui/material";
+import { Alert, Avatar, Button, Collapse, Container, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, Paper, TextField, Divider } from "@mui/material";
 import { Box } from "@mui/system";
 import BackdropLoading from "../../modules/common/components/BackdropLoading";
 import CloseIcon from "@mui/icons-material/Close";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useLogin from "../../modules/pages/LoginComponents/hooks/useLogin";
 import { useForm } from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup"
@@ -19,11 +19,6 @@ const Login = () =>{
     const {t, tReady} = useTranslation(['login', 'yup-validate'])
     const {onSubmit, openError, openBackdrop, setOpenError, loginSchema, showPassword, handleTogglePassword, handleGoogleLogin, handleFacebookLogin} = useLogin();
     
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const isTablet = useMediaQuery(theme.breakpoints.down('md'));
-    
-    const router = useNavigate()
     const methods = useForm({
         mode:"onSubmit", 
         resolver: yupResolver(loginSchema),
@@ -48,48 +43,21 @@ const Login = () =>{
 
         {openBackdrop === true && <BackdropLoading/>}
  
-        <Box 
-            sx={{
-                width: '100%',
-                minHeight: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: { xs: 2, sm: 3, md: 4 },
-                boxSizing: 'border-box'
-            }}
-        >
-            <Container 
-                component={Paper} 
-                elevation={6} 
-                sx={{ 
-                    padding: { xs: 2, sm: 3, md: 4 },
-                    width: { 
-                        xs: '100%', 
-                        sm: '90%', 
-                        md: '70%', 
-                        lg: '50%', 
-                        xl: '30%' 
-                    },
-                    maxWidth: '500px',
-                    borderRadius: 2
-                }} 
-                className="ou-rounded-lg"
-            >
-                <Box sx={{ margin: '12px auto', textAlign: 'center' }}>
-                    <Avatar 
-                        sx={{ 
-                            width: { xs: '150px', sm: '180px', md: '200px' }, 
-                            height: { xs: '40px', sm: '45px', md: '50px' }, 
-                            margin: "auto" 
-                        }} 
-                        variant="square"
-                        className="ou-object-fit-contain"
-                        src="https://res.cloudinary.com/dl6artkyb/image/upload/v1666354515/OUPharmacy/Untitled-1_hdvtsk.png"
-                    />
+        <Box  style={{
+            "width": "80%", 
+            "top": "50%", "left": "50%", "position": "absolute",
+            "transform": "translate(-50%, -50%)"
+        }}>
+
+            <Container component={Paper} elevation={6} style={{ "padding": "20px", "width": "30%"}} className="ou-rounded-lg">
+                <Box style={{"margin":"12px auto"}}>
+                    <Avatar sx={{ width: '200px', height: '50px', margin:"auto" }} variant="square"
+                        src="https://res.cloudinary.com/dl6artkyb/image/upload/v1666354515/OUPharmacy/Untitled-1_hdvtsk.png"></Avatar>
                 </Box>
 
-                <form onSubmit={methods.handleSubmit((data) => {onSubmit(data);})}>
+                <form onSubmit={methods.handleSubmit((data) => {
+                        onSubmit(data);
+                    })}>
                     <Grid item xs={12} sm={12} >
                         <Collapse in={openError}>
                             <Alert
@@ -112,7 +80,7 @@ const Login = () =>{
                             </Alert>
                         </Collapse>
                     </Grid>
-                    <Grid item xs={12} sm={12} sx={{ margin: { xs: "12px 0", sm: "16px 0" } }}>
+                    <Grid item xs={12} sm={12} style={{margin:"16px 0"}}>
                         <TextField
                             fullWidth
                             autoComplete="given-name"
@@ -126,7 +94,7 @@ const Login = () =>{
                         />
                         {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.username?.message}</p>) : <></>}
                     </Grid>
-                    <Grid item xs={12} sx={{ margin: { xs: "12px 0", sm: "16px 0" } }}>
+                    <Grid item xs={12} style={{margin:"16px 0"}}>
                         <FormControl variant="outlined" fullWidth>
                         {methods.formState.errors.password?.message ? (
                             <InputLabel className="!ou-text-red-600" htmlFor="outlined-adornment-password">
@@ -155,42 +123,41 @@ const Login = () =>{
                             {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.password?.message}</p>) : <></>}
                         </FormControl>
                     </Grid>
-                    <Box sx={{ 
-                        margin: "0 auto", 
-                        textAlign: "center",
-                        width: '100%'
-                    }}>
+                    <div style={{ "margin": "0 auto", "textAlign": "center" }}>
                         <Button
                             type="submit"
-                            className="!ou-bg-blue-600 !ou-text-white !ou-my-3"
-                            sx={{
-                                minWidth: { xs: '100%', sm: '200px' },
-                                width: { xs: '100%', sm: 'auto' },
-                                px: { xs: 2, sm: 5 }
-                            }}
+                            className="!ou-bg-blue-600 !ou-text-white !ou-min-w-[120px] !ou-w-[20%] !ou-px-5"
+                            sx={{ mt: 3, mb: 2 }}
                         >
                             {t('login')}
                         </Button>
                         
                         {/* Social Login Section */}
-                        <Box sx={{ mt: 3, mb: 2, width: "100%" }}>
+                        <Box sx={{ mt: 3, mb: 2, "width": "100%" }}>
                             <Divider sx={{ mb: 2 }}>
-                                <span style={{ color: '#666', fontSize: '14px' }}>{t('login:orLoginWith')}</span>
+                                <span style={{ color: '#666', fontSize: '14px' }}>{t('orLoginWith')}</span>
                             </Divider>
                             
                             <Grid container spacing={2} justifyContent="center">
-                                <Grid item xs={12} sm={12}>
-                                    <Button 
+                                <Grid item xs={6}>
+                                    <Button
                                         fullWidth
                                         variant="outlined"
-                                        className="!ou-border-[#c23321] !ou-text-[#db4437]"
                                         startIcon={<GoogleIcon />}
                                         onClick={handleGoogleLogin}
+                                        sx={{
+                                            borderColor: '#db4437',
+                                            color: '#db4437',
+                                            '&:hover': {
+                                                borderColor: '#c23321',
+                                                backgroundColor: 'rgba(219, 68, 55, 0.04)'
+                                            }
+                                        }}
                                     >
                                         Google
                                     </Button>
                                 </Grid>
-                                {/* <Grid item xs={12} sm={6}>
+                                <Grid item xs={6}>
                                     <Button
                                         fullWidth
                                         variant="outlined"
@@ -207,50 +174,38 @@ const Login = () =>{
                                     >
                                         Facebook
                                     </Button>
-                                </Grid> */}
+                                </Grid>
                             </Grid>
                         </Box>
                         
-                      
-                        <Divider sx={{ mb: 2 }}>
-                            <span style={{ color: '#666', fontSize: '14px' }}>{t('login:or')}</span>
-                        </Divider>
-                        <Grid container spacing={2} justifyContent="center">
-                            <Grid item xs={12} sm={6}>
-                                <Tooltip title={t('login:register')} followCursor >
-                                    <Button 
-                                    fullWidth
-                                    variant="outlined"
-                                    onClick={() => router('/register')}
-                                    startIcon={<HowToRegIcon />}
-                                    className="!ou-border-[#4b4343] !ou-text-[#4b4343]"
-                                >
-                                    {t('login:register')}
-                                </Button>
-                                </Tooltip>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Tooltip title={t('login:home')} followCursor>
-                                    <Button
-                                        fullWidth
-                                        variant="outlined"
-                                        onClick={() => router('/')}
-                                        startIcon={<HomeIcon />}
-                                        sx={{
-                                            borderColor: '#4267B2',
-                                            color: '#4267B2',
-                                            '&:hover': {
-                                                borderColor: '#365899',
-                                                backgroundColor: 'rgba(66, 103, 178, 0.04)'
-                                            }
-                                        }}
+                        <Grid container justifyContent="flex-end" style={{ "margin": "20px 0 0 0" }}>
+                            <Grid item className="ou-flex ou-justify-center ou-items-center">
+                                <Box className='ou-mr-2 ou-flex ou-justify-center ou-items-center'>
+                                    <Link
+                                        className="hover:ou-bg-gray-700 hover:ou-bg-opacity-20 ou-p-2 ou-rounded"
+                                        to="/register/"
+                                        sx={{ mt: 3, mb: 2 }}
                                     >
-                                        {t('login:home')}
-                                    </Button>
-                                </Tooltip>
+                                        <HowToRegIcon />
+                                        <Button variant="default" style={{padding:"0px 4px"}} >{t('register')} </Button>
+                                    </Link>
+
+                                </Box>
+                                <Box className='ou-flex ou-justify-center ou-items-center'>
+                                    <Link
+                                        className="hover:ou-bg-gray-700 hover:ou-bg-opacity-20 ou-p-2 ou-rounded ou-text-blue-700"
+                                        to="/"
+                                        style={{ textDecoration: "inherit", margin: "10px 5px" }}
+                                    >
+                                        <HomeIcon />
+                                        <Button style={{padding:"0px 4px"}} >{t('homePage')}</Button>
+                                    </Link>
+
+                                </Box>
+                                
                             </Grid>
                         </Grid>
-                    </Box>
+                    </div>
                 </form>
             </Container>
         </Box>

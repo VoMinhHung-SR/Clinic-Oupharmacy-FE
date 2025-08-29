@@ -170,7 +170,6 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
       </TableRow>
       
       <CustomModal
-        className="ou-w-[900px]"
         open={isOpen}
         onClose={handleCloseModal}
         content={<ExaminationDetailCard examinationData={examinationData}/>}
@@ -179,7 +178,7 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
             {t('modal:cancel')}
           </Button>
         ]}
-        />
+      />
     
     </>
 

@@ -15,8 +15,8 @@ const useAddressInfo = () => {
         location: { lat: "", lng: "" },
         selectedOption: null
     });
-
-    const debouncedValue = useDebounce(addressState.addressInput, 500);
+    const debouncedValue = useDebounce(addressState.addressInput + " "
+        + addressState?.cityName + " " + addressState?.districtName, 500);
     const { listPlace, loading } = useAddressSearch(debouncedValue);
 
     const handleSetLocation = useCallback(() => {

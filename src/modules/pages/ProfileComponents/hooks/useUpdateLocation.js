@@ -18,7 +18,7 @@ const useUpdateLocation = () => {
         const loadLocationData = async (userID) => {
             try{
                 const res = await fetchUserLocation(userID)
-                if (res.status === 200){
+                if (res.status === 200 && res.data){
                     setLocationData(res.data)
                 }
             }catch (err) {
@@ -66,10 +66,18 @@ const useUpdateLocation = () => {
 
         const handleCreateOrUpdateLocation = async () => {
             try{
+                const locationDataUpdate = {
+                    lat:locationGeo.lat,
+                    lng:locationGeo.lng,
+                    city:{id: data.location.city, name: cityName},
+                    district: {id: data.location.district, name: districtName},
+                    address: data.location.address
+                }
                 // Create Location
                 if(locationData === null){
                     const res = await fetchCreateLocation(locationDataSubmit)
                     if(res.status === 201){
+                        updateUser({...user, locationGeo:locationDataUpdate})
                         createToastMessage({message:t('modal:createSuccess'), type:TOAST_SUCCESS})
                         handleChangeFlag()
                         callBackSuccess()
@@ -82,6 +90,7 @@ const useUpdateLocation = () => {
                 else{
                     const res = await updateLocation(locationData.id,locationDataSubmit)
                     if(res.status === 200){
+                        updateUser({...user, locationGeo:locationDataUpdate})
                         createToastMessage({message:t('modal:updateSuccess'), type:TOAST_SUCCESS})
                         handleChangeFlag()
                         callBackSuccess()
@@ -90,6 +99,7 @@ const useUpdateLocation = () => {
                         ErrorAlert(t('modal:updateFailed'),t('modal:pleaseDoubleCheck'),t('modal:ok'))
                     }
                 }
+                setIsLoading(false)
             }
             catch(err){
                 ErrorAlert(t('modal:updateFailed'),t('modal:pleaseDoubleCheck'),t('modal:ok'))

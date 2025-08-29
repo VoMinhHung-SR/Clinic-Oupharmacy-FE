@@ -62,16 +62,15 @@ const DashboardProfile = () => {
 
     return (
         <>
-        <Box className="ou-flex ou-justify-center">
-            <Box  className=" ou-w-[30%]" >
+        <Box className="ou-flex ou-flex-col md:ou-flex-row ou-justify-center">
+            <Box  className="ou-w-full md:ou-w-[30%] ou-mb-4 md:ou-mb-0" >
                 <AvatarProfile/>
                 <Box  component={Paper} elevation={4} className="ou-p-5 ou-mt-6 ">
                     {userProfile.map((items) => itemsNavigate(items.id, items.pathName, items.itemTitle, items.itemIcon))}
                 </Box>
             </Box>
 
-
-           <Box className="ou-w-[70%] ou-ml-3" component={Paper} elevation={4}>
+           <Box className="ou-w-full md:ou-w-[70%] md:ou-ml-3" component={Paper} elevation={4}>
                { removeSymbol('/',location.pathname) === 'dashboardprofile' ? 
                    <Box>
                         <Box>

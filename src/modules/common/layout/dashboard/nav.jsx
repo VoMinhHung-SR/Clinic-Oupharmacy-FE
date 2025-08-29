@@ -421,7 +421,6 @@ const NavDashboard = ({ open, toggleDrawer }) => {
         </StyledDrawer>
 
         <CustomModal
-          className="ou-w-[900px]"
           open={isOpen}
           onClose={handleCloseModal}
           content={<FormChangePassword callBack={handleCloseModal}/>}

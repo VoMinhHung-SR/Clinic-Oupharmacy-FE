@@ -58,11 +58,18 @@ const UpdateAddressInfo = ({onSubmit = () => {}}) => {
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                         noOptionsText={t('noCityFound')}
                         onChange={(event, value) => {
-                            methods.setValue('location.district', ' ')
-                            setCityId(value.id)
-                            setCityName(value.name)
-                            methods.setValue("location.city", value.id)
-                            methods.clearErrors('location.city')
+                            if(value){
+                                methods.setValue('location.district', -1)
+                                setCityId(value.id)
+                                setCityName(value.name)
+                                methods.setValue("location.city", value.id)
+                                methods.clearErrors('location.city')
+                            } else {
+                                setCityId(-1)
+                                setCityName('')
+                                methods.setValue("location.city",-1)
+                                methods.clearErrors('location.city')
+                            }
                         }}
                         renderInput={(params) => <TextField {...params} 
                             label={t('city')} 
@@ -83,9 +90,15 @@ const UpdateAddressInfo = ({onSubmit = () => {}}) => {
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                         noOptionsText={t('noDistrictFound')}
                         onChange={(event, value) => {
-                            setDistrictName(value.name)
-                            methods.setValue("location.district",value.id)
-                            methods.clearErrors('location.district')
+                            if(value){
+                                setDistrictName(value.name)
+                                methods.setValue("location.district",value.id)
+                                methods.clearErrors('location.district')
+                            } else {
+                                setDistrictName('')
+                                methods.setValue("location.district",-1)
+                                methods.clearErrors('location.district')
+                            }
                         }}
                         renderInput={(params) => <TextField {...params} 
                             label={t('district')}

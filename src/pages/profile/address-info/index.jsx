@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from "@mui/material"
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import CustomModal from "../../../modules/common/components/Modal";
 import useCustomModal from "../../../lib/hooks/useCustomModal";
 import UpdateAddressInfo from "../../../modules/pages/ProfileComponents/UpdateAddressInfo";
@@ -12,7 +12,7 @@ import useUpdateLocation from "../../../modules/pages/ProfileComponents/hooks/us
 const ProfileAddressInfo = () => {
     const { t } = useTranslation(['register', 'common', 'yup-validate']);
     const {user} = useContext(UserContext);
-    const { locationData, onSubmit } = useUpdateLocation()
+    const { onSubmit } = useUpdateLocation()
     const { handleCloseModal, isOpen, handleOpenModal} = useCustomModal();
 
     const handleSubmit = (data, setError, locationGeo, cityName, districtName) => {
@@ -21,17 +21,17 @@ const ProfileAddressInfo = () => {
 
     let locationDataProps = {}
 
-    if(locationData) {
+    if(user.locationGeo) {
       locationDataProps = {
         city: {
-          name: locationData.city_info.name
+          name: user.locationGeo.city.name
         },
         district: {
-          name: locationData.district_info.name
+          name: user.locationGeo.district.name
         },
-        address: locationData.address,
-        lat: locationData.lat,
-        lng: locationData.lng
+        address: user.locationGeo.address,
+        lat: user.locationGeo.lat,
+        lng: user.locationGeo.lng
       }
     }
     return(
@@ -44,7 +44,7 @@ const ProfileAddressInfo = () => {
               sx={{fontSize: '2rem'}} >
                 {t('addressInfo')}
             </Typography>
-            {locationData ? (
+            {user.locationGeo ? (
               <Box className="ou-mt-4">
 
                 <AddressInfo locationData={locationDataProps}/>
@@ -62,8 +62,9 @@ const ProfileAddressInfo = () => {
             
         </Box>
             <CustomModal
-            title={t('updateAddressInfo')}
-            className="ou-w-[900px] ou-text-center"
+            title={<span className="ou-text-[#1D4ED8] ou-text-2xl">
+              {t('updateAddressInfo')}</span>}
+            className="ou-text-center ou-w-full"
             open={isOpen}
             onClose={handleCloseModal}
             content={

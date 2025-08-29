@@ -48,7 +48,6 @@ const PatientCard = ({patientData, callBackOnClickCard = () => {}, isSelected}) 
         </Box>
         
         <CustomModal
-            className="ou-w-[600px]"
             open={isOpen}
             onClose={handleCloseModal}
             content={<PatientInfoModel patientData={patientData}/>}
