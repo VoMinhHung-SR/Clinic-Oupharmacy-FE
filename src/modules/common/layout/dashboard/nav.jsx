@@ -233,12 +233,12 @@ const NavDashboard = ({ open, toggleDrawer }) => {
                 }}
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
-                <Link to="/dashboard/profile" className="nav-link" style={{ "padding": "0px" }}>
+                <Link to="/dashboard/profile">
                   <Box component={Paper} elevation={4} className="ou-px-2 ou-py-3 ou-mx-2 ou-mb-3"> 
-                    <Box className="ou-flex ou-items-center">
+                    <Box className="ou-flex ou-items-center ">
                       <Avatar 
                         src={(user.avatar_path === ERROR_CLOUDINARY) ? AVATAR_DEFAULT : user.avatar_path} 
-                      className="!ou-ml-2"/>
+                      className="!ou-ml-2 ou-border-2 ou-border-[#1D4ED8] ou-rounded-full"/>
                       <Typography>
                         | {user.first_name + " " + user.last_name}
                       </Typography>
@@ -246,14 +246,12 @@ const NavDashboard = ({ open, toggleDrawer }) => {
                   </Box>
                 </Link>
                 <Divider className="!ou-m-[0px]" />
-                <Link to="/dashboard/profile" className="nav-link">
-                    <MenuItem className="!ou-py-2">
-                        <AccountCircleIcon fontSize="small" />
-                        <Typography marginLeft={2}>
-                        {t("common:profile")}
-                        </Typography>
-                    </MenuItem>
-                </Link>
+                  <MenuItem className="!ou-py-2" onClick={() => navigate("/dashboard/profile")}>
+                      <AccountCircleIcon fontSize="small" />
+                      <Typography marginLeft={2}>
+                      {t("common:profile")}
+                      </Typography>
+                  </MenuItem>
                 <Divider className="!ou-m-[0px]" />
                 <MenuItem className="!ou-py-2" onClick={handleOpenModal}>
                     <KeyIcon fontSize="small" />
@@ -273,14 +271,13 @@ const NavDashboard = ({ open, toggleDrawer }) => {
 
             {/* Show nav menu */}
             <ul className="ou-flex ou-justify-center ou-items-center">
-
-              <Link to="/dashboard/conversations" className="ou-pr-3 ou-text-[#333]">
-                <Box>
-                  <MailIcon sx={{fontSize:"24px"}} />    
+              <Tooltip followCursor title={t('conversations')}>
+                <Box className="ou-mx-2 ou-text-[#333] hover:ou-cursor-pointer" onClick={() => navigate("/dashboard/conversations")}>
+                    <MailIcon sx={{fontSize:"24px"}} />    
                 </Box>
-              </Link>
-
-              <Box className="hover:ou-cursor-pointer !ou-text-[#333]">
+              </Tooltip>
+              <Tooltip followCursor title={t('notifications')}>
+                <Box className="hover:ou-cursor-pointer ou-text-[#333] ou-mx-2">
                 <NotificationButton
                   length={notifyListContent && notifyListContent.filter(item => !item.is_commit).length}
                   isLoading={isLoading}
@@ -288,14 +285,13 @@ const NavDashboard = ({ open, toggleDrawer }) => {
                   updateNotifications={updateNotifications}
                 />                  
               </Box>
+              </Tooltip>
 
               <Tooltip followCursor title={t('openSettings')}>
-                <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}
-                  aria-controls={open ? 'account-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? 'true' : undefined}>
-                  <Avatar sx={{ width: 32, height: 32 }} 
-                  className="ou-bg-cyan-50"
+                
+                <IconButton onClick={handleClick} size="medium">
+                  <Avatar sx={{ width: 36, height: 36 }}
+                   className="ou-border-2 ou-border-[#1D4ED8] ou-rounded-full"
                   src={(user.avatar_path && user.avatar_path != ERROR_CLOUDINARY) ? user.avatar_path : "https://res.cloudinary.com/dl6artkyb/image/upload/v1666353307/OUPharmacy/logo_oupharmacy_kz2yzd.png"} 
                   alt={user.first_name + " " + user.last_name}/> 
                 </IconButton>

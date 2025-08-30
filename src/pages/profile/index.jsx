@@ -1,4 +1,4 @@
-import { Avatar, Box, Paper } from "@mui/material"
+import { Avatar, Box, Paper, Tooltip } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { Image, ListAlt, Person } from "@mui/icons-material"
 import { Outlet, useLocation, } from "react-router"
@@ -12,6 +12,7 @@ import UserContext from "../../lib/context/UserContext"
 import AvatarProfile from "../../modules/pages/ProfileComponents/AvatarProfile"
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import ListIcon from '@mui/icons-material/List';
+import WarningIcon from '@mui/icons-material/Warning';
 
 const Profile = () => {
     const {user} = useContext(UserContext);
@@ -41,20 +42,30 @@ const Profile = () => {
         itemTitle: t('bookingList'),
         itemIcon: <AssignmentIcon/>
     }]
-
     const [flag, setFlag] = useState(false)
     const handleChangeFlag = () => setFlag(!flag)
 
     useEffect(()=> {}, [flag])
 
     const itemsNavigate = (itemID, pathName, itemTitle, itemIcon) => {
+
         return (
-            <Link key={itemID} to={pathName}>
-                <Box className={clsx("ou-flex ou-items-center ou-p-3", {'!ou-bg-blue-700 ou-rounded !ou-text-white'
+            <Link key={itemID} to={pathName} >
+                <Box className={clsx("ou-flex ou-items-center ou-p-3", 
+                {'!ou-bg-[#ed6c02]' : user && !user.locationGeo && itemID === 'address-info'},
+                { 'ou-bg-blue-700 ou-rounded ou-text-white'
                 : removeSymbol('/', pathName) === removeSymbol('/', location.pathname) })}>
                     {itemIcon}
                     <span className="ou-ml-2">{itemTitle}</span>
+                    {itemID === 'address-info' && user && !user.locationGeo && (
+                        <Tooltip title={t('profile:addressInfoNotSet')}>  
+                            <Box className="ou-flex ou-items-center ou-ml-auto">
+                                <WarningIcon/>
+                            </Box>
+                        </Tooltip>
+                    )}
                 </Box>
+                
             </Link>
         )
     }
