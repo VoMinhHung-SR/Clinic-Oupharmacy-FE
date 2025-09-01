@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Box, Button, Container, Divider, IconButton, Menu, MenuItem, Paper, Toolbar, Tooltip, Typography } from "@mui/material"
+import { AppBar, Avatar, Badge, Box, Button, Container, Divider, IconButton, Menu, MenuItem, Paper, Toolbar, Tooltip, Typography } from "@mui/material"
 import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from '@mui/icons-material/Menu';
 import Logout from '@mui/icons-material/Logout';
@@ -20,6 +20,7 @@ import useCustomModal from "../../../../lib/hooks/useCustomModal";
 import KeyIcon from '@mui/icons-material/Key';
 import FormChangePassword from "../../../pages/HomeComponents/FormChangePassword";
 import UserContext from "../../../../lib/context/UserContext";
+import WarningIcon from '@mui/icons-material/Warning';
 const Nav = () => {
   
   const { t, i18n } = useTranslation(['common', 'modal']);
