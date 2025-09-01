@@ -1,4 +1,4 @@
-import { Avatar, Box, Paper } from "@mui/material"
+import { Box, Paper } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { Person } from "@mui/icons-material"
 import { Outlet, useLocation, } from "react-router"
@@ -12,6 +12,8 @@ import UserContext from "../../../lib/context/UserContext"
 import AvatarProfile from "../../../modules/pages/ProfileComponents/AvatarProfile"
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import ListIcon from '@mui/icons-material/List';
+import WarningIcon from '@mui/icons-material/Warning';
+import Tooltip from "@mui/material/Tooltip";
 
 const DashboardProfile = () => {
     const {user} = useContext(UserContext);
@@ -47,18 +49,40 @@ const DashboardProfile = () => {
 
     useEffect(()=> {}, [flag])
 
+    const hasValidLocationData = user.locationGeo && 
+                                    Object.keys(user.locationGeo).length > 0 &&
+                                    user.locationGeo.city &&
+                                    user.locationGeo.district &&
+                                    user.locationGeo.address
+
     const itemsNavigate = (itemID, pathName, itemTitle, itemIcon) => {
+        if (user && !hasValidLocationData && itemID === 'D-address-info') { 
+            return (
+                <Link key={itemID} to={pathName}>
+                    <Box className={clsx("ou-flex ou-items-center ou-p-3 ou-rounded",
+                        {'!ou-bg-[#ed6c02] !ou-text-white': removeSymbol('/', pathName) === removeSymbol('/', location.pathname)})}>
+                        {itemIcon}
+                        <span className="ou-ml-2">{itemTitle}</span>
+                        <Tooltip title={t('profile:addressInfoNotSet')}>  
+                            <Box className={clsx("ou-flex ou-items-center ou-ml-auto ou-text-[#ed6c02]",
+                                {'!ou-text-white': removeSymbol('/', pathName) === removeSymbol('/', location.pathname)})}>
+                                <WarningIcon/>
+                            </Box>
+                        </Tooltip>
+                    </Box>
+                </Link>
+            )
+        }
         return (
             <Link key={itemID} to={pathName}>
-                <Box className={clsx("ou-flex ou-items-center ou-p-3", {'!ou-bg-blue-700 ou-rounded !ou-text-white'
-                : removeSymbol('/', pathName) === removeSymbol('/', location.pathname) })}>
+                <Box className={clsx("ou-flex ou-items-center ou-p-3 ou-rounded", 
+                {'!ou-bg-blue-700 !ou-text-white': removeSymbol('/', pathName) === removeSymbol('/', location.pathname) })}>
                     {itemIcon}
                     <span className="ou-ml-2">{itemTitle}</span>
                 </Box>
             </Link>
         )
     }
-
 
     return (
         <>

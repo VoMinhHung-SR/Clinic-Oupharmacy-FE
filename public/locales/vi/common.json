@@ -72,5 +72,6 @@
     "asc": "Tăng dần",
     "desc": "Giảm dần",
     "morning": "Buổi sáng",
-    "afternoon": "Buổi chiều"
+    "afternoon": "Buổi chiều",
+    "warningMisInformation": "Tài khoản của bạn đang bị thiếu thông tin"
 }

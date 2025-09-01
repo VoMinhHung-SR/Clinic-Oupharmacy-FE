@@ -21,7 +21,13 @@ const ProfileAddressInfo = () => {
 
     let locationDataProps = {}
 
-    if(user.locationGeo) {
+    const hasValidLocationData = user.locationGeo && 
+                                Object.keys(user.locationGeo).length > 0 &&
+                                user.locationGeo.city &&
+                                user.locationGeo.district &&
+                                user.locationGeo.address
+
+    if(hasValidLocationData) {
       locationDataProps = {
         city: {
           name: user.locationGeo.city.name
@@ -44,7 +50,7 @@ const ProfileAddressInfo = () => {
               sx={{fontSize: '2rem'}} >
                 {t('addressInfo')}
             </Typography>
-            {user.locationGeo ? (
+            {hasValidLocationData ? (
               <Box className="ou-mt-4">
 
                 <AddressInfo locationData={locationDataProps}/>

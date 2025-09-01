@@ -71,5 +71,6 @@
     "asc": "Ascending",
     "desc": "Descending",
     "morning": "Morning",
-    "afternoon": "Afternoon"
+    "afternoon": "Afternoon",
+    "warningMisInformation": "Your account is missing information"
 }

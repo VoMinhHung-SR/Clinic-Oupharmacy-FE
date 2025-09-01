@@ -67,7 +67,27 @@ const Nav = () => {
   };
 
   const {user, handleLogout} = useContext(UserContext);
-
+  const hasValidLocationData = user.locationGeo && 
+                                Object.keys(user.locationGeo).length > 0 &&
+                                user.locationGeo.city &&
+                                user.locationGeo.district &&
+                                user.locationGeo.address
+  const avatarSrc = (user.avatar_path && user.avatar_path != ERROR_CLOUDINARY) ? user.avatar_path : "https://res.cloudinary.com/dl6artkyb/image/upload/v1666353307/OUPharmacy/logo_oupharmacy_kz2yzd.png"
+  const badgeContent = !hasValidLocationData ?
+    <Badge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        badgeContent={
+          <Tooltip title={t('common:warningMisInformation')}>
+            <WarningIcon fontSize='small' color='warning'/>  
+          </Tooltip>
+        }>
+        <Avatar alt={user.first_name + " " + user.last_name} 
+          src={avatarSrc} sx={{ width: 36, height: 36 }}
+          className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
+      </Badge>
+    : <Avatar alt={user.first_name + " " + user.last_name} 
+      src={avatarSrc} sx={{ width: 36, height: 36 }}
+      className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
+    
   let btn = <>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Link to="/login">
@@ -125,9 +145,7 @@ const Nav = () => {
           <Link to="/profile">
               <Box component={Paper} elevation={4} className="ou-px-2 ou-py-3 ou-mx-2 ou-mb-3"> 
                   <Box className="ou-flex ou-items-center">
-                    <Avatar 
-                    src={(user.avatar_path === ERROR_CLOUDINARY) ? AVATAR_DEFAULT : user.avatar_path} 
-                    className="!ou-ml-2 ou-border-2 ou-border-[#1D4ED8] ou-rounded-full"/>
+                    <Box className="ou-ml-2" >{badgeContent}</Box>
                     <Typography>
                       | {user.first_name + " " + user.last_name}
                     </Typography>
@@ -182,22 +200,8 @@ const Nav = () => {
           </Tooltip>
        
           <Tooltip followCursor title={t('openSettings')}>
-            <IconButton 
-              onClick={handleClick} 
-              size="small" 
-              aria-controls={open ? 'account-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? 'true' : undefined}
-            >
-              <Avatar 
-                sx={{ 
-                  width: { xs: 36, sm: 32 }, 
-                  height: { xs: 36, sm: 32 } 
-                }} 
-                className="ou-border-2 ou-border-[#fff]"
-                src={(user.avatar_path && user.avatar_path != ERROR_CLOUDINARY) ? user.avatar_path : "https://res.cloudinary.com/dl6artkyb/image/upload/v1666353307/OUPharmacy/logo_oupharmacy_kz2yzd.png"} 
-                alt={user.first_name + " " + user.last_name}
-              /> 
+            <IconButton onClick={handleClick} size="medium">
+              <Box sx={{ border: '2px solid #fff', borderRadius: '50%' }} >{badgeContent} </Box> 
             </IconButton>
           </Tooltip>
         </Box>
