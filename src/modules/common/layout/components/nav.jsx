@@ -22,31 +22,31 @@ import FormChangePassword from "../../../pages/HomeComponents/FormChangePassword
 import UserContext from "../../../../lib/context/UserContext";
 import WarningIcon from '@mui/icons-material/Warning';
 const Nav = () => {
-  
   const { t, i18n } = useTranslation(['common', 'modal']);
+
   const pages = [
     {
-      id: 'booking',
-      name:t('booking'),
-      link: '/booking'
+        id: 'booking',
+        name: t('booking'),
+        link: '/booking'
     },
     {
-      id: 'waiting-room',
-      name: t('waitingRoom'),
-      link: '/waiting-room'
+        id: 'waiting-room',
+        name: t('waitingRoom'),
+        link: '/waiting-room'
     },
     {
-      id: 'about-us',
-      name: t('aboutUs'),
-      link: '/about-us'
+        id: 'about-us',
+        name: t('aboutUs'),
+        link: '/about-us'
     }, 
     {
-      id: 'contact',
-      name: t('contact'),
-      link: '/contact'
+        id: 'contact',
+        name: t('contact'),
+        link: '/contact'
     }
   ];
-  
+
   const {isLoading, notifyListContent, updateNotifications} = useNotification();
   const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -68,26 +68,12 @@ const Nav = () => {
   };
 
   const {user, handleLogout} = useContext(UserContext);
-  const hasValidLocationData = user.locationGeo && 
+  const hasValidLocationData = user && user.locationGeo && 
                                 Object.keys(user.locationGeo).length > 0 &&
                                 user.locationGeo.city &&
                                 user.locationGeo.district &&
                                 user.locationGeo.address
-  const avatarSrc = (user.avatar_path && user.avatar_path != ERROR_CLOUDINARY) ? user.avatar_path : "https://res.cloudinary.com/dl6artkyb/image/upload/v1666353307/OUPharmacy/logo_oupharmacy_kz2yzd.png"
-  const badgeContent = !hasValidLocationData ?
-    <Badge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        badgeContent={
-          <Tooltip title={t('common:warningMisInformation')}>
-            <WarningIcon fontSize='small' color='warning'/>  
-          </Tooltip>
-        }>
-        <Avatar alt={user.first_name + " " + user.last_name} 
-          src={avatarSrc} sx={{ width: 36, height: 36 }}
-          className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
-      </Badge>
-    : <Avatar alt={user.first_name + " " + user.last_name} 
-      src={avatarSrc} sx={{ width: 36, height: 36 }}
-      className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
+  let badgeContent = <></> 
     
   let btn = <>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -113,6 +99,24 @@ const Nav = () => {
   </>
 
   if (user){
+    badgeContent = !hasValidLocationData ?
+      <Badge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          badgeContent={
+            <Tooltip title={t('common:warningMisInformation')}>
+              <span>
+                <WarningIcon fontSize='small' color='warning'/>  
+              </span>
+            </Tooltip>
+          }>
+          <Avatar alt={user.first_name + " " + user.last_name} 
+            src={ user.avatar_path && user.avatar_path != ERROR_CLOUDINARY ? user.avatar_path : AVATAR_DEFAULT}
+            sx={{ width: 36, height: 36 }}
+            className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
+        </Badge>
+      : <Avatar alt={user.first_name + " " + user.last_name} 
+        src={ user.avatar_path && user.avatar_path != ERROR_CLOUDINARY ? user.avatar_path : AVATAR_DEFAULT}
+        sx={{ width: 36, height: 36 }}
+        className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
     btn = <>
         <Menu anchorEl={anchorEl} id="account-menu" open={open} onClose={handleClose} onClick={handleClose}
             PaperProps={{

@@ -47,7 +47,7 @@ const Profile = () => {
 
     useEffect(()=> {}, [flag])
 
-    const hasValidLocationData = user.locationGeo && 
+    const hasValidLocationData = user && user.locationGeo && 
                                     Object.keys(user.locationGeo).length > 0 &&
                                     user.locationGeo.city &&
                                     user.locationGeo.district &&

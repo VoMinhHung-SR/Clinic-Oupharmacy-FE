@@ -20,9 +20,7 @@ import { changeLanguage } from "i18next";
 import { AVATAR_DEFAULT, ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useContext, useState } from "react";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import PaymentIcon from '@mui/icons-material/Payment';
-import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
+
 import MailIcon from '@mui/icons-material/Mail';
 import HomeIcon from '@mui/icons-material/Home';
 import KeyIcon from '@mui/icons-material/Key';
@@ -37,6 +35,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import UserContext from '../../../../lib/context/UserContext';
 import useCustomNavigate from '../../../../lib/hooks/useCustomNavigate';
 import WarningIcon from '@mui/icons-material/Warning';
+
 
 const drawerWidth = 240;
 
@@ -95,61 +94,55 @@ const NavDashboard = ({ open, toggleDrawer }) => {
   const {t, i18n}= useTranslation(['common', 'modal']);
 
   const pages = [
-      {
-        id: 'dashboard',
-        name:t('home'),
-        icon: <HomeIcon  className='ou-text-white'/>,
-        link: '/dashboard'
-      },
-      {  
-        id: 'examinations',
-        name:t('examinations'),
-        icon: <AssignmentIcon className='ou-text-white'/>,
-        link: '/dashboard/examinations'
-      },
-      {  
-        id: 'doctor-schedules',
-        name:t('doctor-schedules'),
-        icon: <CalendarMonthIcon className='ou-text-white'/>,
-        link: '/dashboard/doctor-schedules'
-      },      
-      {  
-        id: 'waiting-room',
-        name:t('waiting-room'),
-        icon: <CalendarMonthIcon className='ou-text-white'/>,
-        link: '/dashboard/waiting-room'
-      }
-    ];
-  const page_ROLE_DOCTOR = [ 
-      {  
-        id: 'prescribing',
-        name:t('prescribing'),
-        icon: <MedicalServicesIcon className='ou-text-white'/>,
-        link: '/dashboard/prescribing'
-      }
-  ]
-  const pagesMedicineManagement = [
-    {  
-      id: 'categories',
-      name:t('categories'),
-      icon: <CategoryIcon className='ou-text-white'/>,
-      link: '/dashboard/categories'
+    {
+      id: 'dashboard',
+      name: t('home'),
+      icon: <HomeIcon className='ou-text-white'/>,
+      link: '/dashboard'
     },
     {  
-      id: 'medicines',
-      name:t('medicines'),
-      icon: <PillsIcon className='ou-text-white'/>,
-      link: '/dashboard/medicines'
-    }
-  ] 
-  const page_ROLE_NURSE= [
+      id: 'examinations',
+      name: t('examinations'),
+      icon: <AssignmentIcon className='ou-text-white'/>,
+      link: '/dashboard/examinations'
+    },
     {  
-      id: 'payments',
-      name:t('payments'),
-      icon: <PaymentIcon className='ou-text-white'/>,
-      link: '/dashboard/prescribing'
+      id: 'doctor-schedules',
+      name: t('doctor-schedules'),
+      icon: <CalendarMonthIcon className='ou-text-white'/>,
+      link: '/dashboard/doctor-schedules'
+    },      
+    {  
+      id: 'waiting-room',
+      name: t('waiting-room'),
+      icon: <CalendarMonthIcon className='ou-text-white'/>,
+      link: '/dashboard/waiting-room'
     }
-  ]
+  ];
+  const page_ROLE_DOCTOR = [
+    {
+        id: 'prescribing',
+        name: t('prescribing'),
+        icon: <MedicalServicesIcon className='ou-text-white'/>,
+        link: '/dashboard/prescribing'
+    }
+  ];
+  const pagesMedicineManagement = [
+    {
+        id: 'categories',
+        name: t('categories'),
+        icon: <CategoryIcon className='ou-text-white'/>,
+        link: '/dashboard/categories'
+    }
+  ];
+  const page_ROLE_NURSE=  [
+    {
+        id: 'payments',
+        name: t('payments'),
+        icon: <PaymentIcon className='ou-text-white'/>,
+        link: '/dashboard/prescribing'
+    }
+  ];
     
   const {user, handleLogout} = useContext(UserContext);
   const {navigate} = useCustomNavigate();
@@ -162,28 +155,12 @@ const NavDashboard = ({ open, toggleDrawer }) => {
           </Link>
       </ul>
   </>
-  const hasValidLocationData = user.locationGeo && 
+  const hasValidLocationData = user && user.locationGeo && 
                                     Object.keys(user.locationGeo).length > 0 &&
                                     user.locationGeo.city &&
                                     user.locationGeo.district &&
                                     user.locationGeo.address
-  const avatarSrc = (user.avatar_path && user.avatar_path != ERROR_CLOUDINARY) ? user.avatar_path : "https://res.cloudinary.com/dl6artkyb/image/upload/v1666353307/OUPharmacy/logo_oupharmacy_kz2yzd.png"
-  const badgeContent = !hasValidLocationData ?
-    <Badge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        badgeContent={
-          <Tooltip title={t('common:warningMisInformation')}>
-            <span>
-              <WarningIcon fontSize='small' color='warning'/>  
-            </span>
-            </Tooltip>
-        }>
-        <Avatar alt={user.first_name + " " + user.last_name} 
-          src={avatarSrc} sx={{ width: 36, height: 36 }}
-          className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
-      </Badge>
-    : <Avatar alt={user.first_name + " " + user.last_name} 
-      src={avatarSrc} sx={{ width: 36, height: 36 }}
-      className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
+  let badgeContent = <></>
 
   const handleNav = (role, link) => {
     if(role.includes(user.role))
@@ -228,6 +205,24 @@ const NavDashboard = ({ open, toggleDrawer }) => {
   }
 
   if (user){
+
+    badgeContent = !hasValidLocationData ?
+      <Badge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          badgeContent={
+            <Tooltip title={t('common:warningMisInformation')}>
+              <span>
+                <WarningIcon fontSize='small' color='warning'/>  
+              </span>
+            </Tooltip>
+          }>
+          <Avatar alt={user.first_name + " " + user.last_name} sx={{ width: 36, height: 36 }}
+            src={ user.avatar_path && user.avatar_path != ERROR_CLOUDINARY ? user.avatar_path : AVATAR_DEFAULT}
+            className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
+        </Badge>
+      : <Avatar alt={user.first_name + " " + user.last_name} x={{ width: 36, height: 36 }}
+        src={ user.avatar_path && user.avatar_path != ERROR_CLOUDINARY ? user.avatar_path : AVATAR_DEFAULT}
+        className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
+
     btn = <>
         <Menu anchorEl={anchorEl} id="account-menu" open={openSettingMenu} onClose={handleClose} onClick={handleClose}
             PaperProps={{
