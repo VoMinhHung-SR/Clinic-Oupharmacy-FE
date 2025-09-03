@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Box, Button, Container, Divider, IconButton, Menu, MenuItem, Paper, Toolbar, Tooltip, Typography } from "@mui/material"
+import { AppBar, Avatar, Badge, Box, Button, Container, Divider, IconButton, Menu, MenuItem, Paper, Toolbar, Tooltip, Typography } from "@mui/material"
 import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from '@mui/icons-material/Menu';
 import Logout from '@mui/icons-material/Logout';
@@ -20,32 +20,33 @@ import useCustomModal from "../../../../lib/hooks/useCustomModal";
 import KeyIcon from '@mui/icons-material/Key';
 import FormChangePassword from "../../../pages/HomeComponents/FormChangePassword";
 import UserContext from "../../../../lib/context/UserContext";
+import WarningIcon from '@mui/icons-material/Warning';
 const Nav = () => {
-  
   const { t, i18n } = useTranslation(['common', 'modal']);
+
   const pages = [
     {
-      id: 'booking',
-      name:t('booking'),
-      link: '/booking'
+        id: 'booking',
+        name: t('booking'),
+        link: '/booking'
     },
     {
-      id: 'waiting-room',
-      name: t('waitingRoom'),
-      link: '/waiting-room'
+        id: 'waiting-room',
+        name: t('waitingRoom'),
+        link: '/waiting-room'
     },
     {
-      id: 'about-us',
-      name: t('aboutUs'),
-      link: '/about-us'
+        id: 'about-us',
+        name: t('aboutUs'),
+        link: '/about-us'
     }, 
     {
-      id: 'contact',
-      name: t('contact'),
-      link: '/contact'
+        id: 'contact',
+        name: t('contact'),
+        link: '/contact'
     }
   ];
-  
+
   const {isLoading, notifyListContent, updateNotifications} = useNotification();
   const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -67,7 +68,13 @@ const Nav = () => {
   };
 
   const {user, handleLogout} = useContext(UserContext);
-
+  const hasValidLocationData = user && user.locationGeo && 
+                                Object.keys(user.locationGeo).length > 0 &&
+                                user.locationGeo.city &&
+                                user.locationGeo.district &&
+                                user.locationGeo.address
+  let badgeContent = <></> 
+    
   let btn = <>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Link to="/login">
@@ -92,6 +99,24 @@ const Nav = () => {
   </>
 
   if (user){
+    badgeContent = !hasValidLocationData ?
+      <Badge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          badgeContent={
+            <Tooltip title={t('common:warningMisInformation')}>
+              <span>
+                <WarningIcon fontSize='small' color='warning'/>  
+              </span>
+            </Tooltip>
+          }>
+          <Avatar alt={user.first_name + " " + user.last_name} 
+            src={ user.avatar_path && user.avatar_path != ERROR_CLOUDINARY ? user.avatar_path : AVATAR_DEFAULT}
+            sx={{ width: 36, height: 36 }}
+            className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
+        </Badge>
+      : <Avatar alt={user.first_name + " " + user.last_name} 
+        src={ user.avatar_path && user.avatar_path != ERROR_CLOUDINARY ? user.avatar_path : AVATAR_DEFAULT}
+        sx={{ width: 36, height: 36 }}
+        className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
     btn = <>
         <Menu anchorEl={anchorEl} id="account-menu" open={open} onClose={handleClose} onClick={handleClose}
             PaperProps={{
@@ -122,12 +147,10 @@ const Nav = () => {
             }}
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
-          <Link to="/profile" className="nav-link">
+          <Link to="/profile">
               <Box component={Paper} elevation={4} className="ou-px-2 ou-py-3 ou-mx-2 ou-mb-3"> 
                   <Box className="ou-flex ou-items-center">
-                    <Avatar 
-                    src={(user.avatar_path === ERROR_CLOUDINARY) ? AVATAR_DEFAULT : user.avatar_path} 
-                    className="!ou-ml-2"/>
+                    <Box className="ou-ml-2" >{badgeContent}</Box>
                     <Typography>
                       | {user.first_name + " " + user.last_name}
                     </Typography>
@@ -135,14 +158,14 @@ const Nav = () => {
                 </Box>
             </Link>
             <Divider className="!ou-m-[0px]" />
-            <Link to="/profile" className="nav-link">
-                <MenuItem style={{ "color": "#333" }} className="!ou-py-3">
-                   <AccountCircleIcon fontSize="small" />
-                    <Typography marginLeft={2}>
-                      {t("common:profile")}
-                    </Typography>
-                </MenuItem>
-            </Link>
+            
+            <MenuItem style={{ "color": "#333" }} className="!ou-py-3 "
+            onClick={() => navigate("/profile")}>
+                <AccountCircleIcon fontSize="small" />
+                <Typography marginLeft={2}>
+                  {t("common:profile")}
+                </Typography>
+            </MenuItem>
             <Divider className="!ou-m-[0px]" />
             <MenuItem style={{ "color": "#333" }} className="!ou-py-3" onClick={handleOpenModal}>
                    <KeyIcon fontSize="small" />
@@ -162,12 +185,16 @@ const Nav = () => {
         
         {/* Show nav menu */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 } }}>
-          <Link to="/conversations">
-            <IconButton sx={{ color: '#fff', p: { xs: 0.5, sm: 1 } }}>
-              <MailIcon sx={{ fontSize: { xs: "20px", sm: "24px" } }} />    
-            </IconButton>
-          </Link>
-          <Box className="hover:ou-cursor-pointer">
+            <Tooltip followCursor title={t('conversations')}>
+              <Box className="hover:ou-cursor-pointer"> 
+                <IconButton sx={{ color: '#fff', p: { xs: 0.5, sm: 1 } }}>
+                  <MailIcon sx={{ fontSize: { xs: "20px", sm: "24px" } }} />    
+                </IconButton>
+              </Box>
+            </Tooltip>
+
+          <Tooltip followCursor title={t('notifications')}>
+            <Box className="hover:ou-cursor-pointer"> 
               <NotificationButton
               length={notifyListContent && notifyListContent.filter(item => !item.is_commit).length}
               isLoading={isLoading}
@@ -175,28 +202,11 @@ const Nav = () => {
               updateNotifications={updateNotifications}
             />                
           </Box>
+          </Tooltip>
        
           <Tooltip followCursor title={t('openSettings')}>
-            <IconButton 
-              onClick={handleClick} 
-              size="small" 
-              sx={{ 
-                ml: { xs: 0.5, sm: 1 },
-                p: { xs: 0.5, sm: 1 }
-              }}
-              aria-controls={open ? 'account-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? 'true' : undefined}
-            >
-              <Avatar 
-                sx={{ 
-                  width: { xs: 28, sm: 32 }, 
-                  height: { xs: 28, sm: 32 } 
-                }} 
-                className="ou-bg-cyan-50"
-                src={(user.avatar_path && user.avatar_path != ERROR_CLOUDINARY) ? user.avatar_path : "https://res.cloudinary.com/dl6artkyb/image/upload/v1666353307/OUPharmacy/logo_oupharmacy_kz2yzd.png"} 
-                alt={user.first_name + " " + user.last_name}
-              /> 
+            <IconButton onClick={handleClick} size="medium">
+              <Box sx={{ border: '2px solid #fff', borderRadius: '50%' }} >{badgeContent} </Box> 
             </IconButton>
           </Tooltip>
         </Box>
@@ -391,7 +401,6 @@ const Nav = () => {
         </Container>
 
       <CustomModal
-          className="ou-w-[600px]"
           open={isOpen}
           onClose={handleCloseModal}
           content={<FormChangePassword callBack={handleCloseModal}/>}

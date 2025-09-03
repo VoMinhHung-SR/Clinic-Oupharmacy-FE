@@ -9,5 +9,6 @@
     "currentAvatar": "Ảnh hiện tại",
     "selectedAvatar": "Ảnh chọn",
     "noImageSelected": "Không có ảnh",
-    "changeAvatarSuccess": "Thay đổi ảnh đại diện thành công"
+    "changeAvatarSuccess": "Thay đổi ảnh đại diện thành công",
+    "addressInfoNotSet": "Thông tin địa chỉ không được đặt"
 }

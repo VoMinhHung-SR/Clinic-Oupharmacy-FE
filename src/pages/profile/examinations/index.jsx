@@ -103,78 +103,75 @@ export const OwnerExaminationUpdate = ({e, handleDeleteExamination, onUpdateSucc
     const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal(); 
     return (
         <>
-           <TableRow
-        key={e.id}
-        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-    >
-        <TableCell component="th" scope="row" >
-            <Typography>
-                {e.id}
-            </Typography>
-        </TableCell>
+           <TableRow key={e.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <TableCell component="th" scope="row" >
+                    <Typography>
+                        {e.id}
+                    </Typography>
+                </TableCell>
 
-        <TableCell align="center">
-            <Typography className="ou-table-truncate-text-container">
-                {e.description}
-            </Typography>
-        </TableCell>
-        <TableCell align="center">
-            <Typography>{e.schedule_appointment.day ? <span>{moment(e.schedule_appointment.day).format("DD/MM/YYYY")}</span> 
-                      :  <span>{moment(e.created_date).format("DD/MM/YYYY")}</span> }</Typography>
-        </TableCell>
-        <TableCell align="center">{e.mail_status === true ? t('sent') : t('noSent')}</TableCell>
-        <TableCell align="center">
-            <Typography>
-                {e.patient.first_name +" "+ e.patient.last_name}
-            </Typography>
-        </TableCell>
-        <TableCell align="center">
-            <Box  className="!ou-flex ou-justify-center ou-items-center">
-                {!e.mail_status  &&  
-                <Tooltip followCursor title={t('common:edit')} className="hover:ou-cursor-pointer ">
-                {/* <span> */}
-                    <Button variant="contained"
-                            className="!ou-mr-2 !ou-min-w-[68px]  !ou-p-2  hover:ou-cursor-pointer"
-                            color="success"
-                            onClick={handleOpenModal}
-                            >
-                            <EditIcon></EditIcon>
-                    </Button>
-                {/* </span> */}
-            </Tooltip>
-            }
-                <Tooltip followCursor title={t('common:delete')} className="hover:ou-cursor-pointer">
-                    <span>
-                    <Button 
-                        className="!ou-min-w-[68px]  !ou-p-2 hover:ou-cursor-pointer"
-                            variant="contained"
-                            onClick={()=> handleDeleteExamination()}
-                            color="error" >
-                                <DeleteIcon></DeleteIcon>
+                <TableCell align="center">
+                    <Typography className="ou-table-truncate-text-container">
+                        {e.description}
+                    </Typography>
+                </TableCell>
+                <TableCell align="center">
+                    <Typography>{e.schedule_appointment.day ? <span>{moment(e.schedule_appointment.day).format("DD/MM/YYYY")}</span> 
+                            :  <span>{moment(e.created_date).format("DD/MM/YYYY")}</span> }</Typography>
+                </TableCell>
+                <TableCell align="center">{e.mail_status === true ? t('sent') : t('noSent')}</TableCell>
+                <TableCell align="center">
+                    <Typography>
+                        {e.patient.first_name +" "+ e.patient.last_name}
+                    </Typography>
+                </TableCell>
+                <TableCell align="center">
+                    <Box  className="!ou-flex ou-justify-center ou-items-center">
+                        {!e.mail_status  &&  
+                        <Tooltip followCursor title={t('common:edit')} className="hover:ou-cursor-pointer ">
+                        {/* <span> */}
+                            <Button variant="contained"
+                                    className="!ou-mr-2 !ou-min-w-[68px]  !ou-p-2  hover:ou-cursor-pointer"
+                                    color="success"
+                                    onClick={handleOpenModal}
+                                    >
+                                    <EditIcon></EditIcon>
+                            </Button>
+                        {/* </span> */}
+                    </Tooltip>
+                    }
+                        <Tooltip followCursor title={t('common:delete')} className="hover:ou-cursor-pointer">
+                            <span>
+                            <Button 
+                                className="!ou-min-w-[68px]  !ou-p-2 hover:ou-cursor-pointer"
+                                    variant="contained"
+                                    onClick={()=> handleDeleteExamination()}
+                                    color="error" >
+                                        <DeleteIcon></DeleteIcon>
 
-                        </Button>
-                    </span>
-                </Tooltip>
+                                </Button>
+                            </span>
+                        </Tooltip>
 
-            </Box>
+                    </Box>
+                    
             
-       
-        </TableCell>
-    </TableRow>
+                </TableCell>
+            </TableRow>
 
-    <CustomModal
-            className="ou-w-[900px] ou-text-center"
-            open={isOpen}
-            onClose={handleCloseModal}
-            content={<Box>
-                  <ExaminationUpdate examination={e} onUpdateSuccess={onUpdateSuccess}
-                  handleClose={handleCloseModal}/>
-            </Box>}
-            actions={[
-            <Button key="cancel" onClick={handleCloseModal}>
-                {t('modal:cancel')}
-            </Button>
-            ]}
+            <CustomModal
+                className="ou-w-[900px] ou-text-center"
+                open={isOpen}
+                onClose={handleCloseModal}
+                content={<Box>
+                        <ExaminationUpdate examination={e} onUpdateSuccess={onUpdateSuccess}
+                        handleClose={handleCloseModal}/>
+                </Box>}
+                actions={[
+                <Button key="cancel" onClick={handleCloseModal}>
+                    {t('modal:cancel')}
+                </Button>
+                ]}
             />
         </>
      

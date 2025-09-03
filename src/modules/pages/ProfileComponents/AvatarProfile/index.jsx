@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Paper, Tooltip } from "@mui/material"
-import { AVATAR_DEFAULT, AVATAR_NULL, ERROR_CLOUDINARY, TOAST_ERROR, TOAST_SUCCESS } from "../../../../lib/constants"
+import { AVATAR_DEFAULT, ERROR_CLOUDINARY, TOAST_ERROR, TOAST_SUCCESS } from "../../../../lib/constants"
 import { useContext } from "react"
 import UserContext from "../../../../lib/context/UserContext"
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -37,7 +37,6 @@ const AvatarProfile = () => {
                 </div>
             </Box>
             <CustomModal
-                className="ou-w-[600px]"
                 open={isOpen}
                 title={t('profile:changeAvatar')}
                 onClose={handleCloseModal}
