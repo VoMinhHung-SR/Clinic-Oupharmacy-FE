@@ -1,4 +1,5 @@
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material';
+import { styled as muiStyled } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
@@ -20,7 +21,6 @@ import { changeLanguage } from "i18next";
 import { AVATAR_DEFAULT, ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useContext, useState } from "react";
-
 import MailIcon from '@mui/icons-material/Mail';
 import HomeIcon from '@mui/icons-material/Home';
 import KeyIcon from '@mui/icons-material/Key';
@@ -30,16 +30,18 @@ import FormChangePassword from '../../../pages/HomeComponents/FormChangePassword
 import useNotification from '../../../../lib/hooks/useNotification';
 import NotificationButton from '../../components/button/Notification';
 import PillsIcon from '../../../../lib/icon/PillsIcon';
-import CategoryIcon from '@mui/icons-material/Category';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import UserContext from '../../../../lib/context/UserContext';
 import useCustomNavigate from '../../../../lib/hooks/useCustomNavigate';
 import WarningIcon from '@mui/icons-material/Warning';
-
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
+import PaymentIcon from '@mui/icons-material/Payment';
+import CategoryIcon from '@mui/icons-material/Category';
 
 const drawerWidth = 240;
 
-const AppBar = styled(MuiAppBar, {
+const AppBar = muiStyled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -65,7 +67,7 @@ const AppBar = styled(MuiAppBar, {
   };
 });
 
-const StyledDrawer = styled(MuiDrawer)(({ theme }) => ({
+const StyledDrawer = muiStyled(MuiDrawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
     position: 'relative',
     whiteSpace: 'nowrap',
@@ -131,8 +133,14 @@ const NavDashboard = ({ open, toggleDrawer }) => {
     {
         id: 'categories',
         name: t('categories'),
-        icon: <CategoryIcon className='ou-text-white'/>,
+        icon: <CategoryIcon   className='ou-text-white'/>,
         link: '/dashboard/categories'
+    }, 
+    {
+        id: 'medicines',
+        name: t('medicines'),
+        icon: <PillsIcon   className='ou-text-white'/>,
+        link: '/dashboard/medicines'
     }
   ];
   const page_ROLE_NURSE=  [

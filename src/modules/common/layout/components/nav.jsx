@@ -21,6 +21,7 @@ import KeyIcon from '@mui/icons-material/Key';
 import FormChangePassword from "../../../pages/HomeComponents/FormChangePassword";
 import UserContext from "../../../../lib/context/UserContext";
 import WarningIcon from '@mui/icons-material/Warning';
+import useCustomNavigate from "../../../../lib/hooks/useCustomNavigate";
 const Nav = () => {
   const { t, i18n } = useTranslation(['common', 'modal']);
 
@@ -50,22 +51,15 @@ const Nav = () => {
   const {isLoading, notifyListContent, updateNotifications} = useNotification();
   const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
   const [anchorElNav, setAnchorElNav] = useState(null);
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
+  const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+  const handleCloseNavMenu = () => setAnchorElNav(null);
+  const {navigate} = useCustomNavigate();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-      setAnchorEl(null);
-  };
+  const handleClick = (event) => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
 
   const {user, handleLogout} = useContext(UserContext);
   const hasValidLocationData = user && user.locationGeo && 
@@ -186,7 +180,7 @@ const Nav = () => {
         {/* Show nav menu */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 } }}>
             <Tooltip followCursor title={t('conversations')}>
-              <Box className="hover:ou-cursor-pointer"> 
+              <Box className="hover:ou-cursor-pointer" onClick={() => navigate('/conversations')}> 
                 <IconButton sx={{ color: '#fff', p: { xs: 0.5, sm: 1 } }}>
                   <MailIcon sx={{ fontSize: { xs: "20px", sm: "24px" } }} />    
                 </IconButton>

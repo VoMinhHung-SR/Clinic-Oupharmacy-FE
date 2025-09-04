@@ -18,8 +18,6 @@ import BookingProcess from "../../modules/pages/BookingComponents/BookingProcess
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useNavigate } from "react-router";
 import BookingForm from "../../modules/pages/BookingComponents/BookingForm";
-import UserContext from "../../lib/context/UserContext";
-
 
 const Booking = () => {
     const { t, ready } = useTranslation(['booking','common'])
@@ -30,7 +28,6 @@ const Booking = () => {
         state, actionUpState, actionDownState, clearStage,
         patientSelected, setPatientSelected} = useContext(BookingContext)
 
-    const { hasValidUserAddress } = useContext(UserContext)
     const {openBackdrop,patientList, isLoading} = useBooking()
     const router = useNavigate();
     // TODO: adding skeletons here
@@ -88,7 +85,6 @@ const Booking = () => {
             </>
         )
     }
-
 
     // Step 1
     const renderSelectionBookingMethod = () => {
@@ -220,6 +216,5 @@ const Booking = () => {
             </Box>
         </>
     )
-    
 }
 export default Booking

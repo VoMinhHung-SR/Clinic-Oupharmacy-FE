@@ -44,5 +44,8 @@
     "viewAppointment": "Xem lịch đặt khám của bạn",
     "thanksBooking":"Cảm ơn bạn đã đăng ký lịch khám của chúng tôi.",
     "noteBooking": "Hãy theo dõi thông báo email của bạn, để nhận được thư xác nhận đặt lịch khám từ y tá.",
-    "bestWishes": "Chúc bạn thật nhiều sức khỏe!"
+    "bestWishes": "Chúc bạn thật nhiều sức khỏe!",
+    "errMissingImportantInfo": "Thiếu thông tin quan trọng",
+    "errTextMissingImportantInfo": "Bạn cần cài đặt thông tin quan trọng",
+    "addressRequiredForBooking": "Vui lòng cập nhật địa chỉ để có thể đặt lịch khám"
 }
