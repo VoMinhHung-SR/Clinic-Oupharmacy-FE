@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Container, Divider, FormControl, Grid, InputAdornment, InputLabel, MenuItem, OutlinedInput, Paper, Select, TextField } from "@mui/material"
+import { Avatar, Box, Button, Container, Divider, FormControl, Grid, InputLabel, OutlinedInput, Paper, TextField } from "@mui/material"
 import moment from "moment"
 import { CURRENT_DATE } from "../../../../lib/constants"
 import DoctorAvailabilityTime from "../DoctorAvailabilityTime"
@@ -37,7 +37,7 @@ const BookingForm = ({doctorInfo}) => {
     
     const [pendingBookingData, setPendingBookingData] = useState(null);
 
-    useEffect(()=>{setDoctorID(doctor.id)},[doctor.id])
+    useEffect(()=>{setDoctorID(doctor.user_display.id)},[doctor.user_display.id])
 
     const methods = useForm({
         mode:"obSubmit", 
@@ -46,7 +46,7 @@ const BookingForm = ({doctorInfo}) => {
             description:"",
             selectedDate:"",
             selectedTime: {},
-            doctor: doctor.id ? doctor.id : "",
+            doctor: doctor.user_display.id ? doctor.user_display.id : "",
         }
     })
 
@@ -86,7 +86,7 @@ const BookingForm = ({doctorInfo}) => {
 
     // Modified submit handler to check address first
     const handleBookingSubmit = (data) => {
-        if (hasValidUserAddress) {
+        if (!hasValidUserAddress) {
             // Store booking data and show address modal
             setPendingBookingData(data);
             handleOpenAddressModal();
@@ -338,7 +338,7 @@ const DoctorDetailModal = ({ open, onClose, doctor }) => {
                             <h3 className="ou-text-lg ou-font-semibold ou-text-blue-700">
                                 {t('Dr')} {doctor?.user_display?.first_name} {doctor?.user_display?.last_name}
                             </h3>
-                            <p className="ou-text-gray-600">{doctor?.email}</p>
+                            <p className="ou-text-gray-600">{doctor?.user_display?.email}</p>
                         </div>
                     </div>
 

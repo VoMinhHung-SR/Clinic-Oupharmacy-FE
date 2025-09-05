@@ -24,26 +24,61 @@ const PatientCard = ({patientData, callBackOnClickCard = () => {}, isSelected}) 
 
     return (
     <>
-        <Box key={patientData.id} className="ou-mx-4" onClick={()=> handleOnClick()}>
-            <Box className="ou-flex ou-flex-col">
-                <button className={
-                    clsx("ou-btn-booking ou-border-opacity-60",{
-                        "ou-btn-booking__focus": isSelected === true,
-                    })}>
+        <Box 
+            key={"patient"+patientData.id} 
+            onClick={()=> handleOnClick()}
+            className="ou-w-full ou-h-full ou-flex ou-flex-col"
+        >
+            <Box className="ou-flex ou-flex-col ou-h-full ou-w-full">
+                <button 
+                    className={clsx("ou-btn-booking ou-border-opacity-60 ou-h-full ou-w-full ou-min-h-[280px] ou-flex ou-flex-col ou-justify-between ou-py-6 ou-px-5", {
+                        "ou-btn-booking__focus": isSelected
+                    })}
+                >
                     <div className="ou-flex ou-flex-col ou-justify-center ou-items-center">
-                        <PersonIcon className="!ou-text-[120px] ou-mb-3 "/>
-                        <span className="ou-pt-5 ou-font-bold">{patientData.first_name + " " +patientData.last_name} 
-                            <span> ({calculateAge(patientData.date_of_birth)+" "+ t('booking:yearsOld')})</span></span>
-                        <span className="ou-pt-3 ou-mb-3">{patientData.email}</span>
+                        <PersonIcon 
+                            sx={{
+                                fontSize: { xs: '90px', sm: '110px', md: '130px' },
+                                marginBottom: '20px'
+                            }}
+                        />
+                        <Box 
+                            sx={{
+                                textAlign: 'center',
+                                paddingTop: '8px',
+                                fontSize: { xs: '15px', sm: '17px' },
+                                fontWeight: 'bold',
+                                lineHeight: 1.3,
+                                marginBottom: '8px'
+                            }}
+                        >
+                            {patientData.first_name + " " +patientData.last_name} 
+                            <Box sx={{ fontSize: { xs: '13px', sm: '15px' }, marginTop: '4px' }}>
+                                ({calculateAge(patientData.date_of_birth)+" "+ t('booking:yearsOld')})
+                            </Box>
+                        </Box>
+                        <Box 
+                            sx={{
+                                fontSize: { xs: '13px', sm: '15px' },
+                                wordBreak: 'break-word',
+                                textAlign: 'center',
+                                marginBottom: '20px'
+                            }}
+                        >
+                            {patientData.email}
+                        </Box>
                     </div>
 
-                <button className="hover:ou-text-blue-900 hover:ou-font-bold ou-underline" 
-                onClick={(e) => {
-                    e.stopPropagation(); // prevents triggering the card click
-                    handleOpenModal();
-                  }}>{t('booking:seeDetail')}</button>
+                    <button 
+                        className="hover:ou-text-blue-900 hover:ou-font-bold ou-underline" 
+                        onClick={(e) => {
+                            e.stopPropagation(); // prevents triggering the card click
+                            handleOpenModal();
+                        }}
+                    >
+                        {t('booking:seeDetail')}
+                    </button>
                 </button>
-
             </Box>
         </Box>
         
