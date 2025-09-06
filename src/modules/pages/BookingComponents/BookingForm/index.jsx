@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Container, Divider, FormControl, Grid, InputAdornment, InputLabel, MenuItem, OutlinedInput, Paper, Select, TextField } from "@mui/material"
+import { Avatar, Box, Button, Container, Divider, FormControl, Grid, InputLabel, OutlinedInput, Paper, TextField } from "@mui/material"
 import moment from "moment"
 import { CURRENT_DATE } from "../../../../lib/constants"
 import DoctorAvailabilityTime from "../DoctorAvailabilityTime"
@@ -8,7 +8,7 @@ import useDoctorAvailability from "../DoctorAvailabilityTime/hooks/useDoctorAvai
 import clsx from "clsx"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import CustomCollapseListItemButton from "../../../common/components/collapse/ListItemButton"
 import BookingContext from "../../../../lib/context/BookingContext"
 import StethoscopeIcon from "../../../../lib/icon/StethoscopeIcon"
@@ -16,19 +16,28 @@ import SchemaModels from "../../../../lib/schema"
 import useCustomModal from "../../../../lib/hooks/useCustomModal"
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import Tooltip from '@mui/material/Tooltip';
+import UserContext from "../../../../lib/context/UserContext"
+import UpdateAddressInfo from "../../ProfileComponents/UpdateAddressInfo"
+import useUpdateLocation from "../../ProfileComponents/hooks/useUpdateLocation"
+import CloseIcon from '@mui/icons-material/Close';
 
 const BookingForm = ({doctorInfo}) => {
-    const {t , tReady} = useTranslation(['booking', 'yup-validate', 'modal', 'home'])
+    const {t , tReady} = useTranslation(['booking', 'yup-validate', 'modal', 'home', 'register'])
 
     const doctor = doctorInfo;
     const {patientSelected, actionUpState} = useContext(BookingContext)
+    const {hasValidUserAddress} = useContext(UserContext)
     const {timeNotAvailable, isLoading, setDate, slideRight, 
         handleSlideChange, setDoctorID, onSubmit} = useDoctorAvailability();
     
     const { timeSlotSchema } = SchemaModels()
     const { handleCloseModal, handleOpenModal, isOpen } = useCustomModal();
+    const { handleCloseModal: handleCloseAddressModal, handleOpenModal: handleOpenAddressModal, isOpen: isAddressModalOpen } = useCustomModal();
+    const { onSubmit: onSubmitAddress } = useUpdateLocation()
+    
+    const [pendingBookingData, setPendingBookingData] = useState(null);
 
-    useEffect(()=>{setDoctorID(doctor.id)},[doctor.id])
+    useEffect(()=>{setDoctorID(doctor.user_display.id)},[doctor.user_display.id])
 
     const methods = useForm({
         mode:"obSubmit", 
@@ -37,7 +46,7 @@ const BookingForm = ({doctorInfo}) => {
             description:"",
             selectedDate:"",
             selectedTime: {},
-            doctor: doctor.id ? doctor.id : "",
+            doctor: doctor.user_display.id ? doctor.user_display.id : "",
         }
     })
 
@@ -58,6 +67,37 @@ const BookingForm = ({doctorInfo}) => {
         setDate(selectedDate);
         methods.setValue("selectedDate", selectedDate);
         methods.trigger("selectedDate");
+    };
+
+    // Handle address update and continue with booking
+    const handleAddressSubmit = (data, setError, locationGeo, cityName, districtName) => {
+        onSubmitAddress(data, setError, locationGeo, cityName, districtName, () => {
+            handleCloseAddressModal();
+            // Continue with pending booking after address is updated
+            if (pendingBookingData) {
+                onSubmit(pendingBookingData, patientSelected, () => {
+                    methods.reset(); 
+                    actionUpState();
+                }, methods.setError);
+                setPendingBookingData(null);
+            }
+        });
+    };
+
+    // Modified submit handler to check address first
+    const handleBookingSubmit = (data) => {
+        if (!hasValidUserAddress) {
+            // Store booking data and show address modal
+            setPendingBookingData(data);
+            handleOpenAddressModal();
+            return;
+        }
+        
+        // Proceed with booking if address is valid
+        onSubmit(data, patientSelected, () => {
+            methods.reset(); 
+            actionUpState();
+        }, methods.setError);
     };
     
     if (tReady)
@@ -185,33 +225,32 @@ const BookingForm = ({doctorInfo}) => {
             <Container className="!ou-py-4">
                 <Box className="ou-flex ou-py-4" component={Paper} elevation={4} >           
                     <div className="ou-w-[100%]">
-                        <form onSubmit={methods.handleSubmit((data)=> onSubmit(data, patientSelected,() => {
-                            methods.reset(); actionUpState();},
-                            methods.setError()))
-                        } className="ou-m-auto ou-px-5"> 
+                        <form onSubmit={methods.handleSubmit(handleBookingSubmit)} className="ou-m-auto ou-px-5"> 
                             {/* Patient Form required */}
                             {renderPatientInformationForm(slideRight)}
                             {/* Area button */}
-                
-                            <Grid item className="ou-flex ou-items-end !ou-my-3">
-                                {!slideRight ?  disableButton(): <>
-                                    <Button variant="contained" 
-                                        color="primary" 
-                                        type="button" 
-                                        onClick={handleSlideChange}
-                                        className="ou-py-2 ou-px-10 !ou-mr-2 ou-ml-auto"
-                                        >
-                                        {t('booking:goBack')}
-                                    </Button> 
-                                    <Button variant="contained" 
-                                    color="success" 
-                                    type="submit" 
-                                    className="ou-py-2 ou-px-10"
-                                    >
-                                    {t('submit')}
-                                </Button>
-                                </>}
+                            <Grid item className="!ou-my-3 ou-flex ou-justify-end">
+                                {!slideRight ?  disableButton() : 
+                                    <Box className="ou-flex ou-justify-end ou-mb-3 ou-w-full">
+                                            <Button variant="contained" 
+                                                color="primary" 
+                                                type="button" 
+                                                onClick={handleSlideChange}
+                                                className="ou-py-2 ou-px-10 !ou-mr-2"
+                                                >
+                                                {t('booking:goBack')}
+                                            </Button> 
+                                            <Button variant="contained" 
+                                                color="success" 
+                                                type="submit" 
+                                                className="ou-py-2 ou-px-10"
+                                                >
+                                            {t('submit')}
+                                        </Button>
+                                    </Box>
+                                }
                             </Grid>
+
                         </form>
                     </div>
                 </Box>
@@ -224,6 +263,35 @@ const BookingForm = ({doctorInfo}) => {
                     onClose={handleCloseModal} 
                     doctor={doctor}
                 />
+            )}
+
+            {/* Address Update Modal */}
+            {isAddressModalOpen && (
+                <div className={`ou-fixed ou-inset-0 ou-bg-black ou-bg-opacity-50 ou-flex ou-items-center ou-justify-center ou-z-50 ${isAddressModalOpen ? 'ou-block' : 'ou-hidden'}`}>
+                    <div className="ou-bg-white ou-rounded-lg ou-shadow-lg ou-max-w-2xl ou-w-full ou-mx-4 ou-max-h-[90vh] ou-overflow-y-auto">
+                        <div className="ou-p-6">
+                            <div className="ou-flex ou-justify-between ou-items-center ou-mb-4">
+                                <h2 className="ou-text-xl ou-text-gray-800">
+                                    {t('register:updateAddressInfo')}
+                                </h2>
+                                <button 
+                                    onClick={handleCloseAddressModal}
+                                    className="ou-text-gray-500 hover:ou-text-gray-700 ou-text-2xl"
+                                >
+                                    <CloseIcon />
+                                </button>
+                            </div>
+                            
+                            <div className="ou-mb-4">
+                                <p className="ou-text-gray-600 ou-text-sm">
+                                    {t('booking:addressRequiredForBooking')}
+                                </p>
+                            </div>
+                            
+                            <UpdateAddressInfo onSubmit={handleAddressSubmit}/>
+                        </div>
+                    </div>
+                </div>
             )}
         </>
     )
@@ -270,7 +338,7 @@ const DoctorDetailModal = ({ open, onClose, doctor }) => {
                             <h3 className="ou-text-lg ou-font-semibold ou-text-blue-700">
                                 {t('Dr')} {doctor?.user_display?.first_name} {doctor?.user_display?.last_name}
                             </h3>
-                            <p className="ou-text-gray-600">{doctor?.email}</p>
+                            <p className="ou-text-gray-600">{doctor?.user_display?.email}</p>
                         </div>
                     </div>
 

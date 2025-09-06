@@ -44,5 +44,8 @@
     "viewAppointment": "View your appointment schedule ",
     "thanksBooking":"Thank you for scheduling an appointment with us.",
     "noteBooking": "Please keep an eye on your email notifications to receive the appointment confirmation from our nurse.",
-    "bestWishes":"Wishing you great health!"
+    "bestWishes":"Wishing you great health!",
+    "errMissingImportantInfo": "Missing important information",
+    "errTextMissingImportantInfo": "You need to set your information",
+    "addressRequiredForBooking": "Please update your address to book an appointment"
 }
