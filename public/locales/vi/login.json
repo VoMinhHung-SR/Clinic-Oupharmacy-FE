@@ -4,6 +4,9 @@
     "homePage": "Trang Chủ",
     "username": "Email",
     "password": "Mật khẩu",
-    "incorrectInfo": " Thông tin đăng nhập không hợp lệ!"
+    "incorrectInfo": " Thông tin đăng nhập không hợp lệ!",
+    "orLoginWith": "Hoặc đăng nhập với",
+    "or": "Khác",
+    "home": "Trang Chủ"
 
 }

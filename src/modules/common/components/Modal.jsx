@@ -14,10 +14,29 @@ const CustomModal = (props) => {
         }
     };  
     return (
-        <Dialog maxWidth={"md"}
-          open={open} 
+        <Dialog 
+          maxWidth={"md"}
+          open={open}
+          sx={{
+            '& .MuiDialog-paper': {
+              width: {
+                xs: '95%',      
+                sm: '80%',      
+                md: '70%',      
+                lg: '60%',      
+                xl: '50%'       
+              },
+              maxWidth: {
+                xs: '400px',    
+                sm: '600px',    
+                md: '800px',    
+                lg: '1000px',   
+                xl: '1200px'   
+              }
+            }
+          }}
           onClose={handleDialogClose}>
-            <DialogTitle className={clsx('ou-min-w-[300px]',className)}>{title}</DialogTitle>
+            <DialogTitle className={clsx('',className)}>{title}</DialogTitle>
             <DialogContent>{content}</DialogContent>
             <DialogActions>{actions}</DialogActions>
         </Dialog>

@@ -222,7 +222,7 @@ const EditPrescriptionModal = ({medicinesSubmitData, handleOnEdit}) => {
         </Typography>
 
         <CustomModal
-            className="ou-w-[900px] ou-text-center"
+            className="ou-text-center"
             title={t('prescription-detail:editPrescriptionDetail')}
             open={isOpen}
             onClose={handleUnSaveChange}

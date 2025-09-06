@@ -162,10 +162,23 @@ const SchemaModels = () => {
             .matches(REGEX_NUMBER999,t('yupQuantityInvalid')),
     });
 
+    const locationSchema = Yup.object().shape({
+        location: Yup.object().shape({
+            address: Yup.string().trim()
+                .required(t('yupAddressRequired')),
+            city: Yup
+                .number().moreThan(0, t('yupCityNumber'))
+                .required(t('yupCityRequired')),
+            district: Yup
+            .number().moreThan(0, t('yupDistrictNumber'))
+            .required(t('yupDistrictRequired')),
+        })
+    })
+
     return {
         medicineSubmitUpdateSchema, timeSlotSchema,
         addingPatientSchema, medicineUnitSchema, 
-        registerSchema, contactSchema, medicineLineItemSchema
+        registerSchema, contactSchema, medicineLineItemSchema, locationSchema
     }
 }
 

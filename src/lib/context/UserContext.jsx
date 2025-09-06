@@ -52,6 +52,11 @@ export const UserProvider = ({ children }) => {
       setIsLoading(false);
     }
   }
+  const hasValidUserAddress = user && user.locationGeo && 
+                                Object.keys(user.locationGeo).length > 0 &&
+                                user.locationGeo.city &&
+                                user.locationGeo.district &&
+                                user.locationGeo.address
 
   const handleLogout = () => {
     Cookies.remove('token');
@@ -63,7 +68,7 @@ export const UserProvider = ({ children }) => {
   return (
     <UserContext.Provider value={{ user: userState, dispatch, updateUser, 
     imageUrl, selectedImage, isLoading, handleLogout,
-    setSelectedImage, setImageUrl, handleChangeAvatar }}>
+    setSelectedImage, setImageUrl, handleChangeAvatar, hasValidUserAddress }}>
       {children}
     </UserContext.Provider>
   );

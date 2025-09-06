@@ -113,6 +113,15 @@
     .ou-btn-momo:hover {
       background-color:#6e0343;
     }
+    .ou-btn-google {
+      background-color: #db4437;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+    .ou-btn-google:hover {
+      background-color:#c23321;
+    }
     .ou-btn-base__success {
       background-color: #15803d;
       color: #fff;

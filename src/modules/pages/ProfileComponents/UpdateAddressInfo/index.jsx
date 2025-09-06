@@ -3,13 +3,13 @@ import { Autocomplete, Box, Button, FormControl, Grid, TextField, createFilterOp
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import useUpdateLocation from "../hooks/useUpdateLocation";
 import useAddressInfo from "../../RegisterComponents/hooks/useAddressInfo";
 import clsx from "clsx";
+import SchemaModels from "../../../../lib/schema";
 
-const UpdateAddressInfo = (props) => {
+const UpdateAddressInfo = ({onSubmit = () => {}}) => {
     const { t, tReady } = useTranslation(['register', 'common', 'yup-validate']);
-    const { locationData, user, locationSchema, onSubmit } = useUpdateLocation()
+    const {locationSchema} = SchemaModels()
  
     const methods = useForm({
         mode: 'onSubmit',
@@ -25,9 +25,9 @@ const UpdateAddressInfo = (props) => {
 
       const isFormDirty = methods.formState.isDirty;
 
-
-      const {districts, setDistrictName, setAddressInput, setCityId, setCityName, cityName, districtName,
-        handleGetPlaceByID, handleSetLocation, listPlace, setSelectedOption, locationGeo} = useAddressInfo()
+      const {districts, setDistrictName, handleInputChange, setCityId,
+        setCityName, cityName, districtName, handleGetPlaceByID,
+        handleSetLocation, listPlace, setSelectedOption, locationGeo} = useAddressInfo()
       const { allConfig } = useSelector((state) => state.config);
   
        // Filter Options for address
@@ -44,11 +44,9 @@ const UpdateAddressInfo = (props) => {
       });
     return <form
       onSubmit={methods.handleSubmit((data) => {
-        onSubmit(data, methods.setError,locationGeo, props.callBackSuccess, cityName, districtName);
+        onSubmit(data, methods.setError, locationGeo, cityName, districtName);
       })}
-     
     >
-      
         <Grid container justifyContent="flex">
             <Grid item xs={6} className={clsx('ou-pr-2 !ou-mt-4')} >
                 <FormControl fullWidth >
@@ -60,11 +58,18 @@ const UpdateAddressInfo = (props) => {
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                         noOptionsText={t('noCityFound')}
                         onChange={(event, value) => {
-                            methods.setValue('location.district', ' ')
-                            setCityId(value.id)
-                            setCityName(value.name)
-                            methods.setValue("location.city", value.id)
-                            methods.clearErrors('location.city')
+                            if(value){
+                                methods.setValue('location.district', -1)
+                                setCityId(value.id)
+                                setCityName(value.name)
+                                methods.setValue("location.city", value.id)
+                                methods.clearErrors('location.city')
+                            } else {
+                                setCityId(-1)
+                                setCityName('')
+                                methods.setValue("location.city",-1)
+                                methods.clearErrors('location.city')
+                            }
                         }}
                         renderInput={(params) => <TextField {...params} 
                             label={t('city')} 
@@ -85,9 +90,15 @@ const UpdateAddressInfo = (props) => {
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                         noOptionsText={t('noDistrictFound')}
                         onChange={(event, value) => {
-                            setDistrictName(value.name)
-                            methods.setValue("location.district",value.id)
-                            methods.clearErrors('location.district')
+                            if(value){
+                                setDistrictName(value.name)
+                                methods.setValue("location.district",value.id)
+                                methods.clearErrors('location.district')
+                            } else {
+                                setDistrictName('')
+                                methods.setValue("location.district",-1)
+                                methods.clearErrors('location.district')
+                            }
                         }}
                         renderInput={(params) => <TextField {...params} 
                             label={t('district')}
@@ -110,10 +121,7 @@ const UpdateAddressInfo = (props) => {
                 filterOptions={filterAddressOptions}
                 isOptionEqualToValue={(option, value) => option?.id === value?.id}
                 noOptionsText={"No Option"}
-                onInputChange={(event, value) => {
-                    setAddressInput(value);
-                    setSelectedOption(null); // reset selected option when user types a new value
-                }}
+                onInputChange={handleInputChange}
                 onChange={(event, value) => {
                     if (value) {
                         handleGetPlaceByID(value.place_id)
@@ -140,16 +148,14 @@ const UpdateAddressInfo = (props) => {
                 {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.location?.address?.message}</p>) : <></>}
                     
             </FormControl>
-            <Grid container justifyContent="flex" className="ou-my-3">
-            <Grid item xs={12}>
-                
-                <Box sx={{ textAlign: 'right' }}>
-                    <Button className="!ou-min-w-[150px] !ou-mt-3" disabled={!isFormDirty} variant="contained" color="success" type="submit">
-                    {t('register:update')}
-                    </Button>
-                </Box>
-                
-            </Grid>
+            <Grid container justifyContent="flex" className="ou-my-5">
+                <Grid item xs={12}>
+                    <Box className="ou-flex ou-justify-end"  >
+                        <Button className="!ou-min-w-[150px]" disabled={!isFormDirty} variant="contained" color="success" type="submit">
+                        {t('register:update')}
+                        </Button>
+                    </Box> 
+                </Grid>
             </Grid>
         </Grid>
     </form>

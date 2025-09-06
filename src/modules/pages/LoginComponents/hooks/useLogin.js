@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { useMutation } from 'react-query';
 import * as Yup from 'yup';
-import { fetchAccessToken } from '../services';
+import { fetchAccessToken, firebaseSocialLogin } from '../services';
 import { authApi, endpoints } from '../../../../config/APIs';
 import { useNavigate } from 'react-router';
 import { userContext } from '../../../../App';
@@ -9,6 +9,8 @@ import Cookies from 'js-cookie';
 import { useTranslation } from 'react-i18next';
 import UserContext from '../../../../lib/context/UserContext';
 import { ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
+import { signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
+import { auth, googleProvider, facebookProvider } from '../../../../config/firebase';
 
 const useLogin = () => {
     const {t} = useTranslation(['yup-validate'])
@@ -27,6 +29,10 @@ const useLogin = () => {
         fetchAccessToken(data.username, data.password),
     );
 
+    const socialLoginMutation = useMutation((data) =>
+        firebaseSocialLogin(data.idToken, data.provider),
+    );
+
     const onSubmit = async (data) => {
         setOpenBackdrop(true)
         // fetch access token 
@@ -43,6 +49,64 @@ const useLogin = () => {
         });
 
         setOpenBackdrop(false);
+    };
+
+    const handleGoogleLogin = async () => {
+        setOpenBackdrop(true);
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const idToken = await result.user.getIdToken();
+            
+            const response = await socialLoginMutation.mutateAsync({
+                idToken: idToken,
+                provider: 'google'
+            });
+            
+            dispatch({
+                'type': 'login',
+                'payload': response.user
+            });
+            
+            if (response.user.role === ROLE_DOCTOR || response.user.role === ROLE_NURSE) {
+                nav('/dashboard');
+            } else {
+                nav('/');
+            }
+        } catch (error) {
+            console.error('Google login error:', error);
+            setOpenError(true);
+        } finally {
+            setOpenBackdrop(false);
+        }
+    };
+
+    const handleFacebookLogin = async () => {
+        setOpenBackdrop(true);
+        try {
+            const result = await signInWithPopup(auth, facebookProvider);
+            const idToken = await result.user.getIdToken();
+            
+            const response = await socialLoginMutation.mutateAsync({
+                idToken: idToken,
+                provider: 'facebook'
+            });
+            
+            dispatch({
+                'type': 'login',
+                'payload': response.user
+            });
+            
+            if (response.user.role === ROLE_DOCTOR || response.user.role === ROLE_NURSE) {
+                nav('/dashboard');
+            } else {
+                nav('/');
+            }
+        } catch (error) {
+            console.error('Facebook login error:', error);
+            setOpenError(true);
+        } finally {
+            setOpenBackdrop(false);
+        }
     };
 
     const getInfoCurrentUser = async () => {
@@ -71,7 +135,11 @@ const useLogin = () => {
         openBackdrop,loginSchema,
         openError,
         onSubmit,
-        setOpenError, showPassword, handleTogglePassword
+        setOpenError, 
+        showPassword, 
+        handleTogglePassword,
+        handleGoogleLogin,
+        handleFacebookLogin
     }
 }
 export default useLogin;

@@ -137,7 +137,6 @@ const CategoryList = () => {
        
         <CustomModal
             title={createNotUpdate && createNotUpdate ? t('category:addCategory') : t('category:updateCategory')}
-            className="ou-w-[800px]"
             open={isOpen}
             onClose={handleCloseModal}
             content={

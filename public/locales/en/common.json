@@ -7,6 +7,8 @@
     "bookingNow":"Booking Now",
     "backToHomepage": "Back to homepage",
     "all": "All",
+    "okay": "Okay",
+    "stay": "Stay",
     "here": "Here",
     "send": "Send",
     "submit": "Submit",
@@ -71,5 +73,6 @@
     "asc": "Ascending",
     "desc": "Descending",
     "morning": "Morning",
-    "afternoon": "Afternoon"
+    "afternoon": "Afternoon",
+    "warningMisInformation": "Your account is missing information"
 }

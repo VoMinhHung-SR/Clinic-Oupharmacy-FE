@@ -171,7 +171,6 @@ const MedicineList = () => {
       
         <CustomModal
           title={t('medicine:addMedicine')}
-          className="ou-w-[800px]"
           open={isOpen}
           onClose={handleCloseModal}
           content={

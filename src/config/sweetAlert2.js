@@ -32,7 +32,7 @@ export const ErrorAlert = (title, text, confirmButtonText = 'Okay') => {
     });
     swalWithBootstrapButtons.fire({
         icon: 'error', 
-        title: `<span style="font-size: 1.5em;">${title}</span>`, 
+        title: `<span style="font-size: 1em;">${title}</span>`, 
         text: text,
         showConfirmButton: true, confirmButtonText: confirmButtonText
     });

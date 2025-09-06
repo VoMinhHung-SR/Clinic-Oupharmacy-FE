@@ -19,6 +19,47 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useNavigate } from "react-router";
 import BookingForm from "../../modules/pages/BookingComponents/BookingForm";
 
+// Constants for reusable styles
+const BUTTON_STYLES = {
+  base: "ou-btn-base ou-min-w-[120px]",
+  booking: "ou-btn-booking ou-border-opacity-60",
+  responsive: { width: { xs: '100%', sm: 'auto' } },
+  responsiveWithMax: { 
+    width: { xs: '100%', sm: 'auto' }, 
+    maxWidth: { xs: '300px', sm: 'none' } 
+  }
+};
+
+const ICON_STYLES = {
+  large: {
+    fontSize: { xs: '80px', sm: '100px', md: '120px' },
+    marginBottom: '12px'
+  },
+  text: {
+    paddingTop: '12px',
+    fontWeight: 'bold',
+    fontSize: { xs: '14px', sm: '16px' },
+    textAlign: 'center'
+  }
+};
+
+// Reusable SelectionButton component
+const SelectionButton = ({ onClick, isSelected, icon, text }) => (
+    <button 
+        onClick={onClick} 
+        className={clsx(BUTTON_STYLES.booking, {
+            "ou-btn-booking__focus": isSelected,
+        })}
+        sx={BUTTON_STYLES.responsiveWithMax}
+    >  
+        <div className="ou-flex ou-flex-col ou-justify-center ou-items-center">
+            {icon}
+            <Box sx={ICON_STYLES.text}>
+                {text}
+            </Box>
+        </div>
+    </button>
+);
 
 const Booking = () => {
     const { t, ready } = useTranslation(['booking','common'])
@@ -66,27 +107,40 @@ const Booking = () => {
     }
     // === Base step ===
     const renderStep = () => {
-        if (state ===  4)
-            return(
-                <>
-                    <button className="ou-mr-3 ou-btn-base ou-min-w-[120px]" 
-                    onClick={()=> clearStage()}>{t("booking:addingNewPatient")}</button>
-                </>)
-        ;
-        if (state === 1)
-            return <button
-                    className={clsx("ou-btn-base ou-min-w-[120px]" ,{})
-                    } onClick={()=> actionUpState()}>{t('booking:next')}</button>
-        if (state === 3)
-            return <button className="ou-btn-base ou-min-w-[120px]" onClick={()=> actionDownState()}>{t('booking:previous')}</button>
+        const buttonProps = {
+            className: BUTTON_STYLES.base,
+            sx: BUTTON_STYLES.responsive
+        };
+
+        if (state === 4) return (
+            <button {...buttonProps} onClick={()=> clearStage()}>
+                {t("booking:addingNewPatient")}
+            </button>
+        );
+        
+        if (state === 1) return (
+            <button {...buttonProps} onClick={()=> actionUpState()}>
+                {t('booking:next')}
+            </button>
+        );
+        
+        if (state === 3) return (
+            <button {...buttonProps} onClick={()=> actionDownState()}>
+                {t('booking:previous')}
+            </button>
+        );
+        
         return (
             <>
-                <button className="ou-mr-3 ou-btn-base ou-min-w-[120px]" onClick={()=> actionDownState()}>{t('booking:previous')}</button>
-                <button className=" ou-btn-base ou-min-w-[120px]" onClick={()=> checkUpStateTwoToThree()}>{t('booking:next')}</button>
+                <button {...buttonProps} onClick={()=> actionDownState()}>
+                    {t('booking:previous')}
+                </button>
+                <button {...buttonProps} onClick={()=> checkUpStateTwoToThree()}>
+                    {t('booking:next')}
+                </button>
             </>
         )
     }
-
 
     // Step 1
     const renderSelectionBookingMethod = () => {
@@ -94,50 +148,35 @@ const Booking = () => {
             return <BackdropLoading/>
         if(patientList.length !== 0)
             return (
-                <>
-                    <div className="ou-flex ou-justify-center ou-space-x-10 ">
-                        <button onClick={()=>{setIsAddNewPatient(true)}} 
-                            className={
-                                clsx("ou-btn-booking ou-border-opacity-60",{
-                                    "ou-btn-booking__focus": isAddNewPatient === true,
-                                })
-                            }>  
-                            <div className="ou-flex ou-flex-col ou-justify-center ou-items-center">
-                                <AddIcon className="!ou-text-[120px] ou-mb-3 "/>
-                                <span className="ou-pt-5 ou-font-bold">{t("booking:addingNewPatient")}</span>
-                            </div>
-                        </button>
-                        
-                        <div>
-                            <button onClick={()=>{setIsAddNewPatient(false)}} className={
-                                clsx("ou-btn-booking ou-border-opacity-60",{
-                                    "ou-btn-booking__focus": isAddNewPatient === false,
-                                })
-                            }
-                            >  
-                                <div className="ou-flex ou-flex-col ou-justify-center ou-items-center">
-                                    <PersonIcon  className="!ou-text-[120px] ou-mb-3 "/>
-                                    <span className="ou-pt-5 ou-font-bold">{t("booking:existingPatient")}</span>
-                                </div>
-                            </button>
-                        </div>
-                    </div>
-                </>
+                <Box 
+                    className="ou-w-full ou-flex ou-justify-center ou-items-center"    
+                    sx={{gap: { xs: 3, sm: 4, md: 6 }, flexDirection: { xs: 'column', sm: 'row' }}}
+                >
+                    <SelectionButton
+                        onClick={() => setIsAddNewPatient(true)}
+                        isSelected={isAddNewPatient === true}
+                        icon={<AddIcon sx={ICON_STYLES.large} />}
+                        text={t("booking:addingNewPatient")}
+                    />
+                    
+                    <SelectionButton
+                        onClick={() => setIsAddNewPatient(false)}
+                        isSelected={isAddNewPatient === false}
+                        icon={<PersonIcon sx={ICON_STYLES.large} />}
+                        text={t("booking:existingPatient")}
+                    />
+                </Box>
             )
         else
             return (
-                <div className="ou-flex ou-justify-center">
-                    <button onClick={()=>{setIsAddNewPatient(true)}}  className={
-                                    clsx("ou-btn-booking ou-border-opacity-60",{
-                                        "ou-btn-booking__focus": isAddNewPatient === true,
-                                    })
-                                }>  
-                        <div className="ou-flex ou-flex-col ou-justify-center ou-items-center">
-                            <AddIcon className="!ou-text-[120px] ou-mb-3 "/>
-                            <span className="ou-pt-5 ou-font-bold">{t("booking:addingNewPatient")}</span>
-                        </div>
-                    </button>
-                </div>
+                <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                    <SelectionButton
+                        onClick={() => setIsAddNewPatient(true)}
+                        isSelected={isAddNewPatient === true}
+                        icon={<AddIcon sx={ICON_STYLES.large} />}
+                        text={t("booking:addingNewPatient")}
+                    />
+                </Box>
         )
     }
 
@@ -149,15 +188,33 @@ const Booking = () => {
                 createPatientSuccess(patientData)}/>
         
         return (
-            <div> 
-                <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent={"center"}>
-                    {patientList && patientList.map(p => <div className="ou-mb-3">
-                        <PatientCard patientData={p} 
-                            callBackOnClickCard={onCallbackPatientCardOnClick} key={"pa"+p.id} 
-                            isSelected={patientSelected && patientSelected.id === p.id}/>
-                        </div>)}
+            <Box sx={{ width: '100%', maxWidth: '100%' }}>
+                <Grid 
+                    container 
+                    spacing={{ xs: 3, sm: 4, md: 5 }}
+                    justifyContent="center"
+                    sx={{ 
+                        padding: { xs: '0 20px', sm: '0 28px', md: '0 36px' },
+                        margin: '0 auto'
+                    }}
+                >
+                    {patientList && patientList.map(p => (
+                        <Grid 
+                            item xs={12} sm={6} md={4} lg={4} xl={4} key={"patient@"+p.id}
+                            sx={{minHeight: 'fit-content'}}
+                            className="ou-flex ou-justify-center "   
+                        >
+                            <Box>
+                                <PatientCard 
+                                    patientData={p} 
+                                    callBackOnClickCard={onCallbackPatientCardOnClick}
+                                    isSelected={patientSelected && patientSelected.id === p.id}
+                                />
+                            </Box>
+                        </Grid>
+                    ))}
                 </Grid>
-            </div>
+            </Box>
         )
     
     }
@@ -176,7 +233,9 @@ const Booking = () => {
                 <Box className="ou-text-xl ou-font-bold ou-mb-3">{t('booking:thanksBooking')}</Box>
                 <Box>{t('booking:noteBooking')}</Box>
                 <Box className="ou-mb-3">{t('booking:bestWishes')}</Box>
-                <CheckCircleIcon className="!ou-text-[200px] ou-text-green-700 ou-opacity-80 ou-mb-3"/>    
+                <Box className="ou-flex ou-justify-center">
+                    <CheckCircleIcon className="!ou-text-[200px] ou-text-green-700 ou-opacity-80 ou-mb-3"/>    
+                </Box>
                 <Box>{t('booking:viewAppointment')} 
                     <span className="ou-text-blue-700 hover:ou-cursor-pointer ou-underline" onClick={()=> router('/profile/examinations')}>
                         {t('common:here')}
@@ -195,29 +254,71 @@ const Booking = () => {
                 (<BackdropLoading />)
                 : <></>
             } 
-            <Box className="ou-relative ou-py-8 ou-min-h-[80vh] ou-flex">
-                <Box className="ou-relative ou-w-full
-                            ou-m-auto ou-flex ou-items-center ou-justify-center" 
-                            component={Paper} elevation={6}>        
+            <Box 
+                sx={{
+                    position: 'relative',  display: 'flex',
+                    py: { xs: 2, sm: 4, md: 8 }, px: { xs: 1, sm: 2, md: 4 },
+                    minHeight: { xs: '90vh', sm: '80vh' }
+                }}
+            >
+                <Box 
+                    sx={{
+                        position: 'relative',
+                        width: '100%',
+                        maxWidth: { xs: '100%', sm: '1200px' },
+                        margin: '0 auto',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                    component={Paper} 
+                    elevation={6}
+                >        
                     {/* Progression area */}
-                    <div className="ou-absolute ou-top-[5%]">
+                    <Box 
+                        sx={{
+                            position: 'absolute',
+                            top: { xs: '2%', sm: '3%', md: '5%' },
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            zIndex: 1
+                        }}
+                    >
                         <BookingProcess/>
-                    </div>
+                    </Box>
+                    
                     {/* Main content */}
-                    <div className="ou-text-center ou-py-20 ou-w-[80%] ou-mt-8">           
+                    <Box 
+                        sx={{
+                            textAlign: 'center', width: { xs: '95%', sm: '90%', md: '85%' },
+                            py: { xs: 6, sm: 8, md: 10 }, px: { xs: 3, sm: 4, md: 6 },
+                            mt: { xs: 6, sm: 8, md: 10 }, minHeight: { xs: '60vh', sm: '50vh' },
+                            display: 'flex', flexDirection: 'column', justifyContent: 'center'
+                        }}
+                    >           
                         {state === 1 && renderSelectionBookingMethod()}
                         {state === 2 && renderSecondState()}
                         {state === 3 && renderThirdState()}
                         {state === 4 && renderLastState()}
-                    </div>
+                    </Box>
+                    
                     {/* Button area */}
-                    <div className="ou-bottom-0 ou-absolute ou-right-0 ou-m-3">
+                    <Box 
+                        sx={{
+                            position: 'absolute',
+                            bottom: { xs: 8, sm: 12, md: 16 },
+                            right: { xs: 8, sm: 12, md: 16 },
+                            display: 'flex',
+                            flexDirection: { xs: 'column', sm: 'row' },
+                            gap: { xs: 1, sm: 2 },
+                            alignItems: 'center'
+                        }}
+                    >
                         {renderStep()}
-                    </div>
+                    </Box>
                 </Box>
             </Box>
         </>
     )
-    
 }
 export default Booking
