@@ -25,5 +25,11 @@
     "updateInformation":"Update information",
     "confirmToUpdateInformation":"Confirm to update information",
     "update": "Update",
-    "updateAddressInfo": "Update address information"
+    "updateAddressInfo": "Update address information",
+    "addAddress": "Add address",
+    "editAddress": "Edit address",
+    "deleteAddress": "Delete address",
+    "setDefaultAddress": "Set default address",
+    "noAddressFound": "You don't have any address yet. Please add your first address."
+
 }

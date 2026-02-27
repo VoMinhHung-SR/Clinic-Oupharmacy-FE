@@ -32,6 +32,8 @@ export let endpoints = {
     'user-patients':(userId) => `/users/${userId}/get-patients/`,    
     'user-detail':(userId) => `/users/${userId}/`,
     'get-user-location':(userId) => `/users/${userId}/location-info/`,
+    'user-addresses': '/users/me/addresses/',
+    'user-address-detail': (addressId) => `/users/me/addresses/${addressId}/`,
     'booking-list':(userId) => `/users/${userId}/booking-list/`,
     'change-password': (userId) => `/users/${userId}/change-password/`,
     'change-avatar': (userId) => `/users/${userId}/change-avatar/`,

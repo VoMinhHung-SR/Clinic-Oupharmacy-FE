@@ -15,6 +15,33 @@ export const UserProvider = ({ children }) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const getDefaultAddressFromUser = (userData) => {
+    if (!userData) return null;
+
+    // Ưu tiên defaultAddress từ backend
+    const addresses = Array.isArray(userData.addresses) ? userData.addresses : [];
+    if (userData.defaultAddress) {
+      return userData.defaultAddress;
+    }
+    if (addresses.length > 0) {
+      const defaultFromList = addresses.find((addr) => addr.is_default);
+      return defaultFromList || addresses[0];
+    }
+
+    // Compat: fallback từ locationGeo cũ (1 địa chỉ)
+    if (userData.locationGeo) {
+      return {
+        address: userData.locationGeo.address,
+        lat: userData.locationGeo.lat,
+        lng: userData.locationGeo.lng,
+        city: userData.locationGeo.city,
+        district: userData.locationGeo.district,
+      };
+    }
+
+    return null;
+  };
+
   useEffect(() => {
     setUserState(user);
 
@@ -52,11 +79,14 @@ export const UserProvider = ({ children }) => {
       setIsLoading(false);
     }
   }
-  const hasValidUserAddress = user && user.locationGeo && 
-                                Object.keys(user.locationGeo).length > 0 &&
-                                user.locationGeo.city &&
-                                user.locationGeo.district &&
-                                user.locationGeo.address
+  const defaultAddress = getDefaultAddressFromUser(user);
+
+  const hasValidUserAddress = !!(
+    defaultAddress &&
+    defaultAddress.address &&
+    defaultAddress.city &&
+    defaultAddress.district
+  );
 
   const handleLogout = () => {
     Cookies.remove('token');
@@ -68,7 +98,7 @@ export const UserProvider = ({ children }) => {
   return (
     <UserContext.Provider value={{ user: userState, dispatch, updateUser, 
     imageUrl, selectedImage, isLoading, handleLogout,
-    setSelectedImage, setImageUrl, handleChangeAvatar, hasValidUserAddress }}>
+    setSelectedImage, setImageUrl, handleChangeAvatar, hasValidUserAddress, defaultAddress }}>
       {children}
     </UserContext.Provider>
   );
