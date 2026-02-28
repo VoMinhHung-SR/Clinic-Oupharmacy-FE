@@ -22,6 +22,8 @@
 
     "forbidden": "Không được cấp quyền truy cập",
     "undefined":"Chưa xác định",
+    "default": "Mặc định",
+    "noAddressSelected": "Chưa chọn địa chỉ",
     "refresh" : "Phiên bản hết hạn vui lòng làm mới trang",
     "profile": "Trang cá nhân",
     "home": "Trang chủ",

@@ -61,12 +61,7 @@ const Nav = () => {
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
-  const {user, handleLogout} = useContext(UserContext);
-  const hasValidLocationData = user && user.locationGeo && 
-                                Object.keys(user.locationGeo).length > 0 &&
-                                user.locationGeo.city &&
-                                user.locationGeo.district &&
-                                user.locationGeo.address
+  const { user, handleLogout, hasValidUserAddress, defaultAddress } = useContext(UserContext);
   let badgeContent = <></> 
     
   let btn = <>
@@ -93,7 +88,7 @@ const Nav = () => {
   </>
 
   if (user){
-    badgeContent = !hasValidLocationData ?
+    badgeContent = !hasValidUserAddress ?
       <Badge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           badgeContent={
             <Tooltip title={t('common:warningMisInformation')}>

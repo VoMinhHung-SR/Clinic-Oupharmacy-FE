@@ -1,11 +1,10 @@
-import { Box, Button, Typography, Paper } from "@mui/material"
+import { Box, Button, Chip, Typography, Paper } from "@mui/material"
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { useContext, useState } from "react";
 import CustomModal from "../../../modules/common/components/Modal";
 import useCustomModal from "../../../lib/hooks/useCustomModal";
 import UpdateAddressInfo from "../../../modules/pages/ProfileComponents/UpdateAddressInfo";
-import AddressInfo from "../../../modules/pages/ProfileComponents/AddressInfo";
 import UserContext from "../../../lib/context/UserContext";
 import useUserAddresses from "../../../modules/pages/ProfileComponents/hooks/useUserAddresses";
 
@@ -51,7 +50,10 @@ const ProfileAddressInfo = () => {
 
   const handleOpenCreateModal = () => {
     setEditingAddress(null);
-    handleOpenModal();
+    handleOpenModal(() => {
+      setEditingAddress(null);
+      handleCloseModal();
+    });
   };
 
   const handleEditAddress = (addr) => {
@@ -60,10 +62,10 @@ const ProfileAddressInfo = () => {
   };
 
   const handleDelete = (addrId) => {
-    const confirmed = window.confirm("Bạn có chắc muốn xóa địa chỉ này?");
-    if (confirmed) {
-      handleDeleteAddress(addrId);
-    }
+    handleDeleteAddress(addrId, () => {
+      setEditingAddress(null);
+      handleCloseModal();
+    });
   };
 
   const hasAnyAddress = addresses && addresses.length > 0;
@@ -74,8 +76,7 @@ const ProfileAddressInfo = () => {
         <title>{t('register:addressInfo')} - OUpharmacy</title>
       </Helmet>
       <Box  className="ou-m-auto ou-px-8 ou-py-4 ">
-          <Typography className="ou-text-center ou-text-[#1D4ED8]"
-            sx={{fontSize: '2rem'}} >
+          <Typography className="ou-text-center ou-text-[#1D4ED8] !ou-text-2xl ou-font-semibold">
               {t('addressInfo')}
           </Typography>
           {isLoading ? (
@@ -97,52 +98,40 @@ const ProfileAddressInfo = () => {
               {addresses.map((addr) => (
                 <Paper
                   key={addr.id}
-                  className="ou-mb-4 ou-p-4 ou-flex ou-flex-col ou-gap-2"
-                  elevation={2}
+                  className="ou-mb-2 ou-p-3 ou-flex ou-flex-col ou-gap-1.5"
+                  elevation={1}
                 >
-                  <Box className="ou-flex ou-justify-between ou-items-center">
-                    <Typography className="ou-font-semibold">
-                      {addr.address}
-                    </Typography>
-                    {addr.is_default && (
-                      <Typography className="ou-text-xs ou-text-green-600">
-                        {t('setDefaultAddress')}
+                  <Box className="ou-flex ou-justify-between ou-items-start ou-gap-2 ou-flex-wrap">
+                    <Box className="ou-flex-1 ou-min-w-0">
+                      <Typography variant="body2" className="ou-font-medium ou-line-clamp-2">
+                        {addr.address}
                       </Typography>
+                      {(addr.city_info?.name || addr.district_info?.name) && (
+                        <Typography variant="caption" color="text.secondary" className="ou-block ou-mt-0.5">
+                          {[addr.district_info?.name, addr.city_info?.name].filter(Boolean).join(', ')}
+                        </Typography>
+                      )}
+                    </Box>
+                    {addr.is_default && (
+                      <Chip
+                        label={t('common:default')}
+                        size="small"
+                        color="success"
+                        sx={{ fontWeight: 600, flexShrink: 0 }}
+                      />
                     )}
                   </Box>
-                  <AddressInfo
-                    locationData={{
-                      city: { name: addr.city_info?.name },
-                      district: { name: addr.district_info?.name },
-                      address: addr.address,
-                      lat: addr.lat,
-                      lng: addr.lng,
-                    }}
-                  />
-                  <Box className="ou-flex ou-justify-end ou-gap-2 ou-mt-2">
+                  <Box className="ou-flex ou-justify-end ou-flex-wrap ou-gap-1.5 ou-mt-1">
                     {!addr.is_default && (
-                      <Button
-                        size="small"
-                        variant="contained"
-                        color="success"
-                        onClick={() => handleSetDefaultAddress(addr.id)}
-                      >
+                      <Button size="small" variant="contained" color="success" onClick={() => handleSetDefaultAddress(addr.id, () => {handleCloseModal();
+                      })}>
                         {t('setDefaultAddress')}
                       </Button>
                     )}
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      onClick={() => handleEditAddress(addr)}
-                    >
+                    <Button size="small" variant="outlined" onClick={() => handleEditAddress(addr)}>
                       {t('editAddress')}
                     </Button>
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      color="error"
-                      onClick={() => handleDelete(addr.id)}
-                    >
+                    <Button size="small" variant="outlined" color="error" onClick={() => handleDelete(addr.id)}>
                       {t('deleteAddress')}
                     </Button>
                   </Box>

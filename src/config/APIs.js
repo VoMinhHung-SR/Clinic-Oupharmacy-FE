@@ -16,7 +16,11 @@ export let endpoints = {
     // Role
     'roles': "/roles/",
 
-    // Common District 
+    // Common City
+    'cities': '/common-cities/',
+    'city-detail':(cityID) => `/common-cities/${cityID}/`,
+
+    // Common District: TODO replace with 
     'districts-by-city': '/common-districts/get-by-city/',
 
     // Common Location

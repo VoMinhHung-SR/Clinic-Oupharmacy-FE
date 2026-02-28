@@ -28,17 +28,6 @@ export const UserProvider = ({ children }) => {
       return defaultFromList || addresses[0];
     }
 
-    // Compat: fallback từ locationGeo cũ (1 địa chỉ)
-    if (userData.locationGeo) {
-      return {
-        address: userData.locationGeo.address,
-        lat: userData.locationGeo.lat,
-        lng: userData.locationGeo.lng,
-        city: userData.locationGeo.city,
-        district: userData.locationGeo.district,
-      };
-    }
-
     return null;
   };
 
@@ -84,8 +73,8 @@ export const UserProvider = ({ children }) => {
   const hasValidUserAddress = !!(
     defaultAddress &&
     defaultAddress.address &&
-    defaultAddress.city &&
-    defaultAddress.district
+    (defaultAddress.city || defaultAddress.city_info) &&
+    (defaultAddress.district || defaultAddress.district_info)
   );
 
   const handleLogout = () => {

@@ -152,8 +152,8 @@ const NavDashboard = ({ open, toggleDrawer }) => {
     }
   ];
     
-  const {user, handleLogout} = useContext(UserContext);
-  const {navigate} = useCustomNavigate();
+  const { user, handleLogout, hasValidUserAddress, defaultAddress } = useContext(UserContext);
+  const { navigate } = useCustomNavigate();
   let btn = <>
       <ul className="ou-flex ou-items-center ou-text-[#070707]">
         <Link to="/login">
@@ -163,11 +163,6 @@ const NavDashboard = ({ open, toggleDrawer }) => {
           </Link>
       </ul>
   </>
-  const hasValidLocationData = user && user.locationGeo && 
-                                    Object.keys(user.locationGeo).length > 0 &&
-                                    user.locationGeo.city &&
-                                    user.locationGeo.district &&
-                                    user.locationGeo.address
   let badgeContent = <></>
 
   const handleNav = (role, link) => {
@@ -214,7 +209,7 @@ const NavDashboard = ({ open, toggleDrawer }) => {
 
   if (user){
 
-    badgeContent = !hasValidLocationData ?
+    badgeContent = !hasValidUserAddress ?
       <Badge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           badgeContent={
             <Tooltip title={t('common:warningMisInformation')}>
@@ -227,7 +222,7 @@ const NavDashboard = ({ open, toggleDrawer }) => {
             src={ user.avatar_path && user.avatar_path != ERROR_CLOUDINARY ? user.avatar_path : AVATAR_DEFAULT}
             className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
         </Badge>
-      : <Avatar alt={user.first_name + " " + user.last_name} x={{ width: 36, height: 36 }}
+      : <Avatar alt={user.first_name + " " + user.last_name} sx={{ width: 36, height: 36 }}
         src={ user.avatar_path && user.avatar_path != ERROR_CLOUDINARY ? user.avatar_path : AVATAR_DEFAULT}
         className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
 

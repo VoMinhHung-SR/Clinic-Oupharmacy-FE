@@ -10,7 +10,7 @@ import {
 import UserContext from "../../../../lib/context/UserContext";
 import createToastMessage from "../../../../lib/utils/createToastMessage";
 import { TOAST_SUCCESS } from "../../../../lib/constants";
-import { ErrorAlert } from "../../../../config/sweetAlert2";
+import { ConfirmAlert, ErrorAlert } from "../../../../config/sweetAlert2";
 import { authApi, endpoints } from "../../../../config/APIs";
 
 const useUserAddresses = () => {
@@ -186,36 +186,48 @@ const useUserAddresses = () => {
         );
       }
     };
-
-    updateAddress();
+    return ConfirmAlert(t("modal:confirmToUpdateInformation"), "", t("modal:ok"), t("modal:cancel"), () => {
+      updateAddress();
+    }, () => {
+      return;
+    });
   };
 
-  const handleDeleteAddress = async (addressId) => {
-    try {
-      const res = await deleteUserAddress(addressId);
-      if (res.status === 204 || res.status === 200) {
-        createToastMessage({
-          message: t("modal:deleteSuccess"),
-          type: TOAST_SUCCESS,
-        });
-        await refreshCurrentUser();
-      } else {
+  const handleDeleteAddress = async (addressId, callBackSuccess = () => {}) => {
+    const deleteAddress = async () => {
+      try {
+        const res = await deleteUserAddress(addressId);
+        if (res.status === 204 || res.status === 200) {
+          createToastMessage({
+            message: t("modal:deleteSuccess"),
+            type: TOAST_SUCCESS,
+          });
+          await refreshCurrentUser();
+          callBackSuccess();
+        } else {
+          ErrorAlert(
+            t("modal:deleteFailed"),
+            t("modal:pleaseDoubleCheck"),
+            t("modal:ok")
+          );
+        }
+      }
+      catch (error) {
         ErrorAlert(
           t("modal:deleteFailed"),
           t("modal:pleaseDoubleCheck"),
           t("modal:ok")
         );
       }
-    } catch (error) {
-      ErrorAlert(
-        t("modal:deleteFailed"),
-        t("modal:pleaseDoubleCheck"),
-        t("modal:ok")
-      );
-    }
+    };
+    return ConfirmAlert(t("modal:confirmToDeleteInformation"), "", t("modal:ok"), t("modal:cancel"), () => {
+      deleteAddress();
+    }, () => {
+      return;
+    });
   };
 
-  const handleSetDefaultAddress = async (addressId) => {
+  const handleSetDefaultAddress = async (addressId, callBackSuccess = () => {}) => {
     try {
       const res = await setDefaultUserAddress(addressId);
       if (res.status === 200) {
@@ -224,6 +236,7 @@ const useUserAddresses = () => {
           type: TOAST_SUCCESS,
         });
         await refreshCurrentUser();
+        callBackSuccess();
       } else {
         ErrorAlert(
           t("modal:updateFailed"),

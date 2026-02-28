@@ -20,6 +20,9 @@
     "pleaseDoubleCheck": "Vui lòng kiểm tra kỹ thông tin biểu mẫu",
     "noThrowBack": "Hành động nay sẽ không thể hoàn tác, tiếp tục",
     
+    "confirmToUpdateInformation": "Bạn có chắc chắn muốn cập nhật thông tin này?",
+    "confirmToDeleteInformation": "Bạn có chắc chắn muốn xóa thông tin này?",
+
     "unsavedChangesTitle": "Bạn có chắc chắn muốn rời khỏi trang?",
     "unsavedChangesMessage": "Dữ liệu của bạn sẽ bị xóa khi rời khỏi.",
     "returnedToUnsavedChanges": "Bạn đã quay lại trang với dữ liệu chưa lưu",

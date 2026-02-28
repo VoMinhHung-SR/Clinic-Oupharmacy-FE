@@ -11,6 +11,8 @@ import ExaminationUpdate from "../../../modules/pages/ExaminationListComponents/
 import useCustomModal from "../../../lib/hooks/useCustomModal";
 import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem";
 import useCustomNavigate from "../../../lib/hooks/useCustomNavigate";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const ExaminationList = () =>{
     const { isLoading, examinationList, handleDeleteExamination, 
@@ -39,12 +41,12 @@ const ExaminationList = () =>{
                 <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>{t('id')}</TableCell>
-                            <TableCell align="center">{t('description')}</TableCell>
-                            <TableCell align="center">{t('createdDate')}</TableCell>
-                            <TableCell align="center">{t('mailStatus')}</TableCell>
-                            <TableCell align="center">{t('patientName')}</TableCell>
-                            <TableCell align="center">{t('function')}</TableCell>
+                            <TableCell sx={{ py: 2 }}>{t('id')}</TableCell>
+                            <TableCell align="center" sx={{ py: 2 }}>{t('description')}</TableCell>
+                            <TableCell align="center" sx={{ py: 2 }}>{t('createdDate')}</TableCell>
+                            <TableCell align="center" sx={{ py: 2 }}>{t('mailStatus')}</TableCell>
+                            <TableCell align="center" sx={{ py: 2 }}>{t('patientName')}</TableCell>
+                            <TableCell align="center" sx={{ py: 2 }}>{t('function')}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -103,36 +105,29 @@ export const OwnerExaminationUpdate = ({e, handleDeleteExamination, onUpdateSucc
     const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal(); 
     return (
         <>
-           <TableRow key={e.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                <TableCell component="th" scope="row" >
-                    <Typography>
-                        {e.id}
-                    </Typography>
+            <TableRow key={e.id} sx={{ '&:last-child td, &:last-child th': { border: 0 }}}>
+                <TableCell component="th" scope="row" sx={{ py: 1 }}>
+                    <Typography variant="body2">{e.id}</Typography>
                 </TableCell>
-
-                <TableCell align="center">
-                    <Typography className="ou-table-truncate-text-container">
-                        {e.description}
-                    </Typography>
+                <TableCell align="center" sx={{ py: 1 }}>
+                    <Typography variant="body2" className="ou-table-truncate-text-container">{e.description}</Typography>
                 </TableCell>
-                <TableCell align="center">
-                    <Typography>{e.schedule_appointment.day ? <span>{moment(e.schedule_appointment.day).format("DD/MM/YYYY")}</span> 
-                            :  <span>{moment(e.created_date).format("DD/MM/YYYY")}</span> }</Typography>
+                <TableCell align="center" sx={{ py: 1 }}>
+                    <Typography variant="body2">{e.schedule_appointment.day ? moment(e.schedule_appointment.day).format("DD/MM/YYYY") : moment(e.created_date).format("DD/MM/YYYY")}</Typography>
                 </TableCell>
-                <TableCell align="center">{e.mail_status === true ? t('sent') : t('noSent')}</TableCell>
-                <TableCell align="center">
-                    <Typography>
-                        {e.patient.first_name +" "+ e.patient.last_name}
-                    </Typography>
+                <TableCell align="center" sx={{ py: 1 }}>{e.mail_status === true ? <CheckCircleIcon className="!ou-text-green-700" /> : <CancelIcon className="!ou-text-red-700" />}</TableCell>
+                <TableCell align="center" sx={{ py: 1 }}>
+                    <Typography variant="body2">{e.patient.first_name + " " + e.patient.last_name}</Typography>
                 </TableCell>
-                <TableCell align="center">
-                    <Box  className="!ou-flex ou-justify-center ou-items-center">
+                <TableCell align="center" sx={{ py: 1 }}>
+                    <Box className="!ou-flex ou-justify-center ou-items-center">
                         {!e.mail_status  &&  
                         <Tooltip followCursor title={t('common:edit')} className="hover:ou-cursor-pointer ">
                         {/* <span> */}
                             <Button variant="contained"
-                                    className="!ou-mr-2 !ou-min-w-[68px]  !ou-p-2  hover:ou-cursor-pointer"
+                                    className="!ou-mr-2 !ou-p-2  hover:ou-cursor-pointer"
                                     color="success"
+                                    size="small"
                                     onClick={handleOpenModal}
                                     >
                                     <EditIcon></EditIcon>
@@ -143,11 +138,12 @@ export const OwnerExaminationUpdate = ({e, handleDeleteExamination, onUpdateSucc
                         <Tooltip followCursor title={t('common:delete')} className="hover:ou-cursor-pointer">
                             <span>
                             <Button 
-                                className="!ou-min-w-[68px]  !ou-p-2 hover:ou-cursor-pointer"
-                                    variant="contained"
-                                    onClick={()=> handleDeleteExamination()}
-                                    color="error" >
-                                        <DeleteIcon></DeleteIcon>
+                                className="!ou-p-2 hover:ou-cursor-pointer"
+                                variant="contained"
+                                size="small"
+                                onClick={()=> handleDeleteExamination()}
+                                color="error" >
+                                    <DeleteIcon></DeleteIcon>
 
                                 </Button>
                             </span>

@@ -12,6 +12,7 @@
     "email": "Email",
     "phoneNumber": "Số điện thoại",
     "address": "Địa chỉ",
+    "default": "Mặc định",
     "dateOfBirth": "Ngày sinh",
     "gender": "Giới tính",
     "submit": "Đăng ký",
