@@ -21,6 +21,8 @@
 
     "forbidden": "Forbidden",
     "undefined": "Undefined",
+    "default": "Default",
+    "noAddressSelected": "No address selected",
     "refresh" : "Please refresh page to get new versions",
     "profile": "Profile",
     "home": "Dashboard",

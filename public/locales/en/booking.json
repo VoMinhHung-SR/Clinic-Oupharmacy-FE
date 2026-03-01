@@ -12,6 +12,7 @@
     "email": "Email",
     "phoneNumber": "Phone number",
     "address": "Address",
+    "default": "Default",
     "dateOfBirth": "Date of birth",
     "gender": "Gender",
     "submit": "Submit",

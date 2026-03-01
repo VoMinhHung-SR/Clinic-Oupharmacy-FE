@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 import SuccessfulAlert, { ErrorAlert } from '../../../../config/sweetAlert2';
 import { ROLE_USER, TOAST_ERROR } from '../../../../lib/constants';
 import createToastMessage from '../../../../lib/utils/createToastMessage';
-import { fetchCreateLocation, fetchCreateUser, fetchDistrictsByCity, fetchCreateUserRole } from '../services';
+import { fetchCreateUser, fetchCreateUserRole } from '../services';
 
 const useRegister = () => {
     const { t } = useTranslation(['yup-validate', 'modal']);
@@ -53,18 +53,6 @@ const useRegister = () => {
         }
         setOpenBackdrop(true);
         try {
-            // Create location
-            const locationData = {
-                lat: locationGeo.lat,
-                lng: locationGeo.lng,
-                city: data.location.city,
-                district: data.location.district,
-                address: data.location.address,
-            };
-            const locRes = await fetchCreateLocation(locationData);
-            if (locRes.status !== 201) throw new Error();
-
-            // Create user
             const formData = new FormData();
             formData.append('first_name', data.firstName);
             formData.append('last_name', data.lastName);
@@ -76,13 +64,15 @@ const useRegister = () => {
             formData.append('gender', gender);
             formData.append('avatar', selectedImage);
             formData.append('role', userRoleID);
-            formData.append('location', locRes.data.id);
 
             const userRes = await fetchCreateUser(formData);
             if (userRes.status === 201) {
                 setOpenBackdrop(false);
-                SuccessfulAlert({title: t('modal:createSuccess'), confirmButtonText: t('modal:ok'),
-                    callbackSuccess: () => router('/login')});
+                SuccessfulAlert({
+                    title: t('modal:createSuccess'),
+                    confirmButtonText: t('modal:ok'),
+                    callbackSuccess: () => router('/login'),
+                });
             }
         } catch (err) {
             setOpenBackdrop(false);

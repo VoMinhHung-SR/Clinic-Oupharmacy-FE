@@ -54,8 +54,7 @@ const UpdateProfile = ({ userID ,email, firstName, lastName, dob, phoneNumber, g
         })}
         className="ou-m-auto ou-px-8 ou-py-4  !ou-h-full"
       >
-        <Typography gutterBottom 
-          sx={{ fontSize: { xs: '1.5rem', md: '2rem' }, textAlign: 'center', color: '#1D4ED8' }}>
+        <Typography className="ou-text-center ou-text-[#1D4ED8] !ou-text-2xl ou-font-semibold"  >
             {t('register:updateInformation')}
         </Typography>
         <Grid container justifyContent="flex" className="ou-mt-6">

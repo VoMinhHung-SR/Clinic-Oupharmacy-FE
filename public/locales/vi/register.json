@@ -25,5 +25,12 @@
     "updateInformation":"Cập nhật thông tin",
     "confirmToUpdateInformation":"Xác nhận cập nhật thông tin",
     "update": "Cập nhật",
-    "updateAddressInfo": "Cập nhật thông tin đỉa chỉ"
+    "updateAddressInfo": "Cập nhật thông tin đỉa chỉ",
+    "addAddress": "Thêm địa chỉ",
+    "editAddress": "Sửa địa chỉ",
+    "deleteAddress": "Xóa địa chỉ",
+    "setDefaultAddress": "Đặt làm địa chỉ mặc định",
+    "confirmToDeleteAddress": "Xác nhận xóa địa chỉ",
+    "confirmToSetDefaultAddress": "Xác nhận đặt làm địa chỉ mặc định",
+    "noAddressFound": "Bạn chưa có địa chỉ nào. Vui lòng thêm địa chỉ đầu tiên."
 }

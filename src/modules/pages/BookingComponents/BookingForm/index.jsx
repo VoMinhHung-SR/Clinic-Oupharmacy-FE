@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Container, Divider, FormControl, Grid, InputLabel, OutlinedInput, Paper, TextField } from "@mui/material"
+import { Avatar, Box, Button, Container, Divider, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Paper, Select, TextField } from "@mui/material"
 import moment from "moment"
 import { CURRENT_DATE } from "../../../../lib/constants"
 import DoctorAvailabilityTime from "../DoctorAvailabilityTime"
@@ -18,7 +18,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import UserContext from "../../../../lib/context/UserContext"
 import UpdateAddressInfo from "../../ProfileComponents/UpdateAddressInfo"
-import useUpdateLocation from "../../ProfileComponents/hooks/useUpdateLocation"
+import useUserAddresses from "../../ProfileComponents/hooks/useUserAddresses"
 import CloseIcon from '@mui/icons-material/Close';
 
 const BookingForm = ({doctorInfo}) => {
@@ -26,16 +26,24 @@ const BookingForm = ({doctorInfo}) => {
 
     const doctor = doctorInfo;
     const {patientSelected, actionUpState} = useContext(BookingContext)
-    const {hasValidUserAddress} = useContext(UserContext)
+    const { user, hasValidUserAddress, defaultAddress } = useContext(UserContext)
+    const { handleCreateAddress } = useUserAddresses()
     const {timeNotAvailable, isLoading, setDate, slideRight, 
         handleSlideChange, setDoctorID, onSubmit} = useDoctorAvailability();
     
     const { timeSlotSchema } = SchemaModels()
     const { handleCloseModal, handleOpenModal, isOpen } = useCustomModal();
     const { handleCloseModal: handleCloseAddressModal, handleOpenModal: handleOpenAddressModal, isOpen: isAddressModalOpen } = useCustomModal();
-    const { onSubmit: onSubmitAddress } = useUpdateLocation()
-    
+
+    const addresses = Array.isArray(user?.addresses) ? user.addresses : []
+    const [selectedAddressId, setSelectedAddressId] = useState(defaultAddress?.id ?? addresses[0]?.id ?? null)
     const [pendingBookingData, setPendingBookingData] = useState(null);
+
+    useEffect(() => {
+        const list = Array.isArray(user?.addresses) ? user.addresses : []
+        const defaultId = defaultAddress?.id ?? list[0]?.id ?? null
+        setSelectedAddressId((prev) => (list.some((a) => a.id === prev) ? prev : defaultId))
+    }, [user?.addresses, defaultAddress?.id])
 
     useEffect(()=>{setDoctorID(doctor.user_display.id)},[doctor.user_display.id])
 
@@ -69,14 +77,13 @@ const BookingForm = ({doctorInfo}) => {
         methods.trigger("selectedDate");
     };
 
-    // Handle address update and continue with booking
+    // Handle add address (modal) and continue with booking
     const handleAddressSubmit = (data, setError, locationGeo, cityName, districtName) => {
-        onSubmitAddress(data, setError, locationGeo, cityName, districtName, () => {
+        handleCreateAddress(data, setError, locationGeo, cityName, districtName, () => {
             handleCloseAddressModal();
-            // Continue with pending booking after address is updated
             if (pendingBookingData) {
                 onSubmit(pendingBookingData, patientSelected, () => {
-                    methods.reset(); 
+                    methods.reset();
                     actionUpState();
                 }, methods.setError);
                 setPendingBookingData(null);
@@ -198,6 +205,34 @@ const BookingForm = ({doctorInfo}) => {
                 <Divider />
             </div>
             <h5 className="ou-text-center ou-text-xl ou-py-2 ou-mt-2">{t('home:makeAnAppointMent')}</h5>
+
+            {hasValidUserAddress && addresses.length > 0 && (
+                <Grid item xs={12} className="!ou-p-4 !ou-pt-0">
+                    <FormControl fullWidth size="small">
+                        <InputLabel id="booking-address-label">{t('booking:address')}</InputLabel>
+                        <Select
+                            labelId="booking-address-label"
+                            value={selectedAddressId ?? ''}
+                            label={t('booking:address')}
+                            onChange={(e) => setSelectedAddressId(e.target.value)}
+                        >
+                            {addresses.map((addr) => (
+                                <MenuItem key={addr.id} value={addr.id}>
+                                    {addr.address}
+                                    {(addr.city_info?.name || addr.district_info?.name) && ` — ${[addr.district_info?.name, addr.city_info?.name].filter(Boolean).join(', ')}`}
+                                    {addr.is_default && ` (${t('booking:default')})`}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <Box className="ou-mt-2">
+                        <Button size="small" variant="text" color="primary" onClick={handleOpenAddressModal}>
+                            {t('register:addAddress')}
+                        </Button>
+                    </Box>
+                </Grid>
+            )}
+
             <Grid item xs={12} className="!ou-p-4" >
                 <FormControl fullWidth >
                     <InputLabel htmlFor="description">{t('description')}</InputLabel>
@@ -288,7 +323,7 @@ const BookingForm = ({doctorInfo}) => {
                                 </p>
                             </div>
                             
-                            <UpdateAddressInfo onSubmit={handleAddressSubmit}/>
+                            <UpdateAddressInfo onSubmit={handleAddressSubmit} submitLabel={t('register:addAddress')}/>
                         </div>
                     </div>
                 </div>

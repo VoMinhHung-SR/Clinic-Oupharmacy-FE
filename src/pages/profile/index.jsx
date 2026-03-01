@@ -15,7 +15,7 @@ import ListIcon from '@mui/icons-material/List';
 import WarningIcon from '@mui/icons-material/Warning';
 
 const Profile = () => {
-    const {user} = useContext(UserContext);
+    const { user, hasValidUserAddress } = useContext(UserContext);
 
     const location = useLocation()
     const {t, tReady} = useTranslation(['profile'])
@@ -47,14 +47,8 @@ const Profile = () => {
 
     useEffect(()=> {}, [flag])
 
-    const hasValidLocationData = user && user.locationGeo && 
-                                    Object.keys(user.locationGeo).length > 0 &&
-                                    user.locationGeo.city &&
-                                    user.locationGeo.district &&
-                                    user.locationGeo.address
-
     const itemsNavigate = (itemID, pathName, itemTitle, itemIcon) => {
-        if (user && !hasValidLocationData && itemID === 'address-info') {
+        if (user && !hasValidUserAddress && itemID === 'address-info') {
             return (
                 <Link key={itemID} to={pathName}>
                     <Box className={clsx("ou-flex ou-items-center ou-p-3 ou-rounded", 
