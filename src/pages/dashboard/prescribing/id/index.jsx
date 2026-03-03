@@ -1,21 +1,20 @@
-import { Button, FormControl, Grid, Paper, Typography } from "@mui/material"
+import { Button, Grid, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
-import Loading from "../../../../modules/common/components/Loading"
 import usePrescriptionDetail from "../../../../modules/pages/PrescriptionDetailComponents/hooks/usePrescriptionDetail"
 import { Helmet } from "react-helmet"
-import PatientInfoModal from "../../../../modules/pages/PrescriptionDetailComponents/PatientInfoModal"
-import MedicalRecordsModal from "../../../../modules/pages/PrescriptionDetailComponents/MedicalRecordsModal"
 import { useContext, useState, useEffect, useRef } from "react"
 import PrescribingContext from "../../../../lib/context/PrescribingContext"
 import UserContext from "../../../../lib/context/UserContext"
-import EditPrescriptionModal from "../../../../modules/pages/PrescriptionDetailComponents/EditPrescriptionModal"
 import MedicinesHome from "../../../../modules/pages/ProductComponents/MedicinesHome"
 import useCustomNavigate from "../../../../lib/hooks/useCustomNavigate"
 import PrescriptionDetailCard from "../../../../modules/common/components/card/PrescriptionDetailCard"
 import { ConfirmAlert } from "../../../../config/sweetAlert2"
 import BackdropLoading from "../../../../modules/common/components/BackdropLoading"
+import PrescriptionDetailLayout from "../../../../modules/pages/PrescriptionDetailComponents/layout"
+import PrescriptionFormSidebar from "../../../../modules/pages/PrescriptionDetailComponents/PrescriptionFormSidebar"
+import SkeletonPrescribingDetail from "../../../../modules/common/components/skeletons/pages/prescribing/[id]"
 
 const PrescriptionDetail = () => {
     const {user} = useContext(UserContext)
@@ -74,39 +73,15 @@ const PrescriptionDetail = () => {
         handleUpdateMedicinesSubmit(dataWithoutNull)
     }
 
-    const renderMedicinesSubmit = (medicineUnitInfo, index) => {
+    if (!ready || isLoadingPrescriptionDetail)
         return (
-            <Grid  key={'mdc-'+index} item xs={12} className="!ou-mt-2">
-                <Grid id={medicineUnitInfo.id} 
-                    container justifyContent="flex" style={{ "margin": "0 auto" }}>
-
-                    <Grid item xs={7}>
-                        <FormControl fullWidth >
-                            <span className="ou-text-sm">{index+1 + ". " + medicineUnitInfo.medicineName}</span>
-                        </FormControl>
-                    </Grid>
-                
-                    <Grid item xs={3}  className="ou-text-center">
-                        <span className="ou-text-sm">{medicineUnitInfo.uses}</span>
-                    </Grid>
-                    <Grid item xs={2}  className="ou-text-center">
-                        <span className="ou-text-sm ou-text-center">{medicineUnitInfo.quantity}</span>
-                    </Grid>
-                </Grid>
-            </Grid>
-    )}
-
-    //TODO: add skeletons here
-    if(!ready || isLoadingPrescriptionDetail)
-        return <Box sx={{ height: "300px" }}>
-            <Helmet>
-                <title>Prescribing</title>
-            </Helmet>
-            
-            <Box className='ou-p-5'>
-                <Loading/>
-            </Box>
-        </Box>
+            <>
+                <Helmet>
+                    <title>Prescribing Detail</title>
+                </Helmet>
+                <SkeletonPrescribingDetail />
+            </>
+        )
 
     return (
         <>
@@ -144,7 +119,7 @@ const PrescriptionDetail = () => {
                     ou-flex-col ou-flex ou-justify-center ou-items-center
                     ou-top-0 ou-bottom-0 ou-w-full ou-place-items-center'>
                             <h2 className='ou-text-xl ou-text-red-600'>
-                                {t('errNullPrescription')}
+                                {t('prescription-detail:errNullPrescription')}
                             </h2>
                             <Typography className='text-center'>
                                 <h3>{t('common:goToBooking')} </h3>
@@ -154,88 +129,33 @@ const PrescriptionDetail = () => {
                </Box>
             )}
 
-            {!isLoadingPrescriptionDetail && prescriptionDetail !== null && newestPrescriptionDetail.length === 0 &&
-                <Grid container>
-                    <Grid item xs={8} className="ou-pr-6">
-                        <Box>
-                        <MedicinesHome 
-                            onAddMedicineLineItem={addMedicineItem} 
+            {!isLoadingPrescriptionDetail && prescriptionDetail !== null && newestPrescriptionDetail.length === 0 && (
+                <PrescriptionDetailLayout
+                    leftContent={
+                        <MedicinesHome
+                            onAddMedicineLineItem={addMedicineItem}
                             medicinesSubmit={medicinesSubmit}
                             actionButton={
-                                <Button fullWidth className="!ou-p-3 !ou-bg-blue-600 !ou-text-white"> Prescribing 
+                                <Button fullWidth className="!ou-p-3 !ou-bg-blue-600 !ou-text-white">
+                                    {t("prescription-detail:prescribing")}
                                 </Button>
                             }
                         />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={4} className="ou-w-[100%]">
-                        <Box className='ou-m-auto ou-max-w-[1536px] ou-w-full'>                     
-                            <Box className="ou-m-auto ou-mb-6" >
-                                <Grid container justifyContent="flex" className="ou-min-h-[160px] ou-p-5" component={Paper} elevation={5}> 
-                                    <Grid item xs={12} className="ou-pb-5" >
-                                        <h1 className="ou-text-center ou-text-xl">{t('common:basicInformation')}</h1>
-                                    </Grid>
-                                    <Grid item xs={12} className="ou-pb-5 ou-text-center" >
-                                        <PatientInfoModal patientData={prescriptionDetail.examination.patient}/>
-                                    </Grid>
-
-                                    <Grid item xs={12} className="ou-text-center">
-                                        <MedicalRecordsModal patientID={prescriptionDetail.examination.patient.id}/>
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                            {/* Medicine Submit area */}
-                            
-                            <Grid item component={Paper} elevation={5}>
-                                <form
-                                    className="ou-p-5 ou-w-full">
-                                    <h1 className="ou-text-center ou-text-xl ou-pb-8">{t('prescriptionDetail')}</h1>
-                                    <Grid container className="ou-py-3">
-                                    {medicinesSubmit.length === 0 ?
-                                        (<>
-                                            <Grid item xs={12}><Typography className="ou-text-center">{t('nullMedicine')}</Typography></Grid>
-                                        </>)
-                                        : <>
-                                            <Grid item xs={7} className="!ou-mb-2">{t('prescription-detail:medicineName')}</Grid>
-                                            <Grid item xs={3} className="ou-text-center !ou-mb-2">{t('prescription-detail:uses')}</Grid>
-                                            <Grid item xs={2} className="ou-text-center !ou-mb-2">{t('prescription-detail:quantity')}</Grid>
-                                            
-                                            {medicinesSubmit.map((item, index) => renderMedicinesSubmit(item, index))}
-                                        
-                                            <Grid container spacing={2} className="p-3 ou-w-full !ou-mt-5" >
-
-                                                <Grid item xs={6}>
-                                                    <EditPrescriptionModal medicinesSubmitData={medicinesSubmit} 
-                                                    handleOnEdit={handleOnEdit} handleClearAll={resetMedicineStore}
-                                                    />
-                                                </Grid>
-
-                                                <Grid item xs={6}>
-                                                    <Button className="ou-w-full" variant="contained" color="error"
-                                                            onClick={resetMedicineStore} 
-                                                        >
-                                                            {t('common:deleteAll')}
-                                                    </Button>
-                                                </Grid>
-
-                                                <Grid item xs={12}>
-                                                    <Button className="ou-w-full" variant="contained" color="success"
-                                                            onClick={() => handleAddPrescriptionDetail(user.id, prescribingId)} 
-                                                        >
-                                                            {t('prescribing')}
-                                                    </Button>
-                                                </Grid>
-                                            </Grid>
-                                            </> 
-                                        }
-                                        
-                                    </Grid>
-                                </form>            
-                            </Grid>
-                        </Box>
-                    </Grid>
-                </Grid>
-            }
+                    }
+                    rightContent={
+                        <PrescriptionFormSidebar
+                            patient={prescriptionDetail.examination.patient}
+                            patientId={prescriptionDetail.examination.patient.id}
+                            medicinesSubmit={medicinesSubmit}
+                            onAddPrescriptionDetail={handleAddPrescriptionDetail}
+                            onReset={resetMedicineStore}
+                            onEdit={handleOnEdit}
+                            user={user}
+                            prescribingId={prescribingId}
+                        />
+                    }
+                />
+            )}
         </>
     )
 }

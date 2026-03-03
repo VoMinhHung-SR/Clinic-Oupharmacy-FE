@@ -7,6 +7,7 @@ import PaidIcon from "@mui/icons-material/Paid";
 import { useTranslation } from "react-i18next";
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import { ErrorAlert } from "../../../../../config/sweetAlert2";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const DiagnosedCard = ({ diagnosedInfo, user }) => {
 
@@ -15,7 +16,7 @@ const DiagnosedCard = ({ diagnosedInfo, user }) => {
     const renderBillStatus = (prescribingArray) => {
         let doneStatus = 0
         if(prescribingArray.length === 0)
-            return <span><CheckCircleIcon className="!ou-text-red-700"/></span> 
+            return <span><CancelIcon className="!ou-text-red-700"/></span> 
 
 
         if (prescribingArray.some(prescribing => prescribing && prescribing.bill_status === null)) {
@@ -23,7 +24,7 @@ const DiagnosedCard = ({ diagnosedInfo, user }) => {
         }
 
         if(doneStatus === -1 ) 
-            return <span><CheckCircleIcon className="!ou-text-red-700"/></span> 
+            return <span><CancelIcon className="!ou-text-red-700"/></span> 
         return  <span><CheckCircleIcon className="!ou-text-green-700"/></span> 
     }
 
@@ -62,7 +63,7 @@ const DiagnosedCard = ({ diagnosedInfo, user }) => {
             </span>
           ) : (
             <span>
-              <CheckCircleIcon className="!ou-text-red-700" />
+              <CancelIcon className="!ou-text-red-700" />
             </span>
           )}
         </Typography> 

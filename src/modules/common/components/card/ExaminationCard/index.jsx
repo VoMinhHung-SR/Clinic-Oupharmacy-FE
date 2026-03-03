@@ -21,6 +21,8 @@ import useCustomModal from "../../../../../lib/hooks/useCustomModal";
 import ExaminationDetailCard from "../ExaminationDetailCard";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { ErrorAlert } from "../../../../../config/sweetAlert2";
+import CancelIcon from '@mui/icons-material/Cancel';
+
 const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => {
   const { t } = useTranslation(["examinations", "common", "modal", "examination-detail"]);
 
@@ -129,15 +131,14 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
           <Typography>{schedule_appointment.day ? <span>{moment(new Date(schedule_appointment.day)).format("DD/MM/YYYY")}</span>
           : <span>{moment(created_date).format("DD/MM/YYYY")}</span>}</Typography>
         </TableCell>
-        {mail_status ? (
-          <TableCell align="center" className="!ou-text-green-700 !ou-font-bold"> {t("sent")}</TableCell>
-        ) : (
-          <TableCell align="center" className="!ou-text-red-700 !ou-font-bold"> {t("noSent")}</TableCell>
-        )}
-          <TableCell align="center">
+        <TableCell align="center">
+          <Typography>{mail_status ? <span><CheckCircleIcon className="!ou-text-green-700"/></span>
+          : <span><CancelIcon className="!ou-text-red-700"/></span>}</Typography>
+        </TableCell>
+        <TableCell align="center">
           <Typography> {diagnosis_info?.length ? 
             <span><CheckCircleIcon className="!ou-text-green-700"/></span> 
-          : <span><CheckCircleIcon className="!ou-text-red-700"/></span>}
+          : <span><CancelIcon className="!ou-text-red-700"/></span>}
           </Typography>
         </TableCell>
         <TableCell align="center">

@@ -55,30 +55,38 @@ const MedicineLineItem = ({medicine, onAddToPrescription, schema, availableStock
                             fullWidth
                             autoComplete="given-name"
                             variant="outlined"
-                            id="uses"
+                            id={`medicine-uses-${medicine.id}`}
                             name="uses"
                             type="text"
+                            label={t('prescription-detail:uses')}
+                            inputProps={{ "aria-label": t("prescription-detail:uses") }}
                             {...register('uses')}
                         />
                     </div>
 
                     <div className="ou-ml-2 ou-w-[10%]">
                         <TextField
-                        fullWidth
-                        id="outlined-number"
-                        type="number"
-                        name="quantity"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        {...register('quantity')}
+                            fullWidth
+                            id={`medicine-quantity-${medicine.id}`}
+                            type="number"
+                            name="quantity"
+                            label={t('prescription-detail:quantity')}
+                            InputLabelProps={{ shrink: true }}
+                            inputProps={{ "aria-label": t("prescription-detail:quantity") }}
+                            {...register('quantity')}
                         />
-            
                     </div>
 
-                        <Tooltip title={t('addMedicine')} followCursor>
-                            <div className="ou-ml-auto">       
-                            <Button variant="contained" color="success" type="submit" ><AddIcon/></Button>
+                        <Tooltip title={t('prescription-detail:addMedicine')} followCursor>
+                            <div className="ou-ml-auto">
+                                <Button
+                                    variant="contained"
+                                    color="success"
+                                    type="submit"
+                                    aria-label={t('prescription-detail:addMedicine')}
+                                >
+                                    <AddIcon />
+                                </Button>
                             </div>
                         </Tooltip>         
                     

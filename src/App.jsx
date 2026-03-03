@@ -1,6 +1,6 @@
 import { createContext, useState } from 'react'
 import './App.css'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './modules/common/layout'
 import Login from './pages/login'
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
@@ -8,7 +8,6 @@ import Home from './pages'
 import Register from './pages/register'
 import ExaminationList from './pages/profile/examinations'
 import PrescriptionList from './pages/dashboard/prescribing'
-import PrescriptionDetail from './pages/dashboard/prescribing/id'
 import ConversationList from './pages/conversations'
 import ChatWindow from './pages/conversations/id/recipientID/message'
 import { I18nextProvider } from 'react-i18next'
@@ -35,7 +34,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import { PrescribingProvider } from './lib/context/PrescribingContext'
 import { BookingProvider } from './lib/context/BookingContext'
 import DashboardProfile from './pages/dashboard/profile'
 import DashboardLayout from './modules/common/layout/dashboard'
@@ -51,6 +49,7 @@ import Contact from './pages/contact'
 import AboutUs from './pages/about-us'
 import Payments from './pages/dashboard/prescribing/id/payments'
 import ExternalRedirect from './modules/common/components/ExternalRedirect'
+import { PrescriptionDetailWithProvider } from './modules/providers'
 
 export const userContext = createContext()
 const queryClient = new QueryClient({
@@ -102,7 +101,6 @@ function App() {
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <UserProvider>    
               <BookingProvider>
-                <PrescribingProvider>
                   <ConfigLoader>
                     <ScrollToTop />
                     <Routes>
@@ -146,7 +144,7 @@ function App() {
 
                             <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_DOCTOR]} />}>
                               <Route path='/dashboard/examinations/:examinationId/diagnosis' element={<Diagnosis />} />
-                              <Route path='/dashboard/prescribing/:prescribingId' element={<PrescriptionDetail/>} />
+                              <Route path='/dashboard/prescribing/:prescribingId' element={<PrescriptionDetailWithProvider/>} />
                             </Route>
 
                             <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_NURSE]}/>}>
@@ -175,7 +173,6 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     </Routes>
                   </ConfigLoader>
-                </PrescribingProvider>
               </BookingProvider>
             </UserProvider>
           </LocalizationProvider>

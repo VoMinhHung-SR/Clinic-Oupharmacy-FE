@@ -197,6 +197,7 @@ const EditPrescriptionModal = ({medicinesSubmitData, handleOnEdit}) => {
                     type="button"
                     onClick={() => addItemDeleted(medicine.id)}
                     className="ou-text-red-700"
+                    aria-label={t('common:delete')}
                     sx={{ color: "red", width: '100%', height: '100%' }}>
                     <RemoveCircleIcon />
                   </Button>
@@ -212,7 +213,7 @@ const EditPrescriptionModal = ({medicinesSubmitData, handleOnEdit}) => {
          {loading && <BackdropLoading/>}
          <Typography>
                 <Button
-                    variant="contained"      
+                    variant="outlined"      
                     className="ou-w-[100%]"
                     onClick={handleOpenModal}
                 >
