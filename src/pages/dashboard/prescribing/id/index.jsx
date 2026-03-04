@@ -36,7 +36,8 @@ const PrescriptionDetail = () => {
     })
     const [confirm, setConfirm] = useState(false)
     const hasShownDialog = useRef(false)
-    const { prescribingId } = useParams();
+    // URL param :prescribingId is diagnosis ID (same route, semantics clarified in code)
+    const { prescribingId: diagnosisId } = useParams();
 
     const handlePrescriptionDetailExist = () => {
         if(prescriptionDetail?.prescribing_info.length > 0 && !hasShownDialog.current){
@@ -151,7 +152,7 @@ const PrescriptionDetail = () => {
                             onReset={resetMedicineStore}
                             onEdit={handleOnEdit}
                             user={user}
-                            prescribingId={prescribingId}
+                            diagnosisId={diagnosisId}
                         />
                     }
                 />

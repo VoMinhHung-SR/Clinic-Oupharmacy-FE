@@ -19,6 +19,7 @@ import Logout from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import { changeLanguage } from "i18next";
 import { AVATAR_DEFAULT, ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
+import { isRoleIn } from '../../../../lib/auth';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useContext, useState } from "react";
 import MailIcon from '@mui/icons-material/Mail';
@@ -165,15 +166,14 @@ const NavDashboard = ({ open, toggleDrawer }) => {
   </>
   let badgeContent = <></>
 
-  const handleNav = (role, link) => {
-    if(role.includes(user.role))
-      return navigate(link)
-    navigate("/dashboard/forbidden")
-  }
+  const handleNav = (allowedRoles, link) => {
+    if (isRoleIn(user, allowedRoles)) return navigate(link);
+    navigate("/dashboard/forbidden");
+  };
 
-  const renderPage = (routingRole, role, isOpen, isMobile) => {
+  const renderPage = (routingRole, allowedRoles, isOpen, isMobile) => {
       return routingRole && routingRole.map(item => (
-          <ListItemButton key={"dashboard"+item.name} onClick={() => handleNav(role, item.link)}
+          <ListItemButton key={"dashboard"+item.name} onClick={() => handleNav(allowedRoles, item.link)}
               sx={{ 
                   justifyContent: isOpen ? 'initial' : 'center',
                   px: 2.5,
@@ -420,16 +420,16 @@ const NavDashboard = ({ open, toggleDrawer }) => {
 
           {/* Nav */}
           <List component="nav" className="ou-overflow-y-auto">
-              {renderPage(pages, ROLE_NURSE +" "+ ROLE_DOCTOR, open, isMobile)}
+              {renderPage(pages, [ROLE_DOCTOR, ROLE_NURSE], open, isMobile)}
               <Divider sx={{ my: 1 }} />
 
-              {renderPage(page_ROLE_DOCTOR, ROLE_DOCTOR, open, isMobile)}
+              {renderPage(page_ROLE_DOCTOR, [ROLE_DOCTOR], open, isMobile)}
 
               <Divider sx={{ my: 1 }} />
-              {renderPage(page_ROLE_NURSE, ROLE_NURSE, open, isMobile)}
+              {renderPage(page_ROLE_NURSE, [ROLE_NURSE], open, isMobile)}
 
               <Divider sx={{ my: 1 }} />
-              {renderPage(pagesMedicineManagement, ROLE_NURSE +" "+ ROLE_DOCTOR+" "+ ROLE_ADMIN, open, isMobile)}
+              {renderPage(pagesMedicineManagement, [ROLE_DOCTOR, ROLE_NURSE, ROLE_ADMIN], open, isMobile)}
           </List>
 
       </StyledDrawer>

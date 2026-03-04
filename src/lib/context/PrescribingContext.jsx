@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ConfirmAlert, ErrorAlert } from "../../config/sweetAlert2";
-import { fetchAddPrescriptionDetail, fetchCreatePrescribing, fetchGetPrescriptionDetailById } from "../../modules/common/components/card/PrescriptionDetailCard/services";
+import { createPrescribingWithDetails } from "../../modules/pages/PrescriptionDetailComponents/services/prescribingActions";
 import createToastMessage from "../utils/createToastMessage";
 import { TOAST_ERROR, TOAST_SUCCESS } from "../constants";
 
@@ -112,54 +112,47 @@ export const PrescribingProvider = ({children}) => {
     }, [medicinesSubmit, flag]);
 
     const handleAddPrescriptionDetail = async (userID, diagnosisID) => {
-        const handleOnSubmit = async () => {
-            try {
-
-                if (medicinesSubmit.length === 0) {
-                    return createToastMessage({type:TOAST_ERROR,
-                        message: t('modal:createFailed')});
-                }
-    
-                const prescribingData = { user: userID, diagnosis: parseInt(diagnosisID) };
-                const res = await fetchCreatePrescribing(prescribingData);
-                if (res.status === 201) {
-                    setNewPrescribing(res.data);
-                    await Promise.all(
-                        medicinesSubmit.map(async (m) => {
-                            const formData = {
-                                quantity: m.quantity,
-                                uses: m.uses,
-                                prescribing: res.data.id,
-                                medicine_unit: m.id
-                            };
-                            await fetchAddPrescriptionDetail(formData);
-                        })
-                    );
-                    const newPrescriptionDetail = await fetchGetPrescriptionDetailById(res.data.id);
-                    if(newPrescriptionDetail.status === 200){
-                        setNewestPrescriptionDetail(newPrescriptionDetail.data);
-                    }
-                    createToastMessage({type:TOAST_SUCCESS,message: t('prescription-detail:prescriptionCreated')});
-                } else {
-                    createToastMessage({type:TOAST_ERROR,message: t('modal:createFailed')});
-                }
-            } catch (err) {
-                createToastMessage({type:TOAST_ERROR,message: t('modal:createFailed')});
-            } finally {
-                setHasUnsavedChanges(false);
-                setMedicinesSubmit([]);
-                setIsLoadingButton(false)
-                setIsBackdropLoading(false);
-            }
-
+        if (medicinesSubmit.length === 0) {
+            createToastMessage({ type: TOAST_ERROR, message: t("modal:createFailed") });
+            return;
         }
-        return ConfirmAlert(t('prescription-detail:confirmAddPrescription'),
-        t('modal:noThrowBack'),t('modal:yes'),t('modal:cancel'),
-        ()=>{
-            setIsLoadingButton(true)
-            setIsBackdropLoading(true);
-            handleOnSubmit()
-        }, () => { return; })
+
+        return ConfirmAlert(
+            t("prescription-detail:confirmAddPrescription"),
+            t("modal:noThrowBack"),
+            t("modal:yes"),
+            t("modal:cancel"),
+            async () => {
+                setIsLoadingButton(true);
+                setIsBackdropLoading(true);
+                try {
+                    const result = await createPrescribingWithDetails(
+                        userID,
+                        diagnosisID,
+                        medicinesSubmit
+                    );
+                    if (result.success) {
+                        if (result.newPrescribing) setNewPrescribing(result.newPrescribing);
+                        if (result.newestPrescriptionDetail)
+                            setNewestPrescriptionDetail(result.newestPrescriptionDetail);
+                        createToastMessage({
+                            type: TOAST_SUCCESS,
+                            message: t("prescription-detail:prescriptionCreated"),
+                        });
+                    } else {
+                        createToastMessage({ type: TOAST_ERROR, message: t("modal:createFailed") });
+                    }
+                } catch (err) {
+                    createToastMessage({ type: TOAST_ERROR, message: t("modal:createFailed") });
+                } finally {
+                    setHasUnsavedChanges(false);
+                    setMedicinesSubmit([]);
+                    setIsLoadingButton(false);
+                    setIsBackdropLoading(false);
+                }
+            },
+            () => {}
+        );
     };
 
     return (

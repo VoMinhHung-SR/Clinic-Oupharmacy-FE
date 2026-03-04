@@ -1,7 +1,7 @@
 import { Button, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import moment from "moment";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { ROLE_DOCTOR, ROLE_NURSE } from "../../../../../lib/constants";
+import { canPrescribe, canViewPayments } from "../../../../../lib/auth";
 import { Link, useNavigate } from "react-router-dom";
 import PaidIcon from "@mui/icons-material/Paid";
 import { useTranslation } from "react-i18next";
@@ -29,10 +29,10 @@ const DiagnosedCard = ({ diagnosedInfo, user }) => {
     }
 
     const handleOnClick = (id) => {
-      if (user.id !== diagnosedInfo.examination.schedule_appointment.doctor_id)
+      if (!canPrescribe(user, diagnosedInfo))
         return ErrorAlert(t('modal:errPrescribingNotOwner'), t('modal:pleaseTryAgain'), t('modal:ok'));
-      else router(`/dashboard/prescribing/${id}`)
-    }
+      router(`/dashboard/prescribing/${id}`);
+    };
   return (
     <TableRow key={diagnosedInfo.id} 
     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -82,25 +82,25 @@ const DiagnosedCard = ({ diagnosedInfo, user }) => {
         </Typography>
       </TableCell>
       <TableCell align="center">
-        {user && user.role === ROLE_DOCTOR && (
+        {user && canPrescribe(user, diagnosedInfo) && (
           <>
             <Typography className="mb-2">
-                <Tooltip followCursor title={t("prescribing")}>
-                  <span>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      onClick={() => handleOnClick(diagnosedInfo.id)}
-                      className="ou-bg-blue-700 !ou-min-w-[68px] !ou-min-h-[40px] !ou-mx-2"
-                    >
-                      <MedicalServicesIcon />
-                    </Button>
-                  </span>
-                </Tooltip>
+              <Tooltip followCursor title={t("prescribing")}>
+                <span>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => handleOnClick(diagnosedInfo.id)}
+                    className="ou-bg-blue-700 !ou-min-w-[68px] !ou-min-h-[40px] !ou-mx-2"
+                  >
+                    <MedicalServicesIcon />
+                  </Button>
+                </span>
+              </Tooltip>
             </Typography>
           </>
         )}
-        {user && user.role === ROLE_NURSE && (
+        {user && canViewPayments(user) && (
           <>
             <Tooltip followCursor title={t("pay")}>
               <span>

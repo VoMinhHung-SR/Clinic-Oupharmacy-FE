@@ -15,7 +15,8 @@ import SendIcon from "@mui/icons-material/Send";
 import ErrorIcon from "@mui/icons-material/Error";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
-import { ROLE_DOCTOR, ROLE_NURSE } from "../../../../../lib/constants";
+import { ROLE_DOCTOR } from "../../../../../lib/constants";
+import { canDiagnose, canViewPayments, canSendConfirmEmail } from "../../../../../lib/auth";
 import CustomModal from "../../Modal";
 import useCustomModal from "../../../../../lib/hooks/useCustomModal";
 import ExaminationDetailCard from "../ExaminationDetailCard";
@@ -35,82 +36,80 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
   };
 
   const navigateDoctor = () => {
-    if(user.id === examinationData.schedule_appointment.doctor_id)
-      return router(`/dashboard/examinations/${examinationData.id}/diagnosis`)
+    if (canDiagnose(user, examinationData))
+      return router(`/dashboard/examinations/${examinationData.id}/diagnosis`);
     return ErrorAlert(t('modal:errPrescribingNotOwner'), t('modal:pleaseTryAgain'), t('modal:ok'));
-  }
+  };
 
   const navigateNurse = () => {
-    if(examinationData.diagnosis_info.length > 0){
-      return router(`/dashboard/prescribing/${examinationData.diagnosis_info[0].id}/payments`)
-    }
+    if (examinationData.diagnosis_info?.length > 0)
+      return router(`/dashboard/prescribing/${examinationData.diagnosis_info[0].id}/payments`);
     return ErrorAlert(t('examination-detail:errNullDiagnosis'), t('modal:pleaseTryAgain'), t('modal:ok'));
-  }
- 
+  };
+
   const renderButton = () => {
-    if (mail_status){
-      if(user.role === ROLE_DOCTOR)
+    if (mail_status) {
+      if (canDiagnose(user, examinationData))
         return (
           <Tooltip followCursor title={t("diagnose")} className="hover:ou-cursor-pointer">
             <span>
-                <Button
-                  onClick={() => navigateDoctor()}
-                  variant="contained"
-                  color="success"
-                  className="!ou-min-w-[68px] !ou-min-h-[40px] !ou-p-2  hover:ou-cursor-pointer"
-                >
-                    <MedicalServicesIcon />
-                </Button>
+              <Button
+                onClick={() => navigateDoctor()}
+                variant="contained"
+                color="success"
+                className="!ou-min-w-[68px] !ou-min-h-[40px] !ou-p-2  hover:ou-cursor-pointer"
+              >
+                <MedicalServicesIcon />
+              </Button>
             </span>
           </Tooltip>
-      )
-      if (user.role === ROLE_NURSE)
-        return(
+        );
+      if (canViewPayments(user))
+        return (
           <Tooltip followCursor title={t("pay")}>
             <span>
-                <Button
-                  onClick={() => navigateNurse()}
-                  variant="contained"
-                  color="success"
-                  size="small"
-                  className="!ou-min-w-[68px] !ou-py-2  !ou-min-h-[40px]"
-                >
-                  <PaidIcon />
-                </Button>
-            </span>
-          </Tooltip>
-      ) 
-      return <></>
-    }
-    else {
-      if(user.role === ROLE_DOCTOR)
-        return (<Tooltip followCursor title={t("noReady")}>
-            <span>
               <Button
-                size="small"
+                onClick={() => navigateNurse()}
                 variant="contained"
-                className="!ou-bg-red-700 !ou-min-w-[68px]  !ou-min-h-[40px]"
+                color="success"
+                size="small"
+                className="!ou-min-w-[68px] !ou-py-2  !ou-min-h-[40px]"
               >
-                    <ErrorIcon />
-                </Button>
+                <PaidIcon />
+              </Button>
             </span>
           </Tooltip>
-        )
-      if (user.role === ROLE_NURSE)
-        return(
-          <Tooltip followCursor title={t("sendEmail")}>
-            <Button
-              onClick={handleSendEmailConfirm}
-              disabled={loading}
-              variant="contained"
-              className="!ou-min-w-[68px] !ou-py-2"
-            >
-              {loading ? <CircularProgress size={24} /> : <SendIcon />}
-            </Button>
-          </Tooltip>
-      ) 
-        return <></>;
+        );
+      return <></>;
     }
+    if (user?.role === ROLE_DOCTOR)
+      return (
+        <Tooltip followCursor title={t("noReady")}>
+          <span>
+            <Button
+              size="small"
+              variant="contained"
+              className="!ou-bg-red-700 !ou-min-w-[68px]  !ou-min-h-[40px]"
+            >
+              <ErrorIcon />
+            </Button>
+          </span>
+        </Tooltip>
+      );
+    if (canSendConfirmEmail(user))
+      return (
+        <Tooltip followCursor title={t("sendEmail")}>
+          <Button
+            onClick={handleSendEmailConfirm}
+            disabled={loading}
+            variant="contained"
+            className="!ou-min-w-[68px] !ou-py-2"
+          >
+            {loading ? <CircularProgress size={24} /> : <SendIcon />}
+          </Button>
+        </Tooltip>
+      );
+    return <></>;
   };
 
   return (

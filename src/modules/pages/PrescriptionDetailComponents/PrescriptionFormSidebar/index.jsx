@@ -14,7 +14,7 @@ const PrescriptionFormSidebar = ({
   onReset,
   onEdit,
   user,
-  prescribingId,
+  diagnosisId,
 }) => {
   const { t } = useTranslation(["prescription-detail", "common"])
 
@@ -97,7 +97,7 @@ const PrescriptionFormSidebar = ({
                       className="ou-w-full"
                       variant="contained"
                       color="success"
-                      onClick={() => onAddPrescriptionDetail(user?.id, prescribingId)}
+                      onClick={() => onAddPrescriptionDetail(user?.id, diagnosisId)}
                     >
                       {t("prescription-detail:prescribing")}
                     </Button>

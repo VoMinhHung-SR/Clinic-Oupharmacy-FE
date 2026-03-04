@@ -7,7 +7,8 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { ROLE_DOCTOR, ROLE_NURSE, SERVICE_FEE } from "../../../../../lib/constants";
+import { SERVICE_FEE } from "../../../../../lib/constants";
+import { canShowPaymentButtons, canShowPrintButton, canViewPayments } from "../../../../../lib/auth";
 import { useContext } from "react";
 import UserContext from "../../../../../lib/context/UserContext";
 import { useNavigate } from "react-router-dom";
@@ -65,36 +66,36 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
     const renderButtons = () => {
         return (
             <Box className="ou-flex ou-items-center ou-gap-2">
-                {!bill_status && user.role === ROLE_NURSE && (
+                {canShowPaymentButtons(user, bill_status) && (
                     <Box>
-                        <Button 
-                            variant="contained"  
+                        <Button
+                            variant="contained"
                             className="!ou-min-w-[160px] !ou-btn-momo !ou-mt-3 !ou-mr-2"
-                            onClick={() => handlePayment({momoWallet: true})}
+                            onClick={() => handlePayment({ momoWallet: true })}
                             disabled={isLoadingButton}
-                            >
+                        >
                             {t('payment:momoPayment')}
                         </Button>
-                        <Button variant="contained" color="primary" 
-                            className="!ou-min-w-[160px] !ou-btn-base !ou-mt-3"   
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            className="!ou-min-w-[160px] !ou-btn-base !ou-mt-3"
                             disabled={isLoadingButton}
-                            onClick={() => handlePayment({momoWallet: false})}>
+                            onClick={() => handlePayment({ momoWallet: false })}
+                        >
                             {t('payment:pay')}
                         </Button>
                     </Box>
                 )}
                 {/* TODO: Add print feature */}
-                {user.role === ROLE_DOCTOR && (
-                    <Button variant="contained" color="primary" onClick={() => {
-                        // window.print();
-                        router('/dashboard/prescribing/');
-                    }}>
+                {canShowPrintButton(user) && (
+                    <Button variant="contained" color="primary" onClick={() => router('/dashboard/prescribing/')}>
                         {t('prescription-detail:print')}
                     </Button>
                 )}
             </Box>
-        )
-    }
+        );
+    };
     return (
         <Box className="ou-mb-8 ou-w-[100%] ou-m-auto"
         key={'prescription-detail-card-'+listPrescribingId[0]}>
@@ -115,16 +116,14 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
                             
                         </Typography>
                     </Box>
-                    {
-                        user.role === ROLE_NURSE && (
-                            <Chip
-                                label={bill_status ? t('payment:paid') : t('payment:unpaid')}
-                                color={bill_status ? "success" : "warning"}
-                                variant="filled"
-                                size="large"
-                            />
-                        )
-                    }
+                    {canViewPayments(user) && (
+                        <Chip
+                            label={bill_status ? t('payment:paid') : t('payment:unpaid')}
+                            color={bill_status ? "success" : "warning"}
+                            variant="filled"
+                            size="large"
+                        />
+                    )}
                 </Box>
 
                 <Divider className="ou-mb-6" />
