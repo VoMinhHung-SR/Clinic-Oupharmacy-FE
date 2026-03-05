@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { formatNumberCurrency } from "../../../../lib/utils/helper";
+import { getMedicineUnitImageUrl } from "../../../../lib/utils/medicineUnitImage";
 import CustomModal from "../../../common/components/Modal";
 import { useForm } from "react-hook-form";
 import SchemaModels from "../../../../lib/schema";
@@ -42,7 +43,7 @@ const MedicineUnitLineItem = ({data, removeMedicine, categories, updateMedicine}
           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         >
           <TableCell component="th" scope="row">
-            <img src={medicineUnit.image_path} height={40} width={40}
+            <img src={getMedicineUnitImageUrl(medicineUnit)} height={40} width={40}
             alt={`${medicineUnit.image}-${medicineUnit.id}`} />
           </TableCell>
          
@@ -59,8 +60,8 @@ const MedicineUnitLineItem = ({data, removeMedicine, categories, updateMedicine}
           <TableCell align="center"> 
               <Typography>{formatNumberCurrency(medicineUnit.price)}</Typography>
             </TableCell>
-            <TableCell align="center"> 
-              <Typography>{medicineUnit.packaging}</Typography>
+            <TableCell align="center">
+              <Typography>{medicineUnit.package_size ?? medicineUnit.packaging ?? "—"}</Typography>
             </TableCell>
             <TableCell align="center">
             <Typography>{medicineUnit.category.name}</Typography>

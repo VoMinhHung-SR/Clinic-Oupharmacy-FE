@@ -1,8 +1,5 @@
-import {
-  fetchCreatePrescribing,
-  fetchAddPrescriptionDetail,
-  fetchGetPrescriptionDetailById,
-} from "../../common/components/card/PrescriptionDetailCard/services";
+import { fetchCreatePrescribing, fetchAddPrescriptionDetail,
+  fetchGetPrescriptionDetailById } from "../../../common/components/card/PrescriptionDetailCard/services";
 
 /**
  * Tạo prescribing + prescription_detail và lấy dữ liệu chi tiết mới nhất.

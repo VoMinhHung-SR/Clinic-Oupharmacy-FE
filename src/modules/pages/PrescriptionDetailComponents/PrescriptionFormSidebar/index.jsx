@@ -68,6 +68,7 @@ const PrescriptionFormSidebar = ({
                   <PrescriptionDraftLineItem
                     key={item.id ?? index}
                     medicineName={item.medicineName}
+                    packaging={item.packaging}
                     uses={item.uses}
                     quantity={item.quantity}
                     index={index}

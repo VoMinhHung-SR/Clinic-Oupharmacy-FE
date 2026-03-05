@@ -20,18 +20,16 @@ export const PrescribingProvider = ({children}) => {
     const [newestPrescriptionDetail, setNewestPrescriptionDetail] = useState([]);
     const [isBackdropLoading, setIsBackdropLoading] = useState(false);
 
-    const addMedicineItem = (medicineUnitId, medicineName, uses, quantity, inStock) => { 
+    const addMedicineItem = (medicineUnitId, medicineName, packaging, uses, quantity, inStock) => {
         const newItem = {
             id: medicineUnitId,
             medicineName: medicineName,
+            packaging: packaging ?? "",
             uses: uses,
-            quantity: parseInt(quantity),
-            inStock: inStock
+            quantity: parseInt(quantity, 10),
+            inStock: inStock,
         };
-        setMedicinesSubmit( prevMedicinesSubmit => {
-            const updatedState = [...prevMedicinesSubmit, newItem];
-            return updatedState;
-        });
+        setMedicinesSubmit((prev) => [...prev, newItem]);
         setHasUnsavedChanges(true);
     };
     
@@ -52,16 +50,16 @@ export const PrescribingProvider = ({children}) => {
     };
 
     const handleUpdateMedicinesSubmit = (updatedData) => {
-        if(updatedData.length === 0){
-            setMedicinesSubmit([])
+        if (updatedData.length === 0) {
+            setMedicinesSubmit([]);
             setHasUnsavedChanges(false);
-            return
+            return;
         }
-        const updatedMedicinesSubmit = medicinesSubmit.map(medicine => {
-            const updatedMedicine = updatedData.find(item => item.medicineName === medicine.medicineName);
-            return updatedMedicine ? { ...medicine, ...updatedMedicine } : null;
+        const updated = medicinesSubmit.map((item) => {
+            const match = updatedData.find((u) => u.id === item.id);
+            return match ? { ...item, ...match } : null;
         }).filter(Boolean);
-        setMedicinesSubmit(updatedMedicinesSubmit);
+        setMedicinesSubmit(updated);
         setHasUnsavedChanges(true);
     };
     
@@ -77,26 +75,24 @@ export const PrescribingProvider = ({children}) => {
                 // Flag to check if medicine is updated
                 let medicineUpdated = false;
 
-                if (medicinesSubmit.length !== 0) {  
-                    const updatedMedicinesSubmit = medicinesSubmit.map((medicine) => {
-                        if (medicine.id === medicineUnit.id) {
-                            medicineUpdated = true
-
+                if (medicinesSubmit.length !== 0) {
+                    const updatedMedicinesSubmit = medicinesSubmit.map((item) => {
+                        if (item.id === medicineUnit.id) {
+                            medicineUpdated = true;
                             return {
-                                ...medicine,
+                                ...item,
                                 uses: data.uses,
                                 inStock: medicineUnit.in_stock,
-                                quantity: parseInt(medicine.quantity) + parseInt(data.quantity)
+                                quantity: parseInt(item.quantity, 10) + parseInt(data.quantity, 10),
                             };
                         }
-                        return medicine;
+                        return item;
                     });
-                    if (medicineUpdated)
-                        handleUpdateMedicinesSubmit(updatedMedicinesSubmit);
-                    else 
-                        addMedicineItem(medicineUnit.id, medicineUnit.medicine.name, data.uses, data.quantity, medicineUnit.in_stock); 
-                }else 
-                    addMedicineItem(medicineUnit.id, medicineUnit.medicine.name, data.uses, data.quantity, medicineUnit.in_stock);  
+                    if (medicineUpdated) handleUpdateMedicinesSubmit(updatedMedicinesSubmit);
+                    else addMedicineItem(medicineUnit.id, medicineUnit.medicine.name, medicineUnit.packaging ?? "", data.uses, data.quantity, medicineUnit.in_stock);
+                } else {
+                    addMedicineItem(medicineUnit.id, medicineUnit.medicine.name, medicineUnit.packaging ?? "", data.uses, data.quantity, medicineUnit.in_stock);
+                }  
             } catch (err) {
                 console.log(err);
                 ErrorAlert(t('modal:createFailed'), t('modal:pleaseDoubleCheck'), t('modal:ok'));

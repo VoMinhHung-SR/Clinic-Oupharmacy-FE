@@ -1,11 +1,19 @@
 import { Box, Typography } from "@mui/material"
 import { useTranslation } from "react-i18next"
 import MedicineFilter from "../../../common/components/FIlterBar/MedicineFilter"
-import SkeletonListLineItem from "../../../common/components/skeletons/listLineItem"
+import SkeletonPrescribingPage from "../../../common/components/skeletons/pages/prescribing-prescribing-page"
 import MedicineLineItem from "../MedicineLineItem"
 
-const MedicineListPrescribing = ({ medicines, medicineLoading, paramsFilter, handleOnSubmitFilter,
-  categories, schema, onAddToPrescription, availableStockMap }) => {
+const MedicineListPrescribing = ({
+  medicineUnits,
+  medicineLoading,
+  paramsFilter,
+  handleOnSubmitFilter,
+  categories,
+  schema,
+  onAddToPrescription,
+  availableStockMap,
+}) => {
   const { t } = useTranslation(["prescription-detail", "medicine"])
 
   return (
@@ -25,24 +33,20 @@ const MedicineListPrescribing = ({ medicines, medicineLoading, paramsFilter, han
         <p className="ou-w-[10%] ou-text-center">{t("prescription-detail:quantity")}</p>
       </div>
 
-      {medicineLoading && (
-        <Box className="ou-text-center ou-mt-3">
-          <SkeletonListLineItem count={4} className="ou-w-full" />
-        </Box>
-      )}
+      {medicineLoading && <SkeletonPrescribingPage.ListSection />}
 
-      {!medicineLoading && medicines.length > 0 &&
-        medicines.map((medicine) => (
+      {!medicineLoading && medicineUnits.length > 0 &&
+        medicineUnits.map((medicineUnit) => (
           <MedicineLineItem
-            key={medicine.id}
-            medicine={medicine}
+            key={medicineUnit.id}
+            medicineUnit={medicineUnit}
             schema={schema}
             onAddToPrescription={onAddToPrescription}
-            availableStock={availableStockMap?.get(medicine.id)}
+            availableStock={availableStockMap?.get(medicineUnit.id)}
           />
         ))}
 
-      {!medicineLoading && medicines.length === 0 && (
+      {!medicineLoading && medicineUnits.length === 0 && (
         <Typography>
           <Box className="ou-text-center ou-p-12 ou-text-red-700">
             {t("medicine:errMedicinesNull")}

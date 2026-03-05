@@ -8,9 +8,24 @@ import { useTranslation } from "react-i18next";
 import { ConfirmAlert } from "../../config/sweetAlert2";
 import { goToTop } from "../utils/helper";
 
+const normalizeMedicineUnits = (results) => {
+    if (!Array.isArray(results)) return [];
+    return results.map((unit) => {
+        const medicine = unit.medicine != null && typeof unit.medicine === "object"
+            ? { id: unit.medicine.id, name: unit.medicine.name ?? "" }
+            : { id: unit.medicine, name: "" };
+        return {
+            ...unit,
+            medicine,
+            packaging: unit.package_size ?? unit.packaging ?? "",
+        };
+    });
+};
+
 const useMedicine = () => {
-    const [medicines, setMedicines] = useState([])
-    const [medicineLoading, setMedicineLoading] = useState(true)
+    // List from medicine-units API: each item is a MedicineUnit (id, medicine, packaging, in_stock, price)
+    const [medicineUnits, setMedicineUnits] = useState([]);
+    const [medicineLoading, setMedicineLoading] = useState(true);
     const [selectedImage, setSelectedImage] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
     const [flag, setFlag] = useState(false)
@@ -38,7 +53,7 @@ const useMedicine = () => {
             return
         goToTop();
         setMedicineLoading(true);
-        setMedicines([]);
+        setMedicineUnits([]);
         setPage(value);
     };
 
@@ -62,18 +77,17 @@ const useMedicine = () => {
 
                 querySample += querySample.includes("?") ? queryParams : "?" + queryParams
 
-                const res = await fetchMedicinesUnit(querySample)
+                const res = await fetchMedicinesUnit(querySample);
                 if (res.status === 200) {
                     const data = await res.data;
-                    setMedicines(data.results)
-
+                    setMedicineUnits(normalizeMedicineUnits(data.results ?? []));
                     setPagination({
-                        count: data.count,
-                        sizeNumber: Math.ceil(data.count / 9),
+                        count: data.count ?? 0,
+                        sizeNumber: Math.ceil((data.count ?? 0) / 9),
                     });
                 }
-            }catch(err) {
-                setMedicines([])
+            } catch (err) {
+                setMedicineUnits([]);
             } finally {
                 setMedicineLoading(false)
             }
@@ -95,10 +109,10 @@ const useMedicine = () => {
                     medicineFormData.append("price", data.price)
                     medicineFormData.append("in_stock", data.inStock)
                     medicineFormData.append("image", selectedImage)
-                    medicineFormData.append("packaging", data.packaging)
+                    medicineFormData.append("package_size", data.packaging ?? "")
                     medicineFormData.append("medicine", resMedicine.data.id)
                     medicineFormData.append("category", data.category)
-                    
+
                     const resMedicineUnit = await fetchCreateMedicineUnit(medicineFormData)
                     if(resMedicineUnit.status === 201){
                         callBackSuccess()
@@ -165,10 +179,10 @@ const useMedicine = () => {
                     medicineFormData.append("price", data.price)
                     medicineFormData.append("in_stock", data.inStock)
                     medicineFormData.append("image", data.image)
-                    medicineFormData.append("packaging", data.packaging)
+                    medicineFormData.append("package_size", data.packaging ?? "")
                     medicineFormData.append("medicine", resMedicine.data.id)
                     medicineFormData.append("category", data.category)
-                    
+
                     const resMedicineUnit = await fetchUpdateMedicineUnit(medicineUnitID, medicineFormData)
                     if(resMedicineUnit.status === 200){
                         callBackSuccess()
@@ -196,16 +210,24 @@ const useMedicine = () => {
         handleMedicine()
     }
     return {
-        page, filterCount,
-        imageUrl, paramsFilter,
-        medicines, handleOnSubmitFilter,
-        pagination, updateMedicine,
-        selectedImage, deleteMedicine,
-        medicineLoading, backdropLoading,
-        setSelectedImage, setImageUrl,
-        handleChangePage, addMedicine,
-        handleChangeFlag
-    }
+        page,
+        filterCount,
+        imageUrl,
+        paramsFilter,
+        medicineUnits,
+        handleOnSubmitFilter,
+        pagination,
+        updateMedicine,
+        selectedImage,
+        deleteMedicine,
+        medicineLoading,
+        backdropLoading,
+        setSelectedImage,
+        setImageUrl,
+        handleChangePage,
+        addMedicine,
+        handleChangeFlag,
+    };
 }
 
 export default useMedicine

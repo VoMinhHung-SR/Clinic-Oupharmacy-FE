@@ -266,6 +266,11 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
                                             <TableCell align="center">{index + 1}</TableCell>
                                             <TableCell align="center" className="ou-font-medium">
                                                 {prescribingDetail.medicine_unit.medicine.name}
+                                                {(prescribingDetail.medicine_unit.package_size || prescribingDetail.medicine_unit.packaging) && (
+                                                    <Typography component="span" variant="caption" display="block" className="ou-text-gray-600">
+                                                        ({prescribingDetail.medicine_unit.package_size ?? prescribingDetail.medicine_unit.packaging})
+                                                    </Typography>
+                                                )}
                                             </TableCell>
                                             <TableCell align="center">
                                                 {prescribingDetail.uses}

@@ -14,7 +14,7 @@ import { ConfirmAlert } from "../../../../config/sweetAlert2"
 import BackdropLoading from "../../../../modules/common/components/BackdropLoading"
 import PrescriptionDetailLayout from "../../../../modules/pages/PrescriptionDetailComponents/layout"
 import PrescriptionFormSidebar from "../../../../modules/pages/PrescriptionDetailComponents/PrescriptionFormSidebar"
-import SkeletonPrescribingDetail from "../../../../modules/common/components/skeletons/pages/prescribing/[id]"
+import SkeletonPrescribingPage from "../../../../modules/common/components/skeletons/pages/prescribing-prescribing-page"
 
 const PrescriptionDetail = () => {
     const {user} = useContext(UserContext)
@@ -80,7 +80,7 @@ const PrescriptionDetail = () => {
                 <Helmet>
                     <title>Prescribing Detail</title>
                 </Helmet>
-                <SkeletonPrescribingDetail />
+                <SkeletonPrescribingPage />
             </>
         )
 
