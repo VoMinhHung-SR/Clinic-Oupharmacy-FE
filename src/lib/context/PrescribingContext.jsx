@@ -62,6 +62,11 @@ export const PrescribingProvider = ({children}) => {
         setMedicinesSubmit(updated);
         setHasUnsavedChanges(true);
     };
+
+    const removeMedicineItem = (medicineUnitId) => {
+        setMedicinesSubmit((prev) => prev.filter((item) => item.id !== medicineUnitId));
+        setHasUnsavedChanges(true);
+    };
     
     const handleAddMedicineSubmit = (medicineUnit, data) => {
         const addMedicinesUnit = async () => {
@@ -157,9 +162,10 @@ export const PrescribingProvider = ({children}) => {
                 isLoadingButton: isLoadingButton,
                 medicinesSubmit: medicinesSubmit, setMedicinesSubmit,
                 addMedicineItem: handleAddMedicineSubmit, resetMedicineStore,
+                removeMedicineItem,
                 handleUpdateMedicinesSubmit: handleUpdateMedicinesSubmit,
                 handleAddPrescriptionDetail: handleAddPrescriptionDetail,
-                clearForm: clearForm, 
+                clearForm: clearForm,
                 newPrescribing, newestPrescriptionDetail,
                 hasUnsavedChanges, isBackdropLoading
             }}

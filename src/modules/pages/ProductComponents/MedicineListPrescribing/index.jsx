@@ -1,8 +1,32 @@
+import { useMemo } from "react"
 import { Box, Typography } from "@mui/material"
 import { useTranslation } from "react-i18next"
 import MedicineFilter from "../../../common/components/FIlterBar/MedicineFilter"
 import SkeletonPrescribingPage from "../../../common/components/skeletons/pages/prescribing-prescribing-page"
 import MedicineLineItem from "../MedicineLineItem"
+
+/** Cột grid thống nhất cho header và từng dòng thuốc (Tên | Đóng gói | Liều dùng | Số lượng | Nút) */
+const LIST_GRID = {
+  display: "grid",
+  gridTemplateColumns: "minmax(180px, 2fr) minmax(100px, 1fr) 120px 80px 56px",
+  gap: 2,
+  alignItems: "center",
+}
+
+const groupUnitsByMedicine = (medicineUnits) => {
+  if (!Array.isArray(medicineUnits)) return []
+  const byMedicine = new Map()
+  medicineUnits.forEach((unit) => {
+    const medicineId = unit?.medicine?.id ?? unit?.medicine
+    if (!byMedicine.has(medicineId)) byMedicine.set(medicineId, [])
+    byMedicine.get(medicineId).push(unit)
+  })
+  return Array.from(byMedicine.entries()).map(([medicineId, units]) => ({
+    medicineId,
+    medicine: units[0]?.medicine,
+    units,
+  }))
+}
 
 const MedicineListPrescribing = ({
   medicineUnits,
@@ -15,10 +39,11 @@ const MedicineListPrescribing = ({
   availableStockMap,
 }) => {
   const { t } = useTranslation(["prescription-detail", "medicine"])
+  const groupedByMedicine = useMemo(() => groupUnitsByMedicine(medicineUnits), [medicineUnits])
 
   return (
     <div>
-      <Box className="ou-w-full ou-flex ou-items-center ou-justify-end ou-mb-3">
+      <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "flex-end", mb: 2 }}>
         <MedicineFilter
           kw={paramsFilter.kw}
           cateFilter={paramsFilter.cate}
@@ -27,31 +52,33 @@ const MedicineListPrescribing = ({
         />
       </Box>
 
-      <div className="ou-flex">
-        <p className="ou-w-[50%] ou-text-center">{t("prescription-detail:medicineName")}</p>
-        <p className="ou-w-[20%] ou-text-center">{t("prescription-detail:uses")}</p>
-        <p className="ou-w-[10%] ou-text-center">{t("prescription-detail:quantity")}</p>
-      </div>
+      <Box sx={{ ...LIST_GRID, py: 1, px: 0.5, borderBottom: 1, borderColor: "divider", typography: "body2", fontWeight: 600 }}>
+        <Box sx={{ textAlign: "left" }}>{t("prescription-detail:medicineName")}</Box>
+        <Box sx={{ textAlign: "center" }}>{t("medicine:packaging")}</Box>
+        <Box sx={{ textAlign: "center" }}>{t("prescription-detail:uses")}</Box>
+        <Box sx={{ textAlign: "center" }}>{t("prescription-detail:quantity")}</Box>
+        <Box />
+      </Box>
 
       {medicineLoading && <SkeletonPrescribingPage.ListSection />}
 
-      {!medicineLoading && medicineUnits.length > 0 &&
-        medicineUnits.map((medicineUnit) => (
+      {!medicineLoading && groupedByMedicine.length > 0 &&
+        groupedByMedicine.map(({ medicineId, medicine, units }) => (
           <MedicineLineItem
-            key={medicineUnit.id}
-            medicineUnit={medicineUnit}
+            key={medicineId}
+            units={units}
+            medicine={medicine}
             schema={schema}
             onAddToPrescription={onAddToPrescription}
-            availableStock={availableStockMap?.get(medicineUnit.id)}
+            availableStockMap={availableStockMap}
+            gridTemplate={LIST_GRID}
           />
         ))}
 
       {!medicineLoading && medicineUnits.length === 0 && (
-        <Typography>
-          <Box className="ou-text-center ou-p-12 ou-text-red-700">
-            {t("medicine:errMedicinesNull")}
-          </Box>
-        </Typography>
+        <Box sx={{ textAlign: "center", py: 6 }}>
+          <Typography color="error">{t("medicine:errMedicinesNull")}</Typography>
+        </Box>
       )}
     </div>
   )

@@ -19,7 +19,7 @@ import SkeletonPrescribingPage from "../../../../modules/common/components/skele
 const PrescriptionDetail = () => {
     const {user} = useContext(UserContext)
     const {medicinesSubmit, handleAddPrescriptionDetail, newPrescribing,
-        handleUpdateMedicinesSubmit, resetMedicineStore, 
+        handleUpdateMedicinesSubmit, resetMedicineStore, removeMedicineItem,
         addMedicineItem, clearForm, hasUnsavedChanges, 
         newestPrescriptionDetail, isBackdropLoading} = useContext(PrescribingContext)
     
@@ -151,6 +151,7 @@ const PrescriptionDetail = () => {
                             onAddPrescriptionDetail={handleAddPrescriptionDetail}
                             onReset={resetMedicineStore}
                             onEdit={handleOnEdit}
+                            onRemove={removeMedicineItem}
                             user={user}
                             diagnosisId={diagnosisId}
                         />

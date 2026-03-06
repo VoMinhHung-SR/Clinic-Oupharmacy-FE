@@ -51,7 +51,11 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
 
   return (
     <>
-      <Box component={Paper} elevation={5} className="ou-px-4 ou-py-6">
+      <Box
+        component={Paper}
+        elevation={5}
+        sx={{ width: "100%", maxWidth: "100%", overflow: "auto", px: 3, py: 3 }}
+      >
         {isPrescribingView && (
           <MedicineListPrescribing
             medicineUnits={medicineUnits}
