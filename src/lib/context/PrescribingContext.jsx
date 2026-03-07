@@ -67,6 +67,13 @@ export const PrescribingProvider = ({children}) => {
         setMedicinesSubmit((prev) => prev.filter((item) => item.id !== medicineUnitId));
         setHasUnsavedChanges(true);
     };
+
+    const updateMedicineItem = (medicineUnitId, payload) => {
+        setMedicinesSubmit((prev) =>
+            prev.map((item) => (item.id === medicineUnitId ? { ...item, ...payload } : item))
+        );
+        setHasUnsavedChanges(true);
+    };
     
     const handleAddMedicineSubmit = (medicineUnit, data) => {
         const addMedicinesUnit = async () => {
@@ -162,7 +169,7 @@ export const PrescribingProvider = ({children}) => {
                 isLoadingButton: isLoadingButton,
                 medicinesSubmit: medicinesSubmit, setMedicinesSubmit,
                 addMedicineItem: handleAddMedicineSubmit, resetMedicineStore,
-                removeMedicineItem,
+                removeMedicineItem, updateMedicineItem,
                 handleUpdateMedicinesSubmit: handleUpdateMedicinesSubmit,
                 handleAddPrescriptionDetail: handleAddPrescriptionDetail,
                 clearForm: clearForm,

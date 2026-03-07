@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup"
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Tooltip, Typography } from "@mui/material"
+import { Box, Button, Chip, FormControl, InputLabel, MenuItem, Select, TextField, Tooltip, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import AddIcon from "@mui/icons-material/Add"
@@ -18,9 +18,11 @@ const MedicineLineItem = ({ units, medicine, schema, onAddToPrescription, availa
     defaultValues: { uses: "", quantity: "" },
   })
 
+  const RUNNING_OUT_THRESHOLD = 20
+
   const medicineUnit = units?.find((u) => u.id === selectedOption) ?? units?.[0]
   const availableStock = medicineUnit != null && availableStockMap ? availableStockMap.get(medicineUnit.id) : undefined
-  const stockDisplay = availableStock !== undefined && availableStock !== null ? availableStock : "—"
+  const stockNum = availableStock !== undefined && availableStock !== null ? Number(availableStock) : null
   const name =
     (medicine && typeof medicine === "object" && medicine.name) ? medicine.name
     : (medicineUnit?.medicine && typeof medicineUnit.medicine === "object" && medicineUnit.medicine.name) ? medicineUnit.medicine.name
@@ -68,7 +70,22 @@ const MedicineLineItem = ({ units, medicine, schema, onAddToPrescription, availa
           />
           <Box sx={{ flex: 1, minWidth: 0, pl: 1 }}>
             <Typography variant="body2" fontWeight={500} noWrap title={name}>{name}</Typography>
-            <Typography variant="caption" color="text.secondary">(SL: {stockDisplay})</Typography>
+            {stockNum !== null && (
+              <Box sx={{ mt: 0.5, display: "flex", alignItems: "center", gap: 0.5, flexWrap: "wrap" }}>
+                {stockNum === 0 ? (
+                  <>
+                    <Chip size="small" label={t("medicine:outOfStockLabel")} color="error" sx={{ height: 22 }} />
+                    <Typography component="span" variant="caption" color="text.secondary" sx={{ cursor: "pointer", textDecoration: "underline" }} title={t("medicine:orderStockLabel")}>
+                      {t("medicine:orderStockLabel")}
+                    </Typography>
+                  </>
+                ) : stockNum <= RUNNING_OUT_THRESHOLD ? (
+                  <Chip size="small" label={t("medicine:runningOutLabel", { count: stockNum })} color="warning" sx={{ height: 22 }} />
+                ) : (
+                  <Chip size="small" label={t("medicine:inStockLabel", { count: stockNum })} color="success" sx={{ height: 22 }} />
+                )}
+              </Box>
+            )}
           </Box>
         </Box>
 

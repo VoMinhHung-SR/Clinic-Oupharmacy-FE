@@ -13,13 +13,14 @@ import PrescriptionDetailCard from "../../../../modules/common/components/card/P
 import { ConfirmAlert } from "../../../../config/sweetAlert2"
 import BackdropLoading from "../../../../modules/common/components/BackdropLoading"
 import PrescriptionDetailLayout from "../../../../modules/pages/PrescriptionDetailComponents/layout"
+import PrescribingPageHeader from "../../../../modules/pages/PrescriptionDetailComponents/PrescribingPageHeader"
 import PrescriptionFormSidebar from "../../../../modules/pages/PrescriptionDetailComponents/PrescriptionFormSidebar"
 import SkeletonPrescribingPage from "../../../../modules/common/components/skeletons/pages/prescribing-prescribing-page"
 
 const PrescriptionDetail = () => {
     const {user} = useContext(UserContext)
     const {medicinesSubmit, handleAddPrescriptionDetail, newPrescribing,
-        handleUpdateMedicinesSubmit, resetMedicineStore, removeMedicineItem,
+        handleUpdateMedicinesSubmit, resetMedicineStore, removeMedicineItem, updateMedicineItem,
         addMedicineItem, clearForm, hasUnsavedChanges, 
         newestPrescriptionDetail, isBackdropLoading} = useContext(PrescribingContext)
     
@@ -132,6 +133,7 @@ const PrescriptionDetail = () => {
 
             {!isLoadingPrescriptionDetail && prescriptionDetail !== null && newestPrescriptionDetail.length === 0 && (
                 <PrescriptionDetailLayout
+                    headerContent={<PrescribingPageHeader patient={prescriptionDetail.examination.patient} />}
                     leftContent={
                         <MedicinesHome
                             onAddMedicineLineItem={addMedicineItem}
@@ -151,6 +153,7 @@ const PrescriptionDetail = () => {
                             onAddPrescriptionDetail={handleAddPrescriptionDetail}
                             onReset={resetMedicineStore}
                             onEdit={handleOnEdit}
+                            onEditItem={updateMedicineItem}
                             onRemove={removeMedicineItem}
                             user={user}
                             diagnosisId={diagnosisId}

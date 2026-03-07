@@ -3,11 +3,7 @@ import {
   Button,
   Grid,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
+  Stack,
   Typography,
 } from "@mui/material"
 import { useTranslation } from "react-i18next"
@@ -23,6 +19,7 @@ export default function PrescriptionFormSidebar({
   onAddPrescriptionDetail,
   onReset,
   onEdit,
+  onEditItem,
   onRemove,
   user,
   diagnosisId,
@@ -48,7 +45,7 @@ export default function PrescriptionFormSidebar({
       </Box>
 
       <Box component={Paper} elevation={5} sx={{ p: 2.5, width: "100%" }}>
-        <Typography variant="h6" component="h2" textAlign="center" sx={{ mb: 2 }}>
+        <Typography variant="h6" component="h2" textAlign="center" fontWeight={600} sx={{ mb: 2 }}>
           {t("prescription-detail:prescriptionDetail")}
         </Typography>
 
@@ -58,56 +55,52 @@ export default function PrescriptionFormSidebar({
           </Typography>
         ) : (
           <>
-            <Box sx={{ overflowX: "auto", mb: 2 }}>
-              <Table size="small" sx={{ minWidth: 320 }}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell padding="none" sx={{ width: 32, textAlign: "center", fontSize: "0.75rem", fontWeight: 600 }} scope="col" />
-                    <TableCell sx={{ fontSize: "0.75rem", fontWeight: 600, minWidth: 120 }} scope="col">{t("prescription-detail:medicineName")}</TableCell>
-                    <TableCell sx={{ width: 72, textAlign: "center", fontSize: "0.75rem", fontWeight: 600 }} scope="col">{t("prescription-detail:uses")}</TableCell>
-                    <TableCell sx={{ width: 64, textAlign: "center", fontSize: "0.75rem", fontWeight: 600 }} scope="col">{t("prescription-detail:quantity")}</TableCell>
-                    {onRemove && <TableCell padding="none" sx={{ width: 48 }} scope="col" />}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {medicinesSubmit.map((item, index) => (
-                    <PrescriptionDraftLineItem
-                      key={item.id ?? index}
-                      medicineName={item.medicineName}
-                      packaging={item.packaging}
-                      uses={item.uses}
-                      quantity={item.quantity}
-                      index={index}
-                      itemId={item.id}
-                      onRemove={onRemove}
-                    />
-                  ))}
-                </TableBody>
-              </Table>
+            <Box sx={{ mb: 2, maxHeight: 360, overflowY: "auto" }}>
+              {medicinesSubmit.map((item, index) => (
+                <PrescriptionDraftLineItem
+                  key={item.id ?? index}
+                  medicineName={item.medicineName}
+                  packaging={item.packaging}
+                  uses={item.uses}
+                  quantity={item.quantity}
+                  index={index}
+                  itemId={item.id}
+                  onRemove={onRemove}
+                  onEditItem={onEditItem}
+                  variant="card"
+                />
+              ))}
             </Box>
 
-            <Grid container spacing={1.5}>
-              <Grid item xs={6}>
+            <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
+              {t("prescription-detail:totalAmount")}: —
+            </Typography>
+
+            <Stack spacing={1.5}>
+              <Box sx={{ display: "flex", gap: 1 }}>
                 <EditPrescriptionModal medicinesSubmitData={medicinesSubmit} handleOnEdit={onEdit} handleClearAll={onReset} />
-              </Grid>
-              <Grid item xs={6}>
-                <Button fullWidth variant="outlined" color="error" onClick={onReset} aria-label={t("common:deleteAll")}>
-                  {t("common:deleteAll")}
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
                 <Button
                   fullWidth
-                  variant="contained"
-                  color="success"
-                  size="medium"
-                  onClick={() => onAddPrescriptionDetail(user?.id, diagnosisId)}
-                  aria-label={t("prescription-detail:prescribing")}
+                  variant="outlined"
+                  color="error"
+                  onClick={onReset}
+                  aria-label={t("common:deleteAll")}
                 >
-                  {t("prescription-detail:prescribing")}
+                  {t("common:deleteAll")}
                 </Button>
-              </Grid>
-            </Grid>
+              </Box>
+              <Button
+                fullWidth
+                variant="contained"
+                color="success"
+                size="large"
+                onClick={() => onAddPrescriptionDetail(user?.id, diagnosisId)}
+                aria-label={t("prescription-detail:prescribing")}
+                sx={{ py: 1.5, textTransform: "uppercase", fontWeight: 600 }}
+              >
+                {t("prescription-detail:prescribing")}
+              </Button>
+            </Stack>
           </>
         )}
       </Box>

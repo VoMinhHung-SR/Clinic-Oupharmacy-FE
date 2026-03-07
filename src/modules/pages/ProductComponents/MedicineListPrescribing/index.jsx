@@ -43,14 +43,14 @@ const MedicineListPrescribing = ({
 
   return (
     <div>
-      <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "flex-end", mb: 2 }}>
-        <MedicineFilter
-          kw={paramsFilter.kw}
-          cateFilter={paramsFilter.cate}
-          onSubmit={handleOnSubmitFilter}
-          categories={categories}
-        />
-      </Box>
+      <MedicineFilter
+        kw={paramsFilter.kw}
+        cateFilter={paramsFilter.cate}
+        price={paramsFilter.price}
+        onSubmit={handleOnSubmitFilter}
+        categories={categories}
+        prescribingSearch
+      />
 
       <Box sx={{ ...LIST_GRID, py: 1, px: 0.5, borderBottom: 1, borderColor: "divider", typography: "body2", fontWeight: 600 }}>
         <Box sx={{ textAlign: "left" }}>{t("prescription-detail:medicineName")}</Box>
