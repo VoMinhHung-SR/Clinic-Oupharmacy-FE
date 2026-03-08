@@ -47,7 +47,7 @@ const MedicineLineItem = ({ units, medicine, schema, onAddToPrescription, availa
   const rowSx = {
     ...(gridTemplate || {}),
     width: "100%",
-    px: 1.5,
+    minWidth: 0,
     py: 1.5,
     mb: 1,
     minHeight: 64,
@@ -60,7 +60,7 @@ const MedicineLineItem = ({ units, medicine, schema, onAddToPrescription, availa
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box key={medicineUnit?.id ?? "line"} sx={rowSx}>
-        <Box sx={{ display: "flex", alignItems: "center", minWidth: 0 }}>
+        <Box sx={{ display: "flex", alignItems: "center", minWidth: 0, overflow: "hidden" }}>
           <img
             src={getMedicineUnitImageUrl(medicineUnit)}
             alt={name}
@@ -86,17 +86,21 @@ const MedicineLineItem = ({ units, medicine, schema, onAddToPrescription, availa
                 )}
               </Box>
             )}
+            {(errors.uses?.message || errors.quantity?.message) && (
+              <Box component="ul" sx={{ m: 0, mt: 0.5, pl: 2, py: 0, listStyle: "disc" }}>
+                {errors.uses?.message && <Box component="li" sx={{ typography: "caption", color: "error.main" }}>{errors.uses.message}</Box>}
+                {errors.quantity?.message && <Box component="li" sx={{ typography: "caption", color: "error.main" }}>{errors.quantity.message}</Box>}
+              </Box>
+            )}
           </Box>
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", minHeight: 40, justifyContent: "center" }}>
+        <Box sx={{ display: "flex", alignItems: "center", minHeight: 40, justifyContent: "center", minWidth: 0, overflow: "hidden" }}>
           {hasMultiplePackages ? (
             <FormControl size="small" fullWidth>
-              <InputLabel id={`package-size-${medicine?.id}`}>{t("medicine:packaging")}</InputLabel>
               <Select
                 labelId={`package-size-${medicine?.id}`}
                 value={selectedOption ?? ""}
-                label={t("medicine:packaging")}
                 onChange={(e) => setSelectedOption(Number(e.target.value))}
                 aria-label={t("medicine:packaging")}
               >
@@ -114,42 +118,52 @@ const MedicineLineItem = ({ units, medicine, schema, onAddToPrescription, availa
           )}
         </Box>
 
-        <Box>
+        <Box sx={{ minWidth: 0, display: "flex", justifyContent: "center" }}>
           <TextField
-            fullWidth
             size="small"
             variant="outlined"
             id={`medicine-uses-${medicineUnit?.id}`}
             name="uses"
             type="text"
-            inputProps={{ "aria-label": t("prescription-detail:uses") }}
+            error={!!errors.uses}
+            inputProps={{ "aria-label": t("prescription-detail:uses"), "aria-invalid": !!errors.uses }}
             {...register("uses")}
+            sx={{ width: "100%", maxWidth: 96 }}
           />
-          {errors.uses?.message && (
-            <Typography variant="caption" color="error" sx={{ mt: 0.5 }}>{errors.uses.message}</Typography>
-          )}
         </Box>
 
-        <Box>
+        <Box sx={{ minWidth: 0, display: "flex", justifyContent: "center" }}>
           <TextField
-            fullWidth
             size="small"
             variant="outlined"
             id={`medicine-quantity-${medicineUnit?.id}`}
             type="number"
             name="quantity"
             InputLabelProps={{ shrink: true }}
-            inputProps={{ "aria-label": t("prescription-detail:quantity") }}
+            error={!!errors.quantity}
+            inputProps={{ "aria-label": t("prescription-detail:quantity"), "aria-invalid": !!errors.quantity }}
             {...register("quantity")}
+            sx={{ width: "100%", maxWidth: 72 }}
           />
-          {errors.quantity?.message && (
-            <Typography variant="caption" color="error" sx={{ mt: 0.5 }}>{errors.quantity.message}</Typography>
-          )}
         </Box>
 
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minWidth: 0, overflow: "hidden" }}>
           <Tooltip title={t("prescription-detail:addMedicine")} followCursor>
-            <Button variant="contained" color="success" size="small" type="submit" aria-label={t("prescription-detail:addMedicine")}>
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              type="submit"
+              aria-label={t("prescription-detail:addMedicine")}
+              sx={{
+                minWidth: 0,
+                width: 40,
+                height: 40,
+                p: 0,
+                borderRadius: 1,
+                "& .MuiSvgIcon-root": { fontSize: 20 },
+              }}
+            >
               <AddIcon />
             </Button>
           </Tooltip>

@@ -12,7 +12,10 @@ const normalizeMedicineUnits = (results) => {
     if (!Array.isArray(results)) return [];
     return results.map((unit) => {
         const medicine = unit.medicine != null && typeof unit.medicine === "object"
-            ? { id: unit.medicine.id, name: unit.medicine.name ?? "" }
+            ? {
+                id: unit.medicine.id,
+                name: unit.medicine.web_name ?? unit.medicine.name ?? "",
+            }
             : { id: unit.medicine, name: "" };
         return {
             ...unit,

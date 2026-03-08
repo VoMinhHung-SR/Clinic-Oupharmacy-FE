@@ -36,8 +36,32 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
 
   if (!tReady && medicineLoading) {
     return (
-      <Box component={Paper} elevation={5} className="ou-px-4 ou-py-6">
-        <SkeletonPrescribingPage.ListSection />
+      <Box
+        sx={{
+          flex: { xs: "0 0 auto", md: "1 1 0" },
+          minHeight: { xs: "auto", md: 0 },
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          width: "100%",
+        }}
+      >
+        <Box
+          component={Paper}
+          elevation={5}
+          sx={{
+            width: "100%",
+            flex: { xs: "0 0 auto", md: "1 1 0" },
+            minHeight: { xs: "auto", md: 0 },
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            px: 3,
+            py: 3,
+          }}
+        >
+          <SkeletonPrescribingPage.ListSection />
+        </Box>
       </Box>
     )
   }
@@ -50,11 +74,30 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
   }
 
   return (
-    <>
+    <Box
+      sx={{
+        flex: { xs: "0 0 auto", md: "1 1 0" },
+        minHeight: { xs: "auto", md: 0 },
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+        width: "100%",
+      }}
+    >
       <Box
         component={Paper}
         elevation={5}
-        sx={{ width: "100%", maxWidth: "100%", overflow: "auto", px: 3, py: 3 }}
+        sx={{
+          width: "100%",
+          maxWidth: "100%",
+          flex: { xs: "0 0 auto", md: "1 1 0" },
+          minHeight: { xs: "auto", md: 0 },
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          px: 3,
+          py: 3,
+        }}
       >
         {isPrescribingView && (
           <MedicineListPrescribing
@@ -71,7 +114,7 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
         {isProductsView && <MedicineGridProducts medicines={medicineUnits} actionButton={actionButton} />}
 
         {!medicineLoading && pagination.sizeNumber >= 2 && (
-          <Box sx={{ pt: 5, pb: 2 }}>
+          <Box sx={{ flexShrink: 0, pt: 2, pb: 1 }}>
             <Stack>
               <Pagination
                 count={pagination.sizeNumber}
@@ -84,7 +127,7 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
           </Box>
         )}
       </Box>
-    </>
+    </Box>
   )
 }
 

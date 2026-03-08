@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from "@mui/material"
+import { Button, Grid, Typography, useTheme } from "@mui/material"
 import { Box } from "@mui/system"
 import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
@@ -132,6 +132,7 @@ const PrescriptionDetail = () => {
             )}
 
             {!isLoadingPrescriptionDetail && prescriptionDetail !== null && newestPrescriptionDetail.length === 0 && (
+                <PrescribingContentWrapper>
                 <PrescriptionDetailLayout
                     headerContent={<PrescribingPageHeader patient={prescriptionDetail.examination.patient} />}
                     leftContent={
@@ -147,8 +148,6 @@ const PrescriptionDetail = () => {
                     }
                     rightContent={
                         <PrescriptionFormSidebar
-                            patient={prescriptionDetail.examination.patient}
-                            patientId={prescriptionDetail.examination.patient.id}
                             medicinesSubmit={medicinesSubmit}
                             onAddPrescriptionDetail={handleAddPrescriptionDetail}
                             onReset={resetMedicineStore}
@@ -160,9 +159,29 @@ const PrescriptionDetail = () => {
                         />
                     }
                 />
+                </PrescribingContentWrapper>
             )}
         </>
     )
+}
+
+/** Wrapper chiều cao theo theme, tránh fix cứng 120px */
+function PrescribingContentWrapper({ children }) {
+  const theme = useTheme()
+  const offset = theme.spacing(15) // 120px với spacing mặc định 8
+  return (
+    <Box
+      sx={{
+        overflow: "hidden",
+        height: `calc(100vh - ${offset})`,
+        maxHeight: `calc(100vh - ${offset})`,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {children}
+    </Box>
+  )
 }
 
 export default PrescriptionDetail

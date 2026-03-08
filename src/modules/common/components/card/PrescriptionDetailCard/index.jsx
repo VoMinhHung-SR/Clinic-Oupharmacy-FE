@@ -295,10 +295,7 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
 
                 <Box className="ou-flex ou-items-center ou-gap-2 ou-py-3">
                     <Typography className="ou-font-semibold ou-text-gray-500">
-                        {t('prescription-detail:note')}
-                    </Typography>
-                    <Typography className="ou-font-medium ou-text-gray-500">
-                        
+                        {t('prescription-detail:doctorNote')}: ...
                     </Typography>
                 </Box>
                 <Divider className="ou-mb-6" />

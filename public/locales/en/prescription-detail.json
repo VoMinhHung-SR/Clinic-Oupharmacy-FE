@@ -56,5 +56,6 @@
     "prescriptionDetailExistDescription": "Continue to create new prescription?",
     
     "existingPrescriptions": "Existing prescriptions",
-    "newPrescriptionCreated": "New prescription created successfully"
+    "newPrescriptionCreated": "New prescription created successfully",
+    "doctorNote": "Doctor note"
 }
