@@ -19,6 +19,11 @@
     "resultOfTotal": "({{result}} kết quả)",
     "all": "Tất cả",
     "search": "Tìm kiếm",
+    "searchPlaceholder": "Tìm thuốc, hoạt chất, barcode...",
+    "inStockLabel": "Còn {{count}}",
+    "runningOutLabel": "Sắp hết {{count}}",
+    "outOfStockLabel": "Hết hàng",
+    "orderStockLabel": "Kẻ hàng",
     "medicineList": "Danh sách thuốc",
     "filter": "Bộ lọc"
 }

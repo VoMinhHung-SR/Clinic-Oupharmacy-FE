@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ConfirmAlert, ErrorAlert } from "../../config/sweetAlert2";
-import { fetchAddPrescriptionDetail, fetchCreatePrescribing, fetchGetPrescriptionDetailById } from "../../modules/common/components/card/PrescriptionDetailCard/services";
+import { createPrescribingWithDetails } from "../../modules/pages/PrescriptionDetailComponents/services/prescribingActions";
 import createToastMessage from "../utils/createToastMessage";
 import { TOAST_ERROR, TOAST_SUCCESS } from "../constants";
 
@@ -20,18 +20,16 @@ export const PrescribingProvider = ({children}) => {
     const [newestPrescriptionDetail, setNewestPrescriptionDetail] = useState([]);
     const [isBackdropLoading, setIsBackdropLoading] = useState(false);
 
-    const addMedicineItem = (medicineUnitId, medicineName, uses, quantity, inStock) => { 
+    const addMedicineItem = (medicineUnitId, medicineName, packaging, uses, quantity, inStock) => {
         const newItem = {
             id: medicineUnitId,
             medicineName: medicineName,
+            packaging: packaging ?? "",
             uses: uses,
-            quantity: parseInt(quantity),
-            inStock: inStock
+            quantity: parseInt(quantity, 10),
+            inStock: inStock,
         };
-        setMedicinesSubmit( prevMedicinesSubmit => {
-            const updatedState = [...prevMedicinesSubmit, newItem];
-            return updatedState;
-        });
+        setMedicinesSubmit((prev) => [...prev, newItem]);
         setHasUnsavedChanges(true);
     };
     
@@ -52,16 +50,28 @@ export const PrescribingProvider = ({children}) => {
     };
 
     const handleUpdateMedicinesSubmit = (updatedData) => {
-        if(updatedData.length === 0){
-            setMedicinesSubmit([])
+        if (updatedData.length === 0) {
+            setMedicinesSubmit([]);
             setHasUnsavedChanges(false);
-            return
+            return;
         }
-        const updatedMedicinesSubmit = medicinesSubmit.map(medicine => {
-            const updatedMedicine = updatedData.find(item => item.medicineName === medicine.medicineName);
-            return updatedMedicine ? { ...medicine, ...updatedMedicine } : null;
+        const updated = medicinesSubmit.map((item) => {
+            const match = updatedData.find((u) => u.id === item.id);
+            return match ? { ...item, ...match } : null;
         }).filter(Boolean);
-        setMedicinesSubmit(updatedMedicinesSubmit);
+        setMedicinesSubmit(updated);
+        setHasUnsavedChanges(true);
+    };
+
+    const removeMedicineItem = (medicineUnitId) => {
+        setMedicinesSubmit((prev) => prev.filter((item) => item.id !== medicineUnitId));
+        setHasUnsavedChanges(true);
+    };
+
+    const updateMedicineItem = (medicineUnitId, payload) => {
+        setMedicinesSubmit((prev) =>
+            prev.map((item) => (item.id === medicineUnitId ? { ...item, ...payload } : item))
+        );
         setHasUnsavedChanges(true);
     };
     
@@ -77,26 +87,24 @@ export const PrescribingProvider = ({children}) => {
                 // Flag to check if medicine is updated
                 let medicineUpdated = false;
 
-                if (medicinesSubmit.length !== 0) {  
-                    const updatedMedicinesSubmit = medicinesSubmit.map((medicine) => {
-                        if (medicine.id === medicineUnit.id) {
-                            medicineUpdated = true
-
+                if (medicinesSubmit.length !== 0) {
+                    const updatedMedicinesSubmit = medicinesSubmit.map((item) => {
+                        if (item.id === medicineUnit.id) {
+                            medicineUpdated = true;
                             return {
-                                ...medicine,
+                                ...item,
                                 uses: data.uses,
                                 inStock: medicineUnit.in_stock,
-                                quantity: parseInt(medicine.quantity) + parseInt(data.quantity)
+                                quantity: parseInt(item.quantity, 10) + parseInt(data.quantity, 10),
                             };
                         }
-                        return medicine;
+                        return item;
                     });
-                    if (medicineUpdated)
-                        handleUpdateMedicinesSubmit(updatedMedicinesSubmit);
-                    else 
-                        addMedicineItem(medicineUnit.id, medicineUnit.medicine.name, data.uses, data.quantity, medicineUnit.in_stock); 
-                }else 
-                    addMedicineItem(medicineUnit.id, medicineUnit.medicine.name, data.uses, data.quantity, medicineUnit.in_stock);  
+                    if (medicineUpdated) handleUpdateMedicinesSubmit(updatedMedicinesSubmit);
+                    else addMedicineItem(medicineUnit.id, medicineUnit.medicine.name, medicineUnit.packaging ?? "", data.uses, data.quantity, medicineUnit.in_stock);
+                } else {
+                    addMedicineItem(medicineUnit.id, medicineUnit.medicine.name, medicineUnit.packaging ?? "", data.uses, data.quantity, medicineUnit.in_stock);
+                }  
             } catch (err) {
                 console.log(err);
                 ErrorAlert(t('modal:createFailed'), t('modal:pleaseDoubleCheck'), t('modal:ok'));
@@ -112,54 +120,47 @@ export const PrescribingProvider = ({children}) => {
     }, [medicinesSubmit, flag]);
 
     const handleAddPrescriptionDetail = async (userID, diagnosisID) => {
-        const handleOnSubmit = async () => {
-            try {
-
-                if (medicinesSubmit.length === 0) {
-                    return createToastMessage({type:TOAST_ERROR,
-                        message: t('modal:createFailed')});
-                }
-    
-                const prescribingData = { user: userID, diagnosis: parseInt(diagnosisID) };
-                const res = await fetchCreatePrescribing(prescribingData);
-                if (res.status === 201) {
-                    setNewPrescribing(res.data);
-                    await Promise.all(
-                        medicinesSubmit.map(async (m) => {
-                            const formData = {
-                                quantity: m.quantity,
-                                uses: m.uses,
-                                prescribing: res.data.id,
-                                medicine_unit: m.id
-                            };
-                            await fetchAddPrescriptionDetail(formData);
-                        })
-                    );
-                    const newPrescriptionDetail = await fetchGetPrescriptionDetailById(res.data.id);
-                    if(newPrescriptionDetail.status === 200){
-                        setNewestPrescriptionDetail(newPrescriptionDetail.data);
-                    }
-                    createToastMessage({type:TOAST_SUCCESS,message: t('prescription-detail:prescriptionCreated')});
-                } else {
-                    createToastMessage({type:TOAST_ERROR,message: t('modal:createFailed')});
-                }
-            } catch (err) {
-                createToastMessage({type:TOAST_ERROR,message: t('modal:createFailed')});
-            } finally {
-                setHasUnsavedChanges(false);
-                setMedicinesSubmit([]);
-                setIsLoadingButton(false)
-                setIsBackdropLoading(false);
-            }
-
+        if (medicinesSubmit.length === 0) {
+            createToastMessage({ type: TOAST_ERROR, message: t("modal:createFailed") });
+            return;
         }
-        return ConfirmAlert(t('prescription-detail:confirmAddPrescription'),
-        t('modal:noThrowBack'),t('modal:yes'),t('modal:cancel'),
-        ()=>{
-            setIsLoadingButton(true)
-            setIsBackdropLoading(true);
-            handleOnSubmit()
-        }, () => { return; })
+
+        return ConfirmAlert(
+            t("prescription-detail:confirmAddPrescription"),
+            t("modal:noThrowBack"),
+            t("modal:yes"),
+            t("modal:cancel"),
+            async () => {
+                setIsLoadingButton(true);
+                setIsBackdropLoading(true);
+                try {
+                    const result = await createPrescribingWithDetails(
+                        userID,
+                        diagnosisID,
+                        medicinesSubmit
+                    );
+                    if (result.success) {
+                        if (result.newPrescribing) setNewPrescribing(result.newPrescribing);
+                        if (result.newestPrescriptionDetail)
+                            setNewestPrescriptionDetail(result.newestPrescriptionDetail);
+                        createToastMessage({
+                            type: TOAST_SUCCESS,
+                            message: t("prescription-detail:prescriptionCreated"),
+                        });
+                    } else {
+                        createToastMessage({ type: TOAST_ERROR, message: t("modal:createFailed") });
+                    }
+                } catch (err) {
+                    createToastMessage({ type: TOAST_ERROR, message: t("modal:createFailed") });
+                } finally {
+                    setHasUnsavedChanges(false);
+                    setMedicinesSubmit([]);
+                    setIsLoadingButton(false);
+                    setIsBackdropLoading(false);
+                }
+            },
+            () => {}
+        );
     };
 
     return (
@@ -168,9 +169,10 @@ export const PrescribingProvider = ({children}) => {
                 isLoadingButton: isLoadingButton,
                 medicinesSubmit: medicinesSubmit, setMedicinesSubmit,
                 addMedicineItem: handleAddMedicineSubmit, resetMedicineStore,
+                removeMedicineItem, updateMedicineItem,
                 handleUpdateMedicinesSubmit: handleUpdateMedicinesSubmit,
                 handleAddPrescriptionDetail: handleAddPrescriptionDetail,
-                clearForm: clearForm, 
+                clearForm: clearForm,
                 newPrescribing, newestPrescriptionDetail,
                 hasUnsavedChanges, isBackdropLoading
             }}

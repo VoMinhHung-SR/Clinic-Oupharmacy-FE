@@ -24,9 +24,9 @@ import SkeletonMedicineList from "../../../modules/common/components/skeletons/p
 const MemoizedMedicineFilter = memo(MedicineFilter);
 
 const MedicineList = () => {
-    const {page, pagination, handleChangePage, selectedImage, setSelectedImage, imageUrl, 
-    setImageUrl, medicineLoading, medicines, updateMedicine, handleOnSubmitFilter, paramsFilter,
-    addMedicine, backdropLoading, deleteMedicine} = useMedicine()
+    const { page, pagination, handleChangePage, selectedImage, setSelectedImage, imageUrl,
+      setImageUrl, medicineLoading, medicineUnits, updateMedicine, handleOnSubmitFilter, paramsFilter,
+      addMedicine, backdropLoading, deleteMedicine } = useMedicine()
 
     const {categories, isLoading} = useCategory()
     const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
@@ -132,16 +132,17 @@ const MedicineList = () => {
                         </Box>
                     </TableCell>}
 
-                    {!medicineLoading && medicines.length > 0 && medicines.map(medicine => (
-                        <MedicineUnitLineItem 
-                        key={`medicine-unit-${medicine.id}`}  
-                        categories={categories} 
-                        updateMedicine={updateMedicine}
-                        data={medicine} 
-                        removeMedicine={deleteMedicine}/>
+                    {!medicineLoading && medicineUnits.length > 0 && medicineUnits.map((medicineUnit) => (
+                        <MedicineUnitLineItem
+                          key={`medicine-unit-${medicineUnit.id}`}
+                          categories={categories}
+                          updateMedicine={updateMedicine}
+                          data={medicineUnit}
+                          removeMedicine={deleteMedicine}
+                        />
                     ))}
 
-                    {!medicineLoading && medicines.length === 0 &&  
+                    {!medicineLoading && medicineUnits.length === 0 &&  
                       <TableCell colSpan={12} component="th" scope="row">
                           <Typography> 
                               <Box className="ou-text-center ou-p-10 ou-text-red-700">

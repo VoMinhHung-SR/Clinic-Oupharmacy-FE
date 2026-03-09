@@ -224,4 +224,25 @@
       padding: 10px;
       text-align: center;
     }
+
+    /* Scrollbar - inner list/table (prescribing left list, prescription sidebar) */
+    .ou-scrollbar {
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    .ou-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+    .ou-scrollbar::-webkit-scrollbar-track {
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
+    }
+    .ou-scrollbar::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+    .ou-scrollbar::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(0, 0, 0, 0.3);
+    }
   }

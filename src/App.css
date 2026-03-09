@@ -34,3 +34,34 @@
   color: #888;
 }
 
+@media print {
+  body {
+    margin: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 24px 40px;
+    background: #ffffff;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
+

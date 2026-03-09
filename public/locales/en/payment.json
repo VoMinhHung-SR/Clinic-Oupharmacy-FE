@@ -23,6 +23,7 @@
     "pay": "Pay",
     "paid": "Payment Complete",
     "unpaid": "Payment Pending",
+    "printReceipt": "Print receipt",
     "momoPayment": "Momo payment",
     "zalopayPayment": "ZaloPay payment",
 

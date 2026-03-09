@@ -7,17 +7,19 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { ROLE_DOCTOR, ROLE_NURSE, SERVICE_FEE } from "../../../../../lib/constants";
+import { SERVICE_FEE } from "../../../../../lib/constants";
+import { canShowPaymentButtons, canShowPrintButton, canViewPayments } from "../../../../../lib/auth";
 import { useContext } from "react";
 import UserContext from "../../../../../lib/context/UserContext";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../Loading";
+import PrintIcon from '@mui/icons-material/Print';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 
-const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButton}) => {
+const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButton, onPrint }) => {
     const { t, tReady } = useTranslation(['prescription-detail', 'common', 'payment']);
 
     const {user} = useContext(UserContext)
-    const router = useNavigate()
     if (tReady) {
         return (
             <Box className="ou-flex ou-justify-center ou-items-center ou-h-64 ou-p-5">
@@ -55,46 +57,80 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
         return acc + (prescribingDetail.medicine_unit.price || 0) * prescribingDetail.quantity;
     }, 0) || 0;
 
-    // const amounts = Object.entries(
-    //     medicineUnits.reduce((acc, { prescribing, medicine_unit, quantity }) => {
-    //       acc[prescribing.id] = (acc[prescribing.id] || 0) + medicine_unit.price * quantity;
-    //       return acc;
-    //     }, {})
-    //   ).map(([prescribingId, total]) => ({ prescribingId: Number(prescribingId), total }));
-      
+    const isPaymentsMode = typeof handlePayment === "function"
+    const isPaid = Boolean(bill_status)
+
+    const handlePrintClick = () => {
+        if (onPrint) {
+            const firstId = Array.isArray(listPrescribingId) ? listPrescribingId[0] : undefined;
+            onPrint(firstId);
+        } else {
+            window.print();
+        }
+    };
+
     const renderButtons = () => {
         return (
-            <Box className="ou-flex ou-items-center ou-gap-2">
-                {!bill_status && user.role === ROLE_NURSE && (
+            <Box
+                className={
+                    isPaymentsMode
+                        ? "ou-flex ou-flex-col ou-items-end ou-gap-2 no-print"
+                        : "ou-flex ou-items-center ou-gap-2 no-print"
+                }
+            >
+                {canShowPaymentButtons(user, bill_status) && (
                     <Box>
-                        <Button 
-                            variant="contained"  
+                        <Button
+                            variant="contained"
                             className="!ou-min-w-[160px] !ou-btn-momo !ou-mt-3 !ou-mr-2"
-                            onClick={() => handlePayment({momoWallet: true})}
+                            onClick={() => handlePayment({ momoWallet: true })}
                             disabled={isLoadingButton}
-                            >
+                        >
                             {t('payment:momoPayment')}
                         </Button>
-                        <Button variant="contained" color="primary" 
-                            className="!ou-min-w-[160px] !ou-btn-base !ou-mt-3"   
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            className="!ou-min-w-[160px] !ou-btn-base !ou-mt-3"
                             disabled={isLoadingButton}
-                            onClick={() => handlePayment({momoWallet: false})}>
+                            onClick={() => handlePayment({ momoWallet: false })}
+                        >
                             {t('payment:pay')}
                         </Button>
                     </Box>
                 )}
-                {/* TODO: Add print feature */}
-                {user.role === ROLE_DOCTOR && (
-                    <Button variant="contained" color="primary" onClick={() => {
-                        // window.print();
-                        router('/dashboard/prescribing/');
-                    }}>
-                        {t('prescription-detail:print')}
-                    </Button>
+
+                {/* Payments page: only show print receipt when paid (nurse) */}
+                {isPaymentsMode ? (
+                    isPaid && canViewPayments(user) ? (
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            size="medium"
+                            className="!ou-min-w-[200px]"
+                            startIcon={<ReceiptLongIcon />}
+                            onClick={handlePrintClick}
+                        >
+                            {t("payment:printReceipt")}
+                        </Button>
+                    ) : null
+                ) : (
+                    canShowPrintButton(user) && (
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            size="medium"
+                            className="!ou-min-w-[160px]"
+                            startIcon={<PrintIcon />}
+                            onClick={handlePrintClick}
+                        >
+                            {t("prescription-detail:printPrescription")}
+                        </Button>
+                    )
                 )}
             </Box>
-        )
-    }
+        );
+    };
     return (
         <Box className="ou-mb-8 ou-w-[100%] ou-m-auto"
         key={'prescription-detail-card-'+listPrescribingId[0]}>
@@ -115,16 +151,14 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
                             
                         </Typography>
                     </Box>
-                    {
-                        user.role === ROLE_NURSE && (
-                            <Chip
-                                label={bill_status ? t('payment:paid') : t('payment:unpaid')}
-                                color={bill_status ? "success" : "warning"}
-                                variant="filled"
-                                size="large"
-                            />
-                        )
-                    }
+                    {canViewPayments(user) && (
+                        <Chip
+                            label={bill_status ? t('payment:paid') : t('payment:unpaid')}
+                            color={bill_status ? "success" : "warning"}
+                            variant="filled"
+                            size="large"
+                        />
+                    )}
                 </Box>
 
                 <Divider className="ou-mb-6" />
@@ -267,6 +301,11 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
                                             <TableCell align="center">{index + 1}</TableCell>
                                             <TableCell align="center" className="ou-font-medium">
                                                 {prescribingDetail.medicine_unit.medicine.name}
+                                                {(prescribingDetail.medicine_unit.package_size || prescribingDetail.medicine_unit.packaging) && (
+                                                    <Typography component="span" variant="caption" display="block" className="ou-text-gray-600">
+                                                        ({prescribingDetail.medicine_unit.package_size ?? prescribingDetail.medicine_unit.packaging})
+                                                    </Typography>
+                                                )}
                                             </TableCell>
                                             <TableCell align="center">
                                                 {prescribingDetail.uses}
@@ -291,10 +330,7 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
 
                 <Box className="ou-flex ou-items-center ou-gap-2 ou-py-3">
                     <Typography className="ou-font-semibold ou-text-gray-500">
-                        {t('prescription-detail:note')}
-                    </Typography>
-                    <Typography className="ou-font-medium ou-text-gray-500">
-                        
+                        {t('prescription-detail:doctorNote')}: 
                     </Typography>
                 </Box>
                 <Divider className="ou-mb-6" />

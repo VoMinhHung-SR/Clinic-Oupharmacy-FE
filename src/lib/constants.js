@@ -40,6 +40,7 @@ export const GOONGMAP_MAPTOKEN = import.meta.env.VITE_GOONGMAP_MAYKEY
 export const MAX_EXAM_PER_DAY = 30
 
 export const BACKEND_BASEURL = import.meta.env.VITE_SERVER
+export const MEDICINE_STORE_URL = import.meta.env.VITE_MEDICINE_STORE_URL
 
 export const ERROR_CLOUDINARY = 'https://res.cloudinary.com/dl6artkyb/null'
 export const AVATAR_NULL = 'https://res.cloudinary.com/dl6artkyb/users/avatar/null'
