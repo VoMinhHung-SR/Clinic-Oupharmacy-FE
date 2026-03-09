@@ -2,11 +2,9 @@ import { fetchCreatePrescribing, fetchAddPrescriptionDetail,
   fetchGetPrescriptionDetailById } from "../../../common/components/card/PrescriptionDetailCard/services";
 
 /**
- * Tạo prescribing + prescription_detail và lấy dữ liệu chi tiết mới nhất.
- * Service thuần (không toast/alert), dùng trong PrescribingContext.
  * @param {number} userId
  * @param {number} diagnosisId
- * @param {Array<{ id: number, medicineName: string, uses: string, quantity: number }>} medicinesSubmit
+ * @param {Array<{ id: number, medicineName: string, uses: string, quantity: number }>} 
  * @returns {Promise<{ success: boolean, newPrescribing?: object, newestPrescriptionDetail?: array, error?: string }>}
  */
 export async function createPrescribingWithDetails(userId, diagnosisId, medicinesSubmit) {

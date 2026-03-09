@@ -13,12 +13,13 @@ import { useContext } from "react";
 import UserContext from "../../../../../lib/context/UserContext";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../Loading";
+import PrintIcon from '@mui/icons-material/Print';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 
-const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButton}) => {
+const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButton, onPrint }) => {
     const { t, tReady } = useTranslation(['prescription-detail', 'common', 'payment']);
 
     const {user} = useContext(UserContext)
-    const router = useNavigate()
     if (tReady) {
         return (
             <Box className="ou-flex ou-justify-center ou-items-center ou-h-64 ou-p-5">
@@ -56,16 +57,27 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
         return acc + (prescribingDetail.medicine_unit.price || 0) * prescribingDetail.quantity;
     }, 0) || 0;
 
-    // const amounts = Object.entries(
-    //     medicineUnits.reduce((acc, { prescribing, medicine_unit, quantity }) => {
-    //       acc[prescribing.id] = (acc[prescribing.id] || 0) + medicine_unit.price * quantity;
-    //       return acc;
-    //     }, {})
-    //   ).map(([prescribingId, total]) => ({ prescribingId: Number(prescribingId), total }));
-      
+    const isPaymentsMode = typeof handlePayment === "function"
+    const isPaid = Boolean(bill_status)
+
+    const handlePrintClick = () => {
+        if (onPrint) {
+            const firstId = Array.isArray(listPrescribingId) ? listPrescribingId[0] : undefined;
+            onPrint(firstId);
+        } else {
+            window.print();
+        }
+    };
+
     const renderButtons = () => {
         return (
-            <Box className="ou-flex ou-items-center ou-gap-2">
+            <Box
+                className={
+                    isPaymentsMode
+                        ? "ou-flex ou-flex-col ou-items-end ou-gap-2 no-print"
+                        : "ou-flex ou-items-center ou-gap-2 no-print"
+                }
+            >
                 {canShowPaymentButtons(user, bill_status) && (
                     <Box>
                         <Button
@@ -87,11 +99,34 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
                         </Button>
                     </Box>
                 )}
-                {/* TODO: Add print feature */}
-                {canShowPrintButton(user) && (
-                    <Button variant="contained" color="primary" onClick={() => router('/dashboard/prescribing/')}>
-                        {t('prescription-detail:print')}
-                    </Button>
+
+                {/* Payments page: only show print receipt when paid (nurse) */}
+                {isPaymentsMode ? (
+                    isPaid && canViewPayments(user) ? (
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            size="medium"
+                            className="!ou-min-w-[200px]"
+                            startIcon={<ReceiptLongIcon />}
+                            onClick={handlePrintClick}
+                        >
+                            {t("payment:printReceipt")}
+                        </Button>
+                    ) : null
+                ) : (
+                    canShowPrintButton(user) && (
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            size="medium"
+                            className="!ou-min-w-[160px]"
+                            startIcon={<PrintIcon />}
+                            onClick={handlePrintClick}
+                        >
+                            {t("prescription-detail:printPrescription")}
+                        </Button>
+                    )
                 )}
             </Box>
         );
@@ -295,7 +330,7 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
 
                 <Box className="ou-flex ou-items-center ou-gap-2 ou-py-3">
                     <Typography className="ou-font-semibold ou-text-gray-500">
-                        {t('prescription-detail:doctorNote')}: ...
+                        {t('prescription-detail:doctorNote')}: 
                     </Typography>
                 </Box>
                 <Divider className="ou-mb-6" />

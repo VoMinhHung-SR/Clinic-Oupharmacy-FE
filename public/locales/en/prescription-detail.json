@@ -57,5 +57,6 @@
     
     "existingPrescriptions": "Existing prescriptions",
     "newPrescriptionCreated": "New prescription created successfully",
-    "doctorNote": "Doctor note"
+    "doctorNote": "Doctor note",
+    "printPrescription": "Print prescription"
 }

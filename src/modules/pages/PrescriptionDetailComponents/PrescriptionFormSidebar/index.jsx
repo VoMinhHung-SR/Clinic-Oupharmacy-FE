@@ -14,10 +14,9 @@ export default function PrescriptionFormSidebar({
   onEditItem,
   onRemove,
   user,
-  diagnosisId,
+  diagnosisId
 }) {
   const { t } = useTranslation(["prescription-detail", "common"])
-  console.log(medicinesSubmit)
   return (
     <Box sx={{ maxWidth: "100%", minWidth: 0 }}>
       <Box
@@ -81,15 +80,15 @@ export default function PrescriptionFormSidebar({
               
             </Typography>
 
-            <Box  className="ou-flex ou-gap-2">
+            <Box className="ou-flex ou-gap-2">
               <Button
-                  variant="outlined"
-                  color="error"
-                  className="ou-flex-1"
-                  onClick={onReset}
-                  aria-label={t("common:deleteAll")}
-                >
-                  {t("common:deleteAll")}
+                variant="outlined"
+                color="error"
+                className="ou-flex-1"
+                onClick={onReset}
+                aria-label={t("common:deleteAll")}
+              >
+                {t("common:deleteAll")}
               </Button>
               <Button
                 variant="contained"

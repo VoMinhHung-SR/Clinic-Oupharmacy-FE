@@ -36,6 +36,8 @@ const PrescriptionDetail = () => {
         }
     })
     const [confirm, setConfirm] = useState(false)
+    const [isPrescribed, setIsPrescribed] = useState(false)
+    const [prescriptionId, setPrescriptionId] = useState(null)
     const hasShownDialog = useRef(false)
     // URL param :prescribingId is diagnosis ID (same route, semantics clarified in code)
     const { prescribingId: diagnosisId } = useParams();
@@ -67,12 +69,23 @@ const PrescriptionDetail = () => {
         }
     }, [isLoadingPrescriptionDetail, prescriptionDetail]);
 
+    useEffect(() => {
+        if (newPrescribing && newestPrescriptionDetail.length > 0) {
+            setIsPrescribed(true)
+            setPrescriptionId(newPrescribing.id)
+        }
+    }, [newPrescribing, newestPrescriptionDetail])
+
     const handleOnEdit = (medicineUpdate, deletedArrayItems) => {
         if (deletedArrayItems.length === medicinesSubmit.length)
             return handleUpdateMedicinesSubmit([])
 
         const dataWithoutNull = medicineUpdate.filter(item => item !== null);
         handleUpdateMedicinesSubmit(dataWithoutNull)
+    }
+
+    const handlePrint = () => {
+        window.print()
     }
 
     if (!ready || isLoadingPrescriptionDetail)
@@ -98,7 +111,7 @@ const PrescriptionDetail = () => {
             )}
 
             {newestPrescriptionDetail.length > 0 && (
-                <Box>
+                <Box className="print-area">
                     <Box className="ou-mb-4">
                         <PrescriptionDetailCard 
                             prescriptionData={{
@@ -109,7 +122,8 @@ const PrescriptionDetail = () => {
                                 examination: prescriptionDetail.examination,
                                 patient: prescriptionDetail.examination.patient,
                                 user: prescriptionDetail.user
-                            }} 
+                            }}
+                            onPrint={handlePrint}
                         />
                     </Box>
                 </Box>
@@ -147,7 +161,7 @@ const PrescriptionDetail = () => {
                         />
                     }
                     rightContent={
-                        <PrescriptionFormSidebar
+                    <PrescriptionFormSidebar
                             medicinesSubmit={medicinesSubmit}
                             onAddPrescriptionDetail={handleAddPrescriptionDetail}
                             onReset={resetMedicineStore}
@@ -156,6 +170,9 @@ const PrescriptionDetail = () => {
                             onRemove={removeMedicineItem}
                             user={user}
                             diagnosisId={diagnosisId}
+                            isPrescribed={isPrescribed}
+                            prescriptionId={prescriptionId}
+                            onPrint={handlePrint}
                         />
                     }
                 />
