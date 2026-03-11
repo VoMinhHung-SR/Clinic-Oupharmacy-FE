@@ -82,10 +82,10 @@ const Payments = () => {
 
                     {(!isLoadingPrescriptionDetail && prescriptionDetail) &&
                         groupMedicinesByDate(prescriptionDetail).map(
-                            ({ date, prescribingIds, medicines, baseData }) => (
-                                <Box key={date}>
+                            ({ date, prescribingIds, medicines, baseData }, index) => (
+                                <Box key={`${date}-${index}`}>
                                     <PrescriptionDetailCard
-                                        key={`date-${date}`}
+                                        key={`card-${date}-${prescribingIds.join('-')}`}
                                         handlePayment={({ onSuccess, onError, momoWallet = false }) =>
                                             handlePayment({ onSuccess, onError, momoWallet })
                                         }

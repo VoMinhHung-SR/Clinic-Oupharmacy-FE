@@ -9,8 +9,14 @@ import {
  * @returns {Promise<{ success: boolean, status?: number }>}
  */
 export async function executeBulkPayment(diagnosisId) {
-  const res = await fetchBulkPayment({ diagnosisID: diagnosisId });
-  return { success: res.status === 201, status: res.status };
+  try {
+    const res = await fetchBulkPayment({ diagnosisID: diagnosisId });
+    // Accept both 201 (created) and 200 (all bills already exist) as success
+    return { success: res.status === 201 || res.status === 200, status: res.status };
+  } catch (error) {
+    console.error('Error in executeBulkPayment:', error);
+    return { success: false, status: error.response?.status };
+  }
 }
 
 /**
