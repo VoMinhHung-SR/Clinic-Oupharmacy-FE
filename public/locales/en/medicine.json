@@ -19,6 +19,11 @@
     "resultOfTotal": "({{result}} results)",
     "all": "All",
     "search": "Search",
+    "searchPlaceholder": "Search medicine, active ingredient, barcode...",
     "medicineList": "Medicine List",
-    "filter": "Filter"
+    "filter": "Filter",
+    "inStockLabel": "In stock {{count}}",
+    "runningOutLabel": "Running out {{count}}",
+    "outOfStockLabel": "Out of stock",
+    "orderStockLabel": "Order stock"
 }

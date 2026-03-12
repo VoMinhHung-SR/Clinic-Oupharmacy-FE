@@ -20,6 +20,9 @@
     "pleaseDoubleCheck": "Please double check the form information",
     "noThrowBack": "This action can not be throwback, continue",
     
+    "confirmToUpdateInformation": "Are you sure you want to update this information?",
+    "confirmToDeleteInformation": "Are you sure you want to delete this information?",
+
     "unsavedChangesTitle": "Are you sure you want to leave this page?",
     "unsavedChangesMessage": "Your data will be cleared when leaving.",
     "returnedToUnsavedChanges": "You returned to a page with unsaved data",

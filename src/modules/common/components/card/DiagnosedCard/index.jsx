@@ -1,12 +1,13 @@
 import { Button, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import moment from "moment";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { ROLE_DOCTOR, ROLE_NURSE } from "../../../../../lib/constants";
+import { canPrescribe, canViewPayments } from "../../../../../lib/auth";
 import { Link, useNavigate } from "react-router-dom";
 import PaidIcon from "@mui/icons-material/Paid";
 import { useTranslation } from "react-i18next";
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import { ErrorAlert } from "../../../../../config/sweetAlert2";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const DiagnosedCard = ({ diagnosedInfo, user }) => {
 
@@ -15,7 +16,7 @@ const DiagnosedCard = ({ diagnosedInfo, user }) => {
     const renderBillStatus = (prescribingArray) => {
         let doneStatus = 0
         if(prescribingArray.length === 0)
-            return <span><CheckCircleIcon className="!ou-text-red-700"/></span> 
+            return <span><CancelIcon className="!ou-text-red-700"/></span> 
 
 
         if (prescribingArray.some(prescribing => prescribing && prescribing.bill_status === null)) {
@@ -23,15 +24,15 @@ const DiagnosedCard = ({ diagnosedInfo, user }) => {
         }
 
         if(doneStatus === -1 ) 
-            return <span><CheckCircleIcon className="!ou-text-red-700"/></span> 
+            return <span><CancelIcon className="!ou-text-red-700"/></span> 
         return  <span><CheckCircleIcon className="!ou-text-green-700"/></span> 
     }
 
     const handleOnClick = (id) => {
-      if (user.id !== diagnosedInfo.examination.schedule_appointment.doctor_id)
+      if (!canPrescribe(user, diagnosedInfo))
         return ErrorAlert(t('modal:errPrescribingNotOwner'), t('modal:pleaseTryAgain'), t('modal:ok'));
-      else router(`/dashboard/prescribing/${id}`)
-    }
+      router(`/dashboard/prescribing/${id}`);
+    };
   return (
     <TableRow key={diagnosedInfo.id} 
     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -62,7 +63,7 @@ const DiagnosedCard = ({ diagnosedInfo, user }) => {
             </span>
           ) : (
             <span>
-              <CheckCircleIcon className="!ou-text-red-700" />
+              <CancelIcon className="!ou-text-red-700" />
             </span>
           )}
         </Typography> 
@@ -81,25 +82,25 @@ const DiagnosedCard = ({ diagnosedInfo, user }) => {
         </Typography>
       </TableCell>
       <TableCell align="center">
-        {user && user.role === ROLE_DOCTOR && (
+        {user && canPrescribe(user, diagnosedInfo) && (
           <>
             <Typography className="mb-2">
-                <Tooltip followCursor title={t("prescribing")}>
-                  <span>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      onClick={() => handleOnClick(diagnosedInfo.id)}
-                      className="ou-bg-blue-700 !ou-min-w-[68px] !ou-min-h-[40px] !ou-mx-2"
-                    >
-                      <MedicalServicesIcon />
-                    </Button>
-                  </span>
-                </Tooltip>
+              <Tooltip followCursor title={t("prescribing")}>
+                <span>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => handleOnClick(diagnosedInfo.id)}
+                    className="ou-bg-blue-700 !ou-min-w-[68px] !ou-min-h-[40px] !ou-mx-2"
+                  >
+                    <MedicalServicesIcon />
+                  </Button>
+                </span>
+              </Tooltip>
             </Typography>
           </>
         )}
-        {user && user.role === ROLE_NURSE && (
+        {user && canViewPayments(user) && (
           <>
             <Tooltip followCursor title={t("pay")}>
               <span>

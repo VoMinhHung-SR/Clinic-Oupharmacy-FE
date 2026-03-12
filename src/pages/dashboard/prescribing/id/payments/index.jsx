@@ -70,18 +70,25 @@ const Payments = () => {
     }
 
     const renderDiagnosisSection = () => {
-            return (
-                <Box key={`diagnosis-section-${diagnosisInfo.id}`} className="ou-mb-4">
-                    <Box>    
-                        {(!isLoadingPrescriptionDetail && !diagnosisInfo) && renderErrorBox("examination-error", 'payment:errLoadExaminationDetailFailed', 'common:backToHomepage')}
-                        
-                        {(!isLoadingPrescriptionDetail && prescriptionDetail) && groupMedicinesByDate(prescriptionDetail).map(
-                                ({ date, prescribingIds, medicines, baseData }) => (
-                                <Box key={date}>
-                                    <PrescriptionDetailCard 
-                                        key={`date-${date}`}
-                                        handlePayment={({onSuccess, onError, momoWallet = false}) =>
-                                            handlePayment({onSuccess, onError, momoWallet})}
+        return (
+            <Box key={`diagnosis-section-${diagnosisInfo.id}`} className="ou-mb-4">
+                <Box className="print-area">
+                    {(!isLoadingPrescriptionDetail && !diagnosisInfo) &&
+                        renderErrorBox(
+                            "examination-error",
+                            'payment:errLoadExaminationDetailFailed',
+                            'common:backToHomepage'
+                        )}
+
+                    {(!isLoadingPrescriptionDetail && prescriptionDetail) &&
+                        groupMedicinesByDate(prescriptionDetail).map(
+                            ({ date, prescribingIds, medicines, baseData }, index) => (
+                                <Box key={`${date}-${index}`}>
+                                    <PrescriptionDetailCard
+                                        key={`card-${date}-${prescribingIds.join('-')}`}
+                                        handlePayment={({ onSuccess, onError, momoWallet = false }) =>
+                                            handlePayment({ onSuccess, onError, momoWallet })
+                                        }
                                         isLoadingButton={isLoadingButton}
                                         prescriptionData={{
                                             medicineUnits: medicines,
@@ -91,14 +98,14 @@ const Payments = () => {
                                             patient: diagnosisInfo.patient,
                                             user: diagnosisInfo.user,
                                             bill_status: baseData.prescribing.bill_status,
-                                        }} 
+                                        }}
                                     />
                                 </Box>
-                            ))
-                        }
-                    </Box>
+                            )
+                        )}
                 </Box>
-            );
+            </Box>
+        );
     };
 
     return (

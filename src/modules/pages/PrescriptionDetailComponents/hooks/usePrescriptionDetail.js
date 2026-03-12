@@ -4,31 +4,36 @@ import { fetchPrescriptionDetail } from "../services"
 import UserContext from "../../../../lib/context/UserContext"
 
 const usePrescriptionDetail = () => {
-    const {user} = useContext(UserContext)
-    const {prescribingId} = useParams();
-   
-    const [prescriptionDetail, setPrescriptionDetail] = useState(null)
-    const [isLoadingPrescriptionDetail, setIsLoadingPrescriptionDetail] = useState(true)
+    const { user } = useContext(UserContext);
+    // URL param :prescribingId is diagnosis ID
+    const { prescribingId: diagnosisId } = useParams();
+
+    const [prescriptionDetail, setPrescriptionDetail] = useState(null);
+    const [isLoadingPrescriptionDetail, setIsLoadingPrescriptionDetail] = useState(true);
 
     const loadPrescriptionDetailByDiagnosisId = async () => {
+        if (!diagnosisId) {
+            setIsLoadingPrescriptionDetail(false);
+            return;
+        }
         try {
-            const res = await fetchPrescriptionDetail(prescribingId)
+            const res = await fetchPrescriptionDetail(diagnosisId);
             if (res.status === 200) {
-                setPrescriptionDetail(res.data)
-                setIsLoadingPrescriptionDetail(false)
+                setPrescriptionDetail(res.data);
+                setIsLoadingPrescriptionDetail(false);
             }
         } catch (err) {
-            setIsLoadingPrescriptionDetail(false)
-            setPrescriptionDetail(null)
-            console.log(err)
+            setIsLoadingPrescriptionDetail(false);
+            setPrescriptionDetail(null);
+            console.log(err);
         }
-    }
+    };
 
     useEffect(() => {
-        if(user){
-            loadPrescriptionDetailByDiagnosisId()
+        if (user && diagnosisId) {
+            loadPrescriptionDetailByDiagnosisId();
         }
-    }, [user])
+    }, [user, diagnosisId]);
 
     return{
         user,

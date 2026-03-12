@@ -88,49 +88,45 @@ const PatientManagement = () => {
 
     const renderSecondState = () => {
         if(isAddNewPatient)
-            return <FormAddPatient/>
+            return (
+                <>
+                    <Box className="ou-p-8"><FormAddPatient/></Box>
+                    <div className="ou-mb-4 ou-flex ou-justify-end">
+                        {renderButtonStep()}
+                    </div>
+                </>
+            )
         return (
-            <Box sx={{ minHeight: "300px" }}>
-                <TableContainer component={Paper} elevation={6}>
-                    <Table aria-label="simple table">
+            <Box sx={{ minHeight: "300px", position: "relative", display: "block", margin: 0, padding: 0 }}>
+                <TableContainer component={Paper} elevation={6} sx={{ margin: 0, overflowX: "hidden" }}>
+                    <Table aria-label="simple table" sx={{ tableLayout: "fixed", width: "100%" }}>
                         <TableHead>
                             <TableRow>
-                                <TableCell>{t('id')}</TableCell>
-                                <TableCell align="center">{t('fullName')}</TableCell>
-                                <TableCell align="center">{t('phoneNumber')}</TableCell>
-                                <TableCell align="center">{t('email')}</TableCell>
-                                <TableCell align="center">{t('gender')}</TableCell>
-                                <TableCell align="center">{t('dateOfBirth')}</TableCell>
-                                <TableCell align="center">{t('address')}</TableCell>
-                                <TableCell align="center">{t('common:function')}</TableCell>
+                                <TableCell align="center" sx={{ width: "16%", py: 1.5 }}>{t('fullName')}</TableCell>
+                                <TableCell align="center" sx={{ width: "12%", py: 1.5 }}>{t('phoneNumber')}</TableCell>
+                                <TableCell align="center" sx={{ width: "20%", py: 1.5 }}>{t('email')}</TableCell>
+                                <TableCell align="center" sx={{ width: "8%", py: 1.5 }}>{t('gender')}</TableCell>
+                                <TableCell align="center" sx={{ width: "11%", py: 1.5 }}>{t('dateOfBirth')}</TableCell>
+                                <TableCell align="center" sx={{ width: "20%", py: 1.5 }}>{t('address')}</TableCell>
+                                <TableCell align="center" sx={{ width: "10%", py: 1.5 }}>{t('common:function')}</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {patientList.map(patient => (
-                                <TableRow>
-                                    <TableCell>{patient.id}</TableCell>
-                                    <TableCell align="center">{patient.first_name + ' ' + patient.last_name}</TableCell>
-                                    <TableCell align="center">{patient.phone_number}</TableCell>
-                                    <TableCell align="center">{patient.email}</TableCell>
-                                    <TableCell align="center">{patient.gender === 0 ? t('booking:man') : patient.gender === 1 
-                                    ? t('booking:woman') : t('common:secret') }</TableCell>
-                                    <TableCell align="center">{moment(patient.date_of_birth).format('DD/MM/YYYY')}</TableCell>
-                                    <TableCell sx={{
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis'
-                                    }}>
+                                <TableRow key={patient.id}>
+                                    <TableCell align="center" sx={{ py: 1.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{patient.first_name + ' ' + patient.last_name}</TableCell>
+                                    <TableCell align="center" sx={{ py: 1.5 }}>{patient.phone_number}</TableCell>
+                                    <TableCell align="center" sx={{ py: 1.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{patient.email}</TableCell>
+                                    <TableCell align="center" sx={{ py: 1.5 }}>{patient.gender === 0 ? t('booking:man') : patient.gender === 1 ? t('booking:woman') : t('common:secret')}</TableCell>
+                                    <TableCell align="center" sx={{ py: 1.5 }}>{moment(patient.date_of_birth).format('DD/MM/YYYY')}</TableCell>
+                                    <TableCell align="center" sx={{ py: 1.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                                         {patient.address?.split(' ').slice(0, 2).join(' ')}
                                         {patient.address?.split(' ').length > 2 ? '...' : ''}
                                     </TableCell>
-                                    <TableCell align="center">
-                                        <Tooltip followCursor title={t('common:edit')} className="hover:ou-cursor-pointer ">
-                                            <Button variant="contained"
-                                                    className="!ou-mr-2 !ou-min-w-[68px]  !ou-p-2  hover:ou-cursor-pointer"
-                                                    color="success"
-                                                    onClick={() => openModal(patient)}
-                                                    >
-                                                    <EditIcon/> 
+                                    <TableCell align="center" sx={{ py: 1.5 }}>
+                                        <Tooltip followCursor title={t('common:edit')} className="hover:ou-cursor-pointer">
+                                            <Button variant="contained" size="small" className="!ou-min-w-0 !ou-p-1.5 hover:ou-cursor-pointer" color="success" onClick={() => openModal(patient)}>
+                                                <EditIcon sx={{ fontSize: 22 }} />
                                             </Button>
                                         </Tooltip>
                                     </TableCell>
@@ -139,6 +135,9 @@ const PatientManagement = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                <div className="ou-mt-4 ou-flex ou-justify-end">
+                    {renderButtonStep()}
+                </div>
             </Box>
         )
     }
@@ -155,18 +154,25 @@ const PatientManagement = () => {
             <Helmet>
                 <title>{t('common:patientManagement')} - OUpharmacy</title>
             </Helmet>
-            <Box className="ou-relative ou-py-8 ou-flex">
-                <Box className="ou-relative ou-w-full
-                            ou-m-auto ou-flex ou-items-center ou-justify-center">        
+            <Box className={clsx("ou-relative ou-flex", { "ou-py-8": step === 1 })}>
+                <Box className={clsx("ou-relative ou-w-full ou-m-auto ou-flex ou-justify-center", {
+                    "ou-items-center": step === 1,
+                    "ou-items-start": step === 2,
+                })}>        
                     {/* Main content */}
-                    <div className="ou-text-center ou-py-20 ou-w-[100%]">           
+                    <div className={clsx("ou-w-[100%]", {
+                        "ou-text-center ou-py-20": step === 1,
+                        "ou-text-left ou-m-0 ou-p-0": step === 2,
+                    })}>           
                         {step === 1 && renderFirstState()}
                         {step === 2 && renderSecondState()}
                     </div>
-                    {/* Button area */}
-                    <div className="ou-bottom-0 ou-absolute ou-right-0 ou-m-3">
-                        {renderButtonStep()}
-                    </div>
+                    {/* Button area - only for step 1 (step 2 button is inside renderSecondState below table) */}
+                    {step === 1 && (
+                        <div className="ou-bottom-0 ou-absolute ou-right-0 ou-m-3">
+                            {renderButtonStep()}
+                        </div>
+                    )}
                 </Box>
             </Box>
         {patient && (

@@ -7,6 +7,16 @@ import APIs, { endpoints } from "../../config/APIs";
 import { loadDistanceFromUser } from "../services";
 import { APP_ENV, CURRENT_DATE } from "../constants";
 
+/** Lấy lat/lng từ user (defaultAddress hoặc addresses[0]) */
+export const getLatLngFromUser = (user) => {
+  if (!user) return { lat: null, lng: null };
+  const addr = user.defaultAddress
+    || (Array.isArray(user.addresses) && user.addresses.length > 0
+      ? (user.addresses.find((a) => a.is_default) || user.addresses[0])
+      : null);
+  return addr ? { lat: addr.lat, lng: addr.lng } : { lat: null, lng: null };
+};
+
 // it will return a user Id (recipient message in room chat) not current user
 export const getRecipientId = (member ,currentUserId) => member.find(userId => userId !== currentUserId)
 
@@ -106,7 +116,10 @@ export const setListExamToday = async (examData) => {
           // startedDate.setHours(7, 0, 0, 0); // Set to 7AM
           // startedDate.setMinutes(startedDate.getMinutes() + i * 20); // Add 20 minutes for each index
 
-          const {distance, duration} = await loadDistanceFromUser(exam.user.locationGeo.lat, exam.user.locationGeo.lng);
+          const { lat, lng } = getLatLngFromUser(exam.user);
+          const { distance, duration } = (lat != null && lng != null)
+            ? await loadDistanceFromUser(lat, lng)
+            : { distance: "", duration: "" };
         
           const data = {
               isCommitted: false,

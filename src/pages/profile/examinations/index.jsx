@@ -1,4 +1,4 @@
-import { Box, Button, Pagination, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Paper, Pagination, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
 import Loading from "../../../modules/common/components/Loading";
 import useExaminationList from "../../../modules/pages/ExaminationListComponents/hooks/useExaminationList"
 import moment from "moment";
@@ -11,6 +11,8 @@ import ExaminationUpdate from "../../../modules/pages/ExaminationListComponents/
 import useCustomModal from "../../../lib/hooks/useCustomModal";
 import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem";
 import useCustomNavigate from "../../../lib/hooks/useCustomNavigate";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const ExaminationList = () =>{
     const { isLoading, examinationList, handleDeleteExamination, 
@@ -34,17 +36,17 @@ const ExaminationList = () =>{
         <Helmet>
             <title>{t('examinations:appointmentList')} - OUpharmacy</title>
         </Helmet>
-        <Box sx={{ minHeight: "300px" }}>
-            <TableContainer className="md:ou-min-w-0">
-                <Table aria-label="simple table">
+        <Box sx={{ minHeight: "300px", margin: 0, padding: 0 }}>
+            <TableContainer component={Paper} elevation={6} sx={{ margin: 0, overflowX: "hidden" }}>
+                <Table aria-label="simple table" sx={{ tableLayout: "fixed", width: "100%" }}>
                     <TableHead>
                         <TableRow>
-                            <TableCell>{t('id')}</TableCell>
-                            <TableCell align="center">{t('description')}</TableCell>
-                            <TableCell align="center">{t('createdDate')}</TableCell>
-                            <TableCell align="center">{t('mailStatus')}</TableCell>
-                            <TableCell align="center">{t('patientName')}</TableCell>
-                            <TableCell align="center">{t('function')}</TableCell>
+                            <TableCell sx={{ width: "8%", py: 1.5 }}>{t('id')}</TableCell>
+                            <TableCell align="center" sx={{ width: "24%", py: 1.5 }}>{t('description')}</TableCell>
+                            <TableCell align="center" sx={{ width: "12%", py: 1.5 }}>{t('createdDate')}</TableCell>
+                            <TableCell align="center" sx={{ width: "10%", py: 1.5 }}>{t('mailStatus')}</TableCell>
+                            <TableCell align="center" sx={{ width: "20%", py: 1.5 }}>{t('patientName')}</TableCell>
+                            <TableCell align="center" sx={{ width: "14%", py: 1.5 }}>{t('function')}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -58,7 +60,8 @@ const ExaminationList = () =>{
                             </TableRow>
                         )}
                           {!isLoading && examinationList.length === 0 && (
-                            <TableCell colSpan={12} component="th" scope="row">
+                            <TableRow>
+                            <TableCell colSpan={6} component="th" scope="row">
                                 <Typography> 
                                     <Box className="ou-text-center ou-p-10 ou-text-red-700">
                                         {t('examinations:errExamsNull')}
@@ -70,6 +73,7 @@ const ExaminationList = () =>{
                                     </Box>
                                 </Typography>
                             </TableCell>
+                            </TableRow>
                         )}
                         {!isLoading && examinationList.length > 0 && examinationList.map(e => (
                             <OwnerExaminationUpdate e={e} key={`own-e-${e.id}`} 
@@ -103,59 +107,35 @@ export const OwnerExaminationUpdate = ({e, handleDeleteExamination, onUpdateSucc
     const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal(); 
     return (
         <>
-           <TableRow key={e.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                <TableCell component="th" scope="row" >
-                    <Typography>
-                        {e.id}
-                    </Typography>
+            <TableRow key={e.id} sx={{ '&:last-child td, &:last-child th': { border: 0 }}}>
+                <TableCell component="th" scope="row" sx={{ py: 1.5 }}>
+                    <Typography variant="body2">{e.id}</Typography>
                 </TableCell>
-
-                <TableCell align="center">
-                    <Typography className="ou-table-truncate-text-container">
-                        {e.description}
-                    </Typography>
+                <TableCell align="center" sx={{ py: 1.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <Typography variant="body2" noWrap title={e.description}>{e.description}</Typography>
                 </TableCell>
-                <TableCell align="center">
-                    <Typography>{e.schedule_appointment.day ? <span>{moment(e.schedule_appointment.day).format("DD/MM/YYYY")}</span> 
-                            :  <span>{moment(e.created_date).format("DD/MM/YYYY")}</span> }</Typography>
+                <TableCell align="center" sx={{ py: 1.5 }}>
+                    <Typography variant="body2">{e.schedule_appointment?.day ? moment(e.schedule_appointment.day).format("DD/MM/YYYY") : moment(e.created_date).format("DD/MM/YYYY")}</Typography>
                 </TableCell>
-                <TableCell align="center">{e.mail_status === true ? t('sent') : t('noSent')}</TableCell>
-                <TableCell align="center">
-                    <Typography>
-                        {e.patient.first_name +" "+ e.patient.last_name}
-                    </Typography>
+                <TableCell align="center" sx={{ py: 1.5 }}>{e.mail_status === true ? <CheckCircleIcon className="!ou-text-green-700" sx={{ fontSize: 22 }} /> : <CancelIcon className="!ou-text-red-700" sx={{ fontSize: 22 }} />}</TableCell>
+                <TableCell align="center" sx={{ py: 1.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <Typography variant="body2" noWrap title={e.patient?.first_name + " " + e.patient?.last_name}>{e.patient?.first_name + " " + e.patient?.last_name}</Typography>
                 </TableCell>
-                <TableCell align="center">
-                    <Box  className="!ou-flex ou-justify-center ou-items-center">
-                        {!e.mail_status  &&  
-                        <Tooltip followCursor title={t('common:edit')} className="hover:ou-cursor-pointer ">
-                        {/* <span> */}
-                            <Button variant="contained"
-                                    className="!ou-mr-2 !ou-min-w-[68px]  !ou-p-2  hover:ou-cursor-pointer"
-                                    color="success"
-                                    onClick={handleOpenModal}
-                                    >
-                                    <EditIcon></EditIcon>
-                            </Button>
-                        {/* </span> */}
-                    </Tooltip>
-                    }
-                        <Tooltip followCursor title={t('common:delete')} className="hover:ou-cursor-pointer">
-                            <span>
-                            <Button 
-                                className="!ou-min-w-[68px]  !ou-p-2 hover:ou-cursor-pointer"
-                                    variant="contained"
-                                    onClick={()=> handleDeleteExamination()}
-                                    color="error" >
-                                        <DeleteIcon></DeleteIcon>
-
+                <TableCell align="center" sx={{ py: 1.5 }}>
+                    <Box className="!ou-flex ou-justify-center ou-items-center ou-gap-1">
+                        {!e.mail_status && (
+                            <Tooltip followCursor title={t('common:edit')} className="hover:ou-cursor-pointer">
+                                <Button variant="contained" className="!ou-min-w-0 !ou-p-1.5 hover:ou-cursor-pointer" color="success" size="small" onClick={handleOpenModal}>
+                                    <EditIcon sx={{ fontSize: 22 }} />
                                 </Button>
-                            </span>
+                            </Tooltip>
+                        )}
+                        <Tooltip followCursor title={t('common:delete')} className="hover:ou-cursor-pointer">
+                            <Button className="!ou-min-w-0 !ou-p-1.5 hover:ou-cursor-pointer" variant="contained" size="small" onClick={() => handleDeleteExamination()} color="error">
+                                <DeleteIcon sx={{ fontSize: 22 }} />
+                            </Button>
                         </Tooltip>
-
                     </Box>
-                    
-            
                 </TableCell>
             </TableRow>
 

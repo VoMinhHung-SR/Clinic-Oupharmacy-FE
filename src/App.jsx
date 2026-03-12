@@ -1,4 +1,4 @@
-import { createContext, useEffect, useReducer, useState } from 'react'
+import { createContext, useState } from 'react'
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './modules/common/layout'
@@ -8,7 +8,6 @@ import Home from './pages'
 import Register from './pages/register'
 import ExaminationList from './pages/profile/examinations'
 import PrescriptionList from './pages/dashboard/prescribing'
-import PrescriptionDetail from './pages/dashboard/prescribing/id'
 import ConversationList from './pages/conversations'
 import ChatWindow from './pages/conversations/id/recipientID/message'
 import { I18nextProvider } from 'react-i18next'
@@ -16,20 +15,15 @@ import i18n from './i18n'
 import Booking from './pages/booking'
 import Examinations from './pages/dashboard/examinations'
 import ProtectedUserRoute from './modules/common/layout/userRoute'
-import { ROLE_DOCTOR, ROLE_NURSE } from './lib/constants'
+import { MEDICINE_STORE_URL, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from './lib/constants'
 import ProtectedSpecialRoleRoute from './modules/common/layout/specialRole'
 import Forbidden from './modules/common/layout/components/403-forbidden'
 import NotFound from './modules/common/layout/components/404-not_found'
-import WaitingRoom from './pages/waiting-room'
-import { QueueStateProvider } from './lib/context/QueueStateContext'
 import { useDispatch } from 'react-redux';
 import { getAllConfig } from './lib/redux/configSlice'
 import Loading from './modules/common/components/Loading'
 import { Box } from '@mui/material'
 import Demo from './pages/demo'
-import { getCookieValue } from './lib/utils/getCookieValue'
-import { getListExamToday, setListExamToday } from './lib/utils/helper'
-import { jobEveryMinutes } from './cron/job/every_minutes'
 import ScrollToTop from './modules/common/components/ScrollToTop'
 import { OUPharmacyChatBot } from './chatbot'
 import Profile from './pages/profile'
@@ -40,7 +34,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import { PrescribingProvider } from './lib/context/PrescribingContext'
 import { BookingProvider } from './lib/context/BookingContext'
 import DashboardProfile from './pages/dashboard/profile'
 import DashboardLayout from './modules/common/layout/dashboard'
@@ -55,6 +48,8 @@ import APIs, { endpoints } from './config/APIs'
 import Contact from './pages/contact'
 import AboutUs from './pages/about-us'
 import Payments from './pages/dashboard/prescribing/id/payments'
+import ExternalRedirect from './modules/common/components/ExternalRedirect'
+import { PrescriptionDetailWithProvider } from './modules/providers'
 
 export const userContext = createContext()
 const queryClient = new QueryClient({
@@ -106,7 +101,6 @@ function App() {
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <UserProvider>    
               <BookingProvider>
-                <PrescribingProvider>
                   <ConfigLoader>
                     <ScrollToTop />
                     <Routes>
@@ -140,21 +134,25 @@ function App() {
                         <Route element={<ProtectedUserRoute/>}>
                             <Route path='/dashboard/' element={<DashBoard/>} />                          
                             <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_DOCTOR, ROLE_NURSE]} />}>
-                              <Route path='/dashboard/examinations' element={<Examinations/>}/> 
-                              <Route path='/dashboard/categories' element={<CategoryList/>}/>
+                              <Route path='/dashboard/examinations' element={<Examinations/>}/>
                               <Route path='/dashboard/doctor-schedules' element={<DoctorSchedules/>}/>  
-                              <Route path='/dashboard/medicines' element={<MedicineList/>}/> 
+                              {/* redirect to medicine store url -- MedicineList's component replaced by ExternalRedirect */}
+                              <Route path='/dashboard/medicines' element={<ExternalRedirect url={MEDICINE_STORE_URL} replace={true}/>} />
                               <Route path='/dashboard/waiting-room' element={<DashboardWaitingRoom/>}/>
                               <Route path='/dashboard/prescribing' element={<PrescriptionList/>} />
                             </Route>
 
                             <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_DOCTOR]} />}>
                               <Route path='/dashboard/examinations/:examinationId/diagnosis' element={<Diagnosis />} />
-                              <Route path='/dashboard/prescribing/:prescribingId' element={<PrescriptionDetail/>} />
+                              <Route path='/dashboard/prescribing/:prescribingId' element={<PrescriptionDetailWithProvider/>} />
                             </Route>
 
                             <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_NURSE]}/>}>
                               <Route path='/dashboard/prescribing/:prescribingId/payments' element={<Payments />} />
+                            </Route>
+
+                            <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_ADMIN]}/>}> 
+                              <Route path='/dashboard/categories' element={<CategoryList/>}/>
                             </Route>
 
                             <Route path='/dashboard/profile' element={<DashboardProfile />} >
@@ -163,7 +161,7 @@ function App() {
                               <Route path='/dashboard/profile/patient-management' element={<PatientManagement />} />
                             </Route>
 
-                            <Route path='/dashboard/conversations'  element={<ConversationList/>} >
+                            <Route path='/dashboard/conversations' element={<ConversationList/>} >
                               <Route path='/dashboard/conversations/:conversationId/:recipientId/message' element={<ChatWindow/>} />
                             </Route>
 
@@ -175,7 +173,6 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     </Routes>
                   </ConfigLoader>
-                </PrescribingProvider>
               </BookingProvider>
             </UserProvider>
           </LocalizationProvider>

@@ -19,6 +19,7 @@ import Logout from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import { changeLanguage } from "i18next";
 import { AVATAR_DEFAULT, ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
+import { isRoleIn } from '../../../../lib/auth';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useContext, useState } from "react";
 import MailIcon from '@mui/icons-material/Mail';
@@ -152,8 +153,8 @@ const NavDashboard = ({ open, toggleDrawer }) => {
     }
   ];
     
-  const {user, handleLogout} = useContext(UserContext);
-  const {navigate} = useCustomNavigate();
+  const { user, handleLogout, hasValidUserAddress, defaultAddress } = useContext(UserContext);
+  const { navigate } = useCustomNavigate();
   let btn = <>
       <ul className="ou-flex ou-items-center ou-text-[#070707]">
         <Link to="/login">
@@ -163,22 +164,16 @@ const NavDashboard = ({ open, toggleDrawer }) => {
           </Link>
       </ul>
   </>
-  const hasValidLocationData = user && user.locationGeo && 
-                                    Object.keys(user.locationGeo).length > 0 &&
-                                    user.locationGeo.city &&
-                                    user.locationGeo.district &&
-                                    user.locationGeo.address
   let badgeContent = <></>
 
-  const handleNav = (role, link) => {
-    if(role.includes(user.role))
-      return navigate(link)
-    navigate("/dashboard/forbidden")
-  }
+  const handleNav = (allowedRoles, link) => {
+    if (isRoleIn(user, allowedRoles)) return navigate(link);
+    navigate("/dashboard/forbidden");
+  };
 
-  const renderPage = (routingRole, role, isOpen, isMobile) => {
+  const renderPage = (routingRole, allowedRoles, isOpen, isMobile) => {
       return routingRole && routingRole.map(item => (
-          <ListItemButton key={"dashboard"+item.name} onClick={() => handleNav(role, item.link)}
+          <ListItemButton key={"dashboard"+item.name} onClick={() => handleNav(allowedRoles, item.link)}
               sx={{ 
                   justifyContent: isOpen ? 'initial' : 'center',
                   px: 2.5,
@@ -214,7 +209,7 @@ const NavDashboard = ({ open, toggleDrawer }) => {
 
   if (user){
 
-    badgeContent = !hasValidLocationData ?
+    badgeContent = !hasValidUserAddress ?
       <Badge overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           badgeContent={
             <Tooltip title={t('common:warningMisInformation')}>
@@ -227,7 +222,7 @@ const NavDashboard = ({ open, toggleDrawer }) => {
             src={ user.avatar_path && user.avatar_path != ERROR_CLOUDINARY ? user.avatar_path : AVATAR_DEFAULT}
             className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
         </Badge>
-      : <Avatar alt={user.first_name + " " + user.last_name} x={{ width: 36, height: 36 }}
+      : <Avatar alt={user.first_name + " " + user.last_name} sx={{ width: 36, height: 36 }}
         src={ user.avatar_path && user.avatar_path != ERROR_CLOUDINARY ? user.avatar_path : AVATAR_DEFAULT}
         className='ou-border-2 ou-border-[#1D4ED8] ou-rounded-full' />
 
@@ -425,16 +420,16 @@ const NavDashboard = ({ open, toggleDrawer }) => {
 
           {/* Nav */}
           <List component="nav" className="ou-overflow-y-auto">
-              {renderPage(pages, ROLE_NURSE +" "+ ROLE_DOCTOR, open, isMobile)}
+              {renderPage(pages, [ROLE_DOCTOR, ROLE_NURSE], open, isMobile)}
               <Divider sx={{ my: 1 }} />
 
-              {renderPage(page_ROLE_DOCTOR, ROLE_DOCTOR, open, isMobile)}
+              {renderPage(page_ROLE_DOCTOR, [ROLE_DOCTOR], open, isMobile)}
 
               <Divider sx={{ my: 1 }} />
-              {renderPage(page_ROLE_NURSE, ROLE_NURSE, open, isMobile)}
+              {renderPage(page_ROLE_NURSE, [ROLE_NURSE], open, isMobile)}
 
               <Divider sx={{ my: 1 }} />
-              {renderPage(pagesMedicineManagement, ROLE_NURSE +" "+ ROLE_DOCTOR+" "+ ROLE_ADMIN, open, isMobile)}
+              {renderPage(pagesMedicineManagement, [ROLE_DOCTOR, ROLE_NURSE, ROLE_ADMIN], open, isMobile)}
           </List>
 
       </StyledDrawer>

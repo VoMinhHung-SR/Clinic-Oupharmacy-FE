@@ -53,39 +53,38 @@ const EditPrescriptionModal = ({medicinesSubmitData, handleOnEdit}) => {
       
     }
   
-    const handleOnSubmit = (data, callBackError) =>{
-      let err = false
-      try{
-        if(data){
-          const medicineArray = data.medicineSubmit
-          if (!medicineArray)
-            return;
-          medicineArray.forEach((medicine, index) => {
-            const { quantity } = medicine;
-            const { inStock } = medicinesSubmitData[index];
-
-            if (parseInt(quantity) > inStock) {
-              err = true
+    const handleOnSubmit = (data, callBackError) => {
+      let err = false;
+      try {
+        if (data?.medicineSubmit) {
+          const filteredDraft = medicinesSubmitData.filter((m) => !deletedArray.includes(m.id));
+          data.medicineSubmit.forEach((formItem, index) => {
+            const draftItem = filteredDraft[index];
+            const inStock = draftItem?.inStock ?? 0;
+            if (parseInt(formItem.quantity, 10) > inStock) {
+              err = true;
               setError(`medicineSubmit[${index}].quantity`, {
-                type: 'custom',
-                message: t('yup-validate:yupQuantityOverRaw')
+                type: "custom",
+                message: t("yup-validate:yupQuantityOverRaw"),
               });
             }
           });
         }
-      }catch(err){
-          console.error(err)
-      }finally{
-        if (!err){
-          handleOnEdit(data.medicineSubmit, deletedArray)
-          handleCloseModal()
-          reset()
-          setDeletedArray([])
-          createToastMessage({message:t('common:updateSuccess'), type:TOAST_SUCCESS})
-          setLoading(false)
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (!err && data?.medicineSubmit) {
+          const filteredDraft = medicinesSubmitData.filter((m) => !deletedArray.includes(m.id));
+          const merged = data.medicineSubmit.map((formItem, i) => ({ ...filteredDraft[i], ...formItem }));
+          handleOnEdit(merged, deletedArray);
+          handleCloseModal();
+          reset();
+          setDeletedArray([]);
+          createToastMessage({ message: t("common:updateSuccess"), type: TOAST_SUCCESS });
+          setLoading(false);
         }
       }
-    }
+    };
     
     const swapValue = (curIndex, nextIndex) => {
       try{
@@ -150,6 +149,11 @@ const EditPrescriptionModal = ({medicinesSubmitData, handleOnEdit}) => {
                       }}
                       {...register(`medicineSubmit[${index}].medicineName`)}
                     />
+                    {medicine.packaging && (
+                      <Typography variant="caption" className="ou-text-gray-600 ou-block ou-mt-1">
+                        ({medicine.packaging})
+                      </Typography>
+                    )}
                   </FormControl>
                 </Grid>
                   
@@ -197,6 +201,7 @@ const EditPrescriptionModal = ({medicinesSubmitData, handleOnEdit}) => {
                     type="button"
                     onClick={() => addItemDeleted(medicine.id)}
                     className="ou-text-red-700"
+                    aria-label={t('common:delete')}
                     sx={{ color: "red", width: '100%', height: '100%' }}>
                     <RemoveCircleIcon />
                   </Button>
@@ -212,7 +217,7 @@ const EditPrescriptionModal = ({medicinesSubmitData, handleOnEdit}) => {
          {loading && <BackdropLoading/>}
          <Typography>
                 <Button
-                    variant="contained"      
+                    variant="outlined"      
                     className="ou-w-[100%]"
                     onClick={handleOpenModal}
                 >

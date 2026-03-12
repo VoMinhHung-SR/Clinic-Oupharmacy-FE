@@ -6,22 +6,35 @@ import { useSelector } from "react-redux";
 import useAddressInfo from "../../RegisterComponents/hooks/useAddressInfo";
 import clsx from "clsx";
 import SchemaModels from "../../../../lib/schema";
+import { useEffect } from "react";
 
-const UpdateAddressInfo = ({onSubmit = () => {}}) => {
+const UpdateAddressInfo = ({onSubmit = () => {}, initialAddress = null}) => {
     const { t, tReady } = useTranslation(['register', 'common', 'yup-validate']);
     const {locationSchema} = SchemaModels()
- 
+
     const methods = useForm({
         mode: 'onSubmit',
         resolver: yupResolver(locationSchema),
         defaultValues: {
             location:{
-                address: "",
-                city: -1 ,
-                district: -1
+                address: initialAddress?.address || "",
+                city: initialAddress?.city || -1 ,
+                district: initialAddress?.district || -1
             }
-          }
+        }
       })
+
+      useEffect(() => {
+        if (initialAddress) {
+            methods.reset({
+                location: {
+                    address: initialAddress.address || "",
+                    city: initialAddress.city || -1,
+                    district: initialAddress.district || -1
+                }
+            });
+        }
+      }, [initialAddress, methods]);
 
       const isFormDirty = methods.formState.isDirty;
 
