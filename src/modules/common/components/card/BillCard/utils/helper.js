@@ -1,7 +1,9 @@
 export const calculateAmount = (data, wage) => {
     let totalAmount = wage;
     data.forEach(d => {
-         totalAmount = totalAmount + d.quantity * d.medicine_unit.price
+         const unit = d?.medicine_unit || {}
+         const unitPrice = Number(unit.price_value ?? unit.price ?? 0)
+         totalAmount = totalAmount + d.quantity * unitPrice
     });
     return totalAmount;
 }

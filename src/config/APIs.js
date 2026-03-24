@@ -88,13 +88,19 @@ export let endpoints = {
     // Prescription Detail
     'prescription-detail':'/prescription-details/',
     
-    //Medicines
-    'medicines':'/medicines/',
-    'medicine-detail':(medicineID) => `/medicines/${medicineID}/`,
+    // Store products (source of truth for product/variant data)
+    'products': '/api/store/products/',
+    'product-detail': (productId) => `/api/store/products/${productId}/`,
+    'products-summary-counts': '/api/store/products/summary-counts/',
+    // Product variants currently reuse products endpoint (store returns ProductVariant list)
+    'product-variants': '/api/store/products/',
+    'product-variant-detail': (variantId) => `/api/store/products/${variantId}/`,
 
-    //Medicine Units
-    'medicine-units':'/medicine-units/',
-    'medicine-units-detail':(medicineUnitID) =>  `/medicine-units/${medicineUnitID}/`,
+    // Legacy aliases (kept for backward compatibility during migration)
+    'medicines':'/api/store/products/',
+    'medicine-detail':(medicineID) => `/api/store/products/${medicineID}/`,
+    'medicine-units':'/api/store/products/',
+    'medicine-units-detail':(medicineUnitID) =>  `/api/store/products/${medicineUnitID}/`,
     
     // Bill
     'bill':'/bills/',

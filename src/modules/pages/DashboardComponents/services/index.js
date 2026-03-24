@@ -11,6 +11,11 @@ export const fetchListUsers = async () => {
 }
 
 export const fetchListMedicinesUnit = async () => {
-    const res = await authApi().get(`${endpoints['medicine-units']}`);
+    const res = await authApi().get(`${endpoints['product-variants']}`);
+    return res
+}
+
+export const fetchStoreProductSummaryCounts = async () => {
+    const res = await authApi().get(`${endpoints['products-summary-counts']}`)
     return res
 }

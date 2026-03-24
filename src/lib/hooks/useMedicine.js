@@ -7,23 +7,7 @@ import { TOAST_ERROR, TOAST_SUCCESS } from "../constants";
 import { useTranslation } from "react-i18next";
 import { ConfirmAlert } from "../../config/sweetAlert2";
 import { goToTop } from "../utils/helper";
-
-const normalizeMedicineUnits = (results) => {
-    if (!Array.isArray(results)) return [];
-    return results.map((unit) => {
-        const medicine = unit.medicine != null && typeof unit.medicine === "object"
-            ? {
-                id: unit.medicine.id,
-                name: unit.medicine.web_name ?? unit.medicine.name ?? "",
-            }
-            : { id: unit.medicine, name: "" };
-        return {
-            ...unit,
-            medicine,
-            packaging: unit.package_size ?? unit.packaging ?? "",
-        };
-    });
-};
+import { normalizeStoreVariantResponse } from "../adapters/storeProduct";
 
 const useMedicine = () => {
     // List from medicine-units API: each item is a MedicineUnit (id, medicine, packaging, in_stock, price)
@@ -82,8 +66,8 @@ const useMedicine = () => {
 
                 const res = await fetchMedicinesUnit(querySample);
                 if (res.status === 200) {
-                    const data = await res.data;
-                    setMedicineUnits(normalizeMedicineUnits(data.results ?? []));
+                    const data = normalizeStoreVariantResponse(res.data);
+                    setMedicineUnits(Array.isArray(data?.results) ? data.results : []);
                     setPagination({
                         count: data.count ?? 0,
                         sizeNumber: Math.ceil((data.count ?? 0) / 9),

@@ -3,12 +3,16 @@
     "patients": "Bệnh nhân",
     "bookings": "Lịch khám",
     "medicineUnit": "Thuốc kê toa",
-
+    "products": "Sản phẩm",
+    "variants": "Loại sản phẩm",
+    "variantUnits": "Đơn vị bán",
     "noteTotalPatients": "Tổng số hồ sơ bệnh nhân",
     "noteTotalUsers": "Tổng số người dùng",
     "noteTotalBookings": "Tổng số lượt đặt hôm nay",
     "noteTotalMedicines": "Tổng số đơn vị thuốc",
-
+    "noteTotalProducts": "Tổng số sản phẩm",
+    "noteTotalVariants": "Tổng số loại sản phẩm",
+    "noteTotalVariantUnits": "Tổng số đơn vị bán",
     "month": "Tháng",
     "revenue": "Doanh thu (VND)",
     "revenueLabel": "Doanh thu trong năm",

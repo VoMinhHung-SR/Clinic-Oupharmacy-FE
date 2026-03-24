@@ -1,12 +1,15 @@
 import { useContext, useEffect, useState } from "react"
 import UserContext from "../../../../lib/context/UserContext"
-import { fetchListPatients, fetchListUsers, fetchListMedicinesUnit } from "../services"
+import { fetchListPatients, fetchListUsers, fetchListMedicinesUnit, fetchStoreProductSummaryCounts } from "../services"
 
 const useStatistic = () => {
     const {user} = useContext(UserContext)
     const [totalPatients, setTotalPatients] = useState(0) 
     const [totalUsers, setTotalUsers] = useState(0)
     const [totalMedicineUnit, setTotalMedicineUnit] = useState(0)
+    const [totalProducts, setTotalProducts] = useState(0)
+    const [totalVariants, setTotalVariants] = useState(0)
+    const [totalVariantUnits, setTotalVariantUnits] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(()=> {
@@ -29,11 +32,21 @@ const useStatistic = () => {
                 setTotalMedicineUnit(res.data.count)
         }
 
+        const getStoreSummaryCounts = async () => {
+            const res = await fetchStoreProductSummaryCounts()
+            if (res.status === 200) {
+                setTotalProducts(res.data.products ?? 0)
+                setTotalVariants(res.data.variants ?? 0)
+                setTotalVariantUnits(res.data.variant_units ?? 0)
+            }
+        }
+
         const loadStatistic = () => {
             try{
                 getTotalPatients()
                 getTotalUsers()
                 getTotalMedicinesUnit()
+                getStoreSummaryCounts()
             }catch(err){
                 console.log(err)
             }finally{
@@ -48,7 +61,10 @@ const useStatistic = () => {
 
     return {    
         totalPatients, totalUsers, isLoading,
-        totalMedicineUnit
+        totalMedicineUnit,
+        totalProducts,
+        totalVariants,
+        totalVariantUnits
     }
 }
 

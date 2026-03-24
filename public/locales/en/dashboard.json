@@ -3,12 +3,16 @@
     "patients": "Patients",
     "bookings": "Bookings",
     "medicineUnit": "Medicine Unit",
-
+    "products": "Products",
+    "variants": "Variants",
+    "variantUnits": "Variant Units",
     "noteTotalPatients": "Total number of patient profiles",
     "noteTotalUsers": "Total number of users",
     "noteTotalBookings": "Total bookings for today",
     "noteTotalMedicines": "Total units of medicine",
-
+    "noteTotalProducts": "Total number of products",
+    "noteTotalVariants": "Total number of variants",
+    "noteTotalVariantUnits": "Total number of variant units",
     "month": "Month",
     "revenue": "Revenue (VND)",
     "revenueLabel": "Revenue in", 

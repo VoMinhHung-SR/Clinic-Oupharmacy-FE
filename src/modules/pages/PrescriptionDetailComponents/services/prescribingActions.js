@@ -26,7 +26,10 @@ export async function createPrescribingWithDetails(userId, diagnosisId, medicine
           quantity: m.quantity,
           uses: m.uses,
           prescribing: prescribingId,
-          medicine_unit: m.id,
+          // Transitional payload: keep legacy key + new store-oriented keys
+          medicine_unit: m.medicineUnitId ?? m.id,
+          product_variant: m.productVariantId ?? m.id,
+          product_variant_unit: m.productVariantUnitId ?? null,
         })
       )
     );
