@@ -62,7 +62,7 @@ export const normalizeStoreVariantResponse = (payload) => {
 }
 
 export const normalizePrescriptionDetailItem = (detail = {}) => {
-  const source = detail.medicine_unit || detail.product_variant || detail.product_variant_unit || {}
+  const source = detail.medicine_unit || detail.product_variant_unit || detail.product_variant || {}
   const normalized = normalizeStoreVariant(source)
   return {
     ...detail,

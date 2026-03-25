@@ -26,10 +26,9 @@ export async function createPrescribingWithDetails(userId, diagnosisId, medicine
           quantity: m.quantity,
           uses: m.uses,
           prescribing: prescribingId,
-          // Transitional payload: keep legacy key + new store-oriented keys
-          medicine_unit: m.medicineUnitId ?? m.id,
-          product_variant: m.productVariantId ?? m.id,
-          product_variant_unit: m.productVariantUnitId ?? null,
+          // Store-driven payload (legacy medicine tables are not required).
+          product_variant_id: m.productVariantId ?? m.id,
+          product_variant_unit_id: m.productVariantUnitId ?? null,
         })
       )
     );
