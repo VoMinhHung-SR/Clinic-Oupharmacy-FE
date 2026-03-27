@@ -1,13 +1,11 @@
 /**
- * @param {{ image_url?: string, image_path?: string, images_urls?: string[], images?: Array<string|{url?: string, link?: string}> }} unit
+ * @param {{ image_url?: string, image_path?: string, images?: Array<string|{url?: string, link?: string}> }} unit
  * @returns {string}
  */
 export function getMedicineUnitImageUrl(unit) {
   if (!unit) return "";
   if (unit.image_url) return unit.image_url;
   if (unit.image_path) return unit.image_path;
-  const fromUrls = unit.images_urls?.[0];
-  if (fromUrls) return fromUrls;
   const first = unit.images?.[0];
   if (first == null) return "";
   if (typeof first === "string") return first;

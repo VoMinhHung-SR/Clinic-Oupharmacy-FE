@@ -20,9 +20,12 @@ export const PrescribingProvider = ({children}) => {
     const [newestPrescriptionDetail, setNewestPrescriptionDetail] = useState([]);
     const [isBackdropLoading, setIsBackdropLoading] = useState(false);
 
-    const addMedicineItem = (medicineUnitId, medicineName, packaging, uses, quantity, inStock) => {
+    const addMedicineItem = (medicineUnitId, medicineName, packaging, uses, quantity, inStock, productVariantUnitId = null) => {
         const newItem = {
             id: medicineUnitId,
+            medicineUnitId: medicineUnitId,
+            productVariantId: medicineUnitId,
+            productVariantUnitId: productVariantUnitId,
             medicineName: medicineName,
             packaging: packaging ?? "",
             uses: uses,
@@ -101,9 +104,25 @@ export const PrescribingProvider = ({children}) => {
                         return item;
                     });
                     if (medicineUpdated) handleUpdateMedicinesSubmit(updatedMedicinesSubmit);
-                    else addMedicineItem(medicineUnit.id, medicineUnit.medicine.name, medicineUnit.packaging ?? "", data.uses, data.quantity, medicineUnit.in_stock);
+                    else addMedicineItem(
+                        medicineUnit.id,
+                        medicineUnit.medicine.name,
+                        medicineUnit.packaging ?? "",
+                        data.uses,
+                        data.quantity,
+                        medicineUnit.in_stock,
+                        medicineUnit.product_variant_unit_id ?? null
+                    );
                 } else {
-                    addMedicineItem(medicineUnit.id, medicineUnit.medicine.name, medicineUnit.packaging ?? "", data.uses, data.quantity, medicineUnit.in_stock);
+                    addMedicineItem(
+                        medicineUnit.id,
+                        medicineUnit.medicine.name,
+                        medicineUnit.packaging ?? "",
+                        data.uses,
+                        data.quantity,
+                        medicineUnit.in_stock,
+                        medicineUnit.product_variant_unit_id ?? null
+                    );
                 }  
             } catch (err) {
                 console.log(err);

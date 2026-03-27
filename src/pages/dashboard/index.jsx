@@ -20,7 +20,7 @@ const DashBoard = () => {
 
     const {t, tReady} = useTranslation(['dashboard'])
     const {user} = useContext(UserContext)
-    const {totalPatients, totalUsers, totalMedicineUnit} = useStatistic()
+    const {totalPatients, totalUsers, totalProducts, totalVariants, totalVariantUnits, totalMedicineUnit} = useStatistic()
     const {totalExams} = useLimitExamPerDay(CURRENT_DATE) 
 
 
@@ -58,7 +58,9 @@ const DashBoard = () => {
                 
                 <Grid item xs={12} sm={6} md={3} className="ou-p-2 md:ou-pr-0">    
                     <StatisticCard icon={<PillsIcon size={60} className="ou-text-blue-700"/>} 
-                    title={t('dashboard:medicineUnit')} value={totalMedicineUnit} footer={t('dashboard:noteTotalMedicines')}/>
+                    title={t('dashboard:noteTotalProducts')}
+                    value={totalProducts || totalMedicineUnit}
+                    footer={`SKU: ${totalVariants || totalMedicineUnit} | ${t('dashboard:variantUnits')}: ${totalVariantUnits || 0}`}/>
                 </Grid>
             </Grid>
             

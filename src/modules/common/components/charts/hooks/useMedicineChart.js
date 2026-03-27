@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchMedicineStats } from "../../../../../lib/services";
+import { fetchProductUsageStats } from "../../../../../lib/services";
 
 const useMedicineChart = () => {
     const [medicineLabelChartData, setMedicineLabelChartData] = useState({});
@@ -9,7 +9,7 @@ const useMedicineChart = () => {
     useEffect(() => {
         const fetchStats = async () => {
         try {
-            const res = await fetchMedicineStats(0, 2024)
+            const res = await fetchProductUsageStats(0, 2024)
             if(res.status === 200){
                 setMedicineData(res.data.data_medicine_quantity)
                 setMedicineLabelChartData(res.data.data_medicine_labels)

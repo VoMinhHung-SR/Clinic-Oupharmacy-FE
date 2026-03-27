@@ -53,8 +53,37 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
         }).format(amount);
     };
 
+    const getUnitPrice = (prescribingDetail = {}) => {
+        const unit = prescribingDetail?.medicine_unit || {};
+        if (unit?.price_value != null) return Number(unit.price_value) || 0;
+        if (unit?.price != null) return Number(unit.price) || 0;
+        if (prescribingDetail?.unit_price_snapshot != null) return Number(prescribingDetail.unit_price_snapshot) || 0;
+        return 0;
+    };
+
+    const getMedicineName = (prescribingDetail = {}) => {
+        return (
+            prescribingDetail?.medicine_unit?.medicine?.name
+            || prescribingDetail?.item_name_snapshot
+            || prescribingDetail?.product_variant?.product?.web_name
+            || prescribingDetail?.product_variant?.product?.name
+            || "N/A"
+        );
+    };
+
+    const getPackagingLabel = (prescribingDetail = {}) => {
+        return (
+            prescribingDetail?.medicine_unit?.package_size
+            || prescribingDetail?.medicine_unit?.packaging
+            || prescribingDetail?.unit_name_snapshot
+            || prescribingDetail?.product_variant_unit?.unit_name
+            || prescribingDetail?.product_variant?.packing
+            || ""
+        );
+    };
+
     const totalAmount = medicineUnits?.reduce((acc, prescribingDetail) => {
-        return acc + (prescribingDetail.medicine_unit.price_value || 0) * prescribingDetail.quantity;
+        return acc + getUnitPrice(prescribingDetail) * prescribingDetail.quantity;
     }, 0) || 0;
 
     const isPaymentsMode = typeof handlePayment === "function"
@@ -297,14 +326,14 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
                                 </TableHead>
                                 <TableBody>
                                     {medicineUnits.map((prescribingDetail, index) => (
-                                        <TableRow key={"m-unit-"+prescribingDetail.medicine_unit.id} className="ou-hover:ou-bg-gray-50">
+                                        <TableRow key={prescribingDetail?.id ?? `m-unit-${index}`} className="ou-hover:ou-bg-gray-50">
                                             <TableCell align="center">{index + 1}</TableCell>
                                             <TableCell className="ou-font-medium">
-                                                {prescribingDetail.medicine_unit.medicine.name}
+                                                {getMedicineName(prescribingDetail)}
                                                 
-                                                {(prescribingDetail.medicine_unit.package_size || prescribingDetail.medicine_unit.packaging) && (
+                                                {getPackagingLabel(prescribingDetail) && (
                                                     <Typography component="span" variant="caption" display="block" className="ou-text-gray-600">
-                                                        ({prescribingDetail.medicine_unit.package_size ?? prescribingDetail.medicine_unit.packaging})
+                                                        ({getPackagingLabel(prescribingDetail)})
                                                     </Typography>
                                                 )}
                                             </TableCell>
@@ -315,11 +344,10 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
                                                 {prescribingDetail.quantity}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {formatCurrency(prescribingDetail.medicine_unit.price_value || 0)}
+                                                {formatCurrency(getUnitPrice(prescribingDetail))}
                                             </TableCell>
                                             <TableCell align="center" className="ou-font-semibold">
-                                                {formatCurrency((prescribingDetail.medicine_unit.price_value || 0) 
-                                                * prescribingDetail.quantity)}
+                                                {formatCurrency(getUnitPrice(prescribingDetail) * prescribingDetail.quantity)}
                                             </TableCell>
                                         </TableRow>
                                     ))}
