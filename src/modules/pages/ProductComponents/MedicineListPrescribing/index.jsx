@@ -45,7 +45,7 @@ const MedicineListPrescribing = ({
   return (
     <Box
       sx={{
-        flex: "0 1 auto",
+        flex: "1 1 auto",
         minHeight: 0,
         display: "flex",
         flexDirection: "column",
@@ -84,8 +84,8 @@ const MedicineListPrescribing = ({
 
       <Box
         sx={{
-          height: "auto",
-          maxHeight: "70vh",
+          flex: 1,
+          minHeight: 0,
           overflowY: "auto",
           overflowX: "hidden",
           WebkitOverflowScrolling: "touch",

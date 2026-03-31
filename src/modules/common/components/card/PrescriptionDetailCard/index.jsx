@@ -11,10 +11,10 @@ import { SERVICE_FEE } from "../../../../../lib/constants";
 import { canShowPaymentButtons, canShowPrintButton, canViewPayments } from "../../../../../lib/auth";
 import { useContext } from "react";
 import UserContext from "../../../../../lib/context/UserContext";
-import { useNavigate } from "react-router-dom";
 import Loading from "../../Loading";
 import PrintIcon from '@mui/icons-material/Print';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import { resolvePrescriptionDetailUnitPrice } from "../../../../../lib/adapters/storeProduct";
 
 const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButton, onPrint }) => {
     const { t, tReady } = useTranslation(['prescription-detail', 'common', 'payment']);
@@ -53,13 +53,8 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
         }).format(amount);
     };
 
-    const getUnitPrice = (prescribingDetail = {}) => {
-        const unit = prescribingDetail?.medicine_unit || {};
-        if (unit?.price_value != null) return Number(unit.price_value) || 0;
-        if (unit?.price != null) return Number(unit.price) || 0;
-        if (prescribingDetail?.unit_price_snapshot != null) return Number(prescribingDetail.unit_price_snapshot) || 0;
-        return 0;
-    };
+    const getUnitPrice = (prescribingDetail = {}) =>
+        resolvePrescriptionDetailUnitPrice(prescribingDetail);
 
     const getMedicineName = (prescribingDetail = {}) => {
         return (
