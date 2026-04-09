@@ -61,16 +61,41 @@ export const normalizeStoreVariantResponse = (payload) => {
   return payload
 }
 
+/**
+ * Single rule for line unit price (aligned with BE resolved_unit_price when present).
+ */
+export const resolvePrescriptionDetailUnitPrice = (detail = {}) => {
+  const resolved = detail.resolved_unit_price
+  if (resolved != null && resolved !== "") {
+    const n = Number(resolved)
+    return Number.isFinite(n) ? n : 0
+  }
+  const mu = detail.medicine_unit || {}
+  if (mu.price_value != null) return Number(mu.price_value) || 0
+  if (mu.price != null) return Number(mu.price) || 0
+  const pvu = detail.product_variant_unit || {}
+  if (pvu.price_value != null) return Number(pvu.price_value) || 0
+  const pv = detail.product_variant || {}
+  if (pv.price_value != null) return Number(pv.price_value) || 0
+  if (detail.unit_price_snapshot != null) return Number(detail.unit_price_snapshot) || 0
+  return 0
+}
+
 export const normalizePrescriptionDetailItem = (detail = {}) => {
   const source = detail.medicine_unit || detail.product_variant_unit || detail.product_variant || {}
   const normalized = normalizeStoreVariant(source)
+  const resolved = detail.resolved_unit_price
+  const priceValue =
+    resolved != null && resolved !== ""
+      ? Number(resolved) || 0
+      : normalized.price_value
   return {
     ...detail,
     medicine_unit: {
       ...normalized,
       medicine: normalized.medicine,
       package_size: normalized.packaging,
-      price_value: normalized.price_value,
+      price_value: priceValue,
     },
   }
 }

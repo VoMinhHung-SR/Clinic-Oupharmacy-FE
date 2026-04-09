@@ -4,6 +4,7 @@ import { fetchDiagnosisList } from "../services"
 import { useSearchParams } from "react-router-dom"
 import { goToTop } from "../../../../lib/utils/helper"
 import UserContext from "../../../../lib/context/UserContext"
+import { MAX_EXAM_PER_DAY } from "../../../../lib/constants"
 
 const usePrescriptionList = () =>{
     const {user} = useContext(UserContext)
@@ -67,7 +68,7 @@ const usePrescriptionList = () =>{
                     setPrescriptionList(data.results);
                     setPagination({
                         count: data.count,
-                        sizeNumber: Math.ceil(data.count / 30),
+                        sizeNumber: Math.ceil(data.count / MAX_EXAM_PER_DAY),
                     });
                     setIsLoading(true)
                 }

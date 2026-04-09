@@ -1,8 +1,9 @@
+import { resolvePrescriptionDetailUnitPrice } from "../../../../../../lib/adapters/storeProduct"
+
 export const calculateAmount = (data, wage) => {
     let totalAmount = wage;
     data.forEach(d => {
-         const unit = d?.medicine_unit || {}
-         const unitPrice = Number(unit.price_value ?? unit.price ?? 0)
+         const unitPrice = resolvePrescriptionDetailUnitPrice(d)
          totalAmount = totalAmount + d.quantity * unitPrice
     });
     return totalAmount;

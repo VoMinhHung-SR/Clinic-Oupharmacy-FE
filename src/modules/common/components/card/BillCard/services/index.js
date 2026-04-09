@@ -1,9 +1,13 @@
 import { authApi, endpoints } from "../../../../../../config/APIs"
+import { normalizePrescriptionDetailItem } from "../../../../../../lib/adapters/storeProduct"
 
 // To: get all of medicine unit in the prescribing sheet
 export const fetchPrescriptionDetailBillCard = async (prescribingID) => {
     const res = await authApi().get(endpoints['get-prescription-detail'](prescribingID))
-    return res;
+    if (Array.isArray(res?.data)) {
+        res.data = res.data.map(normalizePrescriptionDetailItem)
+    }
+    return res
 }
 
 // To: create a bill with cash payment methods

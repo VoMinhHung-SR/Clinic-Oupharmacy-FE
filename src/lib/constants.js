@@ -38,6 +38,8 @@ export const MAPGL_TOKEN = import.meta.env.VITE_MAPGL_ACCESSTOKEN
 export const GOONGMAP_APITOKEN = import.meta.env.VITE_GOONGMAP_APIKEY
 export const GOONGMAP_MAPTOKEN = import.meta.env.VITE_GOONGMAP_MAYKEY
 export const MAX_EXAM_PER_DAY = 30
+export const PAGE_SIZE = 12
+export const APPOINTMENT_PAGE_SIZE = 30
 
 export const BACKEND_BASEURL = import.meta.env.VITE_SERVER
 export const MEDICINE_STORE_URL = import.meta.env.VITE_MEDICINE_STORE_URL

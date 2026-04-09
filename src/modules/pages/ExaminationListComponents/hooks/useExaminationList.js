@@ -40,7 +40,7 @@ const useExaminationList = () => {
                     setExaminationList(data.results)
                     setPagination({
                         count: data.count,
-                        sizeNumber: Math.ceil(data.count / 10),
+                        sizeNumber: Math.ceil(data.count / MAX_EXAM_PER_DAY),
                     });
                   
                 }

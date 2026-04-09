@@ -14,8 +14,8 @@ import MedicineGridProducts from "../MedicineGridProducts"
 const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit }) => {
   const { tReady } = useTranslation(["prescription-detail", "yup-validate", "modal", "medicine", "product"])
   const { allConfig } = useSelector((state) => state.config)
-  const { medicineUnits, page, handleChangePage, pagination, medicineLoading, paramsFilter, handleOnSubmitFilter } =
-    useMedicine()
+  const { medicineUnits, page, handleChangePage, pagination,
+    medicineLoading, paramsFilter, handleOnSubmitFilter } = useMedicine()
   const { user } = useContext(UserContext)
   const { medicineLineItemSchema } = SchemaModels()
   const { pathname } = useLocation()
@@ -37,14 +37,11 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
   if (!tReady && medicineLoading) {
     return (
       <Box
-        sx={{
-          flex: { xs: "0 0 auto", md: "1 1 0" },
-          minHeight: { xs: "auto", md: 0 },
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-          width: "100%",
-        }}
+        sx={{flex: { xs: "0 0 auto", md: "1 1 0" }, 
+        minHeight: { xs: "auto", md: 0 }, 
+        display: "flex", flexDirection: "column",
+        overflow: "hidden", width: "100%"
+      }}
       >
         <Box
           component={Paper}
@@ -112,9 +109,8 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
           />
         )}
         {isProductsView && <MedicineGridProducts medicines={medicineUnits} actionButton={actionButton} />}
-
         {!medicineLoading && pagination.sizeNumber >= 2 && (
-          <Box sx={{ flexShrink: 0, pt: 2, pb: 1 }}>
+          <Box sx={{ flexShrink: 0, pt: 1.5, pb: 0.5 }}>
             <Stack>
               <Pagination
                 count={pagination.sizeNumber}

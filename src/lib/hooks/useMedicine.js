@@ -3,7 +3,7 @@ import { fetchMedicinesUnit } from "../../modules/common/components/card/Prescri
 import { useSearchParams } from "react-router-dom";
 import { fetchCreateMedicine, fetchCreateMedicineUnit, fetchDeletedMedicine, fetchDeletedMedicineUnit, fetchUpdateMedicine, fetchUpdateMedicineUnit } from "../../modules/pages/ProductComponents/services";
 import createToastMessage from "../utils/createToastMessage";
-import { TOAST_ERROR, TOAST_SUCCESS } from "../constants";
+import { TOAST_ERROR, TOAST_SUCCESS, PAGE_SIZE } from "../constants";
 import { useTranslation } from "react-i18next";
 import { ConfirmAlert } from "../../config/sweetAlert2";
 import { goToTop } from "../utils/helper";
@@ -58,6 +58,7 @@ const useMedicine = () => {
                 let querySample = q.toString();
                 
                 const queryParams = `page=${page}`+
+                `&page_size=${PAGE_SIZE}`+
                 `&kw=${paramsFilter.kw === '' ? '' : paramsFilter.kw}`+
                 `&cate=${paramsFilter.cate === 0 ? '' : paramsFilter.cate}`+
                 `&price=${paramsFilter.price}`
@@ -70,7 +71,7 @@ const useMedicine = () => {
                     setMedicineUnits(Array.isArray(data?.results) ? data.results : []);
                     setPagination({
                         count: data.count ?? 0,
-                        sizeNumber: Math.ceil((data.count ?? 0) / 9),
+                        sizeNumber: Math.ceil((data.count ?? 0) / PAGE_SIZE),
                     });
                 }
             } catch (err) {

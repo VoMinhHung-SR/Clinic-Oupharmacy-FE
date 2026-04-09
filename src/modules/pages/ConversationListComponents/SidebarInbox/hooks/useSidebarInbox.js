@@ -6,7 +6,7 @@ import SuccessfulAlert from "../../../../../config/sweetAlert2";
 import { fetchRecipients } from "../services";
 import { useCollection } from "react-firebase-hooks/firestore"
 import createToastMessage from "../../../../../lib/utils/createToastMessage";
-import { APP_ENV, TOAST_ERROR } from "../../../../../lib/constants";
+import { APP_ENV, MAX_EXAM_PER_DAY, TOAST_ERROR } from "../../../../../lib/constants";
 import useDebounce from "../../../../../lib/hooks/useDebounce";
 import { useTranslation } from "react-i18next";
 const useSidebarInbox = (user) => {
@@ -40,8 +40,7 @@ const useSidebarInbox = (user) => {
                 setRecipients(data)
                 setPagination({
                     count: data.count,
-                    // data show number: x = 30
-                    sizeNumber: Math.ceil(data.count / 30),
+                    sizeNumber: Math.ceil(data.count / MAX_EXAM_PER_DAY),
                 });
                 setIsLoadingRecipients(false);
             } catch (err) {

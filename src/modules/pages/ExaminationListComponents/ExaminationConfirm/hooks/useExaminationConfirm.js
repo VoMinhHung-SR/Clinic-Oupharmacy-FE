@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useSearchParams } from "react-router-dom"
 import { db } from "../../../../../config/firebase"
-import { APP_ENV, STATUS_BOOKING_CONFIRMED, TOAST_SUCCESS } from "../../../../../lib/constants"
+import { APP_ENV, STATUS_BOOKING_CONFIRMED, TOAST_SUCCESS, MAX_EXAM_PER_DAY } from "../../../../../lib/constants"
 import { fetchExaminationListConfirm, fetchSendEmailConfirmExamination } from "../services"
 import createToastMessage from "../../../../../lib/utils/createToastMessage"
 import { ConfirmAlert, ErrorAlert } from "../../../../../config/sweetAlert2"
@@ -78,7 +78,7 @@ const useExaminationConfirm = () =>{
                     setIsLoadingExamination(false)
                     setPagination({
                         count: data.count,
-                        sizeNumber: Math.ceil(data.count / 30),
+                        sizeNumber: Math.ceil(data.count / MAX_EXAM_PER_DAY),
                     });
                     setIsRequestSuccessful(true);
                 }
