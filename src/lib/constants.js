@@ -43,6 +43,9 @@ export const APPOINTMENT_PAGE_SIZE = 30
 
 export const BACKEND_BASEURL = import.meta.env.VITE_SERVER
 export const MEDICINE_STORE_URL = import.meta.env.VITE_MEDICINE_STORE_URL
+export const ACCESS_TOKEN_COOKIE_EXPIRES_DAYS = 12 / 24 // 12 hours
+export const REFRESH_TOKEN_COOKIE_EXPIRES_DAYS = 30 // 30 days
+export const AUTH_COOKIE_OPTIONS = { sameSite: 'Lax' }
 
 export const ERROR_CLOUDINARY = 'https://res.cloudinary.com/dl6artkyb/null'
 export const AVATAR_NULL = 'https://res.cloudinary.com/dl6artkyb/users/avatar/null'
