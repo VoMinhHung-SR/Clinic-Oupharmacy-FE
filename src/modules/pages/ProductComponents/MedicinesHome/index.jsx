@@ -2,6 +2,7 @@ import { useSelector } from "react-redux"
 import { Box, Paper, Stack, Pagination } from "@mui/material"
 import { useTranslation } from "react-i18next"
 import useMedicine from "../../../../lib/hooks/useMedicine"
+import { usePrescribingCatalog } from "../../../../features/prescribing"
 import UserContext from "../../../../lib/context/UserContext"
 import SchemaModels from "../../../../lib/schema"
 import { useLocation } from "react-router"
@@ -14,11 +15,25 @@ import MedicineGridProducts from "../MedicineGridProducts"
 const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit }) => {
   const { tReady } = useTranslation(["prescription-detail", "yup-validate", "modal", "medicine", "product"])
   const { allConfig } = useSelector((state) => state.config)
-  const { medicineUnits, page, handleChangePage, pagination,
-    medicineLoading, paramsFilter, handleOnSubmitFilter } = useMedicine()
   const { user } = useContext(UserContext)
   const { medicineLineItemSchema } = SchemaModels()
   const { pathname } = useLocation()
+
+  const isPrescribingView = pathname !== "/products" && user?.role === ROLE_DOCTOR
+  const isProductsView = pathname === "/products"
+
+  const productCatalog = useMedicine({ enabled: isProductsView })
+  const prescribingCatalog = usePrescribingCatalog({ enabled: isPrescribingView })
+
+  const {
+    medicineUnits,
+    page,
+    handleChangePage,
+    pagination,
+    medicineLoading,
+    paramsFilter,
+    handleOnSubmitFilter,
+  } = isPrescribingView ? prescribingCatalog : productCatalog
 
   const handleAddToPrescription = (medicineUnit, data) => {
     onAddMedicineLineItem(medicineUnit, data)
@@ -39,6 +54,10 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
     })
     return map
   }, [medicineUnits, medicinesSubmit])
+
+  if (!isPrescribingView && !isProductsView) {
+    return null
+  }
 
   if (!tReady && medicineLoading) {
     return (
@@ -67,13 +86,6 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
         </Box>
       </Box>
     )
-  }
-
-  const isPrescribingView = pathname !== "/products" && user?.role === ROLE_DOCTOR
-  const isProductsView = pathname === "/products"
-
-  if (!isPrescribingView && !isProductsView) {
-    return null
   }
 
   return (

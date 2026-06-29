@@ -9,10 +9,10 @@ import { ConfirmAlert } from "../../config/sweetAlert2";
 import { goToTop } from "../utils/helper";
 import { normalizeStoreVariantResponse } from "../adapters/storeProduct";
 
-const useMedicine = () => {
+const useMedicine = ({ enabled = true } = {}) => {
     // List from medicine-units API: each item is a MedicineUnit (id, medicine, packaging, in_stock, price)
     const [medicineUnits, setMedicineUnits] = useState([]);
-    const [medicineLoading, setMedicineLoading] = useState(true);
+    const [medicineLoading, setMedicineLoading] = useState(Boolean(enabled));
     const [selectedImage, setSelectedImage] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
     const [flag, setFlag] = useState(false)
@@ -53,17 +53,38 @@ const useMedicine = () => {
     }
 
     useEffect(() => {
+        if (!enabled) {
+            setMedicineLoading(false);
+            return undefined;
+        }
         const loadMedicines = async () => {
             try{ 
                 let querySample = q.toString();
-                
-                const queryParams = `page=${page}`+
-                `&page_size=${PAGE_SIZE}`+
-                `&kw=${paramsFilter.kw === '' ? '' : paramsFilter.kw}`+
-                `&cate=${paramsFilter.cate === 0 ? '' : paramsFilter.cate}`+
-                `&price=${paramsFilter.price}`
 
-                querySample += querySample.includes("?") ? queryParams : "?" + queryParams
+                const params = new URLSearchParams(querySample.startsWith("?") ? querySample.slice(1) : querySample)
+                params.set("page", String(page))
+                params.set("page_size", String(PAGE_SIZE))
+
+                const kw = (paramsFilter.kw || "").trim()
+                if (kw) params.set("kw", kw)
+                else params.delete("kw")
+
+                if (paramsFilter.cate && paramsFilter.cate !== 0) {
+                    params.set("category", String(paramsFilter.cate))
+                } else {
+                    params.delete("category")
+                }
+                params.delete("cate")
+
+                if (paramsFilter.price && paramsFilter.price !== "all") {
+                    params.set("price_sort", paramsFilter.price)
+                } else {
+                    params.delete("price_sort")
+                }
+                params.delete("price")
+
+                const queryString = params.toString()
+                querySample = queryString ? `?${queryString}` : ""
 
                 const res = await fetchMedicinesUnit(querySample);
                 if (res.status === 200) {
@@ -81,7 +102,7 @@ const useMedicine = () => {
             }
         }
         loadMedicines()
-    }, [page, flag])
+    }, [page, flag, enabled])
 
     const addMedicine = (data, callBackSuccess, setError) => {
         const handleMedicine = async () => {

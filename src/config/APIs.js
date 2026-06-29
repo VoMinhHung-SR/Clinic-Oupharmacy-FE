@@ -88,6 +88,8 @@ export let endpoints = {
     // Product variants currently reuse products endpoint (store returns ProductVariant list)
     'product-variants': '/api/store/products/',
     'product-variant-detail': (variantId) => `/api/store/products/${variantId}/`,
+    'store-search': '/api/store/search/',
+    'store-search-suggest': '/api/store/search/suggest/',
 
     // Legacy aliases (kept for backward compatibility during migration)
     'medicines':'/api/store/products/',
