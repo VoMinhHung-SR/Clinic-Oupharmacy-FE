@@ -20,9 +20,3 @@ export const fetchCreateUserRole = async () => {
     const res = await APIs.post(endpoints['roles'], {name: ROLE_USER})
     return res;
 }
-
-/** @deprecated User address now via POST /users/me/addresses/. Register no longer creates common-location. */
-export const fetchCreateLocation = async (locationData) => {
-    const res = await APIs.post(endpoints['location'], locationData);
-    return res;
-}

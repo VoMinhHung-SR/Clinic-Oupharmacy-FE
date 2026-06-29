@@ -21,13 +21,6 @@ export let endpoints = {
     'cities': '/common-cities/',
     'city-detail':(cityID) => `/common-cities/${cityID}/`,
 
-    // Common District: TODO replace with 
-    'districts-by-city': '/common-districts/get-by-city/',
-
-    // Common Location
-    'location':'/common-locations/', 
-    'location-detail':(locationID) => `/common-locations/${locationID}/`,
-
     //Category
     'categories': '/categories/',
     'category-detail':(cateID) => `/categories/${cateID}/`,
@@ -36,7 +29,6 @@ export let endpoints = {
     'users':'/users/',
     'user-patients':(userId) => `/users/${userId}/get-patients/`,    
     'user-detail':(userId) => `/users/${userId}/`,
-    'get-user-location':(userId) => `/users/${userId}/location-info/`,
     'user-addresses': '/users/me/addresses/',
     'user-address-detail': (addressId) => `/users/me/addresses/${addressId}/`,
     'booking-list':(userId) => `/users/${userId}/booking-list/`,
