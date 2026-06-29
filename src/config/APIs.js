@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Cookies from 'js-cookie';
 import { BACKEND_BASEURL } from '../lib/constants';
+import { refreshAccessToken } from '../lib/auth/tokenManager';
 axios.defaults.withCredentials = false;
 
 
@@ -135,41 +136,38 @@ export const mapApi = () => {
 export const authApi = () => {
     const instance = axios.create({
         baseURL: baseURL,
-        headers: {
-          'Authorization': `Bearer ${Cookies.get('token')}`
+      });
+
+      instance.interceptors.request.use((config) => {
+        const accessToken = Cookies.get('token');
+        if (accessToken) {
+            config.headers.Authorization = `Bearer ${accessToken}`;
         }
+        return config;
       });
     
       instance.interceptors.response.use(
         response => response,
         async error => {
           const originalRequest = error.config;
-          if (error.response.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
-    
-            // call refresh token API to get new access token
-            const refreshToken =  Cookies.get('refresh_token');
-            const clientApp = await axios.get(`${baseURL}/oauth2-info/`)
-            if(clientApp.status === 200){
-                const data = {
-                    grant_type: 'refresh_token',
-                    refresh_token: refreshToken,
-                    client_id: clientApp.data.client_id,
-                    client_secret: clientApp.data.client_secret
-                }
+          if (!error.response || !originalRequest) {
+            return Promise.reject(error);
+          }
 
-                const res = await axios.post(`${baseURL}/o/token/`, data);
-                if (res.status === 200) {
-                    // update access token in cookies 
-                    Cookies.set('refresh_token', res.data.refresh_token)
-                    Cookies.set('token', res.data.access_token)
-          
-                    // set authorization header with new token and retry the original request
-                    instance.defaults.headers.common['Authorization'] = `Bearer ${res.data.access_token}`;
-                    return instance(originalRequest);
-                  }
+          const requestUrl = originalRequest.url || '';
+          const isTokenCall = requestUrl.includes(endpoints.login) || requestUrl.includes(endpoints['auth-info']);
+          if (error.response.status === 401 && !originalRequest._retry && !isTokenCall) {
+            originalRequest._retry = true;
+
+            const newAccessToken = await refreshAccessToken({ baseURL, endpoints });
+            if (!newAccessToken) {
+                return Promise.reject(error);
             }
-           
+
+            originalRequest.headers = originalRequest.headers || {};
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+            instance.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+            return instance(originalRequest);
           }
           return Promise.reject(error);
         }
