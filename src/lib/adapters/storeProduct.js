@@ -30,11 +30,63 @@ const pickPriceValue = (variant = {}) => {
   return 0
 }
 
+const saleUnitOptions = (variant = {}) =>
+  Array.isArray(variant.unit_options) ? variant.unit_options : []
+
+/** Resolve ProductVariantUnit id (store sale unit) for prescribing payload. */
+export const resolveProductVariantUnitId = (variant = {}, preferredUnitId = null) => {
+  const options = saleUnitOptions(variant)
+  if (preferredUnitId != null) {
+    const match = options.find((o) => o.unit_id === preferredUnitId)
+    if (match) return preferredUnitId
+  }
+  if (variant.default_unit_id != null) return variant.default_unit_id
+  if (options.length > 0 && options[0].unit_id != null) return options[0].unit_id
+  return null
+}
+
+export const getSaleUnitById = (variant = {}, unitId = null) => {
+  const resolvedId = resolveProductVariantUnitId(variant, unitId)
+  return saleUnitOptions(variant).find((o) => o.unit_id === resolvedId) ?? null
+}
+
+export const getQuantityInBase = (variant = {}, unitId = null) => {
+  const saleUnit = getSaleUnitById(variant, unitId)
+  const qib = saleUnit?.quantity_in_base
+  if (qib != null) return Number(qib) || 1
+  return 1
+}
+
+/** Max sale quantity for a variant + unit given base stock (variant.in_stock). */
+export const getMaxSaleQuantity = (variant = {}, unitId = null, baseStock = null) => {
+  const inStock = baseStock != null ? Number(baseStock) : Number(variant.in_stock ?? 0)
+  const qib = getQuantityInBase(variant, unitId)
+  if (qib <= 0) return 0
+  return Math.floor(inStock / qib)
+}
+
+/** Attach selected sale unit fields for prescribing submit. */
+export const enrichVariantForPrescribing = (variant = {}, selectedSaleUnitId = null) => {
+  const productVariantUnitId = resolveProductVariantUnitId(variant, selectedSaleUnitId)
+  const saleUnit = getSaleUnitById(variant, productVariantUnitId)
+  return {
+    ...variant,
+    product_variant_unit_id: productVariantUnitId,
+    selectedSaleUnitId: productVariantUnitId,
+    quantity_in_base: getQuantityInBase(variant, productVariantUnitId),
+    selectedUnitName: saleUnit?.unit_name ?? variant.default_unit_name ?? variant.packaging ?? "",
+    selectedUnitPrice: saleUnit?.price_value ?? variant.price_value ?? variant.price ?? 0,
+  }
+}
+
 export const normalizeStoreVariant = (variant = {}) => {
   const medicine = {
     id: variant.product?.id ?? variant.product_id ?? variant.medicine?.id ?? variant.medicine ?? null,
     name: pickProductName(variant) || variant.medicine?.name || "",
   }
+
+  const defaultUnitId = variant.default_unit_id ?? null
+  const options = saleUnitOptions(variant)
 
   return {
     ...variant,
@@ -45,6 +97,9 @@ export const normalizeStoreVariant = (variant = {}) => {
     price_value: pickPriceValue(variant),
     in_stock: Number(variant.in_stock ?? 0),
     category: pickCategory(variant),
+    default_unit_id: defaultUnitId,
+    unit_options: options,
+    default_unit_name: variant.default_unit_name ?? null,
   }
 }
 

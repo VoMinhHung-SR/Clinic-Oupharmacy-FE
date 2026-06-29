@@ -4,6 +4,7 @@ import { ConfirmAlert, ErrorAlert } from "../../config/sweetAlert2";
 import { createPrescribingWithDetails } from "../../modules/pages/PrescriptionDetailComponents/services/prescribingActions";
 import createToastMessage from "../utils/createToastMessage";
 import { TOAST_ERROR, TOAST_SUCCESS } from "../constants";
+import { enrichVariantForPrescribing } from "../adapters/storeProduct";
 
 const PrescribingContext = createContext();
 
@@ -20,12 +21,22 @@ export const PrescribingProvider = ({children}) => {
     const [newestPrescriptionDetail, setNewestPrescriptionDetail] = useState([]);
     const [isBackdropLoading, setIsBackdropLoading] = useState(false);
 
-    const addMedicineItem = (medicineUnitId, medicineName, packaging, uses, quantity, inStock, productVariantUnitId = null) => {
+    const addMedicineItem = (
+        medicineUnitId,
+        medicineName,
+        packaging,
+        uses,
+        quantity,
+        inStock,
+        productVariantUnitId = null,
+        quantityInBase = 1
+    ) => {
         const newItem = {
             id: medicineUnitId,
             medicineUnitId: medicineUnitId,
             productVariantId: medicineUnitId,
             productVariantUnitId: productVariantUnitId,
+            quantityInBase: Number(quantityInBase) || 1,
             medicineName: medicineName,
             packaging: packaging ?? "",
             uses: uses,
@@ -87,41 +98,60 @@ export const PrescribingProvider = ({children}) => {
                 if (medicineUnit.id === -1)
                     return ErrorAlert(t('modal:createFailed'), t('modal:pleaseDoubleCheck'), t('modal:ok'));
 
+                const enriched = enrichVariantForPrescribing(
+                    medicineUnit,
+                    medicineUnit.selectedSaleUnitId ?? medicineUnit.product_variant_unit_id ?? null
+                );
+                if (!enriched.product_variant_unit_id) {
+                    return ErrorAlert(t('modal:createFailed'), t('modal:pleaseDoubleCheck'), t('modal:ok'));
+                }
+
+                const lineKey = (item) =>
+                    `${item.id}:${item.productVariantUnitId ?? ""}`;
+
                 // Flag to check if medicine is updated
                 let medicineUpdated = false;
 
                 if (medicinesSubmit.length !== 0) {
                     const updatedMedicinesSubmit = medicinesSubmit.map((item) => {
-                        if (item.id === medicineUnit.id) {
+                        if (lineKey(item) === lineKey({
+                            id: enriched.id,
+                            productVariantUnitId: enriched.product_variant_unit_id,
+                        })) {
                             medicineUpdated = true;
                             return {
                                 ...item,
                                 uses: data.uses,
-                                inStock: medicineUnit.in_stock,
+                                inStock: enriched.in_stock,
                                 quantity: parseInt(item.quantity, 10) + parseInt(data.quantity, 10),
+                                productVariantUnitId: enriched.product_variant_unit_id,
+                                quantityInBase: enriched.quantity_in_base,
+                                packaging: enriched.selectedUnitName ?? item.packaging,
                             };
                         }
                         return item;
                     });
                     if (medicineUpdated) handleUpdateMedicinesSubmit(updatedMedicinesSubmit);
                     else addMedicineItem(
-                        medicineUnit.id,
-                        medicineUnit.medicine.name,
-                        medicineUnit.packaging ?? "",
+                        enriched.id,
+                        enriched.medicine.name,
+                        enriched.selectedUnitName ?? enriched.packaging ?? "",
                         data.uses,
                         data.quantity,
-                        medicineUnit.in_stock,
-                        medicineUnit.product_variant_unit_id ?? null
+                        enriched.in_stock,
+                        enriched.product_variant_unit_id,
+                        enriched.quantity_in_base
                     );
                 } else {
                     addMedicineItem(
-                        medicineUnit.id,
-                        medicineUnit.medicine.name,
-                        medicineUnit.packaging ?? "",
+                        enriched.id,
+                        enriched.medicine.name,
+                        enriched.selectedUnitName ?? enriched.packaging ?? "",
                         data.uses,
                         data.quantity,
-                        medicineUnit.in_stock,
-                        medicineUnit.product_variant_unit_id ?? null
+                        enriched.in_stock,
+                        enriched.product_variant_unit_id,
+                        enriched.quantity_in_base
                     );
                 }  
             } catch (err) {

@@ -27,9 +27,15 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
   const availableStockMap = useMemo(() => {
     const map = new Map()
     medicineUnits.forEach((unit) => {
-      const existing = medicinesSubmit?.find((item) => item.id === unit.id)
-      const stock = existing ? Math.max(0, unit.in_stock - existing.quantity) : unit.in_stock
-      map.set(unit.id, stock)
+      const reservedBase =
+        medicinesSubmit
+          ?.filter((item) => item.id === unit.id)
+          .reduce(
+            (sum, item) =>
+              sum + (Number(item.quantity) || 0) * (Number(item.quantityInBase) || 1),
+            0
+          ) ?? 0
+      map.set(unit.id, Math.max(0, Number(unit.in_stock ?? 0) - reservedBase))
     })
     return map
   }, [medicineUnits, medicinesSubmit])
