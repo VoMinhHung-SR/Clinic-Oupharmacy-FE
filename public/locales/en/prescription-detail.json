@@ -58,5 +58,11 @@
     "existingPrescriptions": "Existing prescriptions",
     "newPrescriptionCreated": "New prescription created successfully",
     "doctorNote": "Doctor note",
-    "printPrescription": "Print prescription"
+    "printPrescription": "Print prescription",
+    "draftLineCount": "{{count}} line(s)",
+    "draftSubtotal": "Subtotal",
+    "draftPricePending": "Price shown after adding items",
+    "draftFabLabel": "Draft",
+    "openDraftDrawer": "Open prescription draft ({{count}} items)",
+    "closeDraftDrawer": "Close prescription draft"
 }

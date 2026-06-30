@@ -25,5 +25,19 @@
     "inStockLabel": "In stock {{count}}",
     "runningOutLabel": "Running out {{count}}",
     "outOfStockLabel": "Out of stock",
-    "orderStockLabel": "Order stock"
+    "orderStockLabel": "Order stock",
+    "inStockOnly": "In stock only",
+    "catalogSearchIdleTitle": "Search to prescribe",
+    "catalogSearchIdleHint": "Type a medicine name or pick a detailed group under Medicine.",
+    "subcategory": "Medicine group",
+    "pickSubcategory": "Select group",
+    "subcategoryGroup": "Groups in {{name}}",
+    "subcategoryDetail": "Detailed group",
+    "allInGroup": "All — {{name}}",
+    "clearCategoryFilter": "Clear category",
+    "categoryBreadcrumb": "{{root}} › {{sub}}",
+    "pickSubcategoryHint": "Pick a medicine group below (under {{name}}) or type to search.",
+    "catalogNoResults": "No medicines found",
+    "catalogNoResultsHint": "Try another keyword or change category / filters.",
+    "searchKeyboardHint": "Press / to focus search"
 }

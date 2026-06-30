@@ -46,3 +46,6 @@ export const fetchStoreSearchSuggest = async (q) => {
   const params = new URLSearchParams({ q: q || "" })
   return authApi().get(`${endpoints["store-search-suggest"]}?${params.toString()}`)
 }
+
+/** Nested store categories (level0 → level1 → level2), source of truth for prescribing nav. */
+export const fetchStoreCategories = async () => authApi().get(endpoints["store-categories"])

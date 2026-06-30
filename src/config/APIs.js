@@ -90,6 +90,7 @@ export let endpoints = {
     'product-variant-detail': (variantId) => `/api/store/products/${variantId}/`,
     'store-search': '/api/store/search/',
     'store-search-suggest': '/api/store/search/suggest/',
+    'store-categories': '/api/store/categories/',
 
     // Legacy aliases (kept for backward compatibility during migration)
     'medicines':'/api/store/products/',

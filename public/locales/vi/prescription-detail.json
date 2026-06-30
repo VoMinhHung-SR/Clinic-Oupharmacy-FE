@@ -57,5 +57,11 @@
     "existingPrescriptions": "Các phiếu kê toa đã có",
     "newPrescriptionCreated": "Phiếu kê toa mới đã được tạo thành công",
     "doctorNote": "Ghi chú của bác sĩ",
-    "printPrescription": "In phiếu kê toa"
+    "printPrescription": "In phiếu kê toa",
+    "draftLineCount": "{{count}} dòng thuốc",
+    "draftSubtotal": "Tạm tính",
+    "draftPricePending": "Giá cập nhật khi thêm thuốc",
+    "draftFabLabel": "Phiếu",
+    "openDraftDrawer": "Mở phiếu kê toa ({{count}} thuốc)",
+    "closeDraftDrawer": "Đóng phiếu kê toa"
 }

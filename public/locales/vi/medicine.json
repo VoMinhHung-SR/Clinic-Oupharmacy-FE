@@ -25,5 +25,19 @@
     "outOfStockLabel": "Hết hàng",
     "orderStockLabel": "Kẻ hàng",
     "medicineList": "Danh sách thuốc",
-    "filter": "Bộ lọc"
+    "filter": "Bộ lọc",
+    "inStockOnly": "Chỉ còn hàng",
+    "catalogSearchIdleTitle": "Tìm thuốc để kê toa",
+    "catalogSearchIdleHint": "Gõ tên thuốc, hoạt chất hoặc chọn nhóm chi tiết trong danh mục Thuốc.",
+    "subcategory": "Nhóm thuốc",
+    "pickSubcategory": "Chọn nhóm",
+    "subcategoryGroup": "Nhóm trong {{name}}",
+    "subcategoryDetail": "Nhóm chi tiết",
+    "allInGroup": "Tất cả — {{name}}",
+    "clearCategoryFilter": "Xóa danh mục",
+    "categoryBreadcrumb": "{{root}} › {{sub}}",
+    "pickSubcategoryHint": "Chọn nhóm thuốc bên dưới (ví dụ trong {{name}}) hoặc gõ tên thuốc để tìm.",
+    "catalogNoResults": "Không tìm thấy thuốc",
+    "catalogNoResultsHint": "Thử từ khóa khác hoặc đổi danh mục / bộ lọc.",
+    "searchKeyboardHint": "Nhấn / để focus ô tìm kiếm"
 }

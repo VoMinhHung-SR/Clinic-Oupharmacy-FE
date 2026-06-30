@@ -29,7 +29,8 @@ export const PrescribingProvider = ({children}) => {
         quantity,
         inStock,
         productVariantUnitId = null,
-        quantityInBase = 1
+        quantityInBase = 1,
+        unitPrice = 0
     ) => {
         const newItem = {
             id: medicineUnitId,
@@ -42,6 +43,7 @@ export const PrescribingProvider = ({children}) => {
             uses: uses,
             quantity: parseInt(quantity, 10),
             inStock: inStock,
+            unitPrice: Number(unitPrice) || 0,
         };
         setMedicinesSubmit((prev) => [...prev, newItem]);
         setHasUnsavedChanges(true);
@@ -127,6 +129,7 @@ export const PrescribingProvider = ({children}) => {
                                 productVariantUnitId: enriched.product_variant_unit_id,
                                 quantityInBase: enriched.quantity_in_base,
                                 packaging: enriched.selectedUnitName ?? item.packaging,
+                                unitPrice: Number(enriched.selectedUnitPrice) || item.unitPrice || 0,
                             };
                         }
                         return item;
@@ -140,7 +143,8 @@ export const PrescribingProvider = ({children}) => {
                         data.quantity,
                         enriched.in_stock,
                         enriched.product_variant_unit_id,
-                        enriched.quantity_in_base
+                        enriched.quantity_in_base,
+                        enriched.selectedUnitPrice
                     );
                 } else {
                     addMedicineItem(
@@ -151,7 +155,8 @@ export const PrescribingProvider = ({children}) => {
                         data.quantity,
                         enriched.in_stock,
                         enriched.product_variant_unit_id,
-                        enriched.quantity_in_base
+                        enriched.quantity_in_base,
+                        enriched.selectedUnitPrice
                     );
                 }  
             } catch (err) {

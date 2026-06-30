@@ -40,8 +40,14 @@ const PrescriptionDetailLayout = ({ headerContent, leftContent, rightContent }) 
           </Box>
         </Box>
         <Box
-          sx={{ display: "flex", flexDirection: "column",
-          flex: { xs: "0 0 auto", md: "4 4 0" }, minWidth: 0 }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flex: { xs: "0 0 auto", md: "4 4 0" },
+            minWidth: 0,
+            minHeight: { md: 0 },
+            alignSelf: { md: "stretch" },
+          }}
         >
           {rightContent}
         </Box>

@@ -1,56 +1,73 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { useSearchParams } from "react-router-dom"
-import { fetchStoreProductVariants } from "../../api/storeCatalog"
+import useDebounce from "../../../../lib/hooks/useDebounce"
+import { fetchStoreProductVariants, fetchStoreSearch } from "../../api/storeCatalog"
 import {
+  mapPriceFilterToSearchSort,
   PRESCRIBING_DEFAULT_FILTER,
+  PRESCRIBING_MIN_SEARCH_LEN,
   PRESCRIBING_PAGE_SIZE,
+  PRESCRIBING_SEARCH_DEBOUNCE_MS,
 } from "../../constants"
 import { goToTop } from "../../../../lib/utils/helper"
 
-const countActiveFilters = (filter) =>
-  Object.values(filter).filter((v) => v !== 0 && v !== "" && v !== "all").length
+const countActiveFilters = (filter, inStockOnly) => {
+  let n = 0
+  if ((filter.kw || "").trim()) n += 1
+  if (filter.cate && filter.cate !== 0) n += 1
+  if (filter.price && filter.price !== "all") n += 1
+  if (!inStockOnly) n += 1
+  return n
+}
+
+const buildProductsQuery = ({ page, filter, inStockOnly }) => {
+  const params = new URLSearchParams()
+  params.set("page", String(page))
+  params.set("page_size", String(PRESCRIBING_PAGE_SIZE))
+
+  const kw = (filter.kw || "").trim()
+  if (kw) params.set("kw", kw)
+
+  if (filter.cate && filter.cate !== 0) {
+    params.set("category", String(filter.cate))
+  }
+
+  if (filter.price && filter.price !== "all") {
+    params.set("price_sort", filter.price)
+  }
+
+  if (inStockOnly) params.set("in_stock", "true")
+
+  const qs = params.toString()
+  return qs ? `?${qs}` : ""
+}
 
 /**
- * Store catalog for the prescribing workspace.
- * Uses correct BE query params: `category`, `price_sort` (not legacy `cate` / `price`).
+ * Store catalog for prescribing — search-first; category filter uses leaf/mid store IDs.
  */
 const usePrescribingCatalog = ({ enabled = true } = {}) => {
-  const [searchParams] = useSearchParams()
   const [variants, setVariants] = useState([])
-  const [loading, setLoading] = useState(Boolean(enabled))
+  const [loading, setLoading] = useState(false)
   const [page, setPage] = useState(1)
   const [pagination, setPagination] = useState({ count: 0, sizeNumber: 0 })
   const [paramsFilter, setParamsFilter] = useState(PRESCRIBING_DEFAULT_FILTER)
+  const [inStockOnly, setInStockOnly] = useState(true)
   const [filterCount, setFilterCount] = useState(0)
   const [reloadToken, setReloadToken] = useState(0)
 
-  const catalogQuery = useMemo(() => {
-    const params = new URLSearchParams(searchParams)
-    params.set("page", String(page))
-    params.set("page_size", String(PRESCRIBING_PAGE_SIZE))
+  const debouncedKw = useDebounce((paramsFilter.kw || "").trim(), PRESCRIBING_SEARCH_DEBOUNCE_MS)
 
-    const kw = (paramsFilter.kw || "").trim()
-    if (kw) params.set("kw", kw)
-    else params.delete("kw")
+  const hasSearchIntent = useMemo(
+    () =>
+      debouncedKw.length >= PRESCRIBING_MIN_SEARCH_LEN ||
+      (paramsFilter.cate && paramsFilter.cate !== 0),
+    [debouncedKw, paramsFilter.cate]
+  )
 
-    if (paramsFilter.cate && paramsFilter.cate !== 0) {
-      params.set("category", String(paramsFilter.cate))
-    } else {
-      params.delete("category")
-    }
+  const useSearchApi = debouncedKw.length >= PRESCRIBING_MIN_SEARCH_LEN
 
-    if (paramsFilter.price && paramsFilter.price !== "all") {
-      params.set("price_sort", paramsFilter.price)
-    } else {
-      params.delete("price_sort")
-    }
-
-    params.delete("cate")
-    params.delete("price")
-
-    const qs = params.toString()
-    return qs ? `?${qs}` : ""
-  }, [searchParams, page, paramsFilter])
+  const bumpReload = useCallback(() => {
+    setReloadToken((t) => t + 1)
+  }, [])
 
   const handleChangePage = useCallback((_event, value) => {
     setPage((prev) => {
@@ -62,20 +79,82 @@ const usePrescribingCatalog = ({ enabled = true } = {}) => {
     })
   }, [])
 
-  const handleOnSubmitFilter = useCallback((value) => {
+  const applyFilter = useCallback((nextFilter, options = {}) => {
+    const merged = { ...PRESCRIBING_DEFAULT_FILTER, ...nextFilter }
     setLoading(true)
-    setParamsFilter(value)
-    setFilterCount(countActiveFilters(value))
+    setParamsFilter(merged)
+    setFilterCount(countActiveFilters(merged, options.inStockOnly ?? inStockOnly))
     setPage(1)
-    setReloadToken((t) => t + 1)
+    bumpReload()
+  }, [inStockOnly, bumpReload])
+
+  const handleOnSubmitFilter = useCallback((value) => {
+    applyFilter(value)
+  }, [applyFilter])
+
+  const handleKeywordChange = useCallback((kw) => {
+    setParamsFilter((prev) => ({ ...prev, kw }))
+    setPage(1)
   }, [])
 
+  const handleRootCategoryChange = useCallback((rootCate, options = {}) => {
+    setParamsFilter((prev) => {
+      const merged = { ...prev, rootCate, cate: 0 }
+      setFilterCount(countActiveFilters(merged, inStockOnly))
+      return merged
+    })
+    setPage(1)
+    setVariants([])
+    if (!options.silent) {
+      setLoading(false)
+      setPagination({ count: 0, sizeNumber: 0 })
+    }
+  }, [inStockOnly])
+
+  const handleCategoryChange = useCallback((cate) => {
+    setParamsFilter((prev) => {
+      const merged = { ...prev, cate }
+      setFilterCount(countActiveFilters(merged, inStockOnly))
+      return merged
+    })
+    setPage(1)
+    setLoading(true)
+    bumpReload()
+  }, [inStockOnly, bumpReload])
+
+  const handleClearCategories = useCallback(() => {
+    setParamsFilter((prev) => {
+      const merged = { ...prev, rootCate: 0, cate: 0 }
+      setFilterCount(countActiveFilters(merged, inStockOnly))
+      return merged
+    })
+    setPage(1)
+    setVariants([])
+    setPagination({ count: 0, sizeNumber: 0 })
+    setLoading(false)
+    bumpReload()
+  }, [inStockOnly, bumpReload])
+
+  const handleInStockOnlyChange = useCallback((checked) => {
+    setInStockOnly(checked)
+    setFilterCount(countActiveFilters(paramsFilter, checked))
+    setPage(1)
+    bumpReload()
+  }, [paramsFilter, bumpReload])
+
   const refresh = useCallback(() => {
-    setReloadToken((t) => t + 1)
-  }, [])
+    bumpReload()
+  }, [bumpReload])
 
   useEffect(() => {
     if (!enabled) {
+      setLoading(false)
+      return undefined
+    }
+
+    if (!hasSearchIntent) {
+      setVariants([])
+      setPagination({ count: 0, sizeNumber: 0 })
       setLoading(false)
       return undefined
     }
@@ -85,21 +164,39 @@ const usePrescribingCatalog = ({ enabled = true } = {}) => {
     const load = async () => {
       setLoading(true)
       try {
-        const res = await fetchStoreProductVariants(catalogQuery)
-        if (cancelled) return
-        if (res.status === 200) {
-          const data = res.data
-          const results = Array.isArray(data?.results) ? data.results : []
-          const total = data.count ?? 0
-          setVariants(results)
-          setPagination({
-            count: total,
-            sizeNumber: Math.ceil(total / PRESCRIBING_PAGE_SIZE),
+        let results = []
+        let total = 0
+
+        if (useSearchApi) {
+          const res = await fetchStoreSearch({
+            q: debouncedKw,
+            page,
+            page_size: PRESCRIBING_PAGE_SIZE,
+            category: paramsFilter.cate && paramsFilter.cate !== 0 ? paramsFilter.cate : undefined,
+            in_stock: inStockOnly ? true : undefined,
+            sort: mapPriceFilterToSearchSort(paramsFilter.price, true),
           })
+          if (cancelled) return
+          if (res.status === 200) {
+            results = Array.isArray(res.data?.results) ? res.data.results : []
+            total = res.data?.count ?? res.data?.meta?.total ?? results.length
+          }
         } else {
-          setVariants([])
-          setPagination({ count: 0, sizeNumber: 0 })
+          const res = await fetchStoreProductVariants(
+            buildProductsQuery({ page, filter: paramsFilter, inStockOnly })
+          )
+          if (cancelled) return
+          if (res.status === 200) {
+            results = Array.isArray(res.data?.results) ? res.data.results : []
+            total = res.data?.count ?? 0
+          }
         }
+
+        setVariants(results)
+        setPagination({
+          count: total,
+          sizeNumber: Math.ceil(total / PRESCRIBING_PAGE_SIZE),
+        })
       } catch {
         if (!cancelled) {
           setVariants([])
@@ -114,11 +211,19 @@ const usePrescribingCatalog = ({ enabled = true } = {}) => {
     return () => {
       cancelled = true
     }
-  }, [catalogQuery, enabled, reloadToken])
+  }, [
+    enabled,
+    hasSearchIntent,
+    useSearchApi,
+    debouncedKw,
+    page,
+    paramsFilter,
+    inStockOnly,
+    reloadToken,
+  ])
 
   return {
     variants,
-    /** @deprecated use `variants` — alias for legacy components */
     medicineUnits: variants,
     loading,
     medicineLoading: loading,
@@ -126,7 +231,16 @@ const usePrescribingCatalog = ({ enabled = true } = {}) => {
     pagination,
     paramsFilter,
     filterCount,
+    inStockOnly,
+    isIdle: !hasSearchIntent,
+    hasSearchIntent,
     handleOnSubmitFilter,
+    handleKeywordChange,
+    handleRootCategoryChange,
+    handleCategoryChange,
+    handleClearCategories,
+    handleInStockOnlyChange,
+    setInStockOnly: handleInStockOnlyChange,
     handleChangePage,
     refresh,
     pageSize: PRESCRIBING_PAGE_SIZE,

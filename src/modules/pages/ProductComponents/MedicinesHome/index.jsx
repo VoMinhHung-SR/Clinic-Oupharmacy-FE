@@ -1,20 +1,18 @@
-import { useSelector } from "react-redux"
 import { Box, Paper, Stack, Pagination } from "@mui/material"
 import { useTranslation } from "react-i18next"
 import useMedicine from "../../../../lib/hooks/useMedicine"
-import { usePrescribingCatalog } from "../../../../features/prescribing"
+import { usePrescribingCatalog, CatalogPanel } from "../../../../features/prescribing"
+import useStoreCategoryTree from "../../../../features/prescribing/catalog/hooks/useStoreCategoryTree"
 import UserContext from "../../../../lib/context/UserContext"
 import SchemaModels from "../../../../lib/schema"
 import { useLocation } from "react-router"
-import { useContext, useMemo } from "react"
+import { useContext, useEffect, useMemo } from "react"
 import SkeletonPrescribingPage from "../../../common/components/skeletons/pages/prescribing-prescribing-page"
 import { ROLE_DOCTOR } from "../../../../lib/constants"
-import MedicineListPrescribing from "../MedicineListPrescribing"
 import MedicineGridProducts from "../MedicineGridProducts"
 
 const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit }) => {
   const { tReady } = useTranslation(["prescription-detail", "yup-validate", "modal", "medicine", "product"])
-  const { allConfig } = useSelector((state) => state.config)
   const { user } = useContext(UserContext)
   const { medicineLineItemSchema } = SchemaModels()
   const { pathname } = useLocation()
@@ -24,6 +22,16 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
 
   const productCatalog = useMedicine({ enabled: isProductsView })
   const prescribingCatalog = usePrescribingCatalog({ enabled: isPrescribingView })
+  const { handleRootCategoryChange, paramsFilter } = prescribingCatalog
+  const { tree: categoryTree, loading: categoryTreeLoading } = useStoreCategoryTree({
+    enabled: isPrescribingView,
+  })
+
+  useEffect(() => {
+    if (!isPrescribingView || !categoryTree.length || paramsFilter.rootCate) return
+    const thuoc = categoryTree.find((c) => c.slug === "thuoc") ?? categoryTree.find((c) => c.name === "Thuốc")
+    if (thuoc) handleRootCategoryChange(thuoc.id, { silent: true })
+  }, [isPrescribingView, categoryTree, paramsFilter.rootCate, handleRootCategoryChange])
 
   const {
     medicineUnits,
@@ -31,8 +39,6 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
     handleChangePage,
     pagination,
     medicineLoading,
-    paramsFilter,
-    handleOnSubmitFilter,
   } = isPrescribingView ? prescribingCatalog : productCatalog
 
   const handleAddToPrescription = (medicineUnit, data) => {
@@ -88,6 +94,11 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
     )
   }
 
+  const showPagination =
+    !medicineLoading &&
+    pagination.sizeNumber >= 2 &&
+    (!isPrescribingView || prescribingCatalog.hasSearchIntent)
+
   return (
     <Box
       sx={{
@@ -115,19 +126,27 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
         }}
       >
         {isPrescribingView && (
-          <MedicineListPrescribing
-            medicineUnits={medicineUnits}
-            medicineLoading={medicineLoading}
-            paramsFilter={paramsFilter}
-            handleOnSubmitFilter={handleOnSubmitFilter}
-            categories={allConfig.categories}
+          <CatalogPanel
+            variants={prescribingCatalog.medicineUnits}
+            loading={prescribingCatalog.medicineLoading}
+            isIdle={prescribingCatalog.isIdle}
+            paramsFilter={prescribingCatalog.paramsFilter}
+            categoryTree={categoryTree}
+            categoryTreeLoading={categoryTreeLoading}
+            inStockOnly={prescribingCatalog.inStockOnly}
+            onKeywordChange={prescribingCatalog.handleKeywordChange}
+            onRootCategoryChange={prescribingCatalog.handleRootCategoryChange}
+            onCategoryChange={prescribingCatalog.handleCategoryChange}
+            onClearCategories={prescribingCatalog.handleClearCategories}
+            onInStockOnlyChange={prescribingCatalog.handleInStockOnlyChange}
+            onSubmitFilter={prescribingCatalog.handleOnSubmitFilter}
             schema={medicineLineItemSchema}
             onAddToPrescription={handleAddToPrescription}
             availableStockMap={availableStockMap}
           />
         )}
         {isProductsView && <MedicineGridProducts medicines={medicineUnits} actionButton={actionButton} />}
-        {!medicineLoading && pagination.sizeNumber >= 2 && (
+        {showPagination && (
           <Box sx={{ flexShrink: 0, pt: 1.5, pb: 0.5 }}>
             <Stack>
               <Pagination
