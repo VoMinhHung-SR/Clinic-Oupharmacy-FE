@@ -3,7 +3,7 @@ import SearchIcon from "@mui/icons-material/Search"
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined"
 import { useTranslation } from "react-i18next"
 
-export default function CatalogEmptyState({ variant = "idle" }) {
+export default function CatalogEmptyState({ variant = "idle", compact = false }) {
   const { t } = useTranslation(["medicine"])
   const isIdle = variant === "idle"
 
@@ -11,7 +11,7 @@ export default function CatalogEmptyState({ variant = "idle" }) {
     <Box
       sx={{
         textAlign: "center",
-        py: 8,
+        py: compact ? 2 : 8,
         px: 2,
         color: "text.secondary",
       }}

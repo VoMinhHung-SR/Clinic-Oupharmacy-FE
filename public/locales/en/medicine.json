@@ -19,7 +19,7 @@
     "resultOfTotal": "({{result}} results)",
     "all": "All",
     "search": "Search",
-    "searchPlaceholder": "Search medicine, active ingredient, barcode...",
+    "searchPlaceholder": "Search medicine name, barcode...",
     "medicineList": "Medicine List",
     "filter": "Filter",
     "inStockLabel": "In stock {{count}}",
@@ -28,7 +28,7 @@
     "orderStockLabel": "Order stock",
     "inStockOnly": "In stock only",
     "catalogSearchIdleTitle": "Search to prescribe",
-    "catalogSearchIdleHint": "Type a medicine name or pick a detailed group under Medicine.",
+    "catalogSearchIdleHint": "Type a medicine name or pick from frequently / recently prescribed below.",
     "subcategory": "Medicine group",
     "pickSubcategory": "Select group",
     "subcategoryGroup": "Groups in {{name}}",
@@ -39,5 +39,13 @@
     "pickSubcategoryHint": "Pick a medicine group below (under {{name}}) or type to search.",
     "catalogNoResults": "No medicines found",
     "catalogNoResultsHint": "Try another keyword or change category / filters.",
-    "searchKeyboardHint": "Press / to focus search"
+    "searchKeyboardHint": "Press / to focus search",
+    "advancedFilters": "Advanced filters",
+    "quickAccessFrequent": "Frequently prescribed",
+    "quickAccessRecent": "Recent",
+    "quickAccessLoading": "Loading your medicines...",
+    "quickAddTitle": "Quick add: {{name}}",
+    "quickAddLastUsed": "Last used — edit if needed",
+    "quickAddClose": "Close",
+    "searchLoading": "Searching..."
 }

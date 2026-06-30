@@ -5,6 +5,8 @@ import UserContext from "../../../lib/context/UserContext"
 import SchemaModels from "../../../lib/schema"
 import usePrescribingCatalog from "./hooks/usePrescribingCatalog"
 import useStoreCategoryTree from "./hooks/useStoreCategoryTree"
+import usePrescriberMedicinePrefs from "./hooks/usePrescriberMedicinePrefs"
+import useMedicinePicker from "./hooks/useMedicinePicker"
 import CatalogPanel from "./CatalogPanel"
 import { usePrescribingSearchFocus } from "../hooks/usePrescribingSearchFocus"
 import SkeletonPrescribingPage from "../../../modules/common/components/skeletons/pages/prescribing-prescribing-page"
@@ -19,6 +21,12 @@ export default function PrescribingCatalogSection({ onAddMedicineLineItem, medic
 
   usePrescribingSearchFocus(searchInputRef)
 
+  const { prefs, loading: prefsLoading, frequentVariantIds, getPrefillForVariant, boostVariants } =
+    usePrescriberMedicinePrefs({ enabled: Boolean(user) })
+
+  const { selectedVariant, selectionPrefill, selectVariant, selectPrefEntry, clearSelection } =
+    useMedicinePicker({ getPrefillForVariant })
+
   const { tree: categoryTree, loading: categoryTreeLoading } = useStoreCategoryTree({
     enabled: Boolean(user),
   })
@@ -26,6 +34,11 @@ export default function PrescribingCatalogSection({ onAddMedicineLineItem, medic
   const { handleRootCategoryChange, paramsFilter } = prescribingCatalog
 
   const { medicineUnits, page, handleChangePage, pagination, medicineLoading } = prescribingCatalog
+
+  const displayVariants = useMemo(
+    () => boostVariants(medicineUnits),
+    [medicineUnits, boostVariants]
+  )
 
   useEffect(() => {
     if (!categoryTree.length || paramsFilter.rootCate) return
@@ -39,7 +52,11 @@ export default function PrescribingCatalogSection({ onAddMedicineLineItem, medic
 
   const availableStockMap = useMemo(() => {
     const map = new Map()
-    medicineUnits.forEach((unit) => {
+    const unitsForStock = [...medicineUnits]
+    if (selectedVariant && !unitsForStock.some((u) => u.id === selectedVariant.id)) {
+      unitsForStock.push(selectedVariant)
+    }
+    unitsForStock.forEach((unit) => {
       const reservedBase =
         medicinesSubmit
           ?.filter((item) => item.id === unit.id)
@@ -50,7 +67,7 @@ export default function PrescribingCatalogSection({ onAddMedicineLineItem, medic
       map.set(unit.id, Math.max(0, Number(unit.in_stock ?? 0) - reservedBase))
     })
     return map
-  }, [medicineUnits, medicinesSubmit])
+  }, [medicineUnits, medicinesSubmit, selectedVariant])
 
   if (!tReady && medicineLoading) {
     return <SkeletonPrescribingPage.ListSection />
@@ -71,7 +88,7 @@ export default function PrescribingCatalogSection({ onAddMedicineLineItem, medic
       }}
     >
       <CatalogPanel
-        variants={prescribingCatalog.medicineUnits}
+        variants={displayVariants}
         loading={prescribingCatalog.medicineLoading}
         isIdle={prescribingCatalog.isIdle}
         paramsFilter={prescribingCatalog.paramsFilter}
@@ -88,6 +105,15 @@ export default function PrescribingCatalogSection({ onAddMedicineLineItem, medic
         onAddToPrescription={onAddMedicineLineItem}
         availableStockMap={availableStockMap}
         searchInputRef={searchInputRef}
+        prefs={prefs}
+        prefsLoading={prefsLoading}
+        frequentVariantIds={frequentVariantIds}
+        boostVariants={boostVariants}
+        selectedVariant={selectedVariant}
+        selectionPrefill={selectionPrefill}
+        onSelectVariant={selectVariant}
+        onSelectPrefEntry={selectPrefEntry}
+        onClearSelection={clearSelection}
       />
       {showPagination ? (
         <Box sx={{ flexShrink: 0, pt: 1.5, pb: 0.5 }}>
