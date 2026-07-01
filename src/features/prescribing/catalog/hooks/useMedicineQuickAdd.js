@@ -24,7 +24,7 @@ export default function useMedicineQuickAdd({
     () => (Array.isArray(variant?.unit_options) ? variant.unit_options : []),
     [variant?.unit_options]
   )
-  const hasMultipleSaleUnits = saleUnitOptions.length > 1
+  const hasSaleUnits = saleUnitOptions.length > 0
 
   const { register, handleSubmit, formState: { errors }, reset, setError } = useForm({
     resolver: yupResolver(schema),
@@ -73,7 +73,7 @@ export default function useMedicineQuickAdd({
     selectedSaleUnitId,
     setSelectedSaleUnitId,
     saleUnitOptions,
-    hasMultipleSaleUnits,
+    hasSaleUnits,
     maxSaleQty,
     enrichedPreview,
   }

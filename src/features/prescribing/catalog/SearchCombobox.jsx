@@ -14,6 +14,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search"
 import StarIcon from "@mui/icons-material/Star"
 import { useTranslation } from "react-i18next"
+import SearchResultSkeleton from "./SearchResultSkeleton"
 import useDebounce from "../../../lib/hooks/useDebounce"
 import { fetchStoreSearch } from "../api/storeCatalog"
 import { PRESCRIBING_MIN_SEARCH_LEN, PRESCRIBING_PAGE_SIZE, PRESCRIBING_SEARCH_DEBOUNCE_MS } from "../constants"
@@ -25,7 +26,6 @@ export default function SearchCombobox({
   frequentVariantIds,
   boostVariants,
   onSelectVariant,
-  inStockOnly,
   categoryId,
 }) {
   const { t } = useTranslation(["medicine"])
@@ -38,6 +38,10 @@ export default function SearchCombobox({
   const requestIdRef = useRef(0)
 
   const debouncedKw = useDebounce((keyword || "").trim(), PRESCRIBING_SEARCH_DEBOUNCE_MS)
+  const trimmedKw = (keyword || "").trim()
+  const isSearchActive = trimmedKw.length >= PRESCRIBING_MIN_SEARCH_LEN
+  const isDebouncing = isSearchActive && trimmedKw !== debouncedKw
+  const showResultsLoading = loading || isDebouncing
 
   const loadOptions = useCallback(async () => {
     const q = debouncedKw
@@ -56,7 +60,6 @@ export default function SearchCombobox({
         page_size: PRESCRIBING_PAGE_SIZE,
         sort: "relevance",
       }
-      if (inStockOnly) params.in_stock = true
       if (categoryId) params.category = categoryId
 
       const res = await fetchStoreSearch(params)
@@ -75,7 +78,7 @@ export default function SearchCombobox({
     } finally {
       if (reqId === requestIdRef.current) setLoading(false)
     }
-  }, [debouncedKw, inStockOnly, categoryId, boostVariants])
+  }, [debouncedKw, categoryId, boostVariants])
 
   useEffect(() => {
     loadOptions()
@@ -161,23 +164,19 @@ export default function SearchCombobox({
         />
 
         <Popper
-          open={open && debouncedKw.length >= PRESCRIBING_MIN_SEARCH_LEN}
+          open={open && isSearchActive}
           anchorEl={anchorRef.current}
           placement="bottom-start"
           style={{ zIndex: 1300, width: anchorRef.current?.offsetWidth }}
         >
           <Paper elevation={4} sx={{ maxHeight: 280, overflow: "auto", mt: 0.5 }}>
-            {loading && (
-              <Typography variant="body2" color="text.secondary" sx={{ p: 1.5 }}>
-                {t("medicine:searchLoading")}
-              </Typography>
-            )}
-            {!loading && options.length === 0 && (
+            {showResultsLoading && <SearchResultSkeleton rows={4} />}
+            {!showResultsLoading && options.length === 0 && (
               <Typography variant="body2" color="text.secondary" sx={{ p: 1.5 }}>
                 {t("medicine:catalogNoResults")}
               </Typography>
             )}
-            {!loading && options.length > 0 && (
+            {!showResultsLoading && options.length > 0 && (
               <List
                 dense
                 disablePadding

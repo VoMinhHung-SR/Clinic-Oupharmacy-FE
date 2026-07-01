@@ -28,7 +28,7 @@
     "orderStockLabel": "Order stock",
     "inStockOnly": "In stock only",
     "catalogSearchIdleTitle": "Search to prescribe",
-    "catalogSearchIdleHint": "Type a medicine name or pick from frequently / recently prescribed below.",
+    "catalogSearchIdleHint": "Search by name or barcode, or pick from frequently and recently prescribed medicines.",
     "subcategory": "Medicine group",
     "pickSubcategory": "Select group",
     "subcategoryGroup": "Groups in {{name}}",

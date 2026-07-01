@@ -6,7 +6,7 @@ import useStoreCategoryTree from "../../../../features/prescribing/catalog/hooks
 import UserContext from "../../../../lib/context/UserContext"
 import SchemaModels from "../../../../lib/schema"
 import { useLocation } from "react-router"
-import { useContext, useEffect, useMemo } from "react"
+import { useContext, useEffect, useMemo, useRef } from "react"
 import SkeletonPrescribingPage from "../../../common/components/skeletons/pages/prescribing-prescribing-page"
 import { ROLE_DOCTOR } from "../../../../lib/constants"
 import MedicineGridProducts from "../MedicineGridProducts"
@@ -23,14 +23,18 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
   const productCatalog = useMedicine({ enabled: isProductsView })
   const prescribingCatalog = usePrescribingCatalog({ enabled: isPrescribingView })
   const { handleRootCategoryChange, paramsFilter } = prescribingCatalog
+  const didAutoRoot = useRef(false)
   const { tree: categoryTree, loading: categoryTreeLoading } = useStoreCategoryTree({
     enabled: isPrescribingView,
   })
 
   useEffect(() => {
-    if (!isPrescribingView || !categoryTree.length || paramsFilter.rootCate) return
+    if (didAutoRoot.current || !isPrescribingView || !categoryTree.length || paramsFilter.rootCate) return
     const thuoc = categoryTree.find((c) => c.slug === "thuoc") ?? categoryTree.find((c) => c.name === "Thuốc")
-    if (thuoc) handleRootCategoryChange(thuoc.id, { silent: true })
+    if (thuoc) {
+      didAutoRoot.current = true
+      handleRootCategoryChange(thuoc.id, { silent: true })
+    }
   }, [isPrescribingView, categoryTree, paramsFilter.rootCate, handleRootCategoryChange])
 
   const {
@@ -133,16 +137,15 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
             paramsFilter={prescribingCatalog.paramsFilter}
             categoryTree={categoryTree}
             categoryTreeLoading={categoryTreeLoading}
-            inStockOnly={prescribingCatalog.inStockOnly}
             onKeywordChange={prescribingCatalog.handleKeywordChange}
             onRootCategoryChange={prescribingCatalog.handleRootCategoryChange}
             onCategoryChange={prescribingCatalog.handleCategoryChange}
             onClearCategories={prescribingCatalog.handleClearCategories}
-            onInStockOnlyChange={prescribingCatalog.handleInStockOnlyChange}
             onSubmitFilter={prescribingCatalog.handleOnSubmitFilter}
             schema={medicineLineItemSchema}
             onAddToPrescription={handleAddToPrescription}
             availableStockMap={availableStockMap}
+            hasBrowseIntent={prescribingCatalog.hasBrowseIntent}
           />
         )}
         {isProductsView && <MedicineGridProducts medicines={medicineUnits} actionButton={actionButton} />}

@@ -1,6 +1,5 @@
 import { Box, Stack, Pagination } from "@mui/material"
 import { useContext, useEffect, useMemo, useRef } from "react"
-import { useTranslation } from "react-i18next"
 import UserContext from "../../../lib/context/UserContext"
 import SchemaModels from "../../../lib/schema"
 import usePrescribingCatalog from "./hooks/usePrescribingCatalog"
@@ -9,12 +8,10 @@ import usePrescriberMedicinePrefs from "./hooks/usePrescriberMedicinePrefs"
 import useMedicinePicker from "./hooks/useMedicinePicker"
 import CatalogPanel from "./CatalogPanel"
 import { usePrescribingSearchFocus } from "../hooks/usePrescribingSearchFocus"
-import SkeletonPrescribingPage from "../../../modules/common/components/skeletons/pages/prescribing-prescribing-page"
 
 const DEFAULT_ROOT_SLUG = "thuoc"
 
 export default function PrescribingCatalogSection({ onAddMedicineLineItem, medicinesSubmit }) {
-  const { tReady } = useTranslation(["prescription-detail", "yup-validate", "modal", "medicine", "product"])
   const { user } = useContext(UserContext)
   const { medicineLineItemSchema } = SchemaModels()
   const searchInputRef = useRef(null)
@@ -32,6 +29,7 @@ export default function PrescribingCatalogSection({ onAddMedicineLineItem, medic
   })
   const prescribingCatalog = usePrescribingCatalog({ enabled: Boolean(user) })
   const { handleRootCategoryChange, paramsFilter } = prescribingCatalog
+  const didAutoRoot = useRef(false)
 
   const { medicineUnits, page, handleChangePage, pagination, medicineLoading } = prescribingCatalog
 
@@ -41,11 +39,12 @@ export default function PrescribingCatalogSection({ onAddMedicineLineItem, medic
   )
 
   useEffect(() => {
-    if (!categoryTree.length || paramsFilter.rootCate) return
+    if (didAutoRoot.current || !categoryTree.length || paramsFilter.rootCate) return
     const defaultRoot =
       categoryTree.find((c) => c.slug === DEFAULT_ROOT_SLUG) ??
       categoryTree.find((c) => c.name === "Thuốc")
     if (defaultRoot) {
+      didAutoRoot.current = true
       handleRootCategoryChange(defaultRoot.id, { silent: true })
     }
   }, [categoryTree, paramsFilter.rootCate, handleRootCategoryChange])
@@ -69,12 +68,10 @@ export default function PrescribingCatalogSection({ onAddMedicineLineItem, medic
     return map
   }, [medicineUnits, medicinesSubmit, selectedVariant])
 
-  if (!tReady && medicineLoading) {
-    return <SkeletonPrescribingPage.ListSection />
-  }
-
   const showPagination =
-    !medicineLoading && pagination.sizeNumber >= 2 && prescribingCatalog.hasSearchIntent
+    !medicineLoading &&
+    pagination.sizeNumber >= 2 &&
+    prescribingCatalog.hasBrowseIntent
 
   return (
     <Box
@@ -94,12 +91,10 @@ export default function PrescribingCatalogSection({ onAddMedicineLineItem, medic
         paramsFilter={prescribingCatalog.paramsFilter}
         categoryTree={categoryTree}
         categoryTreeLoading={categoryTreeLoading}
-        inStockOnly={prescribingCatalog.inStockOnly}
         onKeywordChange={prescribingCatalog.handleKeywordChange}
         onRootCategoryChange={prescribingCatalog.handleRootCategoryChange}
         onCategoryChange={prescribingCatalog.handleCategoryChange}
         onClearCategories={prescribingCatalog.handleClearCategories}
-        onInStockOnlyChange={prescribingCatalog.handleInStockOnlyChange}
         onSubmitFilter={prescribingCatalog.handleOnSubmitFilter}
         schema={medicineLineItemSchema}
         onAddToPrescription={onAddMedicineLineItem}
@@ -114,6 +109,7 @@ export default function PrescribingCatalogSection({ onAddMedicineLineItem, medic
         onSelectVariant={selectVariant}
         onSelectPrefEntry={selectPrefEntry}
         onClearSelection={clearSelection}
+        hasBrowseIntent={prescribingCatalog.hasBrowseIntent}
       />
       {showPagination ? (
         <Box sx={{ flexShrink: 0, pt: 1.5, pb: 0.5 }}>

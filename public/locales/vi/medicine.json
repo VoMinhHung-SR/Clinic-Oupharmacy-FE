@@ -28,7 +28,7 @@
     "filter": "Bộ lọc",
     "inStockOnly": "Chỉ còn hàng",
     "catalogSearchIdleTitle": "Tìm thuốc để kê toa",
-    "catalogSearchIdleHint": "Gõ tên thuốc hoặc chọn thuốc thường kê / gần đây bên dưới.",
+    "catalogSearchIdleHint": "Tìm theo tên hoặc mã vạch, hoặc chọn nhanh từ thuốc thường kê và vừa kê.",
     "subcategory": "Nhóm thuốc",
     "pickSubcategory": "Chọn nhóm",
     "subcategoryGroup": "Nhóm trong {{name}}",

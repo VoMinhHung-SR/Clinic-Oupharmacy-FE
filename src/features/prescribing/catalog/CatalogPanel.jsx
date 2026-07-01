@@ -1,4 +1,4 @@
-import { Box, Button, Collapse, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
+import { Box, Button, Collapse } from "@mui/material"
 import FilterListIcon from "@mui/icons-material/FilterList"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -8,6 +8,7 @@ import CatalogCompactList from "./CatalogCompactList"
 import CatalogEmptyState from "./CatalogEmptyState"
 import MedicineQuickAccess from "./MedicineQuickAccess"
 import MedicineQuickAdd from "./MedicineQuickAdd"
+import { PRESCRIBING_MIN_SEARCH_LEN } from "../constants"
 
 export default function CatalogPanel({
   variants,
@@ -18,10 +19,8 @@ export default function CatalogPanel({
   categoryTreeLoading,
   onRootCategoryChange,
   onClearCategories,
-  inStockOnly,
   onKeywordChange,
   onCategoryChange,
-  onInStockOnlyChange,
   onSubmitFilter,
   schema,
   onAddToPrescription,
@@ -36,13 +35,16 @@ export default function CatalogPanel({
   onSelectVariant,
   onSelectPrefEntry,
   onClearSelection,
+  hasBrowseIntent = false,
 }) {
   const { t } = useTranslation(["prescription-detail", "medicine", "common"])
   const [showAdvanced, setShowAdvanced] = useState(false)
 
-  const showBrowseList =
-    !isIdle && !selectedVariant && (paramsFilter.kw || "").trim().length < 2
+  const kwActive = (paramsFilter.kw || "").trim().length >= PRESCRIBING_MIN_SEARCH_LEN
+  const showBrowseList = hasBrowseIntent && !kwActive
   const showIdleQuickAccess = isIdle && !selectedVariant
+  const showSearchBrowseHint = hasBrowseIntent && kwActive && !selectedVariant
+  const showResultsPanel = showBrowseList || showIdleQuickAccess || showSearchBrowseHint
   const categoryId = paramsFilter.cate && paramsFilter.cate !== 0 ? paramsFilter.cate : undefined
 
   return (
@@ -63,7 +65,6 @@ export default function CatalogPanel({
           frequentVariantIds={frequentVariantIds}
           boostVariants={boostVariants}
           onSelectVariant={onSelectVariant}
-          inStockOnly={inStockOnly}
           categoryId={categoryId}
         />
 
@@ -101,75 +102,67 @@ export default function CatalogPanel({
               onRootCategoryChange={onRootCategoryChange}
               onCategoryChange={onCategoryChange}
               onClearCategories={onClearCategories}
-              inStockOnly={inStockOnly}
-              onInStockOnlyChange={onInStockOnlyChange}
-            />
-            <Box
-              component="form"
-              onSubmit={(e) => {
-                e.preventDefault()
-                const fd = new FormData(e.currentTarget)
+              onSearch={() =>
                 onSubmitFilter({
                   kw: paramsFilter.kw,
                   rootCate: paramsFilter.rootCate,
                   cate: paramsFilter.cate,
-                  price: fd.get("price") || "all",
                 })
-              }}
-              sx={{ display: "flex", gap: 2, flexWrap: "wrap", alignItems: "center", mt: 1 }}
-            >
-              <FormControl size="small" sx={{ minWidth: 120 }}>
-                <InputLabel>{t("medicine:price")}</InputLabel>
-                <Select name="price" label={t("medicine:price")} defaultValue={paramsFilter.price ?? "all"}>
-                  <MenuItem value="all">{t("medicine:all")}</MenuItem>
-                  <MenuItem value="asc">{t("common:asc")}</MenuItem>
-                  <MenuItem value="desc">{t("common:desc")}</MenuItem>
-                </Select>
-              </FormControl>
-              <Button type="submit" variant="outlined" size="small">
-                {t("medicine:search")}
-              </Button>
-            </Box>
+              }
+            />
           </Box>
         </Collapse>
       </Box>
 
-      <Box
-        sx={{
-          flex: 1,
-          minHeight: 0,
-          overflowY: "auto",
-          overflowX: "hidden",
-          WebkitOverflowScrolling: "touch",
-          borderRadius: 1,
-          border: "1px solid",
-          borderColor: "divider",
-          mt: 0.5,
-          px: 1.5,
-        }}
-      >
-        {showIdleQuickAccess && (
-          <>
-            <CatalogEmptyState variant="idle" compact />
-            <MedicineQuickAccess
-              prefs={prefs}
-              loading={prefsLoading}
-              onSelectEntry={onSelectPrefEntry}
-            />
-          </>
-        )}
+      {showResultsPanel ? (
+        <Box
+          sx={{
+            flex: 1,
+            minHeight: showIdleQuickAccess ? { xs: 280, md: 340 } : 120,
+            display: showIdleQuickAccess ? "flex" : "block",
+            flexDirection: showIdleQuickAccess ? "column" : undefined,
+            alignItems: showIdleQuickAccess ? "center" : undefined,
+            justifyContent: showIdleQuickAccess ? "center" : undefined,
+            overflowY: "auto",
+            overflowX: "hidden",
+            WebkitOverflowScrolling: "touch",
+            borderRadius: 1,
+            border: "1px solid",
+            borderColor: "divider",
+            mt: 0.5,
+            px: 1.5,
+            py: showIdleQuickAccess ? 2 : 0,
+          }}
+        >
+          {showIdleQuickAccess && (
+            <>
+              <CatalogEmptyState variant="idle" compact centered />
+              <Box sx={{ width: "100%", maxWidth: 720, mt: 1 }}>
+                <MedicineQuickAccess
+                  prefs={prefs}
+                  loading={prefsLoading}
+                  onSelectEntry={onSelectPrefEntry}
+                />
+              </Box>
+            </>
+          )}
 
-        {showBrowseList && (
-          <CatalogCompactList
-            variants={variants}
-            loading={loading}
-            isIdle={isIdle}
-            frequentVariantIds={frequentVariantIds}
-            onSelectVariant={onSelectVariant}
-            selectedVariantId={selectedVariant?.id}
-          />
-        )}
-      </Box>
+          {showSearchBrowseHint && (
+            <CatalogEmptyState variant="idle" compact />
+          )}
+
+          {showBrowseList && (
+            <CatalogCompactList
+              variants={variants}
+              loading={loading}
+              isIdle={isIdle}
+              frequentVariantIds={frequentVariantIds}
+              onSelectVariant={onSelectVariant}
+              selectedVariantId={selectedVariant?.id}
+            />
+          )}
+        </Box>
+      ) : null}
     </Box>
   )
 }

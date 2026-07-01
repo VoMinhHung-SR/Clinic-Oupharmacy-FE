@@ -1,9 +1,9 @@
 import {
   Box,
   Button,
-  Chip,
   FormControl,
   IconButton,
+  InputLabel,
   MenuItem,
   Paper,
   Select,
@@ -12,8 +12,10 @@ import {
 } from "@mui/material"
 import CloseIcon from "@mui/icons-material/Close"
 import AddIcon from "@mui/icons-material/Add"
+import { alpha } from "@mui/material/styles"
 import { useTranslation } from "react-i18next"
 import useMedicineQuickAdd from "./hooks/useMedicineQuickAdd"
+import StockStatusBadge from "./StockStatusBadge"
 
 export default function MedicineQuickAdd({
   variant,
@@ -42,7 +44,7 @@ export default function MedicineQuickAdd({
     selectedSaleUnitId,
     setSelectedSaleUnitId,
     saleUnitOptions,
-    hasMultipleSaleUnits,
+    hasSaleUnits,
     maxSaleQty,
     enrichedPreview,
   } = useMedicineQuickAdd({
@@ -79,33 +81,30 @@ export default function MedicineQuickAdd({
       component="form"
       variant="outlined"
       onSubmit={handleSubmit(submitWithStockCheck)}
-      sx={{ p: 1.5, mb: 1, bgcolor: "action.hover", borderColor: "primary.light" }}
+      sx={(theme) => ({
+        p: 1.5,
+        mb: 1,
+        bgcolor: alpha(theme.palette.primary.main, 0.06),
+        borderColor: alpha(theme.palette.primary.main, 0.28),
+        borderWidth: 1,
+      })}
     >
-      <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 1, mb: 1 }}>
-        <Box sx={{ minWidth: 0 }}>
-          <Typography variant="subtitle2" fontWeight={600} noWrap title={name}>
+      <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1, mb: 1.25 }}>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Typography variant="subtitle2" fontWeight={600} sx={{ lineHeight: 1.35 }} title={name}>
             {t("medicine:quickAddTitle", { name })}
           </Typography>
           {showLastUsed && (
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 0.25 }}>
               {t("medicine:quickAddLastUsed")}
             </Typography>
           )}
         </Box>
-        <IconButton size="small" onClick={onClose} aria-label={t("medicine:quickAddClose")}>
+        {stockNum !== null ? <StockStatusBadge count={stockNum} /> : null}
+        <IconButton size="small" onClick={onClose} aria-label={t("medicine:quickAddClose")} sx={{ mt: -0.25 }}>
           <CloseIcon fontSize="small" />
         </IconButton>
       </Box>
-
-      {stockNum !== null && (
-        <Box sx={{ mb: 1 }}>
-          {stockNum === 0 ? (
-            <Chip size="small" label={t("medicine:outOfStockLabel")} color="error" />
-          ) : (
-            <Chip size="small" label={t("medicine:inStockLabel", { count: stockNum })} color="success" />
-          )}
-        </Box>
-      )}
 
       <Box
         sx={{
@@ -115,22 +114,25 @@ export default function MedicineQuickAdd({
           alignItems: "start",
         }}
       >
-        {hasMultipleSaleUnits ? (
+        {hasSaleUnits ? (
           <FormControl size="small" fullWidth>
+            <InputLabel id="quick-add-packaging-label">{t("medicine:packaging")}</InputLabel>
             <Select
+              labelId="quick-add-packaging-label"
+              label={t("medicine:packaging")}
               value={selectedSaleUnitId ?? ""}
               onChange={(e) => setSelectedSaleUnitId(Number(e.target.value))}
-              aria-label={t("medicine:packaging")}
             >
               {saleUnitOptions.map((opt) => (
                 <MenuItem key={opt.unit_id} value={opt.unit_id}>
                   {opt.unit_name || "—"}
+                  {Number(opt.quantity_in_base) > 1 ? ` (×${opt.quantity_in_base})` : ""}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         ) : (
-          <Typography variant="body2" color="text.secondary" sx={{ alignSelf: "center" }}>
+          <Typography variant="body2" color="text.secondary" sx={{ alignSelf: "center", px: 0.5 }}>
             {packagingLabel || "—"}
           </Typography>
         )}

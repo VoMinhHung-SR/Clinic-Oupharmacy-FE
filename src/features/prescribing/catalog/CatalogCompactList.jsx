@@ -1,9 +1,20 @@
-import { Box, Chip, List, ListItemButton, ListItemText, Typography } from "@mui/material"
+import { Box, List, ListItemButton, Typography } from "@mui/material"
 import StarIcon from "@mui/icons-material/Star"
-import { useTranslation } from "react-i18next"
-import SkeletonPrescribingPage from "../../../modules/common/components/skeletons/pages/prescribing-prescribing-page"
+import SearchResultSkeleton from "./SearchResultSkeleton"
 import CatalogEmptyState from "./CatalogEmptyState"
+import StockStatusBadge from "./StockStatusBadge"
 
+const pickVariantId = (variant) => variant?.id ?? variant?.product_variant_id ?? null
+
+const pickName = (variant) =>
+  variant?.medicine?.name || variant?.product?.web_name || variant?.product?.name || "—"
+
+const pickPackaging = (variant) =>
+  variant?.packaging || variant?.packing || variant?.package_size || ""
+
+/**
+ * Category browse rows — avoids MUI Chip (styled engine issues on Vite dev).
+ */
 export default function CatalogCompactList({
   variants,
   loading,
@@ -12,32 +23,31 @@ export default function CatalogCompactList({
   onSelectVariant,
   selectedVariantId,
 }) {
-  const { t } = useTranslation(["medicine"])
-
   if (loading) {
-    return <SkeletonPrescribingPage.ListSectionRows />
+    return <SearchResultSkeleton rows={5} />
   }
 
   if (isIdle) {
     return null
   }
 
-  if (!variants.length) {
+  if (!variants?.length) {
     return <CatalogEmptyState variant="empty" />
   }
 
   return (
-    <List dense disablePadding sx={{ py: 0.5 }}>
-      {variants.map((variant) => {
-        const name = variant.medicine?.name || variant.product?.web_name || "—"
-        const packaging = variant.packaging || variant.packing || ""
-        const isFrequent = frequentVariantIds?.has(variant.id)
-        const isSelected = selectedVariantId === variant.id
-        const stock = Number(variant.in_stock ?? 0)
+    <List dense disablePadding sx={{ py: 0.5 }} role="list">
+      {variants.map((variant, index) => {
+        const variantId = pickVariantId(variant)
+        const name = pickName(variant)
+        const packaging = pickPackaging(variant)
+        const isFrequent = variantId != null && frequentVariantIds?.has?.(variantId)
+        const isSelected = variantId != null && selectedVariantId === variantId
+        const stock = Number(variant?.in_stock ?? 0)
 
         return (
           <ListItemButton
-            key={variant.id}
+            key={variantId ?? `variant-${index}`}
             selected={isSelected}
             onClick={() => onSelectVariant(variant)}
             sx={{
@@ -45,25 +55,26 @@ export default function CatalogCompactList({
               mb: 0.5,
               border: "1px solid",
               borderColor: isSelected ? "primary.main" : "divider",
+              alignItems: "flex-start",
+              py: 1,
             }}
           >
-            <ListItemText
-              primary={
-                <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, minWidth: 0 }}>
-                  {isFrequent && <StarIcon sx={{ fontSize: 16, color: "warning.main", flexShrink: 0 }} />}
-                  <Typography variant="body2" fontWeight={500} noWrap title={name}>
-                    {name}
-                  </Typography>
-                </Box>
-              }
-              secondary={packaging || undefined}
-            />
-            <Chip
-              size="small"
-              label={stock > 0 ? t("medicine:inStockLabel", { count: stock }) : t("medicine:outOfStockLabel")}
-              color={stock > 0 ? "success" : "error"}
-              sx={{ ml: 1, flexShrink: 0 }}
-            />
+            <Box sx={{ flex: 1, minWidth: 0, pr: 1 }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, minWidth: 0 }}>
+                {isFrequent ? (
+                  <StarIcon sx={{ fontSize: 16, color: "warning.main", flexShrink: 0 }} aria-hidden />
+                ) : null}
+                <Typography variant="body2" fontWeight={500} title={name} sx={{ wordBreak: "break-word" }}>
+                  {name}
+                </Typography>
+              </Box>
+              {packaging ? (
+                <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.25 }}>
+                  {packaging}
+                </Typography>
+              ) : null}
+            </Box>
+            <StockStatusBadge count={stock} />
           </ListItemButton>
         )
       })}
