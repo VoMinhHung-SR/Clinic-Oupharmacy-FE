@@ -47,5 +47,18 @@ export const fetchStoreSearchSuggest = async (q) => {
   return authApi().get(`${endpoints["store-search-suggest"]}?${params.toString()}`)
 }
 
+/** All published variants for one store product (no search dedupe). */
+export const fetchVariantsByProductId = async (productId, { pageSize = 20 } = {}) => {
+  const params = new URLSearchParams({
+    product: String(productId),
+    page_size: String(pageSize),
+  })
+  const res = await authApi().get(`${endpoints["product-variants"]}?${params.toString()}`)
+  if (res?.data) {
+    res.data = normalizeStoreVariantResponse(res.data)
+  }
+  return res
+}
+
 /** Nested store categories (level0 → level1 → level2), source of truth for prescribing nav. */
 export const fetchStoreCategories = async () => authApi().get(endpoints["store-categories"])

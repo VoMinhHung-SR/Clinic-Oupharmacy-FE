@@ -6,4 +6,6 @@ export {
   getQuantityInBase,
   getMaxSaleQuantity,
   enrichVariantForPrescribing,
+  resolveProductEntityId,
+  hasMultipleVariants,
 } from "../../../lib/adapters/storeProduct"

@@ -3,7 +3,7 @@ import useMedicine from "../../../lib/hooks/useMedicine"
 import { Box, Button, Divider, FormControl, InputAdornment, InputLabel, MenuItem, OutlinedInput, Pagination, Paper, Select, Stack,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Grid, Badge } from "@mui/material";
 import { Helmet } from "react-helmet";
-import MedicineUnitLineItem from "../../../modules/pages/MedicineComponent/MedicineUnitLineItem";
+import MedicineUnitLineItem from "../../../modules/pages/ProductComponents/admin/MedicineUnitLineItem";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CustomModal from "../../../modules/common/components/Modal";
 import useCustomModal from "../../../lib/hooks/useCustomModal";

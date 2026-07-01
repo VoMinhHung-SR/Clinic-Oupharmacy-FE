@@ -1,5 +1,6 @@
 import { Box, List, ListItemButton, Typography } from "@mui/material"
 import StarIcon from "@mui/icons-material/Star"
+import { useTranslation } from "react-i18next"
 import SearchResultSkeleton from "./SearchResultSkeleton"
 import CatalogEmptyState from "./CatalogEmptyState"
 import StockStatusBadge from "./StockStatusBadge"
@@ -23,6 +24,8 @@ export default function CatalogCompactList({
   onSelectVariant,
   selectedVariantId,
 }) {
+  const { t } = useTranslation(["medicine"])
+
   if (loading) {
     return <SearchResultSkeleton rows={5} />
   }
@@ -41,6 +44,11 @@ export default function CatalogCompactList({
         const variantId = pickVariantId(variant)
         const name = pickName(variant)
         const packaging = pickPackaging(variant)
+        const variantCount = Number(variant?.variant_count ?? 1)
+        const detailParts = [
+          packaging,
+          variantCount > 1 ? t("medicine:variantCount", { count: variantCount }) : null,
+        ].filter(Boolean)
         const isFrequent = variantId != null && frequentVariantIds?.has?.(variantId)
         const isSelected = variantId != null && selectedVariantId === variantId
         const stock = Number(variant?.in_stock ?? 0)
@@ -68,9 +76,9 @@ export default function CatalogCompactList({
                   {name}
                 </Typography>
               </Box>
-              {packaging ? (
+              {detailParts.length ? (
                 <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.25 }}>
-                  {packaging}
+                  {detailParts.join(" · ")}
                 </Typography>
               ) : null}
             </Box>

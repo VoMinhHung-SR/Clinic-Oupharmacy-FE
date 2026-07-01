@@ -47,5 +47,8 @@
     "quickAddTitle": "Thêm nhanh: {{name}}",
     "quickAddLastUsed": "Cách dùng lần trước — chỉnh nếu cần",
     "quickAddClose": "Đóng",
-    "searchLoading": "Đang tìm..."
+    "searchLoading": "Đang tìm...",
+    "selectVariant": "Quy cách đóng gói",
+    "variantCount": "{{count}} quy cách",
+    "loadingVariants": "Đang tải quy cách..."
 }

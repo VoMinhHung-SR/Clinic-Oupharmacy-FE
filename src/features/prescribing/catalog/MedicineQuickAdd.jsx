@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
   IconButton,
   InputLabel,
@@ -41,12 +42,17 @@ export default function MedicineQuickAdd({
     errors,
     setError,
     onSubmit,
+    activeVariant,
     selectedSaleUnitId,
     setSelectedSaleUnitId,
     saleUnitOptions,
     hasSaleUnits,
     maxSaleQty,
     enrichedPreview,
+    showVariantPicker,
+    siblingVariants,
+    siblingsLoading,
+    selectSiblingVariant,
   } = useMedicineQuickAdd({
     variant,
     prefill,
@@ -58,7 +64,7 @@ export default function MedicineQuickAdd({
 
   if (!variant) return null
 
-  const name = variant.medicine?.name || variant.product?.web_name || ""
+  const name = activeVariant?.medicine?.name || activeVariant?.product?.web_name || variant.medicine?.name || variant.product?.web_name || ""
   const packagingLabel =
     enrichedPreview?.selectedUnitName ?? variant.packaging ?? variant.default_unit_name ?? ""
   const stockNum = maxSaleQty !== null && maxSaleQty !== undefined ? Number(maxSaleQty) : null
@@ -114,6 +120,33 @@ export default function MedicineQuickAdd({
           alignItems: "start",
         }}
       >
+        {showVariantPicker && siblingsLoading ? (
+          <Box sx={{ gridColumn: { xs: "1", sm: "1 / -1" }, display: "flex", alignItems: "center", gap: 1 }}>
+            <CircularProgress size={16} />
+            <Typography variant="caption" color="text.secondary">
+              {t("medicine:loadingVariants")}
+            </Typography>
+          </Box>
+        ) : null}
+
+        {showVariantPicker && !siblingsLoading ? (
+          <FormControl size="small" fullWidth sx={{ gridColumn: { xs: "1", sm: "1 / -1" } }}>
+            <InputLabel id="quick-add-variant-label">{t("medicine:selectVariant")}</InputLabel>
+            <Select
+              labelId="quick-add-variant-label"
+              label={t("medicine:selectVariant")}
+              value={activeVariant?.id ?? ""}
+              onChange={(e) => selectSiblingVariant(Number(e.target.value))}
+            >
+              {siblingVariants.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  {item.packing || item.packaging || "—"}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        ) : null}
+
         {hasSaleUnits ? (
           <FormControl size="small" fullWidth>
             <InputLabel id="quick-add-packaging-label">{t("medicine:packaging")}</InputLabel>

@@ -136,6 +136,11 @@ export const resolvePrescriptionDetailUnitPrice = (detail = {}) => {
   return 0
 }
 
+export const resolveProductEntityId = (variant = {}) =>
+  variant.product_entity_id ?? variant.product?.id ?? variant.medicine?.id ?? null
+
+export const hasMultipleVariants = (variant = {}) => Number(variant.variant_count ?? 1) > 1
+
 export const normalizePrescriptionDetailItem = (detail = {}) => {
   const source = detail.medicine_unit || detail.product_variant_unit || detail.product_variant || {}
   const normalized = normalizeStoreVariant(source)

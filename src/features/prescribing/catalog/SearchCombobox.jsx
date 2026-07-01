@@ -187,6 +187,11 @@ export default function SearchCombobox({
                 {options.map((variant, index) => {
                   const name = variant.medicine?.name || variant.product?.web_name || "—"
                   const packaging = variant.packaging || variant.packing || ""
+                  const variantCount = Number(variant.variant_count ?? 1)
+                  const secondaryParts = [
+                    packaging,
+                    variantCount > 1 ? t("medicine:variantCount", { count: variantCount }) : null,
+                  ].filter(Boolean)
                   const isFrequent = frequentVariantIds?.has(variant.id)
                   return (
                     <ListItemButton
@@ -205,7 +210,7 @@ export default function SearchCombobox({
                             <span>{name}</span>
                           </Box>
                         }
-                        secondary={packaging || undefined}
+                        secondary={secondaryParts.length ? secondaryParts.join(" · ") : undefined}
                       />
                     </ListItemButton>
                   )

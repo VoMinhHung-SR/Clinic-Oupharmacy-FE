@@ -47,5 +47,8 @@
     "quickAddTitle": "Quick add: {{name}}",
     "quickAddLastUsed": "Last used — edit if needed",
     "quickAddClose": "Close",
-    "searchLoading": "Searching..."
+    "searchLoading": "Searching...",
+    "selectVariant": "Packaging variant",
+    "variantCount": "{{count}} variants",
+    "loadingVariants": "Loading variants..."
 }
