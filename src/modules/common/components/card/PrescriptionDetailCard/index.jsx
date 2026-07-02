@@ -16,7 +16,7 @@ import PrintIcon from '@mui/icons-material/Print';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { resolvePrescriptionDetailUnitPrice } from "../../../../../lib/adapters/storeProduct";
 
-const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButton, onPrint }) => {
+const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButton, onPrint, printActionsEmphasized = false }) => {
     const { t, tReady } = useTranslation(['prescription-detail', 'common', 'payment']);
 
     const {user} = useContext(UserContext)
@@ -141,10 +141,11 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
                 ) : (
                     canShowPrintButton(user) && (
                         <Button
-                            variant="outlined"
+                            variant={printActionsEmphasized ? "contained" : "outlined"}
                             color="primary"
-                            size="medium"
-                            className="!ou-min-w-[160px]"
+                            size={printActionsEmphasized ? "large" : "medium"}
+                            className={printActionsEmphasized ? "!ou-min-w-[200px]" : "!ou-min-w-[160px]"}
+                            sx={printActionsEmphasized ? { width: { xs: "100%", sm: "auto" } } : undefined}
                             startIcon={<PrintIcon />}
                             onClick={handlePrintClick}
                         >
@@ -361,22 +362,42 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
 
                 {/* Total Amount */}
                 {medicineUnits.length > 0 && (
-                    <Box className="ou-flex ou-justify-end ou-mt-6">
-                        <Box className="ou-flex ou-flex-col ou-items-end ou-gap-2">
+                    <Box
+                        className={
+                            printActionsEmphasized
+                                ? "ou-flex ou-justify-end ou-mt-6 no-print"
+                                : "ou-flex ou-justify-end ou-mt-6"
+                        }
+                    >
+                        <Box className="ou-flex ou-flex-col ou-items-end ou-gap-2 ou-w-full sm:ou-w-auto">
                             <Box className="ou-font-semibold ou-text-gray-500">
                                 {t('prescription-detail:serviceFee')} : {formatCurrency(SERVICE_FEE)}
                             </Box>
-                        
-                            <Box className="ou-bg-blue-50 ou-p-4 ou-rounded-lg ou-border-2 ou-border-blue-200">
+
+                            <Box className="ou-bg-blue-50 ou-p-4 ou-rounded-lg ou-border-2 ou-border-blue-200 ou-w-full sm:ou-w-auto">
                                 <Typography variant="h6" className="ou-font-bold ou-text-blue-800">
-                                    {t('prescription-detail:totalAmount')}: 
+                                    {t('prescription-detail:totalAmount')}:
                                     {formatCurrency(totalAmount + SERVICE_FEE)}
                                 </Typography>
                             </Box>
 
-                            <Box className="ou-flex ou-items-center ou-gap-2">
-                               {renderButtons()}
-                            </Box>
+                            {printActionsEmphasized ? (
+                                <Box
+                                    sx={{
+                                        width: "100%",
+                                        pt: 1.5,
+                                        mt: 0.5,
+                                        borderTop: "1px solid",
+                                        borderColor: "divider",
+                                        display: "flex",
+                                        justifyContent: { xs: "stretch", sm: "flex-end" },
+                                    }}
+                                >
+                                    <Box sx={{ width: { xs: "100%", sm: "auto" } }}>{renderButtons()}</Box>
+                                </Box>
+                            ) : (
+                                <Box className="ou-flex ou-items-center ou-gap-2">{renderButtons()}</Box>
+                            )}
                         </Box>
                     </Box>
                 )}
