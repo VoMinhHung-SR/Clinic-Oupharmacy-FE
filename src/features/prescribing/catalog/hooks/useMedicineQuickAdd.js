@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import {
   enrichVariantForPrescribing,
   getMaxSaleQuantity,
+  getSaleUnitById,
   resolveProductVariantUnitId,
 } from "../../../../lib/adapters/storeProduct"
 
@@ -56,6 +57,8 @@ export default function useMedicineQuickAdd({
     ? enrichVariantForPrescribing(variant, selectedSaleUnitId)
     : null
 
+  const selectedSaleUnit = getSaleUnitById(variant, selectedSaleUnitId)
+
   const onSubmit = useCallback(
     (data) => {
       if (!variant) return
@@ -78,5 +81,6 @@ export default function useMedicineQuickAdd({
     hasMultipleSaleUnits,
     maxSaleQty,
     enrichedPreview,
+    selectedSaleUnit,
   }
 }

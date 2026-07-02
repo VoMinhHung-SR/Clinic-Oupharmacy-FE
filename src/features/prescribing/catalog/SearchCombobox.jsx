@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next"
 import SearchResultSkeleton from "./SearchResultSkeleton"
 import useDebounce from "../../../lib/hooks/useDebounce"
 import { fetchStoreSearch } from "../api/storeCatalog"
+import { getVariantDisplayName } from "../../../lib/adapters/storeProduct"
 import { PRESCRIBING_MIN_SEARCH_LEN, PRESCRIBING_PAGE_SIZE, PRESCRIBING_SEARCH_DEBOUNCE_MS } from "../constants"
 
 export default function SearchCombobox({
@@ -185,7 +186,7 @@ export default function SearchCombobox({
                 ref={listRef}
               >
                 {options.map((variant, index) => {
-                  const name = variant.medicine?.name || variant.product?.web_name || "—"
+                  const name = getVariantDisplayName(variant) || "—"
                   const packaging = variant.packaging || variant.packing || ""
                   const variantCount = Number(variant.variant_count ?? 1)
                   const secondaryParts = [

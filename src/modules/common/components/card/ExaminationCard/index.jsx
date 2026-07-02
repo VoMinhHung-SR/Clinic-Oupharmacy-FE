@@ -15,7 +15,6 @@ import SendIcon from "@mui/icons-material/Send";
 import ErrorIcon from "@mui/icons-material/Error";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
-import { ROLE_DOCTOR } from "../../../../../lib/constants";
 import { canDiagnose, canViewPayments, canSendConfirmEmail } from "../../../../../lib/auth";
 import CustomModal from "../../Modal";
 import useCustomModal from "../../../../../lib/hooks/useCustomModal";
@@ -42,6 +41,8 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
   };
 
   const navigateNurse = () => {
+    if (!canViewPayments(user))
+      return ErrorAlert(t('modal:errPrescribingNotOwner'), t('modal:pleaseTryAgain'), t('modal:ok'));
     if (examinationData.diagnosis_info?.length > 0)
       return router(`/dashboard/prescribing/${examinationData.diagnosis_info[0].id}/payments`);
     return ErrorAlert(t('examination-detail:errNullDiagnosis'), t('modal:pleaseTryAgain'), t('modal:ok'));
@@ -82,7 +83,7 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
         );
       return <></>;
     }
-    if (user?.role === ROLE_DOCTOR)
+    if (canDiagnose(user, examinationData))
       return (
         <Tooltip followCursor title={t("noReady")}>
           <span>

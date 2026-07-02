@@ -32,10 +32,12 @@ Captured at Phase 2a commit `24542e9`. Re-measure after UI-6.
 
 ## Target (plan3 UI-6)
 
-| Metric | Before | Target |
-|--------|--------|--------|
-| Pages on first paint | ~603 | **0** (empty until intent) |
-| `page_size` (prescribing) | 12 | 20 |
-| Search API | `/products/` only | `/store/search/` + suggest |
-| Category filter | Hidden collapse | Visible chips |
-| Default `in_stock` | off | **on** (toggleable) |
+| Metric | Before | Target | After (2026-07-01 smoke) |
+|--------|--------|--------|---------------------------|
+| Pages on first paint | ~603 | **0** (empty until intent) | ✅ idle / combobox |
+| `page_size` (prescribing) | 12 | 20 | ✅ compact list |
+| Search API | `/products/` only | `/store/search/` + suggest | ✅ SearchCombobox |
+| Category filter | Hidden collapse | Visible chips | ✅ UI; ⏳ local DB data |
+| Default `in_stock` | off | toggleable | ✅ filter available |
+| Quick access chips | 2 rows cluttered | single “Gợi ý nhanh” | ✅ mergeQuickAccessEntries |
+| Draft subtotal | — | from `unit_options` | ✅; giá phụ thuộc DB |

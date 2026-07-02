@@ -1,4 +1,4 @@
-import { Box, Button, Chip, Paper, Typography } from "@mui/material"
+import { Box, Button, Paper, Typography } from "@mui/material"
 import { useTranslation } from "react-i18next"
 import PrescriptionDraftLineItem from "../../../modules/pages/PrescriptionDetailComponents/PrescriptionDraftLineItem"
 import DraftSummary from "./DraftSummary"
@@ -62,7 +62,6 @@ export default function PrescriptionDraftPanel({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: 1,
             mb: 2,
             flexShrink: 0,
           }}
@@ -70,9 +69,6 @@ export default function PrescriptionDraftPanel({
           <Typography variant="h6" component="h2" fontWeight={600}>
             {t("prescription-detail:prescriptionDetail")}
           </Typography>
-          {count > 0 ? (
-            <Chip label={count} size="small" color="primary" sx={{ fontWeight: 600, minWidth: 28 }} />
-          ) : null}
         </Box>
 
         {count === 0 ? (

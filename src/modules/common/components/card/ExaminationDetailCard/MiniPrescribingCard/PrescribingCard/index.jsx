@@ -3,6 +3,7 @@ import { Box } from "@mui/system"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { fetchPrescriptionDetailBillCard } from "../../../BillCard/services"
+import { getPrescriptionLineDisplayName, resolvePrescriptionDetailUnitPrice } from "../../../../../../../lib/adapters/storeProduct"
 import SkeletonListLineItem from "../../../../skeletons/listLineItem"
 import SkePrescriptionDetailCard from "../../../../skeletons/card/SkePrescriptionDetailCard"
 
@@ -62,14 +63,16 @@ const PrescribingCard = ({prescribing}) => {
                             </TableRow>
                         </TableHead>    
                         <TableBody>
-                            {prescriptionDetail && prescriptionDetail.map((p, index) => (
+                            {prescriptionDetail && prescriptionDetail.map((p, index) => {
+                                const unitPrice = resolvePrescriptionDetailUnitPrice(p)
+                                return (
                                 <TableRow
-                                    key={p.medicine_unit.id}
+                                    key={p.medicine_unit?.id ?? p.id ?? index}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                     <TableCell colSpan={3} align="left" className="ou-truncate" >
                                         <Typography>
-                                            {index + 1}. {p.medicine_unit.medicine.name}
+                                            {index + 1}. {getPrescriptionLineDisplayName(p)}
                                         </Typography>
                                     </TableCell>
                                     <TableCell align="center">
@@ -84,16 +87,16 @@ const PrescribingCard = ({prescribing}) => {
                                     </TableCell>
                                     <TableCell colSpan={2} className="ou-text-sm" align="center">
                                         <Typography>
-                                            {p.medicine_unit.price}
+                                            {unitPrice}
                                         </Typography>
                                     </TableCell>
                                     <TableCell colSpan={2} align="center">
                                         <Typography>
-                                            {p.medicine_unit.price * p.quantity}
+                                            {unitPrice * p.quantity}
                                         </Typography>
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )})}
                         </TableBody>
                     </Table>
                 </TableContainer>

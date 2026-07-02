@@ -142,11 +142,11 @@ function App() {
 
                             <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_DOCTOR]} />}>
                               <Route path='/dashboard/examinations/:examinationId/diagnosis' element={<Diagnosis />} />
-                              <Route path='/dashboard/prescribing/:prescribingId' element={<PrescriptionDetailWithProvider/>} />
+                              <Route path='/dashboard/prescribing/:diagnosisId' element={<PrescriptionDetailWithProvider/>} />
                             </Route>
 
                             <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_NURSE]}/>}>
-                              <Route path='/dashboard/prescribing/:prescribingId/payments' element={<Payments />} />
+                              <Route path='/dashboard/prescribing/:diagnosisId/payments' element={<Payments />} />
                             </Route>
 
                             <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_ADMIN]}/>}> 

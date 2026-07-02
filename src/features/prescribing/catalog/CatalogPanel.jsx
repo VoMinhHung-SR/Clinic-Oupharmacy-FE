@@ -46,6 +46,8 @@ export default function CatalogPanel({
   const showSearchBrowseHint = hasBrowseIntent && kwActive && !selectedVariant
   const showResultsPanel = showBrowseList || showIdleQuickAccess || showSearchBrowseHint
   const categoryId = paramsFilter.cate && paramsFilter.cate !== 0 ? paramsFilter.cate : undefined
+  const hasQuickSuggestions =
+    !prefsLoading && ((prefs?.frequent?.length ?? 0) > 0 || (prefs?.recent?.length ?? 0) > 0)
 
   return (
     <Box
@@ -118,7 +120,7 @@ export default function CatalogPanel({
         <Box
           sx={{
             flex: 1,
-            minHeight: showIdleQuickAccess ? { xs: 280, md: 340 } : 120,
+            minHeight: showIdleQuickAccess ? { xs: 200, md: 240 } : 120,
             display: showIdleQuickAccess ? "flex" : "block",
             flexDirection: showIdleQuickAccess ? "column" : undefined,
             alignItems: showIdleQuickAccess ? "center" : undefined,
@@ -136,8 +138,8 @@ export default function CatalogPanel({
         >
           {showIdleQuickAccess && (
             <>
-              <CatalogEmptyState variant="idle" compact centered />
-              <Box sx={{ width: "100%", maxWidth: 720, mt: 1 }}>
+              <CatalogEmptyState variant="idle" compact centered shortHint={hasQuickSuggestions} />
+              <Box sx={{ width: "100%", maxWidth: 720, mt: 0.5 }}>
                 <MedicineQuickAccess
                   prefs={prefs}
                   loading={prefsLoading}

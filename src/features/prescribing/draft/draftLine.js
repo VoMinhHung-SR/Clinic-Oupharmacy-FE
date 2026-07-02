@@ -1,4 +1,4 @@
-import { enrichVariantForPrescribing } from "../../../lib/adapters/storeProduct"
+import { enrichVariantForPrescribing, getVariantDisplayName } from "../../../lib/adapters/storeProduct"
 
 /** Stable key for merge: same variant + sale unit → one draft row. */
 export const draftLineKey = (item) => `${item.id}:${item.productVariantUnitId ?? ""}`
@@ -9,7 +9,7 @@ export const buildDraftLine = (enriched, data) => ({
   productVariantId: enriched.id,
   productVariantUnitId: enriched.product_variant_unit_id,
   quantityInBase: Number(enriched.quantity_in_base) || 1,
-  medicineName: enriched.medicine?.name ?? "",
+  medicineName: enriched.product_name ?? getVariantDisplayName(enriched),
   packaging: enriched.selectedUnitName ?? enriched.packaging ?? "",
   uses: data.uses,
   quantity: parseInt(data.quantity, 10),

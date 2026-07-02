@@ -6,4 +6,8 @@ export {
   getQuantityInBase,
   getMaxSaleQuantity,
   enrichVariantForPrescribing,
+  getVariantDisplayName,
+  getVariantProductId,
+  getPrescriptionLineDisplayName,
+  getVariantPackingTotal,
 } from "../../../lib/adapters/storeProduct"
