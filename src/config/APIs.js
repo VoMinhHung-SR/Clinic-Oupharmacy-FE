@@ -92,12 +92,6 @@ export let endpoints = {
     'store-search': '/api/store/search/',
     'store-search-suggest': '/api/store/search/suggest/',
     'store-categories': '/api/store/categories/',
-
-    // Legacy aliases (kept for backward compatibility during migration)
-    'medicines':'/api/store/products/',
-    'medicine-detail':(medicineID) => `/api/store/products/${medicineID}/`,
-    'medicine-units':'/api/store/products/',
-    'medicine-units-detail':(medicineUnitID) =>  `/api/store/products/${medicineUnitID}/`,
     
     // Bill
     'bill':'/bills/',

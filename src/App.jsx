@@ -39,7 +39,6 @@ import DashboardProfile from './pages/dashboard/profile'
 import DashboardLayout from './modules/common/layout/dashboard'
 import DashBoard from './pages/dashboard'
 import CategoryList from './pages/dashboard/categories'
-import MedicineList from './pages/dashboard/medicines'
 import DoctorSchedules from './pages/dashboard/doctor-schedules'
 import PatientManagement from './pages/profile/patient-list'
 import OnlineWaitingRoom from './pages/waiting-room/sub'
@@ -136,7 +135,6 @@ function App() {
                             <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_DOCTOR, ROLE_NURSE]} />}>
                               <Route path='/dashboard/examinations' element={<Examinations/>}/>
                               <Route path='/dashboard/doctor-schedules' element={<DoctorSchedules/>}/>  
-                              {/* redirect to medicine store url -- MedicineList's component replaced by ExternalRedirect */}
                               <Route path='/dashboard/medicines' element={<ExternalRedirect url={MEDICINE_STORE_URL} replace={true}/>} />
                               <Route path='/dashboard/waiting-room' element={<DashboardWaitingRoom/>}/>
                               <Route path='/dashboard/prescribing' element={<PrescriptionList/>} />

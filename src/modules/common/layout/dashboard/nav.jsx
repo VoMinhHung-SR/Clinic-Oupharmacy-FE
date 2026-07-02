@@ -18,7 +18,7 @@ import FlagVN from '../../../../../public/flagVN';
 import Logout from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import { changeLanguage } from "i18next";
-import { AVATAR_DEFAULT, ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
+import { AVATAR_DEFAULT, ERROR_CLOUDINARY, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
 import { isRoleIn } from '../../../../lib/auth';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useContext, useState } from "react";
@@ -30,7 +30,6 @@ import CustomModal from '../../components/Modal';
 import FormChangePassword from '../../../pages/HomeComponents/FormChangePassword';
 import useNotification from '../../../../lib/hooks/useNotification';
 import NotificationButton from '../../components/button/Notification';
-import PillsIcon from '../../../../lib/icon/PillsIcon';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import UserContext from '../../../../lib/context/UserContext';
 import useCustomNavigate from '../../../../lib/hooks/useCustomNavigate';
@@ -38,7 +37,6 @@ import WarningIcon from '@mui/icons-material/Warning';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import PaymentIcon from '@mui/icons-material/Payment';
-import CategoryIcon from '@mui/icons-material/Category';
 
 const drawerWidth = 240;
 
@@ -128,20 +126,6 @@ const NavDashboard = ({ open, toggleDrawer }) => {
         name: t('prescribing'),
         icon: <MedicalServicesIcon className='ou-text-white'/>,
         link: '/dashboard/prescribing'
-    }
-  ];
-  const pagesMedicineManagement = [
-    {
-        id: 'categories',
-        name: t('categories'),
-        icon: <CategoryIcon   className='ou-text-white'/>,
-        link: '/dashboard/categories'
-    }, 
-    {
-        id: 'medicines',
-        name: t('medicines'),
-        icon: <PillsIcon   className='ou-text-white'/>,
-        link: '/dashboard/medicines'
     }
   ];
   const page_ROLE_NURSE=  [
@@ -427,9 +411,6 @@ const NavDashboard = ({ open, toggleDrawer }) => {
 
               <Divider sx={{ my: 1 }} />
               {renderPage(page_ROLE_NURSE, [ROLE_NURSE], open, isMobile)}
-
-              <Divider sx={{ my: 1 }} />
-              {renderPage(pagesMedicineManagement, [ROLE_DOCTOR, ROLE_NURSE, ROLE_ADMIN], open, isMobile)}
           </List>
 
       </StyledDrawer>
