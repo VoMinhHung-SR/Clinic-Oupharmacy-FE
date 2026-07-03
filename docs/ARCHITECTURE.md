@@ -47,4 +47,26 @@ flowchart LR
 - **Thuốc / Danh mục** — không còn trong sidebar; medicines redirect store URL.
 - **`/dashboard/categories`** — read-only store tree (admin URL trực tiếp).
 
-Cập nhật file này khi đổi auth, base URL, hoặc ranh giới store vs mainApp.
+## Dashboard layout (single viewport)
+
+Tất cả route `/dashboard/*` dùng shell **`DashboardLayout`** (`modules/common/layout/dashboard/`):
+
+| Layer | File | Vai trò |
+|-------|------|---------|
+| Frame | `index.jsx` | `100vh`, `main` `overflow: hidden`, outlet `flex: 1` |
+| Tokens | `styleTokens.js` | `DASHBOARD_PAGE_FRAME_SX`, `DASHBOARD_SURFACE`, spacing |
+| List shell | `shell/DashboardPageShell.jsx` | Header + filter + scroll table + pagination footer |
+| Split shell | `shell/DashboardSplitShell.jsx` | 30/70 panes, scroll riêng (conversations) |
+
+**Quy tắc:** page con fill frame (`flex: 1; minHeight: 0`); scroll nội bộ qua `ou-scrollbar` / `DASHBOARD_SCROLL_CONTENT_SX`; không `calc(100vh)` trong page.
+
+**Pattern theo loại trang:**
+
+- **List** — examinations, prescribing list, categories → `DashboardPageShell`
+- **Split** — profile, conversations (dashboard) → flex split hoặc `DashboardSplitShell`
+- **Workspace** — prescribing detail → `PrescribingContentWrapper` + `PrescribingShell`
+- **Scroll content** — home charts, waiting-room grid, doctor-schedules form, diagnosis, payments → `DASHBOARD_PAGE_FRAME_SX` + scroll body
+
+Plan chi tiết: `.cursor/plans/[Done] dashboard-ui-refactor.plan.md`
+
+Cập nhật file này khi đổi auth, base URL, ranh giới store vs mainApp, hoặc dashboard layout contract.

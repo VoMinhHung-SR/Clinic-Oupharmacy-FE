@@ -13,7 +13,10 @@ import AssignmentIcon from "@mui/icons-material/Assignment"
 import ListIcon from "@mui/icons-material/List"
 import WarningIcon from "@mui/icons-material/Warning"
 import Tooltip from "@mui/material/Tooltip"
-import { DASHBOARD_SURFACE } from "../../../modules/common/layout/dashboard/styleTokens"
+import {
+  DASHBOARD_PAGE_FRAME_SX,
+  DASHBOARD_SURFACE,
+} from "../../../modules/common/layout/dashboard/styleTokens"
 
 const navItemSx = (isActive, variant = "primary") => ({
   display: "flex",
@@ -110,10 +113,35 @@ const DashboardProfile = () => {
   }
 
   return (
-    <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, justifyContent: "center" }}>
-      <Box sx={{ width: { xs: "100%", md: "30%" }, mb: { xs: 2, md: 0 } }}>
+    <Box
+      sx={{
+        ...DASHBOARD_PAGE_FRAME_SX,
+        flexDirection: { xs: "column", md: "row" },
+        gap: 2,
+      }}
+    >
+      <Box
+        sx={{
+          width: { xs: "100%", md: "30%" },
+          flexShrink: 0,
+          minHeight: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          maxHeight: { xs: "none", md: "100%" },
+        }}
+      >
         <AvatarProfile />
-        <Paper elevation={DASHBOARD_SURFACE.elevation} sx={{ ...paperSx, mt: 3 }}>
+        <Paper
+          elevation={DASHBOARD_SURFACE.elevation}
+          sx={{
+            ...paperSx,
+            flex: { md: 1 },
+            minHeight: 0,
+            overflow: "auto",
+          }}
+          className="ou-scrollbar"
+        >
           {userProfile.map((items) =>
             itemsNavigate(items.id, items.pathName, items.itemTitle, items.itemIcon)
           )}
@@ -124,10 +152,12 @@ const DashboardProfile = () => {
         elevation={DASHBOARD_SURFACE.elevation}
         sx={{
           ...paperSx,
-          width: { xs: "100%", md: "70%" },
-          ml: { md: 1.5 },
-          mt: { xs: 0, md: 0 },
+          flex: 1,
+          minHeight: 0,
+          minWidth: 0,
+          overflow: "auto",
         }}
+        className="ou-scrollbar"
       >
         {removeSymbol("/", location.pathname) === "dashboardprofile" ? (
           <UpdateProfile

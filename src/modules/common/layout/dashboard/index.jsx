@@ -1,49 +1,81 @@
-import React, { useState } from 'react';
-import { Outlet } from 'react-router';
-import { Box, useTheme, useMediaQuery, Toolbar } from '@mui/material';
-import Copyright from './footer';
-import NavDashboard from './nav';
+import React, { useState } from "react"
+import { Outlet, useLocation } from "react-router"
+import { Box, ThemeProvider, useTheme, useMediaQuery, Toolbar } from "@mui/material"
+import { dashboardTheme } from "../../../../theme/dashboardTheme"
+import Copyright from "./footer"
+import NavDashboard from "./nav"
+import {
+  DASHBOARD_HIDE_FOOTER_PREFIXES,
+  DASHBOARD_PAGE_PADDING,
+  DASHBOARD_PAGE_PADDING_Y,
+} from "./styleTokens"
 
 export default function DashboardLayout() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
+  const location = useLocation()
 
-  const [open, setOpen] = useState(!isMobile);
+  const [open, setOpen] = useState(!isMobile)
   const toggleDrawer = () => {
-      setOpen(!open);
-  };
+    setOpen(!open)
+  }
 
-  const collapsedDrawerWidth = theme.spacing(9);
+  const collapsedDrawerWidth = theme.spacing(9)
+  const hideFooter = DASHBOARD_HIDE_FOOTER_PREFIXES.some((prefix) =>
+    location.pathname.startsWith(prefix)
+  )
 
   return (
-      <Box sx={{ display: 'flex' }}>
-          
-          <NavDashboard open={open} toggleDrawer={toggleDrawer}/>
+    <ThemeProvider theme={dashboardTheme}>
+      <Box sx={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+        <NavDashboard open={open} toggleDrawer={toggleDrawer} />
 
+        <Box
+          component="main"
+          sx={{
+            backgroundColor: "background.default",
+            flexGrow: 1,
+            height: "100vh",
+            minHeight: 0,
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: isMobile ? 0 : open ? 0 : `${collapsedDrawerWidth}px`,
+            transition: theme.transitions.create("margin", {
+              easing: theme.transitions.easing.sharp,
+              duration: open
+                ? theme.transitions.duration.enteringScreen
+                : theme.transitions.duration.leavingScreen,
+            }),
+          }}
+        >
+          <Toolbar />
+          <Box
+            sx={{
+              flex: 1,
+              minHeight: 0,
+              display: "flex",
+              flexDirection: "column",
+              px: DASHBOARD_PAGE_PADDING,
+              py: DASHBOARD_PAGE_PADDING_Y,
+              gap: 0.5,
+            }}
+          >
             <Box
-              component="main"
               sx={{
-                backgroundColor: (theme) =>
-                theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-                flexGrow: 1,
-                height: '100vh',
-                overflow: 'auto',
-                
-                marginLeft: isMobile ? 0 : (open ? 0 : `${collapsedDrawerWidth}px`),
-                transition: theme.transitions.create('margin', {
-                  easing: theme.transitions.easing.sharp,
-                  duration: open ? theme.transitions.duration.enteringScreen : theme.transitions.duration.leavingScreen,
-                }),
+                flex: 1,
+                minHeight: 0,
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
               }}
-              >
-              <Toolbar />
-              <Box sx={{ mb: 4 }} className='ou-px-4 ou-py-4'>
-                  <Outlet />         
-                  <Copyright sx={{ pt: 4 }} />
-              </Box>
+            >
+              <Outlet />
             </Box>
-        </Box> 
-  );
+            {!hideFooter && <Copyright sx={{ flexShrink: 0, py: 0.25 }} />}
+          </Box>
+        </Box>
+      </Box>
+    </ThemeProvider>
+  )
 }

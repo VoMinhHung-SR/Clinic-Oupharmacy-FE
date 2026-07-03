@@ -13,6 +13,7 @@ import PrescribingShell from "../layout/PrescribingShell"
 import PrescribingCatalogSection from "../catalog/PrescribingCatalogSection"
 import PrescriptionDraftPanel from "../draft/PrescriptionDraftPanel"
 import PrescribingSuccessPanel from "./PrescribingSuccessPanel"
+import { DASHBOARD_PAGE_FRAME_SX } from "../../../modules/common/layout/dashboard/styleTokens"
 
 export default function PrescribingWorkspace({ diagnosisId }) {
   const { t, ready } = useTranslation(["prescription-detail", "common", "modal"])
@@ -69,7 +70,8 @@ export default function PrescribingWorkspace({ diagnosisId }) {
 
   if (newestPrescriptionDetail.length > 0 && prescriptionDetail) {
     return (
-      <PrescribingSuccessPanel
+      <Box sx={{ ...DASHBOARD_PAGE_FRAME_SX, overflow: "auto" }} className="ou-scrollbar">
+        <PrescribingSuccessPanel
         prescriptionData={{
           listPrescribingId: [newPrescribing.id],
           created_date: newestPrescriptionDetail[0].created_date,
@@ -79,21 +81,28 @@ export default function PrescribingWorkspace({ diagnosisId }) {
           user: prescriptionDetail.user,
         }}
         onPrint={handlePrint}
-      />
+        />
+      </Box>
     )
   }
 
   if (!isLoadingPrescriptionDetail && prescriptionDetail === null) {
     return (
-      <Box className="ou-relative ou-items-center" sx={{ minHeight: "550px" }}>
-        <Box
-          className="ou-absolute ou-p-5 ou-text-center ou-flex-col ou-flex ou-justify-center ou-items-center ou-top-0 ou-bottom-0 ou-w-full ou-place-items-center"
-        >
-          <h2 className="ou-text-xl ou-text-red-600">{t("prescription-detail:errNullPrescription")}</h2>
-          <Typography className="text-center">
-            <h3>{t("common:goToBooking")} </h3>
-            <Button onClick={() => navigate("/booking")}>{t("common:here")}!</Button>
+      <Box
+        sx={{
+          ...DASHBOARD_PAGE_FRAME_SX,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          p: 3,
+        }}
+      >
+        <Box sx={{ textAlign: "center" }}>
+          <Typography variant="h6" color="error" gutterBottom>
+            {t("prescription-detail:errNullPrescription")}
           </Typography>
+          <Typography gutterBottom>{t("common:goToBooking")}</Typography>
+          <Button onClick={() => navigate("/booking")}>{t("common:here")}!</Button>
         </Box>
       </Box>
     )

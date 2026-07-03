@@ -1,55 +1,44 @@
 import { Box, Paper } from "@mui/material"
 import SkeletonListLineItem from "../../listLineItem"
+import { DASHBOARD_PAGE_FRAME_SX, DASHBOARD_SURFACE } from "../../../../layout/dashboard/styleTokens"
 
 const SkeletonDoctorScheduleList = () => {
-    return (
-        <Box component={Paper} elevation={4} className="ou-text-center ou-container ou-mx-auto ou-p-10 ou-h-[100%]">
-            <Box className="ou-flex ou-justify-end">
-                <SkeletonListLineItem count={1} height="32px" className="ou-w-[10%]"/>
-            </Box>
+  return (
+    <Box
+      component={Paper}
+      elevation={DASHBOARD_SURFACE.elevation}
+      sx={{
+        ...DASHBOARD_PAGE_FRAME_SX,
+        borderRadius: DASHBOARD_SURFACE.borderRadius,
+        p: 2.5,
+      }}
+    >
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <SkeletonListLineItem count={1} height="32px" className="ou-w-[10%]" />
+      </Box>
 
-            <SkeletonListLineItem count={1} height="32px" className="ou-w-[30%] ou-mx-auto ou-my-6"/>
+      <SkeletonListLineItem count={1} height="32px" className="ou-w-[30%] ou-mx-auto ou-mb-4" />
 
-            {/* TABLE HEADER */}
-            <Box className="ou-flex ou-justify-between ou-mb-3">
-                <SkeletonListLineItem count={1} height="72px" className="ou-w-[15%] ou-pr-1"/>
-                <SkeletonListLineItem count={1} height="72px" className="ou-w-[15%] ou-px-1"/>
-                <SkeletonListLineItem count={1} height="72px" className="ou-w-[15%] ou-px-1"/>
-                <SkeletonListLineItem count={1} height="72px" className="ou-w-[15%] ou-px-1"/>
-                <SkeletonListLineItem count={1} height="72px" className="ou-w-[15%] ou-px-1"/>
-                <SkeletonListLineItem count={1} height="72px" className="ou-w-[15%] ou-px-1"/>
-                <SkeletonListLineItem count={1} height="72px" className="ou-w-[15%] ou-pl-1"/>
-            </Box>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2, gap: 1 }}>
+        {Array.from({ length: 7 }).map((_, i) => (
+          <SkeletonListLineItem key={`h-${i}`} count={1} height="72px" className="ou-w-[15%]" />
+        ))}
+      </Box>
 
-            {/* TABLE BODY */}
-            <Box>
-                <Box className="ou-flex ou-justify-between">
-                    <SkeletonListLineItem count={1} height="60px" className="ou-w-[15%] ou-pr-1"/>
-                    <SkeletonListLineItem count={1} height="60px" className="ou-w-[15%] ou-px-1"/>
-                    <SkeletonListLineItem count={1} height="60px" className="ou-w-[15%] ou-px-1"/>
-                    <SkeletonListLineItem count={1} height="60px" className="ou-w-[15%] ou-px-1"/>
-                    <SkeletonListLineItem count={1} height="60px" className="ou-w-[15%] ou-px-1"/>
-                    <SkeletonListLineItem count={1} height="60px" className="ou-w-[15%] ou-px-1"/>
-                    <SkeletonListLineItem count={1} height="60px" className="ou-w-[15%] ou-pl-1"/>
-                </Box>
-                <Box className="ou-flex ou-justify-between ou-mt-1">
-                    <SkeletonListLineItem count={1} height="60px" className="ou-w-[15%] ou-pr-1"/>
-                    <SkeletonListLineItem count={1} height="60px" className="ou-w-[15%] ou-px-1"/>
-                    <SkeletonListLineItem count={1} height="60px" className="ou-w-[15%] ou-px-1"/>
-                    <SkeletonListLineItem count={1} height="60px" className="ou-w-[15%] ou-px-1"/>
-                    <SkeletonListLineItem count={1} height="60px" className="ou-w-[15%] ou-px-1"/>
-                    <SkeletonListLineItem count={1} height="60px" className="ou-w-[15%] ou-px-1"/>
-                    <SkeletonListLineItem count={1} height="60px" className="ou-w-[15%] ou-pl-1"/>
-                </Box>
-            </Box>
-
-            {/* SCHEDULE */}
-            <Box className="ou-mt-8">
-                <SkeletonListLineItem count={1} height="72px" className="ou-w-[100%] ou-mb-2"/>
-                <SkeletonListLineItem count={2} height="60px" className="ou-w-[100%]"/>
-            </Box>
+      {[1, 2].map((row) => (
+        <Box key={row} sx={{ display: "flex", justifyContent: "space-between", mb: 1, gap: 1 }}>
+          {Array.from({ length: 7 }).map((_, i) => (
+            <SkeletonListLineItem key={`${row}-${i}`} count={1} height="60px" className="ou-w-[15%]" />
+          ))}
         </Box>
-    )
+      ))}
+
+      <Box sx={{ mt: 4 }}>
+        <SkeletonListLineItem count={1} height="72px" className="ou-w-full ou-mb-2" />
+        <SkeletonListLineItem count={2} height="60px" className="ou-w-full" />
+      </Box>
+    </Box>
+  )
 }
 
 export default SkeletonDoctorScheduleList

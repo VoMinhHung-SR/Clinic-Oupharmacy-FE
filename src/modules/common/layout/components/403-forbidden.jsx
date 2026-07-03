@@ -1,33 +1,45 @@
-import { Box, Container } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material"
 import { useTranslation } from "react-i18next"
-import Loading from "../../components/Loading";
-import Icon403Forbidden from "../../../../lib/assets/icon403Forbidden";
-import { Helmet } from "react-helmet";
+import Loading from "../../components/Loading"
+import Icon403Forbidden from "../../../../lib/assets/icon403Forbidden"
+import { Helmet } from "react-helmet"
+import { DASHBOARD_PAGE_FRAME_SX } from "../dashboard/styleTokens"
 
 const Forbidden = () => {
-    const {t, ready} = useTranslation('common');
-    if (!ready)
-        return(
-            <Box  className="ou-relative ou-items-center" sx={{ height: "550px" }}>
-                <Helmet><title>Forbidden</title></Helmet>
-                <Container className="ou-text-center ou-mt-5">
-                    <Loading />
-                </Container>
-            </Box>
-        )
-    return (
-        <Box  className="ou-relative ou-items-center" sx={{ height: "550px" }}>
-            <Helmet><title>{t('common:forbidden')}</title></Helmet>
-            <Box className='ou-absolute ou-p-5 ou-text-center 
-                ou-flex-col ou-flex ou-justify-center ou-items-center
-                ou-top-0 ou-bottom-0 ou-w-full ou-place-items-center'>
-                <Container className="ou-text-center ou-mt-5">
-                    <Box className="ou-flex ou-items-center ou-justify-center ou-max-w-[350px] ou-max-h-[350px] ou-m-auto "><Icon403Forbidden/></Box>
-                    <h3 className="ou-text-red-600 ou-text-xl">{t('common:errForbidden')}</h3>
-                    <div className="ou-text-sm">{t('common:loginValidUser')}</div>
-                </Container>
-            </Box>
-        </Box>
-    )
+  const { t, ready } = useTranslation("common")
+
+  const centeredContent = (
+    <Container sx={{ textAlign: "center" }}>
+      {ready ? (
+        <>
+          <Box sx={{ display: "flex", justifyContent: "center", maxWidth: 350, mx: "auto", mb: 2 }}>
+            <Icon403Forbidden />
+          </Box>
+          <Typography variant="h6" color="error" gutterBottom>
+            {t("common:errForbidden")}
+          </Typography>
+          <Typography variant="body2">{t("common:loginValidUser")}</Typography>
+        </>
+      ) : (
+        <Loading />
+      )}
+    </Container>
+  )
+
+  return (
+    <Box
+      sx={{
+        ...DASHBOARD_PAGE_FRAME_SX,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Helmet>
+        <title>{ready ? t("common:forbidden") : "Forbidden"}</title>
+      </Helmet>
+      {centeredContent}
+    </Box>
+  )
 }
+
 export default Forbidden

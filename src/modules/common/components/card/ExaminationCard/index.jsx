@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   CircularProgress,
   TableCell,
@@ -22,6 +21,14 @@ import ExaminationDetailCard from "../ExaminationDetailCard";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { ErrorAlert } from "../../../../../config/sweetAlert2";
 import CancelIcon from '@mui/icons-material/Cancel';
+import DashboardRowActions from "../../../layout/dashboard/components/DashboardRowActions";
+import { DASHBOARD_ACTIONS_CELL_SX } from "../../../layout/dashboard/styleTokens";
+
+const actionButtonSx = {
+  minWidth: 40,
+  minHeight: 40,
+  p: 1,
+};
 
 const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => {
   const { t } = useTranslation(["examinations", "common", "modal", "examination-detail"]);
@@ -48,17 +55,17 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
     return ErrorAlert(t('examination-detail:errNullDiagnosis'), t('modal:pleaseTryAgain'), t('modal:ok'));
   };
 
-  const renderButton = () => {
+  const renderPrimaryAction = () => {
     if (mail_status) {
       if (canDiagnose(user, examinationData))
         return (
-          <Tooltip followCursor title={t("diagnose")} className="hover:ou-cursor-pointer">
+          <Tooltip followCursor title={t("diagnose")}>
             <span>
               <Button
                 onClick={() => navigateDoctor()}
                 variant="contained"
                 color="success"
-                className="!ou-min-w-[68px] !ou-min-h-[40px] !ou-p-2  hover:ou-cursor-pointer"
+                sx={actionButtonSx}
               >
                 <MedicalServicesIcon />
               </Button>
@@ -69,29 +76,19 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
         return (
           <Tooltip followCursor title={t("pay")}>
             <span>
-              <Button
-                onClick={() => navigateNurse()}
-                variant="contained"
-                color="success"
-                size="small"
-                className="!ou-min-w-[68px] !ou-py-2  !ou-min-h-[40px]"
-              >
+              <Button onClick={() => navigateNurse()} variant="contained" color="success" sx={actionButtonSx}>
                 <PaidIcon />
               </Button>
             </span>
           </Tooltip>
         );
-      return <></>;
+      return null;
     }
     if (canDiagnose(user, examinationData))
       return (
         <Tooltip followCursor title={t("noReady")}>
           <span>
-            <Button
-              size="small"
-              variant="contained"
-              className="!ou-bg-red-700 !ou-min-w-[68px]  !ou-min-h-[40px]"
-            >
+            <Button size="small" variant="contained" color="error" sx={actionButtonSx}>
               <ErrorIcon />
             </Button>
           </span>
@@ -104,13 +101,14 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
             onClick={handleSendEmailConfirm}
             disabled={loading}
             variant="contained"
-            className="!ou-min-w-[68px] !ou-py-2"
+            color="primary"
+            sx={actionButtonSx}
           >
-            {loading ? <CircularProgress size={24} /> : <SendIcon />}
+            {loading ? <CircularProgress size={24} color="inherit" /> : <SendIcon />}
           </Button>
         </Tooltip>
       );
-    return <></>;
+    return null;
   };
 
   return (
@@ -147,26 +145,23 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
         <TableCell align="center">
           <Typography>{examinationData?.schedule_appointment?.first_name + " " + examinationData?.schedule_appointment?.last_name}</Typography>
         </TableCell>
-        <TableCell align="center">
-          <Box   className="ou-flex ou-justify-center ou-items-center">
-            <Typography>
-                {user && renderButton()}
-            </Typography>
-            <Typography>
-              <Tooltip followCursor title={t("detail")} >
-                <span>
-                  <Button
-                      variant="contained"
-                      className="ou-bg-blue-700 !ou-min-w-[68px]  !ou-min-h-[40px] !ou-py-2 !ou-mx-2"
-                      size="small"
-                      onClick={()=>handleOpenModal()}
-                    >
-                      <AssignmentIcon />
-                    </Button>
-                </span>
-              </Tooltip>
-            </Typography>
-          </Box>
+        <TableCell align="center" sx={DASHBOARD_ACTIONS_CELL_SX}>
+          <DashboardRowActions slots={2}>
+            {user ? renderPrimaryAction() : null}
+            <Tooltip followCursor title={t("detail")}>
+              <span>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={actionButtonSx}
+                  size="small"
+                  onClick={() => handleOpenModal()}
+                >
+                  <AssignmentIcon />
+                </Button>
+              </span>
+            </Tooltip>
+          </DashboardRowActions>
         </TableCell>
       </TableRow>
       

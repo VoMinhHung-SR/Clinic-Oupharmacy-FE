@@ -1,19 +1,13 @@
-import { Box, useTheme } from "@mui/material"
+import { Box } from "@mui/material"
+import { DASHBOARD_PAGE_FRAME_SX } from "../../../modules/common/layout/dashboard/styleTokens"
 
-/** Viewport-height shell for prescribing workspace (offset ≈ app header). */
+/** Fills dashboard outlet; parent DashboardLayout owns viewport height. */
 export default function PrescribingContentWrapper({ children }) {
-  const theme = useTheme()
-  const offset = theme.spacing(15)
-
   return (
     <Box
       sx={{
+        ...DASHBOARD_PAGE_FRAME_SX,
         overflow: "hidden",
-        height: { xs: "auto", md: `calc(100vh - ${offset})` },
-        maxHeight: { xs: "none", md: `calc(100vh - ${offset})` },
-        minHeight: { xs: "70vh", md: 0 },
-        display: "flex",
-        flexDirection: "column",
       }}
     >
       {children}
