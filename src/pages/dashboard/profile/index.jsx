@@ -99,11 +99,6 @@ const DashboardProfile = () => {
     )
   }
 
-  const paperSx = {
-    ...DASHBOARD_PAPER_SX,
-    p: 2.5,
-  }
-
   return (
     <Box
       sx={{
@@ -121,37 +116,43 @@ const DashboardProfile = () => {
           flexDirection: "column",
           gap: 2,
           maxHeight: { xs: "none", md: "100%" },
+          overflow: "visible",
         }}
       >
         <AvatarProfile />
         <Paper
           elevation={DASHBOARD_SURFACE.elevation}
           sx={{
-            ...paperSx,
+            ...DASHBOARD_PAPER_SX,
             flex: { md: 1 },
             minHeight: 0,
-            overflow: "auto",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
           }}
-          className="ou-scrollbar"
         >
-          {userProfile.map((items) =>
-            itemsNavigate(items.id, items.pathName, items.itemTitle, items.itemIcon)
-          )}
+          <Box className="ou-scrollbar" sx={{ flex: 1, minHeight: 0, overflow: "auto", p: 2.5 }}>
+            {userProfile.map((items) =>
+              itemsNavigate(items.id, items.pathName, items.itemTitle, items.itemIcon)
+            )}
+          </Box>
         </Paper>
       </Box>
 
       <Paper
         elevation={DASHBOARD_SURFACE.elevation}
         sx={{
-          ...paperSx,
+          ...DASHBOARD_PAPER_SX,
           flex: 1,
           minHeight: 0,
           minWidth: 0,
-          overflow: "auto",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
         }}
-        className="ou-scrollbar"
       >
-        {removeSymbol("/", location.pathname) === "dashboardprofile" ? (
+        <Box className="ou-scrollbar" sx={{ flex: 1, minHeight: 0, overflow: "auto", p: 2.5 }}>
+          {removeSymbol("/", location.pathname) === "dashboardprofile" ? (
           <UpdateProfile
             userID={user.id}
             dob={user.date_of_birth}
@@ -162,9 +163,10 @@ const DashboardProfile = () => {
             phoneNumber={user.phone_number}
             handleOnSuccess={handleChangeFlag}
           />
-        ) : (
-          <Outlet />
-        )}
+          ) : (
+            <Outlet />
+          )}
+        </Box>
       </Paper>
     </Box>
   )

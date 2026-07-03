@@ -158,7 +158,7 @@ const NavDashboard = ({ open, toggleDrawer }) => {
 
   const renderPage = (routingRole, allowedRoles, isOpen) => {
       return routingRole && routingRole.map(item => {
-        const active = isDashboardNavItemActive(location.pathname, item.link)
+        const active = isDashboardNavItemActive(location.pathname, item, user)
         const button = (
           <ListItemButton
             key={"dashboard"+item.name}
@@ -433,6 +433,7 @@ const NavDashboard = ({ open, toggleDrawer }) => {
       <CustomModal
         open={isOpen}
         onClose={handleCloseModal}
+        title={t("common:changePassword")}
         content={<FormChangePassword callBack={handleCloseModal}/>}
       />
     </>

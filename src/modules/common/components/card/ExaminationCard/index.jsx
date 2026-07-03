@@ -168,12 +168,13 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
       <CustomModal
         open={isOpen}
         onClose={handleCloseModal}
-        content={<ExaminationDetailCard examinationData={examinationData}/>}
-        actions={[
-          <Button key="cancel" onClick={handleCloseModal}>
-            {t('modal:cancel')}
+        title={t("examination-detail:examinationDetailInfo")}
+        content={<ExaminationDetailCard examinationData={examinationData} />}
+        actions={
+          <Button key="cancel" variant="outlined" color="inherit" onClick={handleCloseModal}>
+            {t("modal:cancel")}
           </Button>
-        ]}
+        }
       />
     
     </>

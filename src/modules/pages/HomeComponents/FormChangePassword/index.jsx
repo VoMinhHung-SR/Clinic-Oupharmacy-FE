@@ -68,8 +68,7 @@ const FormChangePassword = ({callBack=()=> {}}) => {
     return (
         <>
             {isLoading && <BackdropLoading/>}
-            <h3 className="ou-text-center ou-mb-5">{t('common:changePassword')}</h3>
-             <form className="!mb-5 p-4 " onSubmit={methods.handleSubmit((data) => onSubmit(data))}>
+             <form onSubmit={methods.handleSubmit((data) => onSubmit(data))}>
                     <FormControl fullWidth className="!ou-mb-3">
                         <InputLabel htmlFor="newPassword">{t('common:newPassword')}</InputLabel>
                         <OutlinedInput

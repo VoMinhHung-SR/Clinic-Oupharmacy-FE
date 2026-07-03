@@ -1,21 +1,21 @@
 /** Shared dashboard surface + spacing tokens (Phase 0 style contract + P0 polish). */
 
+import { ROLE_DOCTOR, ROLE_NURSE } from "../../../../lib/constants"
+
 export const DASHBOARD_BORDER = "1px solid"
 export const DASHBOARD_BORDER_COLOR = "divider"
+/** MUI elevation-4 — shadow nghiêng góc phải dưới (khớp AvatarProfile). */
 export const DASHBOARD_SHADOW =
-  "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.08)"
+  "0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12)"
 
 export const DASHBOARD_SURFACE = {
-  elevation: 2,
+  elevation: 4,
   borderRadius: 3,
 }
 
-/** Shared Paper chrome for dashboard cards / panes. */
+/** Shared Paper chrome for dashboard cards / panes — shadow via elevation={DASHBOARD_SURFACE.elevation}. */
 export const DASHBOARD_PAPER_SX = {
   borderRadius: DASHBOARD_SURFACE.borderRadius,
-  boxShadow: DASHBOARD_SHADOW,
-  border: "1px solid",
-  borderColor: "rgba(0, 0, 0, 0.1)",
   bgcolor: "background.paper",
 }
 
@@ -57,18 +57,43 @@ export const DASHBOARD_PAGINATION_SX = {
   px: 2,
 }
 
-/** Sticky table head cell — complements theme MuiTableCell.head overrides. */
+/** Table head — brand tint, fixed 48px height (mọi dashboard list table). */
+export const DASHBOARD_TABLE_HEAD_BG = "#f8faff"
+
+export const DASHBOARD_TABLE_HEAD_HEIGHT = 48
+
 export const DASHBOARD_TABLE_HEAD_CELL_SX = {
+  height: DASHBOARD_TABLE_HEAD_HEIGHT,
+  minHeight: DASHBOARD_TABLE_HEAD_HEIGHT,
+  maxHeight: DASHBOARD_TABLE_HEAD_HEIGHT,
+  boxSizing: "border-box",
+  py: 0,
+  px: 2,
   fontWeight: 600,
-  fontSize: "0.75rem",
-  color: "text.secondary",
-  bgcolor: "grey.100",
+  fontSize: "0.8125rem",
+  lineHeight: 1.25,
+  letterSpacing: "0.01em",
+  color: "primary.dark",
+  bgcolor: DASHBOARD_TABLE_HEAD_BG,
+  borderBottom: "2px solid",
+  borderColor: "primary.main",
   whiteSpace: "nowrap",
+  verticalAlign: "middle",
+}
+
+export const DASHBOARD_TABLE_BODY_CELL_SX = {
+  py: 1.5,
+  px: 2,
+  fontSize: "0.875rem",
+  lineHeight: 1.43,
 }
 
 export const DASHBOARD_TABLE_SX = {
   "& .MuiTableCell-head": {
     ...DASHBOARD_TABLE_HEAD_CELL_SX,
+  },
+  "& .MuiTableCell-body": {
+    ...DASHBOARD_TABLE_BODY_CELL_SX,
   },
 }
 
@@ -76,6 +101,19 @@ export const DASHBOARD_TABLE_CONTAINER_SX = {
   flex: 1,
   minHeight: 0,
   overflow: "auto",
+}
+
+/** Optional mobile density override for list tables. */
+export const DASHBOARD_TABLE_MOBILE_BODY_SX = {
+  "& .MuiTableCell-body": {
+    whiteSpace: "nowrap",
+    maxWidth: 150,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    fontSize: "0.75rem",
+    py: 1,
+    px: 1,
+  },
 }
 
 export const DASHBOARD_ACTIONS_CELL_SX = {
@@ -90,6 +128,10 @@ export const DASHBOARD_PAGE_FRAME_SX = {
   display: "flex",
   flexDirection: "column",
   width: "100%",
+  boxSizing: "border-box",
+  /** Room for elevation shadow — tránh bị clip bởi overflow:hidden của layout shell. */
+  pb: 1.5,
+  pr: 0.75,
 }
 
 export const DASHBOARD_SCROLL_BODY_SX = {
@@ -118,11 +160,32 @@ export const DASHBOARD_HIDE_FOOTER_PREFIXES = [
 export const shouldShowDashboardFooter = (pathname) =>
   pathname === "/dashboard" || pathname === "/dashboard/"
 
-/** Sidebar active state — home link must not match every /dashboard/* route. */
-export const isDashboardNavItemActive = (pathname, link) => {
-  if (link === "/dashboard") {
+/** Sidebar active state — disambiguate prescribing vs payments (same list URL). */
+export const isDashboardNavItemActive = (pathname, item, user = null) => {
+  const { id, link } = typeof item === "string" ? { id: undefined, link: item } : item
+
+  if (link === "/dashboard" || id === "dashboard") {
     return pathname === "/dashboard" || pathname === "/dashboard/"
   }
+
+  // Kê toa: list (doctor) + workspace /prescribing/:id — never payments sub-routes
+  if (id === "prescribing") {
+    if (pathname.includes("/payments")) return false
+    if (pathname === "/dashboard/prescribing") {
+      return user?.role === ROLE_DOCTOR
+    }
+    return /^\/dashboard\/prescribing\/[^/]+$/.test(pathname) && user?.role === ROLE_DOCTOR
+  }
+
+  // Thanh toán: list (nurse) + .../payments detail
+  if (id === "payments") {
+    if (pathname.includes("/payments")) return true
+    if (pathname === "/dashboard/prescribing") {
+      return user?.role === ROLE_NURSE
+    }
+    return false
+  }
+
   return pathname === link || pathname.startsWith(`${link}/`)
 }
 

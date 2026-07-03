@@ -1,152 +1,101 @@
-import { Box, Collapse, Grid, List, ListItemIcon, ListItemText, Paper, Typography } from "@mui/material";
-import moment from "moment";
-import { useTranslation } from "react-i18next";
-import CustomCollapseListItemButton from "../../collapse/ListItemButton";
-import Loading from "../../Loading";
-import useExaminationDetailCard from "./hooks/useExaminationDetailCard";
-import MiniDiagnosisCard from "./MiniDiagnosisCard";
-import MiniPrescribingCard from "./MiniPrescribingCard";
+import { Box, Grid, Stack, Typography } from "@mui/material"
+import moment from "moment"
+import { useTranslation } from "react-i18next"
+import CustomCollapseListItemButton from "../../collapse/ListItemButton"
+import Loading from "../../Loading"
+import {
+  EXAM_DETAIL_RELATED_STACK_SX,
+  EXAM_DETAIL_SECTION_GAP,
+  EXAM_DETAIL_SUMMARY_SX,
+} from "./detailLayoutTokens"
+import useExaminationDetailCard from "./hooks/useExaminationDetailCard"
+import MiniDiagnosisCard from "./MiniDiagnosisCard"
+import MiniPrescribingCard from "./MiniPrescribingCard"
 
-const ExaminationDetailCard = ({examinationData}) => {
-    const { t, tReady } = useTranslation(["examination-detail"]);
-    const { diagnosis, isLoading, bill, prescribing} = useExaminationDetailCard(examinationData?.id)
- 
+function DetailField({ label, children, xs = 12, sm = 6 }) {
+  return (
+    <Grid item xs={xs} sm={sm}>
+      <Stack spacing={0.5} sx={{ minHeight: 44 }}>
+        <Typography variant="caption" color="text.secondary" component="div">
+          {label}
+        </Typography>
+        <Typography variant="body2" fontWeight={500} color="text.primary" sx={{ wordBreak: "break-word" }}>
+          {children ?? "—"}
+        </Typography>
+      </Stack>
+    </Grid>
+  )
+}
 
-    if (tReady)
-      return (
-        <Box>
-          <Loading />
-        </Box>
-      );
-  
+const ExaminationDetailCard = ({ examinationData }) => {
+  const { t, ready } = useTranslation(["examination-detail"])
+  const { diagnosis, isLoading, bill, prescribing } = useExaminationDetailCard(examinationData?.id)
+
+  if (!ready) {
     return (
-      <Box className="ou-my-5 ou-mb-8 ou-w-[90%] ou-m-auto">
-        <Box>
-          <Box>
-            <Box className="ou-my-4" component={Paper} elevation={4}>
-              <h5 className="ou-text-center ou-text-xl ou-mb-4 ou-pt-4">
-                {t("examinationDetailInfo")}
-              </h5>
-              <Box className="ou-p-4">
-                <Grid container>
-                  <Grid item xs={6} className="ou-pr-2">
-                    <Typography
-                      variant="subtitle1"
-                      gutterBottom
-                      style={{ textDecoration: "inherit", marginRight: "20px" }}
-                      color="grey.700"
-                    >
-                      {t("examinationId")}: {examinationData.id}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6} className="ou-pr-2">
-                    <Typography
-                      variant="subtitle1"
-                      gutterBottom
-                      style={{ textDecoration: "inherit" }}
-                      color="grey.700"
-                    >
-                      {t("createdDate")}:{" "}
-                      {examinationData.schedule_appointment.day ? <span>{moment(examinationData.schedule_appointment.day).format("DD/MM/YYYY")}</span> 
-                      :  <span>{moment(examinationData.created_date).format("DD/MM/YYYY")}</span> }
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6} className="ou-pr-2">
-                    <Typography
-                      variant="subtitle1"
-                      gutterBottom
-                      style={{ textDecoration: "inherit" }}
-                      color="grey.700"
-                      className="ou-break-words"
-                    >
-                      {t("patientFullName")}:{" "}
-                      {examinationData.patient.first_name}{" "}
-                      {examinationData.patient.last_name}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography
-                      variant="subtitle1"
-                      gutterBottom
-                      style={{ textDecoration: "inherit" }}
-                      color="grey.700"
-                    >
-                      {t("mailStatus")}:{" "}
-                      <span>
-                        {examinationData.mail_status ? t("sent") : t("noSend")}
-                      </span>
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Grid container>
-                  <Grid item xs={12}>
-                    <Typography
-                      variant="subtitle1"
-                      gutterBottom
-                      style={{ textDecoration: "inherit", marginRight: "20px" }}
-                      color="grey.700"
-                      className="ou-truncate"
-                    >
-                      {t("userCreated")}: {examinationData.user.email}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography
-                      variant="subtitle1"
-                      gutterBottom
-                      style={{ textDecoration: "inherit", marginRight: "20px" }}
-                      color="grey.700"
-                      className="ou-truncate"
-                    >
-                      {t("doctor")}: {examinationData.schedule_appointment.first_name + " " + examinationData.schedule_appointment.last_name}
-                    </Typography>
-                  </Grid>
-         
-                  <Grid item xs={6}>
-                    <Typography
-                      variant="subtitle1"
-                      gutterBottom
-                      style={{ textDecoration: "inherit" }}
-                      color="grey.700"
-                    >
-                      {t("remindEmail")}:{" "}
-                      <span>
-                        {examinationData.reminder_email ? t("sent") : t("noSend")}
-                      </span>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography
-                      variant="subtitle1"
-                      gutterBottom
-                      style={{ textDecoration: "inherit" }}
-                      color="grey.700"
-                    >
-                      {t("description")}: {examinationData.description}
-                    </Typography>
-                  </Grid>
-                </Grid>
-
-                <h5 className=" ou-text-lg ou-mb-3 ou-pt-3">
-                     {t('moreInformation')}:
-                </h5>
-                <CustomCollapseListItemButton title={t("diagnose")} loading={isLoading}
-                  content={
-                    <MiniDiagnosisCard diagnosis={diagnosis} isLoading={isLoading}/>
-                  }
-                />
-                <CustomCollapseListItemButton title={t("prescribing")}
-                   content={
-                    <MiniPrescribingCard prescribing={prescribing} isLoading={isLoading} receipt={bill}/>
-                  }
-                />
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-      
+      <Box sx={{ py: 4 }}>
+        <Loading />
       </Box>
-    );
-  };
-  export default ExaminationDetailCard;
-  
+    )
+  }
+
+  const appointmentDate = examinationData.schedule_appointment?.day
+    ? moment(examinationData.schedule_appointment.day).format("DD/MM/YYYY")
+    : moment(examinationData.created_date).format("DD/MM/YYYY")
+
+  const doctorName = [
+    examinationData.schedule_appointment?.first_name,
+    examinationData.schedule_appointment?.last_name,
+  ]
+    .filter(Boolean)
+    .join(" ")
+
+  return (
+    <Stack spacing={EXAM_DETAIL_SECTION_GAP}>
+      <Box sx={EXAM_DETAIL_SUMMARY_SX}>
+        <Grid container spacing={2.5} columnSpacing={3}>
+          <DetailField label={t("examinationId")}>{examinationData.id}</DetailField>
+          <DetailField label={t("createdDate")}>{appointmentDate}</DetailField>
+          <DetailField label={t("patientFullName")}>
+            {examinationData.patient.first_name} {examinationData.patient.last_name}
+          </DetailField>
+          <DetailField label={t("mailStatus")}>
+            {examinationData.mail_status ? t("sent") : t("noSend")}
+          </DetailField>
+          <DetailField label={t("userCreated")} xs={12} sm={12}>
+            {examinationData.user.email}
+          </DetailField>
+          <DetailField label={t("doctor")}>{doctorName}</DetailField>
+          <DetailField label={t("remindEmail")}>
+            {examinationData.reminder_email ? t("sent") : t("noSend")}
+          </DetailField>
+          <DetailField label={t("description")} xs={12} sm={12}>
+            {examinationData.description}
+          </DetailField>
+        </Grid>
+      </Box>
+
+      <Box>
+        <Typography variant="subtitle2" fontWeight={600} color="primary.dark" sx={{ mb: 1.5 }}>
+          {t("moreInformation")}
+        </Typography>
+
+        <Box sx={EXAM_DETAIL_RELATED_STACK_SX}>
+          <CustomCollapseListItemButton
+            standalone
+            title={t("diagnose")}
+            loading={isLoading}
+            content={<MiniDiagnosisCard diagnosis={diagnosis} isLoading={isLoading} />}
+          />
+          <CustomCollapseListItemButton
+            standalone
+            title={t("prescribing")}
+            content={<MiniPrescribingCard prescribing={prescribing} isLoading={isLoading} receipt={bill} />}
+          />
+        </Box>
+      </Box>
+    </Stack>
+  )
+}
+
+export default ExaminationDetailCard

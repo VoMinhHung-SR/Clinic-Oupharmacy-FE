@@ -392,6 +392,7 @@ const Nav = () => {
       <CustomModal
           open={isOpen}
           onClose={handleCloseModal}
+          title={t("common:changePassword")}
           content={<FormChangePassword callBack={handleCloseModal}/>}
         />
     </AppBar>

@@ -17,11 +17,11 @@ import SkeletonCategoryList from "../../../modules/common/components/skeletons/p
 import {
   DASHBOARD_PAGE_FRAME_SX,
   DASHBOARD_TABLE_CONTAINER_SX,
-  DASHBOARD_TABLE_HEAD_CELL_SX,
   DASHBOARD_TABLE_SX,
 } from "../../../modules/common/layout/dashboard/styleTokens"
 import DashboardEmptyState from "../../../modules/common/layout/dashboard/components/DashboardEmptyState"
 import DashboardPageShell from "../../../modules/common/layout/dashboard/shell/DashboardPageShell"
+import DashboardTableHeadCell from "../../../modules/common/layout/dashboard/components/DashboardTableHeadCell"
 
 const levelLabel = (level, t) => {
   if (level === 0) return t("category:level0", { defaultValue: "Nhóm" })
@@ -61,17 +61,13 @@ const CategoryList = () => {
         }
       >
         <TableContainer className="ou-scrollbar" sx={DASHBOARD_TABLE_CONTAINER_SX}>
-          <Table aria-label="store categories" stickyHeader sx={DASHBOARD_TABLE_SX}>
+          <Table aria-label="store categories" size="small" stickyHeader sx={DASHBOARD_TABLE_SX}>
             <TableHead>
               <TableRow>
-                <TableCell sx={DASHBOARD_TABLE_HEAD_CELL_SX}>{t("category:id")}</TableCell>
-                <TableCell sx={DASHBOARD_TABLE_HEAD_CELL_SX}>
-                  {t("category:level", { defaultValue: "Cấp" })}
-                </TableCell>
-                <TableCell sx={DASHBOARD_TABLE_HEAD_CELL_SX}>{t("category:name")}</TableCell>
-                <TableCell sx={DASHBOARD_TABLE_HEAD_CELL_SX}>
-                  {t("category:path", { defaultValue: "Đường dẫn" })}
-                </TableCell>
+                <DashboardTableHeadCell>{t("category:id")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell>{t("category:level", { defaultValue: "Cấp" })}</DashboardTableHeadCell>
+                <DashboardTableHeadCell>{t("category:name")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell>{t("category:path", { defaultValue: "Đường dẫn" })}</DashboardTableHeadCell>
               </TableRow>
             </TableHead>
             <TableBody>

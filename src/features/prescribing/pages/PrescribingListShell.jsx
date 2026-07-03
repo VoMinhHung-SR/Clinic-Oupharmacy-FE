@@ -8,7 +8,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material"
@@ -19,12 +18,13 @@ import DiagnosedCard from "../../../modules/common/components/card/DiagnosedCard
 import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem"
 import {
   DASHBOARD_TABLE_CONTAINER_SX,
-  DASHBOARD_TABLE_HEAD_CELL_SX,
+  DASHBOARD_TABLE_MOBILE_BODY_SX,
   DASHBOARD_TABLE_SX,
 } from "../../../modules/common/layout/dashboard/styleTokens"
 import DashboardPageShell from "../../../modules/common/layout/dashboard/shell/DashboardPageShell"
 import DashboardFilterButton from "../../../modules/common/layout/dashboard/components/DashboardFilterButton"
 import DashboardEmptyState from "../../../modules/common/layout/dashboard/components/DashboardEmptyState"
+import DashboardTableHeadCell from "../../../modules/common/layout/dashboard/components/DashboardTableHeadCell"
 
 const MemoizedDiagnosisFilter = memo(DiagnosisFilter)
 
@@ -82,41 +82,31 @@ export default function PrescribingListShell({
     >
       <TableContainer className="ou-scrollbar" sx={DASHBOARD_TABLE_CONTAINER_SX}>
         <Table
-          size={isMobile ? "small" : "medium"}
+          size="small"
           stickyHeader
           sx={{
             ...DASHBOARD_TABLE_SX,
-            "& .MuiTableCell-root": {
-              padding: isMobile ? "8px" : "12px 16px",
-            },
+            ...(isMobile ? DASHBOARD_TABLE_MOBILE_BODY_SX : {}),
           }}
         >
           <TableHead>
             <TableRow>
-              <TableCell className="ou-hidden md:ou-table-cell" sx={DASHBOARD_TABLE_HEAD_CELL_SX}>
+              <DashboardTableHeadCell className="ou-hidden md:ou-table-cell">
                 {t("prescription:prescriptionId")}
-              </TableCell>
-              <TableCell className="ou-hidden md:ou-table-cell" sx={DASHBOARD_TABLE_HEAD_CELL_SX}>
+              </DashboardTableHeadCell>
+              <DashboardTableHeadCell className="ou-hidden md:ou-table-cell">
                 {t("prescription:EID")}
-              </TableCell>
-              <TableCell sx={DASHBOARD_TABLE_HEAD_CELL_SX}>{t("prescription:sign")}</TableCell>
-              <TableCell sx={DASHBOARD_TABLE_HEAD_CELL_SX}>{t("prescription:diagnosed")}</TableCell>
-              <TableCell align="center" sx={DASHBOARD_TABLE_HEAD_CELL_SX}>
-                {t("prescription:diagnosisDate")}
-              </TableCell>
-              <TableCell align="center" sx={DASHBOARD_TABLE_HEAD_CELL_SX}>
-                {t("prescription:prescribingStatus")}
-              </TableCell>
-              <TableCell align="center" sx={DASHBOARD_TABLE_HEAD_CELL_SX}>
-                {t("prescription:paymentStatus")}
-              </TableCell>
-              <TableCell sx={DASHBOARD_TABLE_HEAD_CELL_SX}>{t("prescription:patientName")}</TableCell>
-              <TableCell className="ou-hidden md:ou-table-cell" sx={DASHBOARD_TABLE_HEAD_CELL_SX}>
+              </DashboardTableHeadCell>
+              <DashboardTableHeadCell>{t("prescription:sign")}</DashboardTableHeadCell>
+              <DashboardTableHeadCell>{t("prescription:diagnosed")}</DashboardTableHeadCell>
+              <DashboardTableHeadCell align="center">{t("prescription:diagnosisDate")}</DashboardTableHeadCell>
+              <DashboardTableHeadCell align="center">{t("prescription:prescribingStatus")}</DashboardTableHeadCell>
+              <DashboardTableHeadCell align="center">{t("prescription:paymentStatus")}</DashboardTableHeadCell>
+              <DashboardTableHeadCell>{t("prescription:patientName")}</DashboardTableHeadCell>
+              <DashboardTableHeadCell className="ou-hidden md:ou-table-cell">
                 {t("prescription:doctorName")}
-              </TableCell>
-              <TableCell align="center" sx={DASHBOARD_TABLE_HEAD_CELL_SX}>
-                {t("prescription:feature")}
-              </TableCell>
+              </DashboardTableHeadCell>
+              <DashboardTableHeadCell align="center">{t("prescription:feature")}</DashboardTableHeadCell>
             </TableRow>
           </TableHead>
           <TableBody>

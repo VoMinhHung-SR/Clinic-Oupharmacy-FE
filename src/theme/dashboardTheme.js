@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material/styles"
+import { DASHBOARD_TABLE_HEAD_BG } from "../modules/common/layout/dashboard/styleTokens"
 
 /** Scoped theme for /dashboard/* — does not affect public site. */
 export const dashboardTheme = createTheme({
@@ -39,9 +40,9 @@ export const dashboardTheme = createTheme({
         root: {
           backgroundImage: "none",
         },
-        elevation2: {
-          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.08)",
-          border: "1px solid rgba(0, 0, 0, 0.1)",
+        elevation4: {
+          boxShadow:
+            "0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12)",
         },
       },
     },
@@ -49,14 +50,22 @@ export const dashboardTheme = createTheme({
       styleOverrides: {
         head: {
           fontWeight: 600,
-          fontSize: "0.75rem",
-          lineHeight: 1.4,
-          color: "rgba(0, 0, 0, 0.65)",
-          backgroundColor: "#f3f4f6",
-          borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+          fontSize: "0.8125rem",
+          lineHeight: 1.25,
+          letterSpacing: "0.01em",
+          color: "#1e3a8a",
+          backgroundColor: DASHBOARD_TABLE_HEAD_BG,
+          borderBottom: "2px solid #2563eb",
+          height: 48,
+          minHeight: 48,
+          maxHeight: 48,
+          paddingTop: 0,
+          paddingBottom: 0,
+          boxSizing: "border-box",
+          verticalAlign: "middle",
         },
         stickyHeader: {
-          backgroundColor: "#f3f4f6",
+          backgroundColor: DASHBOARD_TABLE_HEAD_BG,
         },
       },
     },

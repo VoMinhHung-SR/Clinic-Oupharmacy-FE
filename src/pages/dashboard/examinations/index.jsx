@@ -8,7 +8,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material"
@@ -23,12 +22,13 @@ import SkeletonExaminationList from "../../../modules/common/components/skeleton
 import {
   DASHBOARD_PAGE_FRAME_SX,
   DASHBOARD_TABLE_CONTAINER_SX,
-  DASHBOARD_TABLE_HEAD_CELL_SX,
+  DASHBOARD_TABLE_MOBILE_BODY_SX,
   DASHBOARD_TABLE_SX,
 } from "../../../modules/common/layout/dashboard/styleTokens"
 import DashboardPageShell from "../../../modules/common/layout/dashboard/shell/DashboardPageShell"
 import DashboardFilterButton from "../../../modules/common/layout/dashboard/components/DashboardFilterButton"
 import DashboardEmptyState from "../../../modules/common/layout/dashboard/components/DashboardEmptyState"
+import DashboardTableHeadCell from "../../../modules/common/layout/dashboard/components/DashboardTableHeadCell"
 
 const MemoizedExaminationFilter = memo(ExaminationFilter)
 
@@ -107,40 +107,25 @@ const Examinations = () => {
       >
         <TableContainer className="ou-scrollbar" sx={DASHBOARD_TABLE_CONTAINER_SX}>
           <Table
-            size={isMobile ? "small" : "medium"}
+            size="small"
             stickyHeader
             sx={{
               ...DASHBOARD_TABLE_SX,
               minWidth: isMobile ? 300 : 650,
-              "& .MuiTableCell-root": {
-                padding: isMobile ? "8px" : "12px 16px",
-                fontSize: isMobile ? "0.75rem" : "0.875rem",
-                whiteSpace: isMobile ? "nowrap" : "normal",
-                maxWidth: isMobile ? "150px" : "none",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              },
+              ...(isMobile ? DASHBOARD_TABLE_MOBILE_BODY_SX : {}),
             }}
             aria-label="examinations table"
           >
             <TableHead>
               <TableRow>
-                <TableCell sx={DASHBOARD_TABLE_HEAD_CELL_SX}>{t("id")}</TableCell>
-                <TableCell sx={DASHBOARD_TABLE_HEAD_CELL_SX}>{t("description")}</TableCell>
-                <TableCell align="center" sx={DASHBOARD_TABLE_HEAD_CELL_SX}>
-                  {t("createdDate")}
-                </TableCell>
-                <TableCell align="center" sx={DASHBOARD_TABLE_HEAD_CELL_SX}>
-                  {t("mailStatus")}
-                </TableCell>
-                <TableCell align="center" sx={DASHBOARD_TABLE_HEAD_CELL_SX}>
-                  {t("diagnosisStatus")}
-                </TableCell>
-                <TableCell sx={DASHBOARD_TABLE_HEAD_CELL_SX}>{t("userCreated")}</TableCell>
-                <TableCell sx={DASHBOARD_TABLE_HEAD_CELL_SX}>{t("doctorName")}</TableCell>
-                <TableCell align="center" sx={DASHBOARD_TABLE_HEAD_CELL_SX}>
-                  {t("function")}
-                </TableCell>
+                <DashboardTableHeadCell>{t("id")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell>{t("description")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell align="center">{t("createdDate")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell align="center">{t("mailStatus")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell align="center">{t("diagnosisStatus")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell>{t("userCreated")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell>{t("doctorName")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell align="center">{t("function")}</DashboardTableHeadCell>
               </TableRow>
             </TableHead>
             <TableBody>
