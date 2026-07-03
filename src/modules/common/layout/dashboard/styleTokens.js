@@ -103,3 +103,33 @@ export const DASHBOARD_HIDE_FOOTER_PREFIXES = [
   "/dashboard/prescribing",
   "/dashboard/categories",
 ]
+
+/** Show copyright only on dashboard home. */
+export const shouldShowDashboardFooter = (pathname) =>
+  pathname === "/dashboard" || pathname === "/dashboard/"
+
+/** Primary header bar for split panes (waiting-room, conversations). */
+export const DASHBOARD_PANE_HEADER_SX = {
+  flexShrink: 0,
+  px: 2,
+  py: 1.5,
+  bgcolor: "primary.main",
+  color: "primary.contrastText",
+  textAlign: "center",
+}
+
+/** Profile / side nav item — aligned with dashboard toolbar height. */
+export const dashboardNavItemSx = (isActive, variant = "primary") => ({
+  display: "flex",
+  alignItems: "center",
+  px: 2,
+  py: 1.25,
+  minHeight: 44,
+  borderRadius: 2,
+  transition: "background-color 0.15s ease",
+  ...(isActive && variant === "warning"
+    ? { bgcolor: "warning.main", color: "warning.contrastText" }
+    : isActive
+      ? { bgcolor: "primary.main", color: "primary.contrastText" }
+      : { "&:hover": { bgcolor: "action.hover" } }),
+})

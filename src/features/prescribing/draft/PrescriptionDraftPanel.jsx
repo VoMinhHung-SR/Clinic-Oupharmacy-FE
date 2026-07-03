@@ -1,4 +1,5 @@
 import { Box, Button, Paper, Typography } from "@mui/material"
+import { DASHBOARD_SURFACE } from "../../../modules/common/layout/dashboard/styleTokens"
 import { useTranslation } from "react-i18next"
 import PrescriptionDraftLineItem from "../../../modules/pages/PrescriptionDetailComponents/PrescriptionDraftLineItem"
 import DraftSummary from "./DraftSummary"
@@ -45,7 +46,7 @@ export default function PrescriptionDraftPanel({
       }}
     >
       <Paper
-        elevation={compact ? 0 : 8}
+        elevation={compact ? 0 : DASHBOARD_SURFACE.elevation}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -53,7 +54,7 @@ export default function PrescriptionDraftPanel({
           minHeight: 0,
           p: compact ? 0 : 2.5,
           width: "100%",
-          boxShadow: compact ? 0 : 3,
+          borderRadius: compact ? 0 : DASHBOARD_SURFACE.borderRadius,
           bgcolor: compact ? "transparent" : undefined,
         }}
       >

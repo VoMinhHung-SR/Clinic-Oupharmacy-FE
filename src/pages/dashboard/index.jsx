@@ -8,7 +8,7 @@ import { CURRENT_DATE, MAX_EXAM_PER_DAY, ROLE_ADMIN, ROLE_DOCTOR } from "../../l
 import useStatistic from "../../modules/pages/DashboardComponents/hooks/useStatistic"
 import useLimitExamPerDay from "../../modules/pages/HomeComponents/hooks/useLimitExamPerDay"
 import { useTranslation } from "react-i18next"
-import Loading from "../../modules/common/components/Loading"
+import SkeletonDashboardHome from "../../modules/common/components/skeletons/pages/dashboard"
 import PillsIcon from "../../lib/icon/PillsIcon"
 import BookingChart from "../../modules/common/components/charts/BookingChart"
 import RevenueChart from "../../modules/common/components/charts/RevenueChart"
@@ -34,9 +34,7 @@ const DashBoard = () => {
         <Helmet>
           <title>Dashboard</title>
         </Helmet>
-        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", flex: 1 }}>
-          <Loading />
-        </Box>
+        <SkeletonDashboardHome />
       </Box>
     )
 
@@ -73,7 +71,11 @@ const DashBoard = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={3} sx={{ p: 1, pr: { md: 0 } }}>
             <StatisticCard
-              icon={<PillsIcon size={60} className="ou-text-blue-700" />}
+              icon={
+                <Box sx={{ color: "primary.main", lineHeight: 0 }}>
+                  <PillsIcon size={60} />
+                </Box>
+              }
               title={t("dashboard:noteTotalProducts")}
               value={totalProducts || totalMedicineUnit}
               footer={`SKU: ${totalVariants || totalMedicineUnit} | ${t("dashboard:variantUnits")}: ${totalVariantUnits || 0}`}

@@ -1,21 +1,18 @@
-import { Box, Button, Container, ListItem, ListItemText, Tooltip, Typography } from "@mui/material"
+import { Box, Button, Container, Tooltip, Typography } from "@mui/material"
 import { useTranslation } from "react-i18next"
 import { Outlet, useLocation, useNavigate, useParams } from "react-router"
 import useConversationList from "../../modules/pages/ConversationListComponents/hooks/useConversationList"
 import SidebarInbox from "../../modules/pages/ConversationListComponents/SidebarInbox"
-import Loading from "../../modules/common/components/Loading"
 import { Helmet } from "react-helmet"
 import IconRecipientChatPlaceholder from "../../lib/assets/iconRecipientChatPlaceholder"
 import DashboardSplitShell from "../../modules/common/layout/dashboard/shell/DashboardSplitShell"
+import DashboardPaneHeader from "../../modules/common/layout/dashboard/components/DashboardPaneHeader"
+import SkeletonListLineItem from "../../modules/common/components/skeletons/listLineItem"
 import { DASHBOARD_PAGE_FRAME_SX } from "../../modules/common/layout/dashboard/styleTokens"
 
 const ChatPlaceholder = ({ title }) => (
   <Box sx={{ display: "flex", flexDirection: "column", height: "100%", minHeight: 280 }}>
-    <Box sx={{ bgcolor: "primary.main", color: "primary.contrastText" }}>
-      <ListItem>
-        <ListItemText primary={title} sx={{ color: "inherit" }} />
-      </ListItem>
-    </Box>
+    <DashboardPaneHeader title={title} />
     <Box
       sx={{
         flex: 1,
@@ -37,6 +34,31 @@ const ChatPlaceholder = ({ title }) => (
   </Box>
 )
 
+const ConversationListSkeleton = ({ isDashboard }) => {
+  if (isDashboard) {
+    return (
+      <DashboardSplitShell
+        left={
+          <Box sx={{ p: 2 }}>
+            <SkeletonListLineItem count={8} height="48px" className="ou-w-full" />
+          </Box>
+        }
+        right={
+          <Box sx={{ p: 2, height: "100%" }}>
+            <SkeletonListLineItem count={1} height="320px" className="ou-w-full" />
+          </Box>
+        }
+      />
+    )
+  }
+
+  return (
+    <Box sx={{ p: 2 }}>
+      <SkeletonListLineItem count={1} height="400px" className="ou-w-full" />
+    </Box>
+  )
+}
+
 const ConversationList = () => {
   const { t, tReady } = useTranslation(["common", "modal", "conversation"])
   const { user } = useConversationList()
@@ -47,13 +69,13 @@ const ConversationList = () => {
   const isDashboard = location.pathname.startsWith("/dashboard")
   const selectUserLabel = t("conversation:selectUser")
 
-  if (tReady)
+  if (!tReady)
     return (
       <Box sx={isDashboard ? DASHBOARD_PAGE_FRAME_SX : { p: 1.5 }}>
         <Helmet>
           <title>{t("common:conversations")}</title>
         </Helmet>
-        <Loading />
+        <ConversationListSkeleton isDashboard={isDashboard} />
       </Box>
     )
 

@@ -24,6 +24,7 @@ import {
 } from "../../../modules/common/layout/dashboard/styleTokens"
 import DashboardPageShell from "../../../modules/common/layout/dashboard/shell/DashboardPageShell"
 import DashboardFilterButton from "../../../modules/common/layout/dashboard/components/DashboardFilterButton"
+import DashboardEmptyState from "../../../modules/common/layout/dashboard/components/DashboardEmptyState"
 
 const MemoizedDiagnosisFilter = memo(DiagnosisFilter)
 
@@ -131,10 +132,8 @@ export default function PrescribingListShell({
 
             {!isLoadingPrescriptionList && prescriptionList.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={12}>
-                  <Typography align="center" color="error" sx={{ py: 6 }}>
-                    {t("prescription:errNullPrescription")}
-                  </Typography>
+                <TableCell colSpan={12} sx={{ border: 0 }}>
+                  <DashboardEmptyState message={t("prescription:errNullPrescription")} />
                 </TableCell>
               </TableRow>
             ) : null}

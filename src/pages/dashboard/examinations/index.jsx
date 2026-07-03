@@ -28,6 +28,7 @@ import {
 } from "../../../modules/common/layout/dashboard/styleTokens"
 import DashboardPageShell from "../../../modules/common/layout/dashboard/shell/DashboardPageShell"
 import DashboardFilterButton from "../../../modules/common/layout/dashboard/components/DashboardFilterButton"
+import DashboardEmptyState from "../../../modules/common/layout/dashboard/components/DashboardEmptyState"
 
 const MemoizedExaminationFilter = memo(ExaminationFilter)
 
@@ -170,10 +171,8 @@ const Examinations = () => {
 
               {!isLoadingExamination && examinationList.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={8}>
-                    <Typography align="center" color="error" sx={{ py: 6 }}>
-                      {t("examinations:errExamsNull")}
-                    </Typography>
+                  <TableCell colSpan={8} sx={{ border: 0 }}>
+                    <DashboardEmptyState message={t("examinations:errExamsNull")} />
                   </TableCell>
                 </TableRow>
               )}

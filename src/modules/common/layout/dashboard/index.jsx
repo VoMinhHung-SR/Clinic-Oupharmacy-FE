@@ -8,6 +8,7 @@ import {
   DASHBOARD_HIDE_FOOTER_PREFIXES,
   DASHBOARD_PAGE_PADDING,
   DASHBOARD_PAGE_PADDING_Y,
+  shouldShowDashboardFooter,
 } from "./styleTokens"
 
 export default function DashboardLayout() {
@@ -24,6 +25,7 @@ export default function DashboardLayout() {
   const hideFooter = DASHBOARD_HIDE_FOOTER_PREFIXES.some((prefix) =>
     location.pathname.startsWith(prefix)
   )
+  const showFooter = shouldShowDashboardFooter(location.pathname)
 
   return (
     <ThemeProvider theme={dashboardTheme}>
@@ -72,7 +74,7 @@ export default function DashboardLayout() {
             >
               <Outlet />
             </Box>
-            {!hideFooter && <Copyright sx={{ flexShrink: 0, py: 0.25 }} />}
+            {!hideFooter && showFooter && <Copyright sx={{ flexShrink: 0, py: 0.25 }} />}
           </Box>
         </Box>
       </Box>

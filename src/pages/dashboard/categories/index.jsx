@@ -20,6 +20,7 @@ import {
   DASHBOARD_TABLE_HEAD_CELL_SX,
   DASHBOARD_TABLE_SX,
 } from "../../../modules/common/layout/dashboard/styleTokens"
+import DashboardEmptyState from "../../../modules/common/layout/dashboard/components/DashboardEmptyState"
 import DashboardPageShell from "../../../modules/common/layout/dashboard/shell/DashboardPageShell"
 
 const levelLabel = (level, t) => {
@@ -85,10 +86,8 @@ const CategoryList = () => {
               )}
               {!isLoading && Array.isArray(categories) && categories.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={4}>
-                    <Typography align="center" color="error" sx={{ py: 6 }}>
-                      {t("category:errNullCate")}
-                    </Typography>
+                  <TableCell colSpan={4} sx={{ border: 0 }}>
+                    <DashboardEmptyState message={t("category:errNullCate")} />
                   </TableCell>
                 </TableRow>
               )}

@@ -9,17 +9,10 @@ import TimeSlotGrid from "../../../modules/pages/WaittingRoomComponents/TimeSlot
 import { useState, useEffect } from "react"
 import {
   DASHBOARD_PAGE_FRAME_SX,
+  DASHBOARD_PANE_HEADER_SX,
   DASHBOARD_SCROLL_CONTENT_SX,
   DASHBOARD_SURFACE,
 } from "../../../modules/common/layout/dashboard/styleTokens"
-
-const waitingRoomHeaderSx = {
-  p: 2,
-  flexShrink: 0,
-  bgcolor: "primary.main",
-  color: "primary.contrastText",
-  textAlign: "center",
-}
 
 const sessionLabelSx = {
   flexShrink: 0,
@@ -127,7 +120,7 @@ const DashboardWaitingRoom = () => {
         overflow: "hidden",
       }}
     >
-      <Box sx={waitingRoomHeaderSx}>
+      <Box sx={DASHBOARD_PANE_HEADER_SX}>
         <Typography variant="h6">
           {t("title")} - {moment(CURRENT_DATE).format("DD/MM/YYYY")}
         </Typography>

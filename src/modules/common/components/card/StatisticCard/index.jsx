@@ -1,26 +1,45 @@
-import { Box, Divider, Paper } from "@mui/material"
+import { Box, Divider, Paper, Typography } from "@mui/material"
+import { DASHBOARD_SURFACE } from "../../../layout/dashboard/styleTokens"
 
-const StatisticCard = ({icon, title, value, footer}) => {
-    return (
-        <Box component={Paper}>
-            <div className="ou-flex ou-justify-between ou-p-4">
-                <p>
-                    {icon}
-                </p>
-
-                <div className="ou-flex ou-flex-col ou-justify-center 
-                ou-items-end ou-text-right ou-w-full">
-                    <span>{title}</span>
-                    <span className="ou-text-[32px]">{value}</span>
-                </div>
-            </div>
-
-            <Divider className="ou-w-[90%] !ou-m-auto"/>
-            <div className="ou-p-4 ou-py-2">
-                {footer}
-            </div>
+const StatisticCard = ({ icon, title, value, footer }) => {
+  return (
+    <Paper
+      elevation={DASHBOARD_SURFACE.elevation}
+      sx={{
+        borderRadius: DASHBOARD_SURFACE.borderRadius,
+        overflow: "hidden",
+        height: "100%",
+      }}
+    >
+      <Box sx={{ display: "flex", justifyContent: "space-between", p: 2 }}>
+        <Box>{icon}</Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "flex-end",
+            textAlign: "right",
+            width: "100%",
+          }}
+        >
+          <Typography variant="body2" color="text.secondary">
+            {title}
+          </Typography>
+          <Typography variant="h4" component="span" fontWeight={600} color="text.primary">
+            {value}
+          </Typography>
         </Box>
-    )
+      </Box>
+
+      <Divider sx={{ width: "90%", mx: "auto" }} />
+      <Box sx={{ p: 2, pt: 1 }}>
+        <Typography variant="caption" color="text.secondary">
+          {footer}
+        </Typography>
+      </Box>
+    </Paper>
+  )
 }
 
 export default StatisticCard

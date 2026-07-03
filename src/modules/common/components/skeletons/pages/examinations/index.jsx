@@ -16,8 +16,8 @@ const SkeletonExaminationList = () => {
         flexDirection: "column",
       }}
     >
-      <Box sx={{ width: "20%", mb: 2 }}>
-        <SkeletonListLineItem count={1} height="32px" className="ou-w-full" />
+      <Box sx={{ width: "20%", mb: 2, alignSelf: "flex-end" }}>
+        <SkeletonListLineItem count={1} height="36px" className="ou-w-full" />
       </Box>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2, gap: 1 }}>
         <SkeletonListLineItem count={1} height="32px" className="ou-w-[10%]" />

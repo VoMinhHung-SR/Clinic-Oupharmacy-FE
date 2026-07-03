@@ -16,19 +16,10 @@ import Tooltip from "@mui/material/Tooltip"
 import {
   DASHBOARD_PAGE_FRAME_SX,
   DASHBOARD_SURFACE,
+  dashboardNavItemSx,
 } from "../../../modules/common/layout/dashboard/styleTokens"
 
-const navItemSx = (isActive, variant = "primary") => ({
-  display: "flex",
-  alignItems: "center",
-  p: 1.5,
-  borderRadius: 1,
-  ...(isActive && variant === "warning"
-    ? { bgcolor: "warning.main", color: "warning.contrastText" }
-    : isActive
-      ? { bgcolor: "primary.main", color: "primary.contrastText" }
-      : {}),
-})
+const navItemSx = dashboardNavItemSx
 
 const DashboardProfile = () => {
   const { user, hasValidUserAddress } = useContext(UserContext)
