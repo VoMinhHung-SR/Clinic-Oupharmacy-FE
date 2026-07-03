@@ -72,11 +72,7 @@
     .ou-radio-custom:hover {
       background-color: #f5f5f5;
     }
-    
-    .ou-radio-custom:hover {
-      background-color: #f5f5f5;
-    }
-    
+
     .ou-radio-custom:active {
       background-color: #ddd;
     }
@@ -202,7 +198,9 @@
     }
     /* Progress Bar */
 
-    /* Chat - Page */
+    /* Dashboard layout: prefer MUI sx + .ou-scrollbar in layout/dashboard (not new globals here). */
+
+    /* Chat - Page (legacy fixed layout; dashboard refactor will use flex-fill) */
     .ou-recipients-conversation{
       background-color: #fff;
       border: 2px solid rgba(0, 0, 0, 0.3);
@@ -216,7 +214,7 @@
       border-radius: 12px;
     }
     /* Chat - Page */
-    /* Waiting Room - Page */
+    /* Waiting Room - public/legacy; dashboard uses MUI primary.main in sx */
     .ou-waiting-room-header{
       background-color: #1976d2;
       color: #fff;

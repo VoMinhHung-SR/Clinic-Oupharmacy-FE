@@ -24,6 +24,12 @@ import { useTranslation } from "react-i18next"
 import DiagnosisFilter from "../../../modules/common/components/FIlterBar/DiagnosisFilter"
 import DiagnosedCard from "../../../modules/common/components/card/DiagnosedCard"
 import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem"
+import {
+  DASHBOARD_FILTER_BUTTON_SX,
+  DASHBOARD_LIST_HEADER_SX,
+  DASHBOARD_PAGINATION_SX,
+  DASHBOARD_SURFACE,
+} from "../../../modules/common/layout/dashboard/styleTokens"
 
 const MemoizedDiagnosisFilter = memo(DiagnosisFilter)
 
@@ -40,25 +46,15 @@ export default function PrescribingListShell({
   const { t } = useTranslation(["prescription", "common"])
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
-  const isTablet = useMediaQuery(theme.breakpoints.down("md"))
   const [showFilter, setShowFilter] = useState(false)
 
   return (
     <Box sx={{ width: "100%", mx: "auto" }}>
-      <Paper elevation={3} sx={{ borderRadius: 2, overflow: "hidden" }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: isTablet ? "column" : "row",
-            alignItems: isTablet ? "flex-start" : "center",
-            justifyContent: "space-between",
-            gap: 2,
-            p: 2,
-            borderBottom: 1,
-            borderColor: "divider",
-            bgcolor: "background.paper",
-          }}
-        >
+      <Paper
+        elevation={DASHBOARD_SURFACE.elevation}
+        sx={{ borderRadius: DASHBOARD_SURFACE.borderRadius, overflow: "hidden" }}
+      >
+        <Box sx={DASHBOARD_LIST_HEADER_SX}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, minWidth: 0 }}>
             <LocalHospitalIcon color="primary" />
             <Typography variant="h6" component="h1" fontWeight={600}>
@@ -78,7 +74,7 @@ export default function PrescribingListShell({
               />
             }
             onClick={() => setShowFilter((prev) => !prev)}
-            sx={{ borderRadius: 3, fontWeight: 500, textTransform: "none" }}
+            sx={DASHBOARD_FILTER_BUTTON_SX}
           >
             {t("prescription:filter")}
           </Button>
@@ -151,7 +147,7 @@ export default function PrescribingListShell({
       </Paper>
 
       {pagination.sizeNumber >= 2 ? (
-        <Box sx={{ pt: 3, pb: 2 }}>
+        <Box sx={DASHBOARD_PAGINATION_SX}>
           <Stack>
             <Pagination
               count={pagination.sizeNumber}

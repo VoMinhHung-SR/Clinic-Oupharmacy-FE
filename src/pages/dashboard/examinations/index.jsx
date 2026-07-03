@@ -1,18 +1,40 @@
-import {Badge, Box, Button, Collapse, Pagination, Paper, Stack, Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow, Typography, useMediaQuery, useTheme
-} from "@mui/material";
-import useExaminationConfirm from "../../../modules/pages/ExaminationListComponents/ExaminationConfirm/hooks/useExaminationConfirm";
-import { useTranslation } from "react-i18next";
-import ExaminationCard from "../../../modules/common/components/card/ExaminationCard";
-import ExaminationFilter from "../../../modules/common/components/FIlterBar/ExaminationFilter";
-import { Helmet } from "react-helmet";
-import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useState, memo } from "react";
-import FilterListIcon from '@mui/icons-material/FilterList';
-import SkeletonExaminationList from "../../../modules/common/components/skeletons/pages/examinations";
+import {
+  Badge,
+  Box,
+  Button,
+  Collapse,
+  Pagination,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material"
+import useExaminationConfirm from "../../../modules/pages/ExaminationListComponents/ExaminationConfirm/hooks/useExaminationConfirm"
+import { useTranslation } from "react-i18next"
+import ExaminationCard from "../../../modules/common/components/card/ExaminationCard"
+import ExaminationFilter from "../../../modules/common/components/FIlterBar/ExaminationFilter"
+import { Helmet } from "react-helmet"
+import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+import FilterListIcon from "@mui/icons-material/FilterList"
+import AssignmentIcon from "@mui/icons-material/Assignment"
+import { useState, memo } from "react"
+import SkeletonExaminationList from "../../../modules/common/components/skeletons/pages/examinations"
+import {
+  DASHBOARD_FILTER_BUTTON_SX,
+  DASHBOARD_LIST_HEADER_SX,
+  DASHBOARD_PAGINATION_SX,
+  DASHBOARD_SURFACE,
+} from "../../../modules/common/layout/dashboard/styleTokens"
 
-const MemoizedExaminationFilter = memo(ExaminationFilter);
+const MemoizedExaminationFilter = memo(ExaminationFilter)
 
 const Examinations = () => {
   const {
@@ -25,150 +47,171 @@ const Examinations = () => {
     paramsFilter,
     handleChangeFlag,
     handleOnSubmitFilter,
-    handleSendEmailConfirm, loadingState
-  } = useExaminationConfirm();
+    handleSendEmailConfirm,
+    loadingState,
+  } = useExaminationConfirm()
 
-  const { t, ready } = useTranslation(["examinations", "common", "modal"]);
-  const [showFilter, setShowFilter] = useState(false);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+  const { t, ready } = useTranslation(["examinations", "common", "modal"])
+  const [showFilter, setShowFilter] = useState(false)
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
-  /* Initial loading */
   if (!ready && isLoadingExamination)
-    return <Box>
-        <Helmet><title>Examinations</title></Helmet>
+    return (
+      <Box>
+        <Helmet>
+          <title>Examinations</title>
+        </Helmet>
         <SkeletonExaminationList />
       </Box>
+    )
 
   return (
     <>
       <Helmet>
-          <title>{t('common:examinations')}</title>
+        <title>{t("common:examinations")}</title>
       </Helmet>
-      <Box className="ou-flex ou-justify-center ou-flex-col"
-      component={Paper} elevation={4}
-      sx={{ width: '100%', overflowX: 'auto' }}>
-          <TableContainer component={Paper} sx={{ 
-            maxWidth: '100%',
-            overflowX: 'auto',
-            '& .MuiTableCell-root': {
-              padding: isMobile ? '8px' : '16px',
-              fontSize: isMobile ? '0.75rem' : '0.875rem',
-            }
-          }}>
-            <div className="ou-flex ou-items-center ou-justify-between" style={{ 
-              flexDirection: isMobile ? 'column' : 'row',
-              gap: isMobile ? '1rem' : '0',
-              padding: isMobile ? '1rem' : '0'
-            }}>
-              <div className="ou-flex ou-py-5 ou-items-center ou-justify-between">
-                <h1 className="ou-text-xl ou-pl-4" style={{ fontSize: isMobile ? '1rem' : '1.25rem' }}>
-                  {t('listOfExaminations')}
-                </h1>
-              <Button
-                variant="outlined"
-                startIcon={<Badge badgeContent={pagination.count} color="primary"> <FilterListIcon /> </Badge>}
-                endIcon={<ExpandMoreIcon sx={{ transform: showFilter ? 'rotate(180deg)' : 'rotate(0deg)', transition: '0.2s' }} />}
-                onClick={() => setShowFilter((prev) => !prev)}
-                sx={{ borderRadius: 3, fontWeight: 500, marginLeft: '12px', textTransform: 'none' }}
-              >
-                <span className="ou-pl-3">{t('examinations:filter')}</span>
-              </Button>
-              </div>
-            </div>
-              <Collapse in={showFilter}>
-                <Paper elevation={3} sx={{ p: 2, mb: 2, borderRadius: 3, boxShadow: 2, width: '100%' }}>
-                  <MemoizedExaminationFilter
-                    onSubmit={handleOnSubmitFilter}
-                    mailStatus={paramsFilter.mailStatus}
-                    createdDate={paramsFilter.createdDate}
-                    kw={paramsFilter.kw}
-                    hasDiagnosis={paramsFilter.hasDiagnosis}
-                    isMobile={isMobile}
-                  />
-                </Paper>
-              </Collapse>
-            
-            <Table sx={{ 
-              minWidth: isMobile ? 300 : 650,
-              '& .MuiTableCell-root': {
-                whiteSpace: isMobile ? 'nowrap' : 'normal',
-                maxWidth: isMobile ? '150px' : 'none',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
+      <Box sx={{ width: "100%", mx: "auto" }}>
+        <Paper
+          elevation={DASHBOARD_SURFACE.elevation}
+          sx={{ borderRadius: DASHBOARD_SURFACE.borderRadius, overflow: "hidden" }}
+        >
+          <Box sx={DASHBOARD_LIST_HEADER_SX}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, minWidth: 0 }}>
+              <AssignmentIcon color="primary" />
+              <Typography variant="h6" component="h1" fontWeight={600}>
+                {t("listOfExaminations")}
+              </Typography>
+            </Box>
+            <Button
+              variant="outlined"
+              startIcon={
+                <Badge badgeContent={pagination.count} color="primary" max={999}>
+                  <FilterListIcon />
+                </Badge>
               }
-            }} aria-label="simple table">
+              endIcon={
+                <ExpandMoreIcon
+                  sx={{
+                    transform: showFilter ? "rotate(180deg)" : "rotate(0deg)",
+                    transition: "0.2s",
+                  }}
+                />
+              }
+              onClick={() => setShowFilter((prev) => !prev)}
+              sx={DASHBOARD_FILTER_BUTTON_SX}
+            >
+              {t("examinations:filter")}
+            </Button>
+          </Box>
+
+          <Collapse in={showFilter}>
+            <Box sx={{ p: 2, bgcolor: "action.hover" }}>
+              <MemoizedExaminationFilter
+                onSubmit={handleOnSubmitFilter}
+                mailStatus={paramsFilter.mailStatus}
+                createdDate={paramsFilter.createdDate}
+                kw={paramsFilter.kw}
+                hasDiagnosis={paramsFilter.hasDiagnosis}
+                isMobile={isMobile}
+              />
+            </Box>
+          </Collapse>
+
+          <TableContainer sx={{ overflowX: "auto" }}>
+            <Table
+              size={isMobile ? "small" : "medium"}
+              stickyHeader
+              sx={{
+                minWidth: isMobile ? 300 : 650,
+                "& .MuiTableCell-root": {
+                  padding: isMobile ? "8px" : "16px",
+                  fontSize: isMobile ? "0.75rem" : "0.875rem",
+                  whiteSpace: isMobile ? "nowrap" : "normal",
+                  maxWidth: isMobile ? "150px" : "none",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                },
+              }}
+              aria-label="examinations table"
+            >
               <TableHead>
                 <TableRow>
                   <TableCell>{t("id")}</TableCell>
                   <TableCell align="center">{t("description")}</TableCell>
                   <TableCell align="center">{t("createdDate")}</TableCell>
                   <TableCell align="center">{t("mailStatus")}</TableCell>
-                  <TableCell align="center">{t("diagnosisStatus")}</TableCell>    
+                  <TableCell align="center">{t("diagnosisStatus")}</TableCell>
                   <TableCell align="center">{t("userCreated")}</TableCell>
                   <TableCell align="center">{t("doctorName")}</TableCell>
-                  <TableCell align="center">
-                    <Box className="ou-flex ou-justify-center ou-items-center">
-                      {t("function")} 
-                    </Box>
-                  </TableCell>
+                  <TableCell align="center">{t("function")}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-
-                {isLoadingExamination && 
-                  <TableCell colSpan={12} component="th" scope="row">
-                      <Box className="ou-text-center">
-                          <SkeletonListLineItem count={10} height="40px" className="ou-w-full" />
+                {isLoadingExamination && (
+                  <TableRow>
+                    <TableCell colSpan={8}>
+                      <Box sx={{ textAlign: "center", py: 2 }}>
+                        <SkeletonListLineItem count={10} height="40px" className="ou-w-full" />
                       </Box>
-                  </TableCell>
-                }
-                {
-                  !isLoadingExamination && 
-                  examinationList.length > 0 && examinationList.map((e) => (
-                    <ExaminationCard key={`e-${e.id}`} 
-                    examinationData={e} user={user} 
-                    callback={handleChangeFlag}
-                    loading={loadingState[e.id] || false} 
-                    sendEmailConfirm={() => handleSendEmailConfirm(e.user.id, e.id, user.avatar_path)}
-                    />       
-                ))} 
+                    </TableCell>
+                  </TableRow>
+                )}
 
-                {!isLoadingExamination && 
-                  examinationList.length === 0 &&  <TableCell colSpan={12} component="th" scope="row">
-                  <Typography> <Box className="ou-text-center ou-p-10 ou-text-red-700">{t('examinations:errExamsNull')}</Box></Typography>
-                </TableCell>
-                } 
+                {!isLoadingExamination &&
+                  examinationList.length > 0 &&
+                  examinationList.map((e) => (
+                    <ExaminationCard
+                      key={`e-${e.id}`}
+                      examinationData={e}
+                      user={user}
+                      callback={handleChangeFlag}
+                      loading={loadingState[e.id] || false}
+                      sendEmailConfirm={() =>
+                        handleSendEmailConfirm(e.user.id, e.id, user.avatar_path)
+                      }
+                    />
+                  ))}
 
+                {!isLoadingExamination && examinationList.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={8}>
+                      <Typography align="center" color="error" sx={{ py: 6 }}>
+                        {t("examinations:errExamsNull")}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
-          {pagination.sizeNumber >= 2 && (
-            <Box sx={{ 
-              pt: 5, 
-              pb: 2,
-              '& .MuiPagination-root': {
-                '& .MuiPaginationItem-root': {
-                  fontSize: isMobile ? '0.75rem' : '0.875rem',
-                  padding: isMobile ? '4px' : '8px'
-                }
-              }
-            }}>
-              <Stack>
-                <Pagination
-                  count={pagination.sizeNumber}
-                  variant="outlined"
-                  sx={{ margin: "0 auto" }}
-                  page={page}
-                  onChange={handleChangePage}
-                />
-              </Stack>
-            </Box>
-          )}
-      </Box>
+        </Paper>
 
+        {pagination.sizeNumber >= 2 && (
+          <Box
+            sx={{
+              ...DASHBOARD_PAGINATION_SX,
+              "& .MuiPaginationItem-root": {
+                fontSize: isMobile ? "0.75rem" : "0.875rem",
+                padding: isMobile ? "4px" : "8px",
+              },
+            }}
+          >
+            <Stack>
+              <Pagination
+                count={pagination.sizeNumber}
+                variant="outlined"
+                sx={{ margin: "0 auto" }}
+                page={page}
+                onChange={handleChangePage}
+                size={isMobile ? "small" : "medium"}
+              />
+            </Stack>
+          </Box>
+        )}
+      </Box>
     </>
-  );
-};
-export default Examinations;
+  )
+}
+
+export default Examinations

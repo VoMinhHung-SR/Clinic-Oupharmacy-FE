@@ -7,6 +7,20 @@ import SkeletonListLineItem from "../../../modules/common/components/skeletons/l
 import { Helmet } from "react-helmet";
 import TimeSlotGrid from "../../../modules/pages/WaittingRoomComponents/TimeSlotGrid";
 import { useState, useEffect } from "react";
+import { DASHBOARD_SURFACE } from "../../../modules/common/layout/dashboard/styleTokens";
+
+const waitingRoomHeaderSx = {
+  p: 2,
+  bgcolor: "primary.main",
+  color: "primary.contrastText",
+  textAlign: "center",
+};
+
+const sessionLabelSx = {
+  textAlign: "center",
+  bgcolor: "grey.100",
+  p: 1.25,
+};
 
 const DashboardWaitingRoom = () => {
     const { t } = useTranslation(['waiting-room']);
@@ -78,11 +92,11 @@ const DashboardWaitingRoom = () => {
     if (loading) 
       return(
     <Box>
-      <Paper elevation={3}>
-      <Box sx={{ p: 2, bgcolor: '#1976d2', color: '#fff', textAlign: 'center' }}>
+      <Paper elevation={DASHBOARD_SURFACE.elevation} sx={{ borderRadius: DASHBOARD_SURFACE.borderRadius, overflow: "hidden" }}>
+      <Box sx={waitingRoomHeaderSx}>
             <Typography variant="h6">{t('title')} - {moment(CURRENT_DATE).format('DD/MM/YYYY')}</Typography>
           </Box>
-        <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9', p: '10px' }}>{t('morning')}</Box>
+        <Box sx={sessionLabelSx}>{t('morning')}</Box>
         <Grid container>
           <SkeletonListLineItem height="200px" width="25%" />
           <SkeletonListLineItem height="200px" width="25%"/>
@@ -90,7 +104,7 @@ const DashboardWaitingRoom = () => {
           <SkeletonListLineItem height="200px" width="25%"/>
         </Grid>
   
-        <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9', p: '10px' }}>{t('afternoon')}</Box>
+        <Box sx={sessionLabelSx}>{t('afternoon')}</Box>
         <Grid container>
           <SkeletonListLineItem height="200px" width="25%"/>
           <SkeletonListLineItem height="200px" width="25%"/>
@@ -111,11 +125,11 @@ const DashboardWaitingRoom = () => {
           <title>{t('title')} </title>
         </Helmet>
         
-        <Paper elevation={3}>
-          <Box sx={{ p: 2, bgcolor: '#1976d2', color: '#fff', textAlign: 'center' }}>
+        <Paper elevation={DASHBOARD_SURFACE.elevation} sx={{ borderRadius: DASHBOARD_SURFACE.borderRadius, overflow: "hidden" }}>
+          <Box sx={waitingRoomHeaderSx}>
             <Typography variant="h6">{t('title')} - {moment(CURRENT_DATE).format('DD/MM/YYYY')}</Typography>
           </Box>
-          <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9', p: '10px' }}>{t('morning')}</Box>
+          <Box sx={sessionLabelSx}>{t('morning')}</Box>
           <Grid container>
             {timeSlots.slice(0, 4).map((timeSlot, index) => (
               <TimeSlotGrid 
@@ -127,7 +141,7 @@ const DashboardWaitingRoom = () => {
             ))}
           </Grid>
   
-          <Box sx={{ textAlign: 'center', bgcolor: '#f9f9f9', p: '10px' }}>{t('afternoon')}</Box>
+          <Box sx={sessionLabelSx}>{t('afternoon')}</Box>
           <Grid container>
             {timeSlots.slice(4).map((timeSlot, index) => (
               <TimeSlotGrid 
