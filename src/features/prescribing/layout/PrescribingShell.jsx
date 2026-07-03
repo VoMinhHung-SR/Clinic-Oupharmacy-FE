@@ -3,7 +3,7 @@ import { useState } from "react"
 import PatientContextBar from "../patient/PatientContextBar"
 import PrescribingContentWrapper from "./PrescribingContentWrapper"
 import PrescribingDraftDrawer from "../draft/PrescribingDraftDrawer"
-import { DASHBOARD_SURFACE } from "../../../modules/common/layout/dashboard/styleTokens"
+import { DASHBOARD_PAPER_SX, DASHBOARD_SURFACE } from "../../../modules/common/layout/dashboard/styleTokens"
 
 export default function PrescribingShell({
   patient,
@@ -39,7 +39,7 @@ export default function PrescribingShell({
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
-            borderRadius: DASHBOARD_SURFACE.borderRadius,
+            ...DASHBOARD_PAPER_SX,
             px: { xs: 2, md: 2.5 },
             py: { xs: 1.5, md: 2 },
           }}

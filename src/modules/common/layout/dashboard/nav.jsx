@@ -38,6 +38,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import PaymentIcon from '@mui/icons-material/Payment';
+import { isDashboardNavItemActive } from './styleTokens';
 
 const drawerWidth = 240;
 
@@ -155,12 +156,9 @@ const NavDashboard = ({ open, toggleDrawer }) => {
     navigate("/dashboard/forbidden");
   };
 
-  const isNavItemActive = (link) =>
-    location.pathname === link || location.pathname.startsWith(`${link}/`)
-
   const renderPage = (routingRole, allowedRoles, isOpen) => {
       return routingRole && routingRole.map(item => {
-        const active = isNavItemActive(item.link)
+        const active = isDashboardNavItemActive(location.pathname, item.link)
         const button = (
           <ListItemButton
             key={"dashboard"+item.name}

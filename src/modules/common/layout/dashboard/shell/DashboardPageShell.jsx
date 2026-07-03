@@ -3,6 +3,7 @@ import {
   DASHBOARD_LIST_HEADER_SX,
   DASHBOARD_PAGE_FRAME_SX,
   DASHBOARD_PAGINATION_SX,
+  DASHBOARD_PAPER_SX,
   DASHBOARD_SCROLL_BODY_SX,
   DASHBOARD_SURFACE,
 } from "../styleTokens"
@@ -26,11 +27,11 @@ export default function DashboardPageShell({
       <Paper
         elevation={DASHBOARD_SURFACE.elevation}
         sx={{
+          ...DASHBOARD_PAPER_SX,
           flex: 1,
           minHeight: 0,
           display: "flex",
           flexDirection: "column",
-          borderRadius: DASHBOARD_SURFACE.borderRadius,
           overflow: "hidden",
         }}
       >

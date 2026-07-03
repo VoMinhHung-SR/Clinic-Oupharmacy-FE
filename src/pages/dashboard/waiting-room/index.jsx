@@ -10,6 +10,7 @@ import { useState, useEffect } from "react"
 import {
   DASHBOARD_PAGE_FRAME_SX,
   DASHBOARD_PANE_HEADER_SX,
+  DASHBOARD_PAPER_SX,
   DASHBOARD_SCROLL_CONTENT_SX,
   DASHBOARD_SURFACE,
 } from "../../../modules/common/layout/dashboard/styleTokens"
@@ -112,11 +113,11 @@ const DashboardWaitingRoom = () => {
     <Paper
       elevation={DASHBOARD_SURFACE.elevation}
       sx={{
+        ...DASHBOARD_PAPER_SX,
         flex: 1,
         minHeight: 0,
         display: "flex",
         flexDirection: "column",
-        borderRadius: DASHBOARD_SURFACE.borderRadius,
         overflow: "hidden",
       }}
     >

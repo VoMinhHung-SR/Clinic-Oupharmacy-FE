@@ -1,13 +1,12 @@
 import { Box, Divider, Paper, Typography } from "@mui/material"
-import { DASHBOARD_SURFACE } from "../../../layout/dashboard/styleTokens"
+import { DASHBOARD_SURFACE, DASHBOARD_PAPER_SX } from "../../../layout/dashboard/styleTokens"
 
 const StatisticCard = ({ icon, title, value, footer }) => {
   return (
     <Paper
       elevation={DASHBOARD_SURFACE.elevation}
       sx={{
-        borderRadius: DASHBOARD_SURFACE.borderRadius,
-        overflow: "hidden",
+        ...DASHBOARD_PAPER_SX,
         height: "100%",
       }}
     >

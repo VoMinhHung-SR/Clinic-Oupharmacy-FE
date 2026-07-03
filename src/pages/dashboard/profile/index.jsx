@@ -16,6 +16,7 @@ import Tooltip from "@mui/material/Tooltip"
 import {
   DASHBOARD_PAGE_FRAME_SX,
   DASHBOARD_SURFACE,
+  DASHBOARD_PAPER_SX,
   dashboardNavItemSx,
 } from "../../../modules/common/layout/dashboard/styleTokens"
 
@@ -99,7 +100,7 @@ const DashboardProfile = () => {
   }
 
   const paperSx = {
-    borderRadius: DASHBOARD_SURFACE.borderRadius,
+    ...DASHBOARD_PAPER_SX,
     p: 2.5,
   }
 

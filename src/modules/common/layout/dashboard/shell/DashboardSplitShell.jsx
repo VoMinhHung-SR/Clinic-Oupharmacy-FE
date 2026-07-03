@@ -1,12 +1,12 @@
 import { Box, Paper } from "@mui/material"
-import { DASHBOARD_PAGE_FRAME_SX, DASHBOARD_SURFACE } from "../styleTokens"
+import { DASHBOARD_PAGE_FRAME_SX, DASHBOARD_PAPER_SX, DASHBOARD_SURFACE } from "../styleTokens"
 
 function SplitPane({ children, sx = {} }) {
   return (
     <Paper
       elevation={DASHBOARD_SURFACE.elevation}
       sx={{
-        borderRadius: DASHBOARD_SURFACE.borderRadius,
+        ...DASHBOARD_PAPER_SX,
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",

@@ -12,10 +12,10 @@ import {
 } from "../../../modules/common/layout/dashboard/styleTokens"
 
 const DoctorSchedules = () => {
-  const { t, tReady } = useTranslation(["doctor-schedule", "common"])
+  const { t, ready } = useTranslation(["doctor-schedule", "common"])
   const { user } = useContext(UserContext)
 
-  if (!tReady)
+  if (!ready)
     return (
       <Box sx={DASHBOARD_PAGE_FRAME_SX}>
         <Helmet>

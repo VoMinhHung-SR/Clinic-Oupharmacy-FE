@@ -2,11 +2,21 @@
 
 export const DASHBOARD_BORDER = "1px solid"
 export const DASHBOARD_BORDER_COLOR = "divider"
-export const DASHBOARD_SHADOW = "0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06)"
+export const DASHBOARD_SHADOW =
+  "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.08)"
 
 export const DASHBOARD_SURFACE = {
   elevation: 2,
   borderRadius: 3,
+}
+
+/** Shared Paper chrome for dashboard cards / panes. */
+export const DASHBOARD_PAPER_SX = {
+  borderRadius: DASHBOARD_SURFACE.borderRadius,
+  boxShadow: DASHBOARD_SHADOW,
+  border: "1px solid",
+  borderColor: "rgba(0, 0, 0, 0.1)",
+  bgcolor: "background.paper",
 }
 
 export const DASHBOARD_PAGE_PADDING = {
@@ -52,7 +62,7 @@ export const DASHBOARD_TABLE_HEAD_CELL_SX = {
   fontWeight: 600,
   fontSize: "0.75rem",
   color: "text.secondary",
-  bgcolor: "grey.50",
+  bgcolor: "grey.100",
   whiteSpace: "nowrap",
 }
 
@@ -107,6 +117,14 @@ export const DASHBOARD_HIDE_FOOTER_PREFIXES = [
 /** Show copyright only on dashboard home. */
 export const shouldShowDashboardFooter = (pathname) =>
   pathname === "/dashboard" || pathname === "/dashboard/"
+
+/** Sidebar active state — home link must not match every /dashboard/* route. */
+export const isDashboardNavItemActive = (pathname, link) => {
+  if (link === "/dashboard") {
+    return pathname === "/dashboard" || pathname === "/dashboard/"
+  }
+  return pathname === link || pathname.startsWith(`${link}/`)
+}
 
 /** Primary header bar for split panes (waiting-room, conversations). */
 export const DASHBOARD_PANE_HEADER_SX = {

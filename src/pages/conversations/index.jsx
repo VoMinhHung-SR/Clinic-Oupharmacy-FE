@@ -60,7 +60,7 @@ const ConversationListSkeleton = ({ isDashboard }) => {
 }
 
 const ConversationList = () => {
-  const { t, tReady } = useTranslation(["common", "modal", "conversation"])
+  const { t, ready } = useTranslation(["common", "modal", "conversation"])
   const { user } = useConversationList()
   const router = useNavigate()
   const location = useLocation()
@@ -69,7 +69,7 @@ const ConversationList = () => {
   const isDashboard = location.pathname.startsWith("/dashboard")
   const selectUserLabel = t("conversation:selectUser")
 
-  if (!tReady)
+  if (!ready)
     return (
       <Box sx={isDashboard ? DASHBOARD_PAGE_FRAME_SX : { p: 1.5 }}>
         <Helmet>

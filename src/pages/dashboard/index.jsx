@@ -19,16 +19,17 @@ import {
   DASHBOARD_PAGE_FRAME_SX,
   DASHBOARD_SCROLL_CONTENT_SX,
   DASHBOARD_SURFACE,
+  DASHBOARD_PAPER_SX,
 } from "../../modules/common/layout/dashboard/styleTokens"
 
 const DashBoard = () => {
-  const { t, tReady } = useTranslation(["dashboard"])
+  const { t, ready } = useTranslation(["dashboard"])
   const { user } = useContext(UserContext)
   const { totalPatients, totalUsers, totalProducts, totalVariants, totalVariantUnits, totalMedicineUnit } =
     useStatistic()
   const { totalExams } = useLimitExamPerDay(CURRENT_DATE)
 
-  if (!tReady)
+  if (!ready)
     return (
       <Box sx={DASHBOARD_PAGE_FRAME_SX}>
         <Helmet>
@@ -86,7 +87,7 @@ const DashBoard = () => {
         <Box className="ou-scrollbar" sx={DASHBOARD_SCROLL_CONTENT_SX}>
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
-              <Paper elevation={DASHBOARD_SURFACE.elevation} sx={{ p: 2, borderRadius: DASHBOARD_SURFACE.borderRadius }}>
+              <Paper elevation={DASHBOARD_SURFACE.elevation} sx={{ ...DASHBOARD_PAPER_SX, p: 2 }}>
                 {user.role === ROLE_ADMIN || user.role === ROLE_DOCTOR ? (
                   <DoctorScheduleWeeklyChart />
                 ) : (
@@ -95,7 +96,7 @@ const DashBoard = () => {
               </Paper>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Paper elevation={DASHBOARD_SURFACE.elevation} sx={{ p: 2, borderRadius: DASHBOARD_SURFACE.borderRadius }}>
+              <Paper elevation={DASHBOARD_SURFACE.elevation} sx={{ ...DASHBOARD_PAPER_SX, p: 2 }}>
                 <RevenueChart />
               </Paper>
             </Grid>
