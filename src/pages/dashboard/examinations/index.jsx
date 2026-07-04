@@ -1,18 +1,36 @@
-import {Badge, Box, Button, Collapse, Pagination, Paper, Stack, Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow, Typography, useMediaQuery, useTheme
-} from "@mui/material";
-import useExaminationConfirm from "../../../modules/pages/ExaminationListComponents/ExaminationConfirm/hooks/useExaminationConfirm";
-import { useTranslation } from "react-i18next";
-import ExaminationCard from "../../../modules/common/components/card/ExaminationCard";
-import ExaminationFilter from "../../../modules/common/components/FIlterBar/ExaminationFilter";
-import { Helmet } from "react-helmet";
-import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useState, memo } from "react";
-import FilterListIcon from '@mui/icons-material/FilterList';
-import SkeletonExaminationList from "../../../modules/common/components/skeletons/pages/examinations";
+import {
+  Box,
+  Pagination,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material"
+import useExaminationConfirm from "../../../modules/pages/ExaminationListComponents/ExaminationConfirm/hooks/useExaminationConfirm"
+import { useTranslation } from "react-i18next"
+import ExaminationCard from "../../../modules/common/components/card/ExaminationCard"
+import ExaminationFilter from "../../../modules/common/components/FIlterBar/ExaminationFilter"
+import { Helmet } from "react-helmet"
+import SkeletonListLineItem from "../../../modules/common/components/skeletons/listLineItem"
+import { memo, useState } from "react"
+import SkeletonExaminationList from "../../../modules/common/components/skeletons/pages/examinations"
+import {
+  DASHBOARD_PAGE_FRAME_SX,
+  DASHBOARD_TABLE_CONTAINER_SX,
+  DASHBOARD_TABLE_MOBILE_BODY_SX,
+  DASHBOARD_TABLE_SX,
+} from "../../../modules/common/layout/dashboard/styleTokens"
+import DashboardPageShell from "../../../modules/common/layout/dashboard/shell/DashboardPageShell"
+import DashboardFilterButton from "../../../modules/common/layout/dashboard/components/DashboardFilterButton"
+import DashboardEmptyState from "../../../modules/common/layout/dashboard/components/DashboardEmptyState"
+import DashboardTableHeadCell from "../../../modules/common/layout/dashboard/components/DashboardTableHeadCell"
 
-const MemoizedExaminationFilter = memo(ExaminationFilter);
+const MemoizedExaminationFilter = memo(ExaminationFilter)
 
 const Examinations = () => {
   const {
@@ -25,150 +43,130 @@ const Examinations = () => {
     paramsFilter,
     handleChangeFlag,
     handleOnSubmitFilter,
-    handleSendEmailConfirm, loadingState
-  } = useExaminationConfirm();
+    handleSendEmailConfirm,
+    loadingState,
+  } = useExaminationConfirm()
 
-  const { t, ready } = useTranslation(["examinations", "common", "modal"]);
-  const [showFilter, setShowFilter] = useState(false);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+  const { t, ready } = useTranslation(["examinations", "common", "modal"])
+  const [showFilter, setShowFilter] = useState(false)
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
-  /* Initial loading */
   if (!ready && isLoadingExamination)
-    return <Box>
-        <Helmet><title>Examinations</title></Helmet>
-        <SkeletonExaminationList />
-      </Box>
+    return (
+      <>
+        <Helmet>
+          <title>Examinations</title>
+        </Helmet>
+        <Box sx={DASHBOARD_PAGE_FRAME_SX}>
+          <SkeletonExaminationList />
+        </Box>
+      </>
+    )
+
+  const paginationFooter =
+    pagination.sizeNumber >= 2 ? (
+      <Stack>
+        <Pagination
+          count={pagination.sizeNumber}
+          variant="outlined"
+          sx={{ margin: "0 auto" }}
+          page={page}
+          onChange={handleChangePage}
+          size={isMobile ? "small" : "medium"}
+        />
+      </Stack>
+    ) : null
 
   return (
     <>
       <Helmet>
-          <title>{t('common:examinations')}</title>
+        <title>{t("common:examinations")}</title>
       </Helmet>
-      <Box className="ou-flex ou-justify-center ou-flex-col"
-      component={Paper} elevation={4}
-      sx={{ width: '100%', overflowX: 'auto' }}>
-          <TableContainer component={Paper} sx={{ 
-            maxWidth: '100%',
-            overflowX: 'auto',
-            '& .MuiTableCell-root': {
-              padding: isMobile ? '8px' : '16px',
-              fontSize: isMobile ? '0.75rem' : '0.875rem',
-            }
-          }}>
-            <div className="ou-flex ou-items-center ou-justify-between" style={{ 
-              flexDirection: isMobile ? 'column' : 'row',
-              gap: isMobile ? '1rem' : '0',
-              padding: isMobile ? '1rem' : '0'
-            }}>
-              <div className="ou-flex ou-py-5 ou-items-center ou-justify-between">
-                <h1 className="ou-text-xl ou-pl-4" style={{ fontSize: isMobile ? '1rem' : '1.25rem' }}>
-                  {t('listOfExaminations')}
-                </h1>
-              <Button
-                variant="outlined"
-                startIcon={<Badge badgeContent={pagination.count} color="primary"> <FilterListIcon /> </Badge>}
-                endIcon={<ExpandMoreIcon sx={{ transform: showFilter ? 'rotate(180deg)' : 'rotate(0deg)', transition: '0.2s' }} />}
-                onClick={() => setShowFilter((prev) => !prev)}
-                sx={{ borderRadius: 3, fontWeight: 500, marginLeft: '12px', textTransform: 'none' }}
-              >
-                <span className="ou-pl-3">{t('examinations:filter')}</span>
-              </Button>
-              </div>
-            </div>
-              <Collapse in={showFilter}>
-                <Paper elevation={3} sx={{ p: 2, mb: 2, borderRadius: 3, boxShadow: 2, width: '100%' }}>
-                  <MemoizedExaminationFilter
-                    onSubmit={handleOnSubmitFilter}
-                    mailStatus={paramsFilter.mailStatus}
-                    createdDate={paramsFilter.createdDate}
-                    kw={paramsFilter.kw}
-                    hasDiagnosis={paramsFilter.hasDiagnosis}
-                    isMobile={isMobile}
-                  />
-                </Paper>
-              </Collapse>
-            
-            <Table sx={{ 
+      <DashboardPageShell
+        actions={
+          <DashboardFilterButton
+            label={t("examinations:filter")}
+            count={pagination.count}
+            showFilter={showFilter}
+            onToggle={() => setShowFilter((prev) => !prev)}
+          />
+        }
+        showFilter={showFilter}
+        filterPanel={
+          <MemoizedExaminationFilter
+            onSubmit={handleOnSubmitFilter}
+            mailStatus={paramsFilter.mailStatus}
+            createdDate={paramsFilter.createdDate}
+            kw={paramsFilter.kw}
+            hasDiagnosis={paramsFilter.hasDiagnosis}
+            isMobile={isMobile}
+          />
+        }
+        footer={paginationFooter}
+      >
+        <TableContainer className="ou-scrollbar" sx={DASHBOARD_TABLE_CONTAINER_SX}>
+          <Table
+            size="small"
+            stickyHeader
+            sx={{
+              ...DASHBOARD_TABLE_SX,
               minWidth: isMobile ? 300 : 650,
-              '& .MuiTableCell-root': {
-                whiteSpace: isMobile ? 'nowrap' : 'normal',
-                maxWidth: isMobile ? '150px' : 'none',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }
-            }} aria-label="simple table">
-              <TableHead>
+              ...(isMobile ? DASHBOARD_TABLE_MOBILE_BODY_SX : {}),
+            }}
+            aria-label="examinations table"
+          >
+            <TableHead>
+              <TableRow>
+                <DashboardTableHeadCell>{t("id")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell>{t("description")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell align="center">{t("createdDate")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell align="center">{t("mailStatus")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell align="center">{t("diagnosisStatus")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell>{t("userCreated")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell>{t("doctorName")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell align="center">{t("function")}</DashboardTableHeadCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {isLoadingExamination && (
                 <TableRow>
-                  <TableCell>{t("id")}</TableCell>
-                  <TableCell align="center">{t("description")}</TableCell>
-                  <TableCell align="center">{t("createdDate")}</TableCell>
-                  <TableCell align="center">{t("mailStatus")}</TableCell>
-                  <TableCell align="center">{t("diagnosisStatus")}</TableCell>    
-                  <TableCell align="center">{t("userCreated")}</TableCell>
-                  <TableCell align="center">{t("doctorName")}</TableCell>
-                  <TableCell align="center">
-                    <Box className="ou-flex ou-justify-center ou-items-center">
-                      {t("function")} 
+                  <TableCell colSpan={8}>
+                    <Box sx={{ textAlign: "center", py: 2 }}>
+                      <SkeletonListLineItem count={10} height="40px" className="ou-w-full" />
                     </Box>
                   </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
+              )}
 
-                {isLoadingExamination && 
-                  <TableCell colSpan={12} component="th" scope="row">
-                      <Box className="ou-text-center">
-                          <SkeletonListLineItem count={10} height="40px" className="ou-w-full" />
-                      </Box>
-                  </TableCell>
-                }
-                {
-                  !isLoadingExamination && 
-                  examinationList.length > 0 && examinationList.map((e) => (
-                    <ExaminationCard key={`e-${e.id}`} 
-                    examinationData={e} user={user} 
+              {!isLoadingExamination &&
+                examinationList.length > 0 &&
+                examinationList.map((e) => (
+                  <ExaminationCard
+                    key={`e-${e.id}`}
+                    examinationData={e}
+                    user={user}
                     callback={handleChangeFlag}
-                    loading={loadingState[e.id] || false} 
-                    sendEmailConfirm={() => handleSendEmailConfirm(e.user.id, e.id, user.avatar_path)}
-                    />       
-                ))} 
+                    loading={loadingState[e.id] || false}
+                    sendEmailConfirm={() =>
+                      handleSendEmailConfirm(e.user.id, e.id, user.avatar_path)
+                    }
+                  />
+                ))}
 
-                {!isLoadingExamination && 
-                  examinationList.length === 0 &&  <TableCell colSpan={12} component="th" scope="row">
-                  <Typography> <Box className="ou-text-center ou-p-10 ou-text-red-700">{t('examinations:errExamsNull')}</Box></Typography>
-                </TableCell>
-                } 
-
-              </TableBody>
-            </Table>
-          </TableContainer>
-          {pagination.sizeNumber >= 2 && (
-            <Box sx={{ 
-              pt: 5, 
-              pb: 2,
-              '& .MuiPagination-root': {
-                '& .MuiPaginationItem-root': {
-                  fontSize: isMobile ? '0.75rem' : '0.875rem',
-                  padding: isMobile ? '4px' : '8px'
-                }
-              }
-            }}>
-              <Stack>
-                <Pagination
-                  count={pagination.sizeNumber}
-                  variant="outlined"
-                  sx={{ margin: "0 auto" }}
-                  page={page}
-                  onChange={handleChangePage}
-                />
-              </Stack>
-            </Box>
-          )}
-      </Box>
-
+              {!isLoadingExamination && examinationList.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={8} sx={{ border: 0 }}>
+                    <DashboardEmptyState message={t("examinations:errExamsNull")} />
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </DashboardPageShell>
     </>
-  );
-};
-export default Examinations;
+  )
+}
+
+export default Examinations

@@ -5,24 +5,6 @@ export const updateProfile = async (userID, data) => {
     return res;
 }
 
-/** @deprecated Use fetchUserAddresses / defaultAddress from context. Kept for backward compat. */
-export const fetchUserLocation = async (userID) => {
-    const res = await authApi().get(endpoints['get-user-location'](userID));
-    return res;
-}
-
-/** @deprecated Use updateUserAddress. Kept for backward compat. */
-export const updateLocation = async (locationID, data) => {
-    const res = await authApi().patch(endpoints['location-detail'](locationID), data);
-    return res;
-}
-
-/** @deprecated Use createUserAddress. Kept for backward compat. */
-export const fetchCreateLocation = async (data) => {
-    const res = await authApi().post(endpoints['location'], data);
-    return res;
-}
-
 export const changeAvatar = async (userID, data) => {
     const res = await authApi().patch(endpoints['change-avatar'](userID), data);
     return res;

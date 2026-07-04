@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material"
+import { Box, Button, Grid, Paper, Typography } from "@mui/material"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
 import { Helmet } from "react-helmet"
@@ -8,93 +8,94 @@ import MedicalRecordsModal from "../../../../../modules/pages/PrescriptionDetail
 import useDiagnosis from "../../../../../modules/pages/DiagnosisComponents/hooks/useDiagnosis"
 import AppointmentStatusBanner from "../../../../../modules/pages/DiagnosisComponents/AppointmentStatusBanner"
 import SkeletonDiagnosis from "../../../../../modules/common/components/skeletons/pages/examinations/diagnosis"
+import {
+  DASHBOARD_PAGE_FRAME_SX,
+  DASHBOARD_SCROLL_CONTENT_SX,
+  DASHBOARD_SURFACE,
+} from "../../../../../modules/common/layout/dashboard/styleTokens"
 
 const Diagnosis = () => {
-    const { examinationDetail, isLoadingExamination, diagnosis,
-        prescriptionId, examinationId, user, handleChangeFlag } = useDiagnosis()
-    const router = useNavigate()
-    const { t, ready } = useTranslation(["diagnosis", "common"])
+  const { examinationDetail, isLoadingExamination, diagnosis, prescriptionId, examinationId, user, handleChangeFlag } =
+    useDiagnosis()
+  const router = useNavigate()
+  const { t, ready } = useTranslation(["diagnosis", "common"])
 
-    if (!ready || isLoadingExamination)
-        return <Box>
-        <Helmet>
-            <title>Diagnosis</title>
-        </Helmet>
-        <Box className="ou-w-[80%] ou-mx-auto"  >
-            <SkeletonDiagnosis />
-        </Box>
-    </Box>
-
+  if (!ready || isLoadingExamination)
     return (
-        <>
-           <Helmet>
-                <title>{t('diagnosis:title')}</title>
-            </Helmet>
-
-            {!isLoadingExamination && examinationDetail && examinationDetail.length === 0 &&
-                <Box className="ou-relative ou-items-center " sx={{ minHeight: "550px" }}>
-                    <Box className='ou-absolute ou-p-5 ou-text-center 
-                    ou-flex-col ou-flex ou-justify-center ou-items-center
-                    ou-top-0 ou-bottom-0 ou-w-full ou-place-items-center'>
-                        <h2 className='ou-text-xl ou-text-red-600'>
-                            {t('errNullExamination')}
-                        </h2>
-                        <Typography className='text-center'>
-                            <h3>{t('common:goToBooking')}</h3>
-                            <Button onClick={() => { router('/booking') }}>{t('here')}!</Button>
-                        </Typography>
-                    </Box>
-                </Box>
-            }
-            {!isLoadingExamination && examinationDetail &&
-                <>
-                <Container>
-                    <Box className='ou-py-8 ou-m-auto'> 
-                        <Box style={{ "margin": "auto" }} >
-                            <Grid container justifyContent="flex" className="ou-min-h-[160px] ou-p-5" component={Paper} elevation={5}> 
-                                <Grid item xs={12} className="ou-pb-5" >
-                                    <h1 className="ou-text-center ou-text-2xl">{t('common:basicInformation')}</h1>
-                                </Grid>
-
-                                <Grid item xs={6} className="ou-text-center" >
-                                    <PatientInfoModal patientData={examinationDetail.patient}/>
-                                </Grid>
-
-                                <Grid item xs={6} className="ou-text-center">
-                                    <MedicalRecordsModal patientID={examinationDetail.patient.id}/>
-                                </Grid>
-                        
-                            </Grid>
-                        </Box>
-                    
-                    </Box>
-
-                    <AppointmentStatusBanner
-                        scheduleAppointment={examinationDetail?.schedule_appointment}
-                        hasDiagnosis={!!(diagnosis?.id ?? prescriptionId > 0)}
-                    />
-
-                    <Box>
-                        <Box style={{ "margin": "auto" }}>
-                            {user && <DiagnosisForm
-                                id={prescriptionId}
-                                examinationId={examinationId}
-                                diagnosed={diagnosis.diagnosed}
-                                sign={diagnosis.sign}
-                                userID={user.id}
-                                patientID={examinationDetail.patient.id}
-                                handleChangeFlag={handleChangeFlag}
-                                />
-                            }       
-                        </Box>
-                    </Box>
-                </Container>
-                </>
-            }
-
-           
-
-        </>
+      <Box sx={DASHBOARD_PAGE_FRAME_SX}>
+        <Helmet>
+          <title>Diagnosis</title>
+        </Helmet>
+        <SkeletonDiagnosis />
+      </Box>
     )
+
+  return (
+    <>
+      <Helmet>
+        <title>{t("diagnosis:title")}</title>
+      </Helmet>
+
+      {!isLoadingExamination && examinationDetail && examinationDetail.length === 0 && (
+        <Box
+          sx={{
+            ...DASHBOARD_PAGE_FRAME_SX,
+            alignItems: "center",
+            justifyContent: "center",
+            p: 3,
+          }}
+        >
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="h6" color="error" gutterBottom>
+              {t("errNullExamination")}
+            </Typography>
+            <Typography gutterBottom>{t("common:goToBooking")}</Typography>
+            <Button onClick={() => router("/booking")}>{t("here")}!</Button>
+          </Box>
+        </Box>
+      )}
+
+      {!isLoadingExamination && examinationDetail && (
+        <Box className="ou-scrollbar" sx={{ ...DASHBOARD_PAGE_FRAME_SX, ...DASHBOARD_SCROLL_CONTENT_SX }}>
+          <Box sx={{ maxWidth: 1200, mx: "auto", width: "100%", py: 2 }}>
+            <Paper
+              elevation={DASHBOARD_SURFACE.elevation}
+              sx={{ borderRadius: DASHBOARD_SURFACE.borderRadius, p: 2.5, mb: 2 }}
+            >
+              <Typography variant="h5" align="center" fontWeight={600} sx={{ mb: 2 }}>
+                {t("common:basicInformation")}
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={6} sx={{ textAlign: "center" }}>
+                  <PatientInfoModal patientData={examinationDetail.patient} />
+                </Grid>
+                <Grid item xs={12} md={6} sx={{ textAlign: "center" }}>
+                  <MedicalRecordsModal patientID={examinationDetail.patient.id} />
+                </Grid>
+              </Grid>
+            </Paper>
+
+            <AppointmentStatusBanner
+              scheduleAppointment={examinationDetail?.schedule_appointment}
+              hasDiagnosis={!!(diagnosis?.id ?? prescriptionId > 0)}
+            />
+
+            {user ? (
+              <DiagnosisForm
+                id={prescriptionId}
+                examinationId={examinationId}
+                diagnosed={diagnosis.diagnosed}
+                sign={diagnosis.sign}
+                userID={user.id}
+                patientID={examinationDetail.patient.id}
+                handleChangeFlag={handleChangeFlag}
+              />
+            ) : null}
+          </Box>
+        </Box>
+      )}
+    </>
+  )
 }
+
 export default Diagnosis

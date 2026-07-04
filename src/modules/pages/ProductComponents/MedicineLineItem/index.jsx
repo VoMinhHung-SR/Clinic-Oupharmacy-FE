@@ -1,18 +1,39 @@
 import { yupResolver } from "@hookform/resolvers/yup"
-import { Box, Button, Chip, FormControl, InputLabel, MenuItem, Select, TextField, Tooltip, Typography } from "@mui/material"
+import { Box, Button, Chip, FormControl, MenuItem, Select, TextField, Tooltip, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { useTranslation } from "react-i18next"
 import AddIcon from "@mui/icons-material/Add"
 import React, { useState, useEffect } from "react"
 import { getMedicineUnitImageUrl } from "../../../../lib/utils/medicineUnitImage"
+import {
+  enrichVariantForPrescribing,
+  getMaxSaleQuantity,
+  getVariantDisplayName,
+  resolveProductVariantUnitId,
+} from "../../../../lib/adapters/storeProduct"
 
 const MedicineLineItem = ({ units, medicine, schema, onAddToPrescription, availableStockMap, gridTemplate }) => {
   const { t } = useTranslation(["prescription-detail", "yup-validate", "modal", "medicine"])
-  const [selectedOption, setSelectedOption] = useState(units?.[0]?.id ?? null)
+  const [selectedVariantId, setSelectedVariantId] = useState(units?.[0]?.id ?? null)
+  const [selectedSaleUnitId, setSelectedSaleUnitId] = useState(null)
+
+  const medicineUnit = units?.find((u) => u.id === selectedVariantId) ?? units?.[0]
+  const saleUnitOptions = Array.isArray(medicineUnit?.unit_options) ? medicineUnit.unit_options : []
+  const hasMultipleVariants = Array.isArray(units) && units.length > 1
+  const hasMultipleSaleUnits = saleUnitOptions.length > 1
+
   useEffect(() => {
     const firstId = units?.[0]?.id
-    if (firstId != null && !units?.some((u) => u.id === selectedOption)) setSelectedOption(firstId)
-  }, [units, selectedOption])
+    if (firstId != null && !units?.some((u) => u.id === selectedVariantId)) {
+      setSelectedVariantId(firstId)
+    }
+  }, [units, selectedVariantId])
+
+  useEffect(() => {
+    if (!medicineUnit) return
+    setSelectedSaleUnitId(resolveProductVariantUnitId(medicineUnit))
+  }, [medicineUnit?.id])
+
   const { register, handleSubmit, formState: { errors }, reset, setError } = useForm({
     resolver: yupResolver(schema),
     defaultValues: { uses: "", quantity: "" },
@@ -20,20 +41,24 @@ const MedicineLineItem = ({ units, medicine, schema, onAddToPrescription, availa
 
   const RUNNING_OUT_THRESHOLD = 20
 
-  const medicineUnit = units?.find((u) => u.id === selectedOption) ?? units?.[0]
-  const availableStock = medicineUnit != null && availableStockMap ? availableStockMap.get(medicineUnit.id) : undefined
-  const stockNum = availableStock !== undefined && availableStock !== null ? Number(availableStock) : null
-  const name =
-    (medicine && typeof medicine === "object" && medicine.name) ? medicine.name
-    : (medicineUnit?.medicine && typeof medicineUnit.medicine === "object" && medicineUnit.medicine.name) ? medicineUnit.medicine.name
-    : ""
-  const packaging = medicineUnit?.packaging ?? ""
-  const hasMultiplePackages = Array.isArray(units) && units.length > 1
+  const baseStockAvailable =
+    medicineUnit != null && availableStockMap
+      ? availableStockMap.get(medicineUnit.id)
+      : medicineUnit?.in_stock
+  const maxSaleQty = getMaxSaleQuantity(medicineUnit, selectedSaleUnitId, baseStockAvailable)
+  const stockNum = maxSaleQty !== null && maxSaleQty !== undefined ? Number(maxSaleQty) : null
+
+  const enrichedPreview = medicineUnit
+    ? enrichVariantForPrescribing(medicineUnit, selectedSaleUnitId)
+    : null
+  const name = getVariantDisplayName(medicineUnit) || getVariantDisplayName(medicine)
+  const packagingLabel =
+    enrichedPreview?.selectedUnitName ?? medicineUnit?.packaging ?? medicineUnit?.default_unit_name ?? ""
 
   const onSubmit = (data) => {
     if (!medicineUnit) return
-    const inStock = medicineUnit.in_stock ?? 0
-    if (parseInt(data.quantity, 10) > parseInt(inStock, 10)) {
+    const qty = parseInt(data.quantity, 10)
+    if (qty > maxSaleQty) {
       setError("quantity", {
         type: "custom",
         message: t("yup-validate:yupQuantityOverStock"),
@@ -41,7 +66,10 @@ const MedicineLineItem = ({ units, medicine, schema, onAddToPrescription, availa
       return
     }
     reset()
-    onAddToPrescription(medicineUnit, data)
+    onAddToPrescription(
+      enrichVariantForPrescribing(medicineUnit, selectedSaleUnitId),
+      data
+    )
   }
 
   const rowSx = {
@@ -95,27 +123,53 @@ const MedicineLineItem = ({ units, medicine, schema, onAddToPrescription, availa
           </Box>
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", minHeight: 40, justifyContent: "center", minWidth: 0, overflow: "hidden" }}>
-          {hasMultiplePackages ? (
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5, alignItems: "center", justifyContent: "center", minWidth: 0, overflow: "hidden" }}>
+          {hasMultipleVariants ? (
             <FormControl size="small" fullWidth>
               <Select
-                labelId={`package-size-${medicine?.id}`}
-                value={selectedOption ?? ""}
-                onChange={(e) => setSelectedOption(Number(e.target.value))}
+                labelId={`variant-${medicine?.id}`}
+                value={selectedVariantId ?? ""}
+                onChange={(e) => setSelectedVariantId(Number(e.target.value))}
                 aria-label={t("medicine:packaging")}
               >
-                {units.map((u) => (
-                  <MenuItem key={u.id} value={u.id}>
-                    {u.packaging || "—"} (SL: {availableStockMap?.get(u.id) ?? u.in_stock ?? 0})
-                  </MenuItem>
-                ))}
+                {units.map((u) => {
+                  const base = availableStockMap?.get(u.id) ?? u.in_stock ?? 0
+                  const defaultUnit = resolveProductVariantUnitId(u)
+                  const maxQty = getMaxSaleQuantity(u, defaultUnit, base)
+                  return (
+                    <MenuItem key={u.id} value={u.id}>
+                      {u.packaging || u.default_unit_name || "—"} (SL: {maxQty})
+                    </MenuItem>
+                  )
+                })}
               </Select>
             </FormControl>
-          ) : (
-            <Typography variant="body2" color="text.secondary" noWrap title={packaging || "—"}>
-              {packaging || "—"}
+          ) : null}
+
+          {hasMultipleSaleUnits ? (
+            <FormControl size="small" fullWidth>
+              <Select
+                labelId={`sale-unit-${medicineUnit?.id}`}
+                value={selectedSaleUnitId ?? ""}
+                onChange={(e) => setSelectedSaleUnitId(Number(e.target.value))}
+                aria-label={t("medicine:packaging")}
+              >
+                {saleUnitOptions.map((opt) => {
+                  const base = availableStockMap?.get(medicineUnit.id) ?? medicineUnit.in_stock ?? 0
+                  const maxQty = getMaxSaleQuantity(medicineUnit, opt.unit_id, base)
+                  return (
+                    <MenuItem key={opt.unit_id} value={opt.unit_id}>
+                      {opt.unit_name || "—"} (SL: {maxQty})
+                    </MenuItem>
+                  )
+                })}
+              </Select>
+            </FormControl>
+          ) : !hasMultipleVariants ? (
+            <Typography variant="body2" color="text.secondary" noWrap title={packagingLabel || "—"}>
+              {packagingLabel || "—"}
             </Typography>
-          )}
+          ) : null}
         </Box>
 
         <Box sx={{ minWidth: 0, display: "flex", justifyContent: "center" }}>

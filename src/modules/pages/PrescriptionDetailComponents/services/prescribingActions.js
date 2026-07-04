@@ -1,16 +1,24 @@
 import { fetchCreatePrescribing, fetchAddPrescriptionDetail,
   fetchGetPrescriptionDetailById } from "../../../common/components/card/PrescriptionDetailCard/services";
+import {
+  isPrescribingMockSubmitEnabled,
+  mockCreatePrescribingWithDetails,
+} from "../../../../features/prescribing/api/prescribingMock";
 
 /**
  * @param {number} userId
  * @param {number} diagnosisId
- * @param {Array<{ id: number, medicineName: string, uses: string, quantity: number }>} 
+ * @param {Array<{ id: number, medicineName: string, uses: string, quantity: number }>} medicinesSubmit
  * @returns {Promise<{ success: boolean, newPrescribing?: object, newestPrescriptionDetail?: array, error?: string }>}
  */
 export async function createPrescribingWithDetails(userId, diagnosisId, medicinesSubmit) {
   try {
     if (!medicinesSubmit?.length) {
       return { success: false, error: "empty_medicines" };
+    }
+
+    if (isPrescribingMockSubmitEnabled()) {
+      return mockCreatePrescribingWithDetails(userId, diagnosisId, medicinesSubmit);
     }
 
     const prescribingData = { user: userId, diagnosis: parseInt(diagnosisId, 10) };

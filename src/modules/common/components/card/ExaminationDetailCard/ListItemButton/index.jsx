@@ -1,22 +1,33 @@
-import { Button } from "@mui/material"
-import clsx from "clsx"
+import { Chip, Stack, Typography } from "@mui/material"
 
-const ListItemButton = ({title, arrayContent, callback, isLoading}) => {
-    return (
-        <div>{title}: 
-            {arrayContent.length !== 0 ? 
-                arrayContent.map(obj => <>
-                    <Button className={clsx("!ou-ml-2 ",{
-                  '!ou-bg-green-800 !ou-text-white': !isLoading,
-                  "!ou-bg-gray-500 !ou-text-black ou-opacity-70": isLoading} )}
-                        disabled={isLoading}
-                        onClick={()=> {callback(obj.id)}}>{obj.id}
-                    </Button>
-                </>
-                )
-            : <></>}
-        </div>
-    
-    )
+const ListItemButton = ({ title, arrayContent, callback, isLoading, selectedId }) => {
+  return (
+    <Stack spacing={1}>
+      <Typography variant="body2" color="text.secondary">
+        {title}
+      </Typography>
+      {arrayContent.length !== 0 ? (
+        <Stack direction="row" flexWrap="wrap" gap={1}>
+          {arrayContent.map((obj) => {
+            const isSelected = selectedId === obj.id
+            return (
+              <Chip
+                key={obj.id}
+                label={obj.id}
+                size="small"
+                clickable={!isLoading}
+                disabled={isLoading}
+                variant={isSelected ? "filled" : "outlined"}
+                color={isSelected ? "primary" : "default"}
+                onClick={() => callback(obj.id)}
+                sx={{ fontWeight: 600 }}
+              />
+            )
+          })}
+        </Stack>
+      ) : null}
+    </Stack>
+  )
 }
+
 export default ListItemButton

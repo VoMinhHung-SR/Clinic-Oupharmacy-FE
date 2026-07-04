@@ -27,6 +27,8 @@
     "confirmDeleteMedicine":"Confirm to delete this medicine unit",
     "confirmAddPrescription":"Confirm to add prescription",
     "medicalRecords": "Medical records",
+    "patientChart": "Patient chart",
+    "patientChartTitle": "Patient chart — {{name}}",
 
     "unDiagnosed": "This patient do not have any diagnosis sheets",
     "firstRecord": "The first record at",
@@ -58,5 +60,11 @@
     "existingPrescriptions": "Existing prescriptions",
     "newPrescriptionCreated": "New prescription created successfully",
     "doctorNote": "Doctor note",
-    "printPrescription": "Print prescription"
+    "printPrescription": "Print prescription",
+    "draftLineCount": "{{count}} line(s)",
+    "draftSubtotal": "Subtotal",
+    "draftPricePending": "Price shown after adding items",
+    "draftFabLabel": "Draft",
+    "openDraftDrawer": "Open prescription draft ({{count}} items)",
+    "closeDraftDrawer": "Close prescription draft"
 }

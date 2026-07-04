@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   CircularProgress,
   TableCell,
@@ -15,7 +14,6 @@ import SendIcon from "@mui/icons-material/Send";
 import ErrorIcon from "@mui/icons-material/Error";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
-import { ROLE_DOCTOR } from "../../../../../lib/constants";
 import { canDiagnose, canViewPayments, canSendConfirmEmail } from "../../../../../lib/auth";
 import CustomModal from "../../Modal";
 import useCustomModal from "../../../../../lib/hooks/useCustomModal";
@@ -23,6 +21,14 @@ import ExaminationDetailCard from "../ExaminationDetailCard";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { ErrorAlert } from "../../../../../config/sweetAlert2";
 import CancelIcon from '@mui/icons-material/Cancel';
+import DashboardRowActions from "../../../layout/dashboard/components/DashboardRowActions";
+import { DASHBOARD_ACTIONS_CELL_SX } from "../../../layout/dashboard/styleTokens";
+
+const actionButtonSx = {
+  minWidth: 40,
+  minHeight: 40,
+  p: 1,
+};
 
 const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => {
   const { t } = useTranslation(["examinations", "common", "modal", "examination-detail"]);
@@ -42,22 +48,24 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
   };
 
   const navigateNurse = () => {
+    if (!canViewPayments(user))
+      return ErrorAlert(t('modal:errPrescribingNotOwner'), t('modal:pleaseTryAgain'), t('modal:ok'));
     if (examinationData.diagnosis_info?.length > 0)
       return router(`/dashboard/prescribing/${examinationData.diagnosis_info[0].id}/payments`);
     return ErrorAlert(t('examination-detail:errNullDiagnosis'), t('modal:pleaseTryAgain'), t('modal:ok'));
   };
 
-  const renderButton = () => {
+  const renderPrimaryAction = () => {
     if (mail_status) {
       if (canDiagnose(user, examinationData))
         return (
-          <Tooltip followCursor title={t("diagnose")} className="hover:ou-cursor-pointer">
+          <Tooltip followCursor title={t("diagnose")}>
             <span>
               <Button
                 onClick={() => navigateDoctor()}
                 variant="contained"
                 color="success"
-                className="!ou-min-w-[68px] !ou-min-h-[40px] !ou-p-2  hover:ou-cursor-pointer"
+                sx={actionButtonSx}
               >
                 <MedicalServicesIcon />
               </Button>
@@ -68,29 +76,19 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
         return (
           <Tooltip followCursor title={t("pay")}>
             <span>
-              <Button
-                onClick={() => navigateNurse()}
-                variant="contained"
-                color="success"
-                size="small"
-                className="!ou-min-w-[68px] !ou-py-2  !ou-min-h-[40px]"
-              >
+              <Button onClick={() => navigateNurse()} variant="contained" color="success" sx={actionButtonSx}>
                 <PaidIcon />
               </Button>
             </span>
           </Tooltip>
         );
-      return <></>;
+      return null;
     }
-    if (user?.role === ROLE_DOCTOR)
+    if (canDiagnose(user, examinationData))
       return (
         <Tooltip followCursor title={t("noReady")}>
           <span>
-            <Button
-              size="small"
-              variant="contained"
-              className="!ou-bg-red-700 !ou-min-w-[68px]  !ou-min-h-[40px]"
-            >
+            <Button size="small" variant="contained" color="error" sx={actionButtonSx}>
               <ErrorIcon />
             </Button>
           </span>
@@ -103,13 +101,14 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
             onClick={handleSendEmailConfirm}
             disabled={loading}
             variant="contained"
-            className="!ou-min-w-[68px] !ou-py-2"
+            color="primary"
+            sx={actionButtonSx}
           >
-            {loading ? <CircularProgress size={24} /> : <SendIcon />}
+            {loading ? <CircularProgress size={24} color="inherit" /> : <SendIcon />}
           </Button>
         </Tooltip>
       );
-    return <></>;
+    return null;
   };
 
   return (
@@ -146,38 +145,36 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
         <TableCell align="center">
           <Typography>{examinationData?.schedule_appointment?.first_name + " " + examinationData?.schedule_appointment?.last_name}</Typography>
         </TableCell>
-        <TableCell align="center">
-          <Box   className="ou-flex ou-justify-center ou-items-center">
-            <Typography>
-                {user && renderButton()}
-            </Typography>
-            <Typography>
-              <Tooltip followCursor title={t("detail")} >
-                <span>
-                  <Button
-                      variant="contained"
-                      className="ou-bg-blue-700 !ou-min-w-[68px]  !ou-min-h-[40px] !ou-py-2 !ou-mx-2"
-                      size="small"
-                      onClick={()=>handleOpenModal()}
-                    >
-                      <AssignmentIcon />
-                    </Button>
-                </span>
-              </Tooltip>
-            </Typography>
-          </Box>
+        <TableCell align="center" sx={DASHBOARD_ACTIONS_CELL_SX}>
+          <DashboardRowActions slots={2}>
+            {user ? renderPrimaryAction() : null}
+            <Tooltip followCursor title={t("detail")}>
+              <span>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={actionButtonSx}
+                  size="small"
+                  onClick={() => handleOpenModal()}
+                >
+                  <AssignmentIcon />
+                </Button>
+              </span>
+            </Tooltip>
+          </DashboardRowActions>
         </TableCell>
       </TableRow>
       
       <CustomModal
         open={isOpen}
         onClose={handleCloseModal}
-        content={<ExaminationDetailCard examinationData={examinationData}/>}
-        actions={[
-          <Button key="cancel" onClick={handleCloseModal}>
-            {t('modal:cancel')}
+        title={t("examination-detail:examinationDetailInfo")}
+        content={<ExaminationDetailCard examinationData={examinationData} />}
+        actions={
+          <Button key="cancel" variant="outlined" color="inherit" onClick={handleCloseModal}>
+            {t("modal:cancel")}
           </Button>
-        ]}
+        }
       />
     
     </>

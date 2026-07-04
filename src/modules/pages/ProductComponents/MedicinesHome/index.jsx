@@ -1,74 +1,27 @@
-import { useSelector } from "react-redux"
 import { Box, Paper, Stack, Pagination } from "@mui/material"
 import { useTranslation } from "react-i18next"
 import useMedicine from "../../../../lib/hooks/useMedicine"
-import UserContext from "../../../../lib/context/UserContext"
-import SchemaModels from "../../../../lib/schema"
-import { useLocation } from "react-router"
-import { useContext, useMemo } from "react"
 import SkeletonPrescribingPage from "../../../common/components/skeletons/pages/prescribing-prescribing-page"
-import { ROLE_DOCTOR } from "../../../../lib/constants"
-import MedicineListPrescribing from "../MedicineListPrescribing"
 import MedicineGridProducts from "../MedicineGridProducts"
 
-const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit }) => {
-  const { tReady } = useTranslation(["prescription-detail", "yup-validate", "modal", "medicine", "product"])
-  const { allConfig } = useSelector((state) => state.config)
-  const { medicineUnits, page, handleChangePage, pagination,
-    medicineLoading, paramsFilter, handleOnSubmitFilter } = useMedicine()
-  const { user } = useContext(UserContext)
-  const { medicineLineItemSchema } = SchemaModels()
-  const { pathname } = useLocation()
-
-  const handleAddToPrescription = (medicineUnit, data) => {
-    onAddMedicineLineItem(medicineUnit, data)
-  }
-
-  const availableStockMap = useMemo(() => {
-    const map = new Map()
-    medicineUnits.forEach((unit) => {
-      const existing = medicinesSubmit?.find((item) => item.id === unit.id)
-      const stock = existing ? Math.max(0, unit.in_stock - existing.quantity) : unit.in_stock
-      map.set(unit.id, stock)
-    })
-    return map
-  }, [medicineUnits, medicinesSubmit])
+/** Store product browse for `/products` only — prescribing uses `PrescribingWorkspace`. */
+const MedicinesHome = ({ actionButton }) => {
+  const { tReady } = useTranslation(["product", "medicine"])
+  const { medicineUnits, page, handleChangePage, pagination, medicineLoading } = useMedicine({
+    enabled: true,
+  })
 
   if (!tReady && medicineLoading) {
     return (
-      <Box
-        sx={{flex: { xs: "0 0 auto", md: "1 1 0" }, 
-        minHeight: { xs: "auto", md: 0 }, 
-        display: "flex", flexDirection: "column",
-        overflow: "hidden", width: "100%"
-      }}
-      >
-        <Box
-          component={Paper}
-          elevation={5}
-          sx={{
-            width: "100%",
-            flex: { xs: "0 0 auto", md: "1 1 0" },
-            minHeight: { xs: "auto", md: 0 },
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-            px: 3,
-            py: 3,
-          }}
-        >
+      <Box sx={{ width: "100%", py: 3 }}>
+        <Paper elevation={5} sx={{ px: 3, py: 3 }}>
           <SkeletonPrescribingPage.ListSection />
-        </Box>
+        </Paper>
       </Box>
     )
   }
 
-  const isPrescribingView = pathname !== "/products" && user?.role === ROLE_DOCTOR
-  const isProductsView = pathname === "/products"
-
-  if (!isPrescribingView && !isProductsView) {
-    return null
-  }
+  const showPagination = !medicineLoading && pagination.sizeNumber >= 2
 
   return (
     <Box
@@ -96,20 +49,8 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
           py: 3,
         }}
       >
-        {isPrescribingView && (
-          <MedicineListPrescribing
-            medicineUnits={medicineUnits}
-            medicineLoading={medicineLoading}
-            paramsFilter={paramsFilter}
-            handleOnSubmitFilter={handleOnSubmitFilter}
-            categories={allConfig.categories}
-            schema={medicineLineItemSchema}
-            onAddToPrescription={handleAddToPrescription}
-            availableStockMap={availableStockMap}
-          />
-        )}
-        {isProductsView && <MedicineGridProducts medicines={medicineUnits} actionButton={actionButton} />}
-        {!medicineLoading && pagination.sizeNumber >= 2 && (
+        <MedicineGridProducts medicines={medicineUnits} actionButton={actionButton} />
+        {showPagination ? (
           <Box sx={{ flexShrink: 0, pt: 1.5, pb: 0.5 }}>
             <Stack>
               <Pagination
@@ -121,7 +62,7 @@ const MedicinesHome = ({ actionButton, onAddMedicineLineItem, medicinesSubmit })
               />
             </Stack>
           </Box>
-        )}
+        ) : null}
       </Box>
     </Box>
   )

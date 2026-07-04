@@ -8,10 +8,18 @@ import { useTranslation } from "react-i18next";
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import { ErrorAlert } from "../../../../../config/sweetAlert2";
 import CancelIcon from "@mui/icons-material/Cancel";
+import DashboardRowActions from "../../../layout/dashboard/components/DashboardRowActions";
+import { DASHBOARD_ACTIONS_CELL_SX } from "../../../layout/dashboard/styleTokens";
+
+const actionButtonSx = {
+  minWidth: 40,
+  minHeight: 40,
+  p: 1,
+};
 
 const DiagnosedCard = ({ diagnosedInfo, user }) => {
 
-    const {t, ready} = useTranslation(['prescription', 'common'])
+    const {t} = useTranslation(['prescription', 'common', 'modal'])
     const router = useNavigate()
     const renderBillStatus = (prescribingArray) => {
         let doneStatus = 0
@@ -33,6 +41,39 @@ const DiagnosedCard = ({ diagnosedInfo, user }) => {
         return ErrorAlert(t('modal:errPrescribingNotOwner'), t('modal:pleaseTryAgain'), t('modal:ok'));
       router(`/dashboard/prescribing/${id}`);
     };
+
+    const prescribeAction =
+      user && canPrescribe(user, diagnosedInfo) ? (
+        <Tooltip followCursor title={t("prescribing")}>
+          <span>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={() => handleOnClick(diagnosedInfo.id)}
+              sx={actionButtonSx}
+            >
+              <MedicalServicesIcon />
+            </Button>
+          </span>
+        </Tooltip>
+      ) : null;
+
+    const paymentAction =
+      user && canViewPayments(user) ? (
+        <Tooltip followCursor title={t("pay")}>
+          <span>
+            <Link
+              style={{ textDecoration: "none" }}
+              to={`/dashboard/prescribing/${diagnosedInfo.id}/payments`}
+            >
+              <Button variant="contained" color="success" sx={actionButtonSx}>
+                <PaidIcon />
+              </Button>
+            </Link>
+          </span>
+        </Tooltip>
+      ) : null;
+
   return (
     <TableRow key={diagnosedInfo.id} 
     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -81,45 +122,11 @@ const DiagnosedCard = ({ diagnosedInfo, user }) => {
           {diagnosedInfo.user.first_name} {diagnosedInfo.user.last_name}
         </Typography>
       </TableCell>
-      <TableCell align="center">
-        {user && canPrescribe(user, diagnosedInfo) && (
-          <>
-            <Typography className="mb-2">
-              <Tooltip followCursor title={t("prescribing")}>
-                <span>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    onClick={() => handleOnClick(diagnosedInfo.id)}
-                    className="ou-bg-blue-700 !ou-min-w-[68px] !ou-min-h-[40px] !ou-mx-2"
-                  >
-                    <MedicalServicesIcon />
-                  </Button>
-                </span>
-              </Tooltip>
-            </Typography>
-          </>
-        )}
-        {user && canViewPayments(user) && (
-          <>
-            <Tooltip followCursor title={t("pay")}>
-              <span>
-                <Link
-                  style={{ textDecoration: "none" }}
-                  to={`/dashboard/prescribing/${diagnosedInfo.id}/payments`}
-                >
-                  <Button
-                    variant="contained"
-                    color="success"
-                    className="!ou-min-w-[68px] !ou-py-2  !ou-min-h-[40px]"
-                  >
-                    <PaidIcon />
-                  </Button>
-                </Link>
-              </span>
-            </Tooltip>
-          </>
-        )}
+      <TableCell align="center" sx={DASHBOARD_ACTIONS_CELL_SX}>
+        <DashboardRowActions slots={2}>
+          {prescribeAction}
+          {paymentAction}
+        </DashboardRowActions>
       </TableCell>
     </TableRow>
   );

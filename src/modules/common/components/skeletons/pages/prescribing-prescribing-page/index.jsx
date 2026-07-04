@@ -1,5 +1,6 @@
 import { Box, Paper, Skeleton, useTheme } from "@mui/material"
 import PrescriptionDetailLayout from "../../../../../pages/PrescriptionDetailComponents/layout"
+import { DASHBOARD_PAGE_FRAME_SX, DASHBOARD_SURFACE } from "../../../../layout/dashboard/styleTokens"
 
 export const HeaderSection = () => {
   const theme = useTheme()
@@ -67,7 +68,7 @@ export const SidebarSection = () => {
   const spacing = (n) => theme.spacing(n)
   return (
     <Box sx={{ width: "100%", minWidth: 0 }}>
-      <Box component={Paper} elevation={8} sx={{ p: 2.5, minHeight: spacing(45), boxShadow: 3 }}>
+      <Box component={Paper} elevation={DASHBOARD_SURFACE.elevation} sx={{ p: 2.5, minHeight: spacing(45) }}>
         <Skeleton variant="text" sx={{ width: "60%", height: spacing(3.5), mx: "auto", mb: 2 }} />
         <Skeleton variant="rectangular" sx={{ height: spacing(10), borderRadius: 1, mb: 2 }} />
         <Skeleton variant="rectangular" sx={{ height: spacing(12.5), borderRadius: 1, mb: 2 }} />
@@ -77,19 +78,8 @@ export const SidebarSection = () => {
   )
 }
 
-const CONTENT_HEIGHT_OFFSET_SPACING = 15
-
 const SkeletonPrescribingPage = () => (
-  <Box
-    sx={{
-      overflow: "hidden",
-      height: (theme) => `calc(100vh - ${theme.spacing(CONTENT_HEIGHT_OFFSET_SPACING)})`,
-      maxHeight: (theme) => `calc(100vh - ${theme.spacing(CONTENT_HEIGHT_OFFSET_SPACING)})`,
-      display: "flex",
-      flexDirection: "column",
-      width: "100%",
-    }}
-  >
+  <Box sx={{ ...DASHBOARD_PAGE_FRAME_SX, overflow: "hidden" }}>
     <PrescriptionDetailLayout
       headerContent={<HeaderSection />}
       leftContent={<ListSection />}

@@ -5,8 +5,7 @@ import UserContext from "../../../../lib/context/UserContext"
 
 const usePrescriptionDetail = () => {
     const { user } = useContext(UserContext);
-    // URL param :prescribingId is diagnosis ID
-    const { prescribingId: diagnosisId } = useParams();
+    const { diagnosisId } = useParams();
 
     const [prescriptionDetail, setPrescriptionDetail] = useState(null);
     const [isLoadingPrescriptionDetail, setIsLoadingPrescriptionDetail] = useState(true);
