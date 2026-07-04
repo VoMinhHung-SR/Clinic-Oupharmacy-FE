@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import usePrescriptionList from "../../../modules/pages/PrescriptionListComponents/hooks/usePrescription"
 import SkeletonPrescribingList from "../../../modules/common/components/skeletons/pages/prescribing"
 import PrescribingListShell from "../../../features/prescribing/pages/PrescribingListShell"
+import { DASHBOARD_PAGE_FRAME_SX } from "../../../modules/common/layout/dashboard/styleTokens"
 
 export default function PrescriptionList() {
   const {
@@ -20,7 +21,7 @@ export default function PrescriptionList() {
 
   if (!ready) {
     return (
-      <Box className="ou-h-[80vh]">
+      <Box sx={DASHBOARD_PAGE_FRAME_SX}>
         <Helmet>
           <title>Prescribing</title>
         </Helmet>

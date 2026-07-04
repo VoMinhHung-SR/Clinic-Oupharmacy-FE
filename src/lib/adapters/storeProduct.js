@@ -1,6 +1,16 @@
 const pickProductName = (variant = {}) => {
   const product = variant.product || {}
-  return product.web_name || product.name || ""
+  return product.web_name || product.name || variant.product_name || ""
+}
+
+const pickProductId = (variant = {}) => {
+  if (variant.product_id != null) return variant.product_id
+  const product = variant.product
+  if (product && typeof product === "object" && product.id != null) return product.id
+  if (typeof product === "number") return product
+  if (variant.medicine?.id != null) return variant.medicine.id
+  if (typeof variant.medicine === "number") return variant.medicine
+  return null
 }
 
 const pickCategory = (variant = {}) => {
@@ -20,9 +30,8 @@ const pickCategory = (variant = {}) => {
   return null
 }
 
-const pickPackaging = (variant = {}) => {
-  return variant.packing || variant.package_size || variant.packaging || ""
-}
+const pickPackaging = (variant = {}) =>
+  variant.packing || variant.package_size || variant.packaging || ""
 
 const pickPriceValue = (variant = {}) => {
   if (variant.price_value != null) return Number(variant.price_value) || 0
@@ -32,6 +41,16 @@ const pickPriceValue = (variant = {}) => {
 
 const saleUnitOptions = (variant = {}) =>
   Array.isArray(variant.unit_options) ? variant.unit_options : []
+
+/** Human-readable total package on variant row (e.g. "Hộp 3 Vỉ x 10 Viên"). */
+export const getVariantPackingTotal = (variant = {}) => pickPackaging(variant)
+
+/** Store-native product display name (ProductVariant row). */
+export const getVariantDisplayName = (variant = {}) =>
+  variant.product_name || pickProductName(variant) || variant.medicine?.name || ""
+
+/** Store-native product id on a variant row. */
+export const getVariantProductId = (variant = {}) => pickProductId(variant)
 
 /** Resolve ProductVariantUnit id (store sale unit) for prescribing payload. */
 export const resolveProductVariantUnitId = (variant = {}, preferredUnitId = null) => {
@@ -80,17 +99,15 @@ export const enrichVariantForPrescribing = (variant = {}, selectedSaleUnitId = n
 }
 
 export const normalizeStoreVariant = (variant = {}) => {
-  const medicine = {
-    id: variant.product?.id ?? variant.product_id ?? variant.medicine?.id ?? variant.medicine ?? null,
-    name: pickProductName(variant) || variant.medicine?.name || "",
-  }
-
+  const product_id = pickProductId(variant)
+  const product_name = getVariantDisplayName(variant) || pickProductName(variant)
   const defaultUnitId = variant.default_unit_id ?? null
   const options = saleUnitOptions(variant)
 
   return {
     ...variant,
-    medicine,
+    product_id,
+    product_name,
     packaging: pickPackaging(variant),
     package_size: pickPackaging(variant),
     price: pickPriceValue(variant),
@@ -115,6 +132,17 @@ export const normalizeStoreVariantResponse = (payload) => {
   }
   return payload
 }
+
+/**
+ * Display name for a persisted prescription detail line (BE snapshot + enrich).
+ */
+export const getPrescriptionLineDisplayName = (detail = {}) =>
+  detail.item_name_snapshot ||
+  detail.medicine_unit?.product_name ||
+  getVariantDisplayName(detail.medicine_unit) ||
+  detail.product_variant?.product?.web_name ||
+  detail.product_variant?.product?.name ||
+  "N/A"
 
 /**
  * Single rule for line unit price (aligned with BE resolved_unit_price when present).
@@ -148,7 +176,8 @@ export const normalizePrescriptionDetailItem = (detail = {}) => {
     ...detail,
     medicine_unit: {
       ...normalized,
-      medicine: normalized.medicine,
+      product_id: normalized.product_id,
+      product_name: normalized.product_name,
       package_size: normalized.packaging,
       price_value: priceValue,
     },

@@ -8,6 +8,7 @@ import CustomModal from "../../../common/components/Modal";
 import useCustomModal from "../../../../lib/hooks/useCustomModal";
 import createToastMessage from "../../../../lib/utils/createToastMessage";
 import PersonIcon from '@mui/icons-material/Person';
+import { DASHBOARD_PAPER_SX, DASHBOARD_SURFACE } from "../../../common/layout/dashboard/styleTokens";
 const AvatarProfile = () => {
     const {user, setSelectedImage, imageUrl, 
         selectedImage, handleChangeAvatar, isLoading } = useContext(UserContext)
@@ -15,7 +16,7 @@ const AvatarProfile = () => {
     const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
     return (
         <>
-            <Box component={Paper} elevation={4} className="ou-p-5">
+            <Box component={Paper} elevation={DASHBOARD_SURFACE.elevation} sx={{ ...DASHBOARD_PAPER_SX, p: 2.5 }}>
                 <div className="ou-text-center">
                     <Box className="ou-relative">
                         <Avatar

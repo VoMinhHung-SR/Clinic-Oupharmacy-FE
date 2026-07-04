@@ -12,8 +12,7 @@ import createToastMessage from "../../../../lib/utils/createToastMessage";
 
 const usePayment = () => {
     const { user } = useContext(UserContext);
-    // URL param :prescribingId is diagnosis ID
-    const { prescribingId: diagnosisId } = useParams();
+    const { diagnosisId } = useParams();
     const [diagnosisInfo, setDiagnosisInfo] = useState([])
     const [prescriptionDetail, setPrescriptionDetail] = useState({})
     const [loadingStates, setLoadingStates] = useState(true)

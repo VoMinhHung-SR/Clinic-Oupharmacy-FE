@@ -7,6 +7,7 @@ import CatalogCategoryNav from "./CatalogCategoryNav"
 import CatalogCompactList from "./CatalogCompactList"
 import CatalogEmptyState from "./CatalogEmptyState"
 import MedicineQuickAccess from "./MedicineQuickAccess"
+import DiagnosisMedicineSuggestions from "./DiagnosisMedicineSuggestions"
 import MedicineQuickAdd from "./MedicineQuickAdd"
 import { PRESCRIBING_MIN_SEARCH_LEN } from "../constants"
 
@@ -28,6 +29,9 @@ export default function CatalogPanel({
   searchInputRef,
   prefs,
   prefsLoading,
+  diagnosisSuggestions,
+  diagnosisSuggestionsLoading,
+  l2ExcludeVariantIds,
   frequentVariantIds,
   boostVariants,
   selectedVariant,
@@ -41,11 +45,15 @@ export default function CatalogPanel({
   const [showAdvanced, setShowAdvanced] = useState(false)
 
   const kwActive = (paramsFilter.kw || "").trim().length >= PRESCRIBING_MIN_SEARCH_LEN
-  const showBrowseList = hasBrowseIntent && !kwActive
   const showIdleQuickAccess = isIdle && !selectedVariant
-  const showSearchBrowseHint = hasBrowseIntent && kwActive && !selectedVariant
-  const showResultsPanel = showBrowseList || showIdleQuickAccess || showSearchBrowseHint
+  const showCatalogList = !showIdleQuickAccess && (kwActive || hasBrowseIntent) && !selectedVariant
+  const showResultsPanel = showIdleQuickAccess || showCatalogList
   const categoryId = paramsFilter.cate && paramsFilter.cate !== 0 ? paramsFilter.cate : undefined
+  const hasQuickSuggestions =
+    !prefsLoading && ((prefs?.frequent?.length ?? 0) > 0 || (prefs?.recent?.length ?? 0) > 0)
+  const hasDiagnosisSuggestions =
+    !diagnosisSuggestionsLoading && (diagnosisSuggestions?.length ?? 0) > 0
+  const hasAnyQuickAccess = hasDiagnosisSuggestions || hasQuickSuggestions
 
   return (
     <Box
@@ -118,7 +126,7 @@ export default function CatalogPanel({
         <Box
           sx={{
             flex: 1,
-            minHeight: showIdleQuickAccess ? { xs: 280, md: 340 } : 120,
+            minHeight: showIdleQuickAccess ? { xs: 200, md: 240 } : 120,
             display: showIdleQuickAccess ? "flex" : "block",
             flexDirection: showIdleQuickAccess ? "column" : undefined,
             alignItems: showIdleQuickAccess ? "center" : undefined,
@@ -131,31 +139,32 @@ export default function CatalogPanel({
             borderColor: "divider",
             mt: 0.5,
             px: 1.5,
-            py: showIdleQuickAccess ? 2 : 0,
+            py: showIdleQuickAccess ? 2 : 1.5,
           }}
         >
           {showIdleQuickAccess && (
             <>
-              <CatalogEmptyState variant="idle" compact centered />
-              <Box sx={{ width: "100%", maxWidth: 720, mt: 1 }}>
+              <CatalogEmptyState variant="idle" compact centered shortHint={hasAnyQuickAccess} />
+              <Box sx={{ width: "100%", maxWidth: 720, mt: 0.5 }}>
+                <DiagnosisMedicineSuggestions
+                  suggestions={diagnosisSuggestions}
+                  loading={diagnosisSuggestionsLoading}
+                  onSelectEntry={onSelectPrefEntry}
+                />
                 <MedicineQuickAccess
                   prefs={prefs}
                   loading={prefsLoading}
                   onSelectEntry={onSelectPrefEntry}
+                  excludeVariantIds={l2ExcludeVariantIds}
                 />
               </Box>
             </>
           )}
 
-          {showSearchBrowseHint && (
-            <CatalogEmptyState variant="idle" compact />
-          )}
-
-          {showBrowseList && (
+          {showCatalogList && (
             <CatalogCompactList
               variants={variants}
               loading={loading}
-              isIdle={isIdle}
               frequentVariantIds={frequentVariantIds}
               onSelectVariant={onSelectVariant}
               selectedVariantId={selectedVariant?.id}

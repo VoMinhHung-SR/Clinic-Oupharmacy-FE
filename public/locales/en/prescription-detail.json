@@ -27,6 +27,8 @@
     "confirmDeleteMedicine":"Confirm to delete this medicine unit",
     "confirmAddPrescription":"Confirm to add prescription",
     "medicalRecords": "Medical records",
+    "patientChart": "Patient chart",
+    "patientChartTitle": "Patient chart — {{name}}",
 
     "unDiagnosed": "This patient do not have any diagnosis sheets",
     "firstRecord": "The first record at",

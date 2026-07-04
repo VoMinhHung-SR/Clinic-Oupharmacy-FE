@@ -6,7 +6,7 @@ import PrescribingWorkspace from "../../../../features/prescribing/pages/Prescri
 /** Thin route — orchestration lives in `features/prescribing/pages/PrescribingWorkspace`. */
 export default function PrescriptionDetail() {
   const { t, ready } = useTranslation(["prescription-detail"])
-  const { prescribingId: diagnosisId } = useParams()
+  const { diagnosisId } = useParams()
 
   return (
     <>

@@ -20,10 +20,13 @@ export default function useMedicinePicker({ getPrefillForVariant } = {}) {
   const selectPrefEntry = useCallback(
     (entry) => {
       if (!entry?.variant) return
+      const prefillAllowed = entry.prefill_allowed !== false
       selectVariant(entry.variant, {
-        uses: entry.uses ?? "",
-        quantity: entry.quantity != null ? String(entry.quantity) : "",
-        productVariantUnitId: entry.product_variant_unit_id ?? null,
+        uses: prefillAllowed ? (entry.uses ?? "") : "",
+        quantity: prefillAllowed && entry.quantity != null ? String(entry.quantity) : "",
+        productVariantUnitId: prefillAllowed
+          ? (entry.product_variant_unit_id ?? null)
+          : null,
       })
     },
     [selectVariant]

@@ -21,10 +21,6 @@ export let endpoints = {
     'cities': '/common-cities/',
     'city-detail':(cityID) => `/common-cities/${cityID}/`,
 
-    //Category
-    'categories': '/categories/',
-    'category-detail':(cateID) => `/categories/${cateID}/`,
-
     // User
     'users':'/users/',
     'user-patients':(userId) => `/users/${userId}/get-patients/`,    
@@ -77,6 +73,7 @@ export let endpoints = {
     'prescribing': '/prescribing/',
     'get-pres-by-diagnosis': '/prescribing/get-by-diagnosis/',
     'prescribing-medicine-prefs': '/prescribing/medicine-prefs/',
+    'prescribing-medicine-suggestions': '/prescribing/medicine-suggestions/',
     'get-prescription-detail': (prescribingID) => `/prescribing/${prescribingID}/get-pres-detail/`,
 
     // Prescription Detail

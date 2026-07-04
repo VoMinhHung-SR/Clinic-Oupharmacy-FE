@@ -1,11 +1,14 @@
 import { Box, Paper, useMediaQuery, useTheme } from "@mui/material"
 import { useState } from "react"
 import PatientContextBar from "../patient/PatientContextBar"
+import DiagnosisContextStrip from "../patient/DiagnosisContextStrip"
 import PrescribingContentWrapper from "./PrescribingContentWrapper"
 import PrescribingDraftDrawer from "../draft/PrescribingDraftDrawer"
+import { DASHBOARD_PAPER_SX, DASHBOARD_SURFACE } from "../../../modules/common/layout/dashboard/styleTokens"
 
 export default function PrescribingShell({
   patient,
+  diagnosis,
   catalogContent,
   draftContent,
   draftCount = 0,
@@ -17,6 +20,7 @@ export default function PrescribingShell({
   return (
     <PrescribingContentWrapper>
       <PatientContextBar patient={patient} />
+      <DiagnosisContextStrip sign={diagnosis?.sign} diagnosed={diagnosis?.diagnosed} />
 
       <Box
         sx={{
@@ -30,14 +34,15 @@ export default function PrescribingShell({
       >
         <Box
           component={Paper}
-          elevation={4}
+          elevation={DASHBOARD_SURFACE.elevation}
           sx={{
-            flex: { xs: "1 1 auto", md: "8 8 0" },
+            flex: { xs: "1 1 0", md: "8 8 0" },
             minWidth: 0,
-            minHeight: { xs: "50vh", md: 0 },
+            minHeight: 0,
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
+            ...DASHBOARD_PAPER_SX,
             px: { xs: 2, md: 2.5 },
             py: { xs: 1.5, md: 2 },
           }}

@@ -8,6 +8,7 @@ import { getMedicineUnitImageUrl } from "../../../../lib/utils/medicineUnitImage
 import {
   enrichVariantForPrescribing,
   getMaxSaleQuantity,
+  getVariantDisplayName,
   resolveProductVariantUnitId,
 } from "../../../../lib/adapters/storeProduct"
 
@@ -50,10 +51,7 @@ const MedicineLineItem = ({ units, medicine, schema, onAddToPrescription, availa
   const enrichedPreview = medicineUnit
     ? enrichVariantForPrescribing(medicineUnit, selectedSaleUnitId)
     : null
-  const name =
-    (medicine && typeof medicine === "object" && medicine.name) ? medicine.name
-    : (medicineUnit?.medicine && typeof medicineUnit.medicine === "object" && medicineUnit.medicine.name) ? medicineUnit.medicine.name
-    : ""
+  const name = getVariantDisplayName(medicineUnit) || getVariantDisplayName(medicine)
   const packagingLabel =
     enrichedPreview?.selectedUnitName ?? medicineUnit?.packaging ?? medicineUnit?.default_unit_name ?? ""
 

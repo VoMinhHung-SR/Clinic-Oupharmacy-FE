@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import useDebounce from "../../../../lib/hooks/useDebounce"
-import { fetchStoreProductVariants } from "../../api/storeCatalog"
+import { fetchStoreProductVariants, fetchStoreSearch } from "../../api/storeCatalog"
 import {
   PRESCRIBING_DEFAULT_FILTER,
   PRESCRIBING_MIN_SEARCH_LEN,
@@ -44,19 +44,40 @@ const usePrescribingCatalog = ({ enabled = true } = {}) => {
   const [filterCount, setFilterCount] = useState(0)
   const [reloadToken, setReloadToken] = useState(0)
 
-  const debouncedKw = useDebounce((paramsFilter.kw || "").trim(), PRESCRIBING_SEARCH_DEBOUNCE_MS)
+  const kwTrimmed = useMemo(() => (paramsFilter.kw || "").trim(), [paramsFilter.kw])
+  const debouncedKw = useDebounce(kwTrimmed, PRESCRIBING_SEARCH_DEBOUNCE_MS)
 
   const hasBrowseIntent = useMemo(
     () => Boolean(paramsFilter.cate && paramsFilter.cate !== 0),
     [paramsFilter.cate]
   )
 
-  /** Keyword search is handled by SearchCombobox — catalog hook only loads category browse. */
-  const hasSearchIntent = hasBrowseIntent
+  const hasKeywordWithCategory = useMemo(
+    () => kwTrimmed.length >= PRESCRIBING_MIN_SEARCH_LEN && hasBrowseIntent,
+    [kwTrimmed, hasBrowseIntent]
+  )
+
+  const hasKeywordOnly = useMemo(
+    () => kwTrimmed.length >= PRESCRIBING_MIN_SEARCH_LEN && !hasBrowseIntent,
+    [kwTrimmed, hasBrowseIntent]
+  )
+
+  const hasCategoryOnlyBrowse = useMemo(
+    () => hasBrowseIntent && kwTrimmed.length < PRESCRIBING_MIN_SEARCH_LEN,
+    [hasBrowseIntent, kwTrimmed]
+  )
+
+  /** Keyword search, category browse, or keyword + category (faceted search). */
+  const hasSearchIntent = hasCategoryOnlyBrowse || hasKeywordWithCategory || hasKeywordOnly
+
+  const isKeywordDebouncing = useMemo(
+    () => kwTrimmed.length >= PRESCRIBING_MIN_SEARCH_LEN && debouncedKw !== kwTrimmed,
+    [kwTrimmed, debouncedKw]
+  )
 
   const isIdle = useMemo(
-    () => debouncedKw.length < PRESCRIBING_MIN_SEARCH_LEN && !hasBrowseIntent,
-    [debouncedKw, hasBrowseIntent]
+    () => kwTrimmed.length < PRESCRIBING_MIN_SEARCH_LEN && !hasBrowseIntent,
+    [kwTrimmed, hasBrowseIntent]
   )
 
   const bumpReload = useCallback(() => {
@@ -92,6 +113,9 @@ const usePrescribingCatalog = ({ enabled = true } = {}) => {
   const handleKeywordChange = useCallback((kw) => {
     setParamsFilter((prev) => ({ ...prev, kw }))
     setPage(1)
+    if ((kw || "").trim().length >= PRESCRIBING_MIN_SEARCH_LEN) {
+      setLoading(true)
+    }
   }, [])
 
   const handleRootCategoryChange = useCallback((rootCate, options = {}) => {
@@ -137,20 +161,46 @@ const usePrescribingCatalog = ({ enabled = true } = {}) => {
       return undefined
     }
 
+    const keywordActive = kwTrimmed.length >= PRESCRIBING_MIN_SEARCH_LEN
+    if (keywordActive && debouncedKw !== kwTrimmed) {
+      setLoading(true)
+      return undefined
+    }
+
     let cancelled = false
 
     const load = async () => {
       setLoading(true)
       try {
-        const res = await fetchStoreProductVariants(
-          buildProductsQuery({ page, filter: paramsFilter })
-        )
-        if (cancelled) return
         let results = []
         let total = 0
-        if (res.status === 200) {
-          results = Array.isArray(res.data?.results) ? res.data.results : []
-          total = res.data?.count ?? 0
+
+        if (hasKeywordWithCategory || hasKeywordOnly) {
+          const res = await fetchStoreSearch({
+            q: debouncedKw,
+            page,
+            page_size: PRESCRIBING_PAGE_SIZE,
+            sort: "relevance",
+            category: hasKeywordWithCategory ? paramsFilter.cate : undefined,
+          })
+          if (cancelled) return
+          if (res.status === 200) {
+            results = Array.isArray(res.data?.items)
+              ? res.data.items
+              : Array.isArray(res.data?.results)
+                ? res.data.results
+                : []
+            total = res.data?.meta?.total ?? res.data?.count ?? results.length
+          }
+        } else {
+          const res = await fetchStoreProductVariants(
+            buildProductsQuery({ page, filter: { ...paramsFilter, kw: debouncedKw } })
+          )
+          if (cancelled) return
+          if (res.status === 200) {
+            results = Array.isArray(res.data?.results) ? res.data.results : []
+            total = res.data?.count ?? 0
+          }
         }
 
         setVariants(results)
@@ -175,16 +225,22 @@ const usePrescribingCatalog = ({ enabled = true } = {}) => {
   }, [
     enabled,
     hasSearchIntent,
+    hasKeywordWithCategory,
+    hasKeywordOnly,
+    kwTrimmed,
+    debouncedKw,
     page,
     paramsFilter,
     reloadToken,
   ])
 
+  const catalogLoading = loading || isKeywordDebouncing
+
   return {
     variants,
     medicineUnits: variants,
-    loading,
-    medicineLoading: loading,
+    loading: catalogLoading,
+    medicineLoading: catalogLoading,
     page,
     pagination,
     paramsFilter,

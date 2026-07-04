@@ -14,7 +14,7 @@ import UserContext from "../../../../../lib/context/UserContext";
 import Loading from "../../Loading";
 import PrintIcon from '@mui/icons-material/Print';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import { resolvePrescriptionDetailUnitPrice } from "../../../../../lib/adapters/storeProduct";
+import { resolvePrescriptionDetailUnitPrice, getPrescriptionLineDisplayName } from "../../../../../lib/adapters/storeProduct";
 
 const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButton, onPrint, printActionsEmphasized = false }) => {
     const { t, tReady } = useTranslation(['prescription-detail', 'common', 'payment']);
@@ -56,15 +56,7 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
     const getUnitPrice = (prescribingDetail = {}) =>
         resolvePrescriptionDetailUnitPrice(prescribingDetail);
 
-    const getMedicineName = (prescribingDetail = {}) => {
-        return (
-            prescribingDetail?.medicine_unit?.medicine?.name
-            || prescribingDetail?.item_name_snapshot
-            || prescribingDetail?.product_variant?.product?.web_name
-            || prescribingDetail?.product_variant?.product?.name
-            || "N/A"
-        );
-    };
+    const getMedicineName = (prescribingDetail = {}) => getPrescriptionLineDisplayName(prescribingDetail);
 
     const getPackagingLabel = (prescribingDetail = {}) => {
         return (

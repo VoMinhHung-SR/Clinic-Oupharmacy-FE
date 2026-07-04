@@ -3,7 +3,7 @@ import SearchIcon from "@mui/icons-material/Search"
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined"
 import { useTranslation } from "react-i18next"
 
-export default function CatalogEmptyState({ variant = "idle", compact = false, centered = false }) {
+export default function CatalogEmptyState({ variant = "idle", compact = false, centered = false, shortHint = false }) {
   const { t } = useTranslation(["medicine"])
   const isIdle = variant === "idle"
 
@@ -18,13 +18,13 @@ export default function CatalogEmptyState({ variant = "idle", compact = false, c
         width: centered ? "100%" : undefined,
         maxWidth: centered ? 420 : undefined,
         mx: centered ? "auto" : undefined,
-        py: compact ? (centered ? 3 : 2) : 8,
+        py: compact ? (centered ? 2 : 1.5) : 8,
         px: 2,
         color: "text.secondary",
       }}
     >
       {isIdle ? (
-        <SearchIcon sx={{ fontSize: 48, mb: 1, opacity: 0.4 }} />
+        <SearchIcon sx={{ fontSize: centered && shortHint ? 36 : 48, mb: 1, opacity: 0.4 }} />
       ) : (
         <Inventory2OutlinedIcon sx={{ fontSize: 48, mb: 1, opacity: 0.4 }} />
       )}
@@ -32,7 +32,13 @@ export default function CatalogEmptyState({ variant = "idle", compact = false, c
         {t(isIdle ? "medicine:catalogSearchIdleTitle" : "medicine:catalogNoResults")}
       </Typography>
       <Typography variant="body2" color="text.secondary">
-        {t(isIdle ? "medicine:catalogSearchIdleHint" : "medicine:catalogNoResultsHint")}
+        {t(
+          isIdle
+            ? shortHint
+              ? "medicine:catalogSearchIdleHintShort"
+              : "medicine:catalogSearchIdleHint"
+            : "medicine:catalogNoResultsHint"
+        )}
       </Typography>
     </Box>
   )

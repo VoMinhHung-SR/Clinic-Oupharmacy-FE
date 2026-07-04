@@ -31,12 +31,14 @@ import FormChangePassword from '../../../pages/HomeComponents/FormChangePassword
 import useNotification from '../../../../lib/hooks/useNotification';
 import NotificationButton from '../../components/button/Notification';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import GroupsIcon from '@mui/icons-material/Groups';
 import UserContext from '../../../../lib/context/UserContext';
 import useCustomNavigate from '../../../../lib/hooks/useCustomNavigate';
 import WarningIcon from '@mui/icons-material/Warning';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import PaymentIcon from '@mui/icons-material/Payment';
+import { isDashboardNavItemActive } from './styleTokens';
 
 const drawerWidth = 240;
 
@@ -45,7 +47,6 @@ const AppBar = muiStyled(MuiAppBar, {
 })(({ theme, open }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return {
-    backgroundColor: "white",
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
@@ -70,8 +71,8 @@ const StyledDrawer = muiStyled(MuiDrawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
     position: 'relative',
     whiteSpace: 'nowrap',
-    color: '#fff',
-    background: 'linear-gradient(180deg, #1e3a8a 0%, #2563eb 100%)',
+    color: theme.palette.primary.contrastText,
+    background: `linear-gradient(180deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
     width: drawerWidth,
     boxSizing: 'border-box',
   },
@@ -116,7 +117,7 @@ const NavDashboard = ({ open, toggleDrawer }) => {
     {  
       id: 'waiting-room',
       name: t('waiting-room'),
-      icon: <CalendarMonthIcon className='ou-text-white'/>,
+      icon: <GroupsIcon className='ou-text-white'/>,
       link: '/dashboard/waiting-room'
     }
   ];
@@ -155,28 +156,41 @@ const NavDashboard = ({ open, toggleDrawer }) => {
     navigate("/dashboard/forbidden");
   };
 
-  const renderPage = (routingRole, allowedRoles, isOpen, isMobile) => {
-      return routingRole && routingRole.map(item => (
-          <ListItemButton key={"dashboard"+item.name} onClick={() => handleNav(allowedRoles, item.link)}
-              sx={{ 
-                  justifyContent: isOpen ? 'initial' : 'center',
-                  px: 2.5,
-              }}
+  const renderPage = (routingRole, allowedRoles, isOpen) => {
+      return routingRole && routingRole.map(item => {
+        const active = isDashboardNavItemActive(location.pathname, item, user)
+        const button = (
+          <ListItemButton
+            key={"dashboard"+item.name}
+            selected={active}
+            onClick={() => handleNav(allowedRoles, item.link)}
+            sx={{
+              justifyContent: isOpen ? 'initial' : 'center',
+              px: 2.5,
+            }}
           >
-              <ListItemIcon
-                  sx={{ 
-                      minWidth: 0,
-                      mr: isOpen ? 3 : 'auto',
-                      justifyContent: 'center',
-                      color: 'inherit',
-                  }}
-              >
-                {item.icon && item.icon}
-              </ListItemIcon>
-              {isOpen && <ListItemText primary={`${item.name}`} sx={{ opacity: isOpen ? 1 : 0 }} />} 
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: isOpen ? 3 : 'auto',
+                justifyContent: 'center',
+                color: 'inherit',
+              }}
+            >
+              {item.icon && item.icon}
+            </ListItemIcon>
+            {isOpen && <ListItemText primary={`${item.name}`} sx={{ opacity: isOpen ? 1 : 0 }} />}
           </ListItemButton>
+        )
 
-      ))
+        return !isOpen ? (
+          <Tooltip key={"tooltip-" + item.id} title={item.name} placement="right">
+            {button}
+          </Tooltip>
+        ) : (
+          button
+        )
+      })
   }
 
   const renderHeadingTitle = (path) => {
@@ -322,13 +336,14 @@ const NavDashboard = ({ open, toggleDrawer }) => {
                   </IconButton>
                   <Typography
                       component="h1"
-                      variant="h6"
+                      variant="subtitle1"
                       noWrap
-                      color='#707070'
-                      sx={{ 
+                      color="text.primary"
+                      fontWeight={600}
+                      sx={{
                           flexGrow: 1,
                           [theme.breakpoints.down('sm')]: {
-                              fontSize: '1rem',
+                              fontSize: '0.95rem',
                           },
                       }}
                   >
@@ -404,13 +419,13 @@ const NavDashboard = ({ open, toggleDrawer }) => {
 
           {/* Nav */}
           <List component="nav" className="ou-overflow-y-auto">
-              {renderPage(pages, [ROLE_DOCTOR, ROLE_NURSE], open, isMobile)}
+              {renderPage(pages, [ROLE_DOCTOR, ROLE_NURSE], open)}
               <Divider sx={{ my: 1 }} />
 
-              {renderPage(page_ROLE_DOCTOR, [ROLE_DOCTOR], open, isMobile)}
+              {renderPage(page_ROLE_DOCTOR, [ROLE_DOCTOR], open)}
 
               <Divider sx={{ my: 1 }} />
-              {renderPage(page_ROLE_NURSE, [ROLE_NURSE], open, isMobile)}
+              {renderPage(page_ROLE_NURSE, [ROLE_NURSE], open)}
           </List>
 
       </StyledDrawer>
@@ -418,6 +433,7 @@ const NavDashboard = ({ open, toggleDrawer }) => {
       <CustomModal
         open={isOpen}
         onClose={handleCloseModal}
+        title={t("common:changePassword")}
         content={<FormChangePassword callBack={handleCloseModal}/>}
       />
     </>

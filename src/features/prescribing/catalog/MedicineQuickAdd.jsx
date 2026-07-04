@@ -16,6 +16,7 @@ import { alpha } from "@mui/material/styles"
 import { useTranslation } from "react-i18next"
 import useMedicineQuickAdd from "./hooks/useMedicineQuickAdd"
 import StockStatusBadge from "./StockStatusBadge"
+import { getVariantDisplayName, getVariantPackingTotal } from "../../../lib/adapters/storeProduct"
 
 export default function MedicineQuickAdd({
   variant,
@@ -46,7 +47,7 @@ export default function MedicineQuickAdd({
     saleUnitOptions,
     hasMultipleSaleUnits,
     maxSaleQty,
-    enrichedPreview,
+    selectedSaleUnit,
   } = useMedicineQuickAdd({
     variant,
     prefill,
@@ -58,13 +59,11 @@ export default function MedicineQuickAdd({
 
   if (!variant) return null
 
-  const name = variant.medicine?.name || variant.product?.web_name || ""
-  const packagingLabel =
-    enrichedPreview?.selectedUnitName ??
-    variant.packaging ??
-    variant.packing ??
-    variant.default_unit_name ??
-    ""
+  const name = getVariantDisplayName(variant)
+  /** Gray subtitle = variant packing total (store `packing` field), not sale-unit name. */
+  const packingTotalLabel = getVariantPackingTotal(variant)
+  const saleUnitLabel =
+    selectedSaleUnit?.unit_name || variant.default_unit_name || "—"
   const stockNum = maxSaleQty !== null && maxSaleQty !== undefined ? Number(maxSaleQty) : null
   const showLastUsed = Boolean(prefill?.uses)
 
@@ -98,9 +97,9 @@ export default function MedicineQuickAdd({
           <Typography variant="subtitle2" fontWeight={600} sx={{ lineHeight: 1.35 }} title={name}>
             {t("medicine:quickAddTitle", { name })}
           </Typography>
-          {!hasMultipleSaleUnits && packagingLabel ? (
+          {packingTotalLabel ? (
             <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.25 }}>
-              {packagingLabel}
+              {packingTotalLabel}
             </Typography>
           ) : null}
           {showLastUsed && (
@@ -125,25 +124,31 @@ export default function MedicineQuickAdd({
       >
         {hasMultipleSaleUnits ? (
           <FormControl size="small" fullWidth>
-            <InputLabel id="quick-add-sale-unit-label">{t("medicine:packaging")}</InputLabel>
+            <InputLabel id="quick-add-sale-unit-label">{t("medicine:saleUnit")}</InputLabel>
             <Select
               labelId="quick-add-sale-unit-label"
-              label={t("medicine:packaging")}
+              label={t("medicine:saleUnit")}
               value={selectedSaleUnitId ?? ""}
               onChange={(e) => setSelectedSaleUnitId(Number(e.target.value))}
             >
               {saleUnitOptions.map((opt) => (
                 <MenuItem key={opt.unit_id} value={opt.unit_id}>
                   {opt.unit_name || "—"}
-                  {Number(opt.quantity_in_base) > 1 ? ` (×${opt.quantity_in_base})` : ""}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         ) : (
-          <Typography variant="body2" color="text.secondary" sx={{ alignSelf: "center", px: 0.5 }}>
-            {packagingLabel || "—"}
-          </Typography>
+          <TextField
+            size="small"
+            fullWidth
+            label={t("medicine:saleUnit")}
+            value={saleUnitLabel}
+            inputProps={{ readOnly: true, "aria-label": t("medicine:saleUnit") }}
+            sx={{
+              "& .MuiInputBase-input": { cursor: "default" },
+            }}
+          />
         )}
 
         <TextField

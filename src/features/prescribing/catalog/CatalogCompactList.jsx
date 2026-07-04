@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next"
 import SearchResultSkeleton from "./SearchResultSkeleton"
 import CatalogEmptyState from "./CatalogEmptyState"
 import StockStatusBadge from "./StockStatusBadge"
+import { getVariantDisplayName } from "../../../lib/adapters/storeProduct"
 
 const pickVariantId = (variant) => variant?.id ?? variant?.product_variant_id ?? null
 
-const pickName = (variant) =>
-  variant?.medicine?.name || variant?.product?.web_name || variant?.product?.name || "—"
+const pickName = (variant) => getVariantDisplayName(variant) || "—"
 
 const pickPackaging = (variant) =>
   variant?.packaging || variant?.packing || variant?.package_size || ""
@@ -19,7 +19,6 @@ const pickPackaging = (variant) =>
 export default function CatalogCompactList({
   variants,
   loading,
-  isIdle,
   frequentVariantIds,
   onSelectVariant,
   selectedVariantId,
@@ -30,12 +29,8 @@ export default function CatalogCompactList({
     return <SearchResultSkeleton rows={5} />
   }
 
-  if (isIdle) {
-    return null
-  }
-
   if (!variants?.length) {
-    return <CatalogEmptyState variant="empty" />
+    return <CatalogEmptyState variant="empty" compact />
   }
 
   return (
