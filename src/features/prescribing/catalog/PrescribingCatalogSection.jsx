@@ -5,13 +5,19 @@ import SchemaModels from "../../../lib/schema"
 import usePrescribingCatalog from "./hooks/usePrescribingCatalog"
 import useStoreCategoryTree from "./hooks/useStoreCategoryTree"
 import usePrescriberMedicinePrefs from "./hooks/usePrescriberMedicinePrefs"
+import useDiagnosisMedicineSuggestions from "./hooks/useDiagnosisMedicineSuggestions"
 import useMedicinePicker from "./hooks/useMedicinePicker"
+import { excludeVariantIds } from "./mergeQuickAccessEntries"
 import CatalogPanel from "./CatalogPanel"
 import { usePrescribingSearchFocus } from "../hooks/usePrescribingSearchFocus"
 
 const DEFAULT_ROOT_SLUG = "thuoc"
 
-export default function PrescribingCatalogSection({ onAddMedicineLineItem, medicinesSubmit }) {
+export default function PrescribingCatalogSection({
+  diagnosisId,
+  onAddMedicineLineItem,
+  medicinesSubmit,
+}) {
   const { user } = useContext(UserContext)
   const { medicineLineItemSchema } = SchemaModels()
   const searchInputRef = useRef(null)
@@ -20,6 +26,33 @@ export default function PrescribingCatalogSection({ onAddMedicineLineItem, medic
 
   const { prefs, loading: prefsLoading, frequentVariantIds, getPrefillForVariant, boostVariants } =
     usePrescriberMedicinePrefs({ enabled: Boolean(user) })
+
+  const { suggestions: diagnosisSuggestions, loading: diagnosisSuggestionsLoading } =
+    useDiagnosisMedicineSuggestions({
+      diagnosisId,
+      enabled: Boolean(user && diagnosisId),
+    })
+
+  const draftVariantIds = useMemo(
+    () => new Set((medicinesSubmit ?? []).map((item) => item.id).filter(Boolean)),
+    [medicinesSubmit]
+  )
+
+  const visibleDiagnosisSuggestions = useMemo(
+    () => excludeVariantIds(diagnosisSuggestions, draftVariantIds),
+    [diagnosisSuggestions, draftVariantIds]
+  )
+
+  const l1VariantIds = useMemo(
+    () => new Set(visibleDiagnosisSuggestions.map((e) => e.product_variant_id)),
+    [visibleDiagnosisSuggestions]
+  )
+
+  const l2ExcludeVariantIds = useMemo(() => {
+    const ids = new Set(draftVariantIds)
+    l1VariantIds.forEach((id) => ids.add(id))
+    return ids
+  }, [draftVariantIds, l1VariantIds])
 
   const { selectedVariant, selectionPrefill, selectVariant, selectPrefEntry, clearSelection } =
     useMedicinePicker({ getPrefillForVariant })
@@ -71,7 +104,7 @@ export default function PrescribingCatalogSection({ onAddMedicineLineItem, medic
   const showPagination =
     !medicineLoading &&
     pagination.sizeNumber >= 2 &&
-    prescribingCatalog.hasBrowseIntent
+    prescribingCatalog.hasSearchIntent
 
   return (
     <Box
@@ -102,6 +135,9 @@ export default function PrescribingCatalogSection({ onAddMedicineLineItem, medic
         searchInputRef={searchInputRef}
         prefs={prefs}
         prefsLoading={prefsLoading}
+        diagnosisSuggestions={visibleDiagnosisSuggestions}
+        diagnosisSuggestionsLoading={diagnosisSuggestionsLoading}
+        l2ExcludeVariantIds={l2ExcludeVariantIds}
         frequentVariantIds={frequentVariantIds}
         boostVariants={boostVariants}
         selectedVariant={selectedVariant}

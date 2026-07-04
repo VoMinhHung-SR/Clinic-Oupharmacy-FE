@@ -1,11 +1,9 @@
 import { useMemo, useState } from "react"
 import { Box, Button, Chip, Skeleton, Stack, Tooltip, Typography } from "@mui/material"
 import { alpha } from "@mui/material/styles"
-import StarIcon from "@mui/icons-material/Star"
 import { useTranslation } from "react-i18next"
 import { getVariantDisplayName } from "../../../lib/adapters/storeProduct"
 import {
-  mergeQuickAccessEntries,
   QUICK_ACCESS_VISIBLE_LIMIT,
   truncateQuickAccessLabel,
 } from "./mergeQuickAccessEntries"
@@ -15,13 +13,9 @@ const chipSx = (theme) => ({
   height: 30,
   fontWeight: 500,
   borderRadius: 999,
-  bgcolor: alpha(theme.palette.primary.main, 0.08),
-  borderColor: alpha(theme.palette.primary.main, 0.28),
+  bgcolor: alpha(theme.palette.secondary.main, 0.08),
+  borderColor: alpha(theme.palette.secondary.main, 0.28),
   color: theme.palette.text.primary,
-  "& .MuiChip-icon": {
-    color: theme.palette.primary.main,
-    ml: 0.75,
-  },
   "& .MuiChip-label": {
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -29,27 +23,19 @@ const chipSx = (theme) => ({
     px: 0.5,
   },
   "&:hover": {
-    bgcolor: alpha(theme.palette.primary.main, 0.14),
-    borderColor: alpha(theme.palette.primary.main, 0.45),
+    bgcolor: alpha(theme.palette.secondary.main, 0.14),
+    borderColor: alpha(theme.palette.secondary.main, 0.45),
     boxShadow: 1,
   },
 })
 
-export default function MedicineQuickAccess({ prefs, loading, onSelectEntry, excludeVariantIds = [] }) {
+export default function DiagnosisMedicineSuggestions({
+  suggestions = [],
+  loading,
+  onSelectEntry,
+}) {
   const { t } = useTranslation(["medicine"])
   const [expanded, setExpanded] = useState(false)
-  const { frequent = [], recent = [] } = prefs ?? {}
-
-  const excludeSet = useMemo(
-    () => (excludeVariantIds instanceof Set ? excludeVariantIds : new Set(excludeVariantIds)),
-    [excludeVariantIds]
-  )
-
-  const suggestions = useMemo(() => {
-    const merged = mergeQuickAccessEntries(frequent, recent)
-    if (!excludeSet.size) return merged
-    return merged.filter((e) => !excludeSet.has(e.product_variant_id))
-  }, [frequent, recent, excludeSet])
 
   const visible = expanded
     ? suggestions
@@ -59,9 +45,9 @@ export default function MedicineQuickAccess({ prefs, loading, onSelectEntry, exc
   if (loading) {
     return (
       <Box sx={{ py: 1, px: 0.5 }} aria-busy="true">
-        <Skeleton variant="text" width={100} height={16} sx={{ mb: 0.75 }} />
+        <Skeleton variant="text" width={140} height={16} sx={{ mb: 0.75 }} />
         <Stack direction="row" flexWrap="wrap" gap={0.75} useFlexGap>
-          {[1, 2, 3, 4].map((i) => (
+          {[1, 2, 3].map((i) => (
             <Skeleton key={i} variant="rounded" width={100} height={30} sx={{ borderRadius: 999 }} />
           ))}
         </Stack>
@@ -79,9 +65,16 @@ export default function MedicineQuickAccess({ prefs, loading, onSelectEntry, exc
         variant="caption"
         color="text.secondary"
         fontWeight={600}
-        sx={{ display: "block", mb: 0.75, textAlign: "left" }}
+        sx={{ display: "block", mb: 0.25, textAlign: "left" }}
       >
-        {t("medicine:quickAccessPersonal")}
+        {t("medicine:diagnosisSuggestionsTitle")}
+      </Typography>
+      <Typography
+        variant="caption"
+        color="text.disabled"
+        sx={{ display: "block", mb: 0.75, textAlign: "left", fontSize: "0.68rem" }}
+      >
+        {t("medicine:diagnosisSuggestionsDisclaimer")}
       </Typography>
       <Stack direction="row" flexWrap="wrap" gap={0.75} useFlexGap alignItems="center">
         {visible.map((entry) => {
@@ -93,7 +86,6 @@ export default function MedicineQuickAccess({ prefs, loading, onSelectEntry, exc
           return (
             <Tooltip key={entry.product_variant_id} title={fullLabel} enterDelay={400}>
               <Chip
-                icon={entry.isFrequent ? <StarIcon sx={{ fontSize: 15 }} /> : undefined}
                 label={shortLabel}
                 size="small"
                 variant="outlined"

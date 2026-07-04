@@ -73,6 +73,7 @@ export let endpoints = {
     'prescribing': '/prescribing/',
     'get-pres-by-diagnosis': '/prescribing/get-by-diagnosis/',
     'prescribing-medicine-prefs': '/prescribing/medicine-prefs/',
+    'prescribing-medicine-suggestions': '/prescribing/medicine-suggestions/',
     'get-prescription-detail': (prescribingID) => `/prescribing/${prescribingID}/get-pres-detail/`,
 
     // Prescription Detail

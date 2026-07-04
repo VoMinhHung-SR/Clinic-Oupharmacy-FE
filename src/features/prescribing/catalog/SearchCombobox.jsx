@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import {
   Box,
   ClickAwayListener,
+  IconButton,
   InputAdornment,
   List,
   ListItemButton,
@@ -11,6 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
+import ClearIcon from "@mui/icons-material/Clear"
 import SearchIcon from "@mui/icons-material/Search"
 import StarIcon from "@mui/icons-material/Star"
 import { useTranslation } from "react-i18next"
@@ -125,6 +127,16 @@ export default function SearchCombobox({
     el?.scrollIntoView({ block: "nearest" })
   }, [highlightIndex])
 
+  const handleClear = () => {
+    onKeywordChange("")
+    setOpen(false)
+    setOptions([])
+    setHighlightIndex(-1)
+    inputRef?.current?.focus()
+  }
+
+  const showClear = trimmedKw.length > 0
+
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
       <Box ref={anchorRef} sx={{ position: "relative", mb: 1 }}>
@@ -156,6 +168,18 @@ export default function SearchCombobox({
                 <SearchIcon color="action" fontSize="small" />
               </InputAdornment>
             ),
+            endAdornment: showClear ? (
+              <InputAdornment position="end">
+                <IconButton
+                  size="small"
+                  edge="end"
+                  onClick={handleClear}
+                  aria-label={t("medicine:clearSearch")}
+                >
+                  <ClearIcon fontSize="small" />
+                </IconButton>
+              </InputAdornment>
+            ) : null,
             sx: { bgcolor: "background.paper", borderRadius: 1 },
           }}
           inputProps={{

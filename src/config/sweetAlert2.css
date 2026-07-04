@@ -1,0 +1,150 @@
+/* SweetAlert2 — OUPharmacy dashboard theme + responsive layout */
+
+.ou-swal-container {
+  z-index: 1500 !important;
+  padding: 1rem !important;
+  align-items: center !important;
+}
+
+.ou-swal-container.swal2-backdrop-show {
+  background: rgba(15, 23, 42, 0.45) !important;
+}
+
+.ou-swal-popup {
+  width: min(26rem, calc(100vw - 2rem)) !important;
+  max-width: min(26rem, calc(100vw - 2rem)) !important;
+  margin: 0 auto !important;
+  padding: 1.25rem 1rem 1rem !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 20px 25px -5px rgba(15, 23, 42, 0.12),
+    0 8px 10px -6px rgba(15, 23, 42, 0.08) !important;
+  font-family: inherit !important;
+}
+
+.ou-swal-title {
+  font-size: 1.125rem !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+  line-height: 1.4 !important;
+  padding: 0 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.ou-swal-text {
+  font-size: 0.9375rem !important;
+  color: #475569 !important;
+  line-height: 1.5 !important;
+  margin-top: 0.5rem !important;
+}
+
+.ou-swal-icon {
+  width: 3.25rem !important;
+  height: 3.25rem !important;
+  margin: 0.25rem auto 0.75rem !important;
+  border-width: 3px !important;
+}
+
+.ou-swal-icon .swal2-icon-content {
+  font-size: 1.625rem !important;
+}
+
+.ou-swal-icon.swal2-warning {
+  border-color: #f59e0b !important;
+  color: #f59e0b !important;
+}
+
+.ou-swal-icon.swal2-success {
+  border-color: #15803d !important;
+  color: #15803d !important;
+}
+
+.ou-swal-icon.swal2-error {
+  border-color: #dc2626 !important;
+  color: #dc2626 !important;
+}
+
+.ou-swal-actions {
+  display: flex !important;
+  flex-direction: row-reverse !important;
+  flex-wrap: wrap !important;
+  gap: 0.625rem !important;
+  justify-content: center !important;
+  width: 100% !important;
+  margin-top: 1.25rem !important;
+  padding: 0 !important;
+}
+
+.ou-swal-btn {
+  font-size: 0.9375rem !important;
+  font-weight: 600 !important;
+  padding: 0.625rem 1.25rem !important;
+  border-radius: 10px !important;
+  border: none !important;
+  cursor: pointer !important;
+  min-width: 6.5rem;
+  line-height: 1.25 !important;
+  box-shadow: none !important;
+  transition: background-color 0.15s ease, filter 0.15s ease;
+}
+
+.ou-swal-btn:focus-visible {
+  outline: 2px solid #2563eb !important;
+  outline-offset: 2px !important;
+}
+
+.ou-swal-btn--confirm {
+  background-color: #15803d !important;
+  color: #fff !important;
+}
+
+.ou-swal-btn--confirm:hover {
+  background-color: #166534 !important;
+}
+
+.ou-swal-btn--cancel {
+  background-color: #dc2626 !important;
+  color: #fff !important;
+}
+
+.ou-swal-btn--cancel:hover {
+  background-color: #b91c1c !important;
+}
+
+.ou-swal-btn--neutral {
+  background-color: #64748b !important;
+  color: #f8fafc !important;
+}
+
+.ou-swal-btn--neutral:hover {
+  background-color: #475569 !important;
+}
+
+@media (min-width: 480px) {
+  .ou-swal-popup {
+    padding: 1.75rem 1.5rem 1.25rem !important;
+  }
+
+  .ou-swal-title {
+    font-size: 1.25rem !important;
+  }
+
+  .ou-swal-icon {
+    width: 3.75rem !important;
+    height: 3.75rem !important;
+    margin-bottom: 1rem !important;
+  }
+}
+
+@media (max-width: 479px) {
+  .ou-swal-actions {
+    flex-direction: column-reverse !important;
+    align-items: stretch !important;
+  }
+
+  .ou-swal-btn {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+}

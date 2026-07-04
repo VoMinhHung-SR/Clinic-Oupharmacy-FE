@@ -26,6 +26,8 @@
     "confirmDeleteMedicine":"Xác nhận xóa đơn vị thuốc này",
     "confirmAddPrescription":"Xác nhận tạo phiếu kê toa",
     "medicalRecords": "Hồ sơ bệnh án",
+    "patientChart": "Hồ sơ bệnh nhân",
+    "patientChartTitle": "Hồ sơ bệnh nhân — {{name}}",
 
     "unDiagnosed": "Bệnh nhân này chưa tồn tại bất kỳ phiếu chẩn đoán",
     "firstRecord": "Phiếu chẩn đoán đầu tiên vào ngày",

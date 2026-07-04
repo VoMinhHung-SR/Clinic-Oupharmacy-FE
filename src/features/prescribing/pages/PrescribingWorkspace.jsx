@@ -132,9 +132,14 @@ export default function PrescribingWorkspace({ diagnosisId }) {
 
       <PrescribingShell
         patient={prescriptionDetail?.examination?.patient}
+        diagnosis={{
+          sign: prescriptionDetail?.sign,
+          diagnosed: prescriptionDetail?.diagnosed,
+        }}
         draftCount={medicinesSubmit.length}
         catalogContent={
           <PrescribingCatalogSection
+            diagnosisId={diagnosisId}
             onAddMedicineLineItem={addMedicineItem}
             medicinesSubmit={medicinesSubmit}
           />

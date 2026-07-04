@@ -19,7 +19,6 @@ const pickPackaging = (variant) =>
 export default function CatalogCompactList({
   variants,
   loading,
-  isIdle,
   frequentVariantIds,
   onSelectVariant,
   selectedVariantId,
@@ -30,12 +29,8 @@ export default function CatalogCompactList({
     return <SearchResultSkeleton rows={5} />
   }
 
-  if (isIdle) {
-    return null
-  }
-
   if (!variants?.length) {
-    return <CatalogEmptyState variant="empty" />
+    return <CatalogEmptyState variant="empty" compact />
   }
 
   return (

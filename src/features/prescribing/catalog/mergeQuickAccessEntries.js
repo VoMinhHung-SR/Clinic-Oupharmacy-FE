@@ -59,3 +59,10 @@ export function mergeQuickAccessEntries(frequent = [], recent = []) {
     return tb - ta
   })
 }
+
+/** Remove entries whose variant id is in excludeIds (draft lines, L1 overlap). */
+export function excludeVariantIds(entries = [], excludeIds = []) {
+  const exclude = excludeIds instanceof Set ? excludeIds : new Set(excludeIds)
+  if (!exclude.size) return entries
+  return entries.filter((e) => e?.product_variant_id != null && !exclude.has(e.product_variant_id))
+}
