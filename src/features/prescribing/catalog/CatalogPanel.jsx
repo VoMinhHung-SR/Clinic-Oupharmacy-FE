@@ -31,6 +31,7 @@ export default function CatalogPanel({
   prefsLoading,
   diagnosisSuggestions,
   diagnosisSuggestionsLoading,
+  diagnosisSuggestionsMeta,
   l2ExcludeVariantIds,
   frequentVariantIds,
   boostVariants,
@@ -53,7 +54,11 @@ export default function CatalogPanel({
     !prefsLoading && ((prefs?.frequent?.length ?? 0) > 0 || (prefs?.recent?.length ?? 0) > 0)
   const hasDiagnosisSuggestions =
     !diagnosisSuggestionsLoading && (diagnosisSuggestions?.length ?? 0) > 0
-  const hasAnyQuickAccess = hasDiagnosisSuggestions || hasQuickSuggestions
+  const hasDiagnosisEmptyState =
+    !diagnosisSuggestionsLoading &&
+    diagnosisSuggestionsMeta != null &&
+    (diagnosisSuggestions?.length ?? 0) === 0
+  const hasAnyQuickAccess = hasDiagnosisSuggestions || hasQuickSuggestions || hasDiagnosisEmptyState
 
   return (
     <Box
@@ -149,6 +154,7 @@ export default function CatalogPanel({
                 <DiagnosisMedicineSuggestions
                   suggestions={diagnosisSuggestions}
                   loading={diagnosisSuggestionsLoading}
+                  meta={diagnosisSuggestionsMeta}
                   onSelectEntry={onSelectPrefEntry}
                 />
                 <MedicineQuickAccess

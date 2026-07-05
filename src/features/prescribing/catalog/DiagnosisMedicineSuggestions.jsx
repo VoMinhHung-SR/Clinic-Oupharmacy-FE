@@ -32,10 +32,14 @@ const chipSx = (theme) => ({
 export default function DiagnosisMedicineSuggestions({
   suggestions = [],
   loading,
+  meta,
   onSelectEntry,
 }) {
   const { t } = useTranslation(["medicine"])
   const [expanded, setExpanded] = useState(false)
+
+  const hasClinicSuggestions = suggestions.some((entry) => entry.source === "clinic_history")
+  const showClinicDisclaimer = Boolean(meta?.clinic_fallback_used) || hasClinicSuggestions
 
   const visible = expanded
     ? suggestions
@@ -56,7 +60,32 @@ export default function DiagnosisMedicineSuggestions({
   }
 
   if (!suggestions.length) {
-    return null
+    if (!meta) {
+      return null
+    }
+
+    return (
+      <Box sx={{ py: 1, px: 0.5, width: "100%" }}>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          fontWeight={600}
+          sx={{ display: "block", mb: 0.25, textAlign: "left" }}
+        >
+          {t("medicine:diagnosisSuggestionsTitle")}
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ textAlign: "left", fontSize: "0.8rem" }}>
+          {t("medicine:diagnosisSuggestionsEmpty")}
+        </Typography>
+        <Typography
+          variant="caption"
+          color="text.disabled"
+          sx={{ display: "block", mt: 0.5, textAlign: "left", fontSize: "0.72rem" }}
+        >
+          {t("medicine:diagnosisSuggestionsEmptyHint")}
+        </Typography>
+      </Box>
+    )
   }
 
   return (
@@ -76,6 +105,15 @@ export default function DiagnosisMedicineSuggestions({
       >
         {t("medicine:diagnosisSuggestionsDisclaimer")}
       </Typography>
+      {showClinicDisclaimer ? (
+        <Typography
+          variant="caption"
+          color="text.disabled"
+          sx={{ display: "block", mb: 0.75, textAlign: "left", fontSize: "0.68rem" }}
+        >
+          {t("medicine:diagnosisSuggestionsClinicDisclaimer")}
+        </Typography>
+      ) : null}
       <Stack direction="row" flexWrap="wrap" gap={0.75} useFlexGap alignItems="center">
         {visible.map((entry) => {
           const name = getVariantDisplayName(entry.variant) || "—"

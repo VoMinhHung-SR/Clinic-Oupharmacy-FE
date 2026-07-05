@@ -27,8 +27,11 @@ export default function PrescribingCatalogSection({
   const { prefs, loading: prefsLoading, frequentVariantIds, getPrefillForVariant, boostVariants } =
     usePrescriberMedicinePrefs({ enabled: Boolean(user) })
 
-  const { suggestions: diagnosisSuggestions, loading: diagnosisSuggestionsLoading } =
-    useDiagnosisMedicineSuggestions({
+  const {
+    suggestions: diagnosisSuggestions,
+    loading: diagnosisSuggestionsLoading,
+    meta: diagnosisSuggestionsMeta,
+  } = useDiagnosisMedicineSuggestions({
       diagnosisId,
       enabled: Boolean(user && diagnosisId),
     })
@@ -137,6 +140,7 @@ export default function PrescribingCatalogSection({
         prefsLoading={prefsLoading}
         diagnosisSuggestions={visibleDiagnosisSuggestions}
         diagnosisSuggestionsLoading={diagnosisSuggestionsLoading}
+        diagnosisSuggestionsMeta={diagnosisSuggestionsMeta}
         l2ExcludeVariantIds={l2ExcludeVariantIds}
         frequentVariantIds={frequentVariantIds}
         boostVariants={boostVariants}
