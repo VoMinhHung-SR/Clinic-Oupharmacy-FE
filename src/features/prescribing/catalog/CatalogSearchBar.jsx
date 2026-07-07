@@ -1,6 +1,7 @@
 import { InputAdornment, TextField } from "@mui/material"
 import SearchIcon from "@mui/icons-material/Search"
 import { useTranslation } from "react-i18next"
+import { prescribingSearchInputSx } from "../layout/prescribingChrome"
 
 export default function CatalogSearchBar({ keyword, onKeywordChange, inputRef }) {
   const { t } = useTranslation(["medicine"])
@@ -21,7 +22,7 @@ export default function CatalogSearchBar({ keyword, onKeywordChange, inputRef })
             <SearchIcon color="action" fontSize="small" />
           </InputAdornment>
         ),
-        sx: { bgcolor: "background.paper", borderRadius: 1 },
+        sx: prescribingSearchInputSx,
       }}
       inputProps={{
         "aria-label": t("medicine:search"),

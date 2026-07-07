@@ -16,6 +16,9 @@
     "doctorName": "Doctor name",
     "sign": "Sign",
     "diagnosed": "Diagnosed",
+    "diagnosisContextHeading": "Diagnosis",
+    "symptomsHeading": "Symptoms",
+    "noSymptoms": "No symptoms recorded",
     "uses": "Uses",
     "quantity": "Quantity",
     "availableQuantity": "Available Quantity",
@@ -66,5 +69,8 @@
     "draftPricePending": "Price shown after adding items",
     "draftFabLabel": "Draft",
     "openDraftDrawer": "Open prescription draft ({{count}} items)",
-    "closeDraftDrawer": "Close prescription draft"
+    "closeDraftDrawer": "Close prescription draft",
+    "draftEmptyHint": "Add medicine from search, suggestions, or medicines you often prescribe.",
+    "draftEmptyFocusSearch": "Search medicines",
+    "draftEmptyPickSuggestion": "Pick from suggestions"
 }

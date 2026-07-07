@@ -1,8 +1,10 @@
 import { Box, Button, Paper, Typography } from "@mui/material"
+import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined"
 import { DASHBOARD_SURFACE, DASHBOARD_PAPER_SX } from "../../../modules/common/layout/dashboard/styleTokens"
 import { useTranslation } from "react-i18next"
 import PrescriptionDraftLineItem from "../../../modules/pages/PrescriptionDetailComponents/PrescriptionDraftLineItem"
 import DraftSummary from "./DraftSummary"
+import { prescribingInsetPanelSx, prescribingPillRadius } from "../layout/prescribingChrome"
 
 const listScrollSx = {
   flex: 1,
@@ -10,14 +12,12 @@ const listScrollSx = {
   overflowY: "auto",
   overflowX: "hidden",
   WebkitOverflowScrolling: "touch",
-  borderRadius: 1,
-  border: "1px solid",
-  borderColor: "divider",
+  ...prescribingInsetPanelSx,
   px: 1,
   py: 0.5,
   "&::-webkit-scrollbar": { width: 6 },
   "&::-webkit-scrollbar-track": { bgcolor: "transparent" },
-  "&::-webkit-scrollbar-thumb": { bgcolor: "action.selected", borderRadius: 999 },
+  "&::-webkit-scrollbar-thumb": { bgcolor: "action.selected", borderRadius: prescribingPillRadius },
 }
 
 export default function PrescriptionDraftPanel({
@@ -43,6 +43,7 @@ export default function PrescriptionDraftPanel({
         minHeight: { xs: 280, md: 0 },
         maxWidth: "100%",
         minWidth: 0,
+        width: "100%",
       }}
     >
       <Paper
@@ -73,9 +74,31 @@ export default function PrescriptionDraftPanel({
         </Box>
 
         {count === 0 ? (
-          <Typography variant="body2" color="text.secondary" textAlign="center" sx={{ py: 6, px: 1 }}>
-            {t("prescription-detail:nullMedicine")}
-          </Typography>
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              textAlign: "center",
+              pt: 2,
+              pb: 3,
+              px: 1.5,
+              gap: 1,
+            }}
+          >
+            <AssignmentOutlinedIcon
+              sx={{ fontSize: 56, color: "primary.main", opacity: 0.55 }}
+              aria-hidden
+            />
+            <Typography variant="body2" fontWeight={600} color="text.primary">
+              {t("prescription-detail:nullMedicine")}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ maxWidth: 260, lineHeight: 1.45 }}>
+              {t("prescription-detail:draftEmptyHint")}
+            </Typography>
+          </Box>
         ) : (
           <>
             <Box sx={listScrollSx}>

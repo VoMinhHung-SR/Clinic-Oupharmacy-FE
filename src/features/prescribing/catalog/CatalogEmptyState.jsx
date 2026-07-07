@@ -3,7 +3,13 @@ import SearchIcon from "@mui/icons-material/Search"
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined"
 import { useTranslation } from "react-i18next"
 
-export default function CatalogEmptyState({ variant = "idle", compact = false, centered = false, shortHint = false }) {
+export default function CatalogEmptyState({
+  variant = "idle",
+  compact = false,
+  centered = false,
+  shortHint = false,
+  fullWidth = false,
+}) {
   const { t } = useTranslation(["medicine"])
   const isIdle = variant === "idle"
 
@@ -15,11 +21,12 @@ export default function CatalogEmptyState({ variant = "idle", compact = false, c
         flexDirection: "column",
         alignItems: "center",
         justifyContent: centered ? "center" : undefined,
-        width: centered ? "100%" : undefined,
-        maxWidth: centered ? 420 : undefined,
-        mx: centered ? "auto" : undefined,
+        width: centered || fullWidth ? "100%" : undefined,
+        maxWidth: centered && !fullWidth ? 420 : undefined,
+        mx: centered && !fullWidth ? "auto" : undefined,
+        alignSelf: fullWidth ? "stretch" : undefined,
         py: compact ? (centered ? 2 : 1.5) : 8,
-        px: 2,
+        px: fullWidth ? { xs: 1.5, sm: 2 } : 2,
         color: "text.secondary",
       }}
     >

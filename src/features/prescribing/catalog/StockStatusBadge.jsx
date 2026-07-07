@@ -4,6 +4,7 @@ import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined"
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline"
 import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined"
 import { useTranslation } from "react-i18next"
+import { prescribingPillRadius } from "../layout/prescribingChrome"
 
 const LOW_STOCK_THRESHOLD = 5
 
@@ -56,7 +57,7 @@ export default function StockStatusBadge({ count }) {
         gap: 0.5,
         px: 1,
         py: 0.375,
-        borderRadius: 999,
+        borderRadius: prescribingPillRadius,
         border: "1px solid",
         flexShrink: 0,
         maxWidth: "100%",
