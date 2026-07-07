@@ -5,7 +5,6 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
-  Paper,
   Select,
   TextField,
   Typography,
@@ -17,6 +16,7 @@ import { useTranslation } from "react-i18next"
 import useMedicineQuickAdd from "./hooks/useMedicineQuickAdd"
 import StockStatusBadge from "./StockStatusBadge"
 import { getVariantDisplayName, getVariantPackingTotal } from "../../../lib/adapters/storeProduct"
+import { prescribingInsetPanelSx } from "../layout/prescribingChrome"
 
 export default function MedicineQuickAdd({
   variant,
@@ -80,19 +80,17 @@ export default function MedicineQuickAdd({
   }
 
   return (
-    <Paper
+    <Box
       component="form"
-      variant="outlined"
       onSubmit={handleSubmit(submitWithStockCheck)}
       sx={(theme) => ({
-        p: 1.5,
-        mb: 1,
+        ...prescribingInsetPanelSx,
+        p: { xs: 1.25, sm: 1.5 },
         bgcolor: alpha(theme.palette.primary.main, 0.06),
         borderColor: alpha(theme.palette.primary.main, 0.28),
-        borderWidth: 1,
       })}
     >
-      <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1, mb: 1.25 }}>
+      <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1, mb: 1 }}>
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Typography variant="subtitle2" fontWeight={600} sx={{ lineHeight: 1.35 }} title={name}>
             {t("medicine:quickAddTitle", { name })}
@@ -187,6 +185,6 @@ export default function MedicineQuickAdd({
           {t("prescription-detail:addMedicine")}
         </Button>
       </Box>
-    </Paper>
+    </Box>
   )
 }

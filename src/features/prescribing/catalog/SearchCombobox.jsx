@@ -21,6 +21,8 @@ import useDebounce from "../../../lib/hooks/useDebounce"
 import { fetchStoreSearch } from "../api/storeCatalog"
 import { getVariantDisplayName } from "../../../lib/adapters/storeProduct"
 import { PRESCRIBING_MIN_SEARCH_LEN, PRESCRIBING_PAGE_SIZE, PRESCRIBING_SEARCH_DEBOUNCE_MS } from "../constants"
+import { dashboardRadius } from "../../../modules/common/layout/dashboard/styleTokens"
+import { prescribingSearchInputSx } from "../layout/prescribingChrome"
 
 export default function SearchCombobox({
   keyword,
@@ -30,6 +32,7 @@ export default function SearchCombobox({
   boostVariants,
   onSelectVariant,
   categoryId,
+  noMargin = false,
 }) {
   const { t } = useTranslation(["medicine"])
   const anchorRef = useRef(null)
@@ -139,7 +142,7 @@ export default function SearchCombobox({
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
-      <Box ref={anchorRef} sx={{ position: "relative", mb: 1 }}>
+      <Box ref={anchorRef} sx={{ position: "relative", mb: noMargin ? 0 : 1 }}>
         <TextField
           fullWidth
           variant="outlined"
@@ -180,7 +183,7 @@ export default function SearchCombobox({
                 </IconButton>
               </InputAdornment>
             ) : null,
-            sx: { bgcolor: "background.paper", borderRadius: 1 },
+            sx: prescribingSearchInputSx,
           }}
           inputProps={{
             "aria-label": t("medicine:search"),
@@ -194,7 +197,7 @@ export default function SearchCombobox({
           placement="bottom-start"
           style={{ zIndex: 1300, width: anchorRef.current?.offsetWidth }}
         >
-          <Paper elevation={4} sx={{ maxHeight: 280, overflow: "auto", mt: 0.5 }}>
+          <Paper elevation={4} sx={{ maxHeight: 280, overflow: "auto", mt: 0.5, borderRadius: dashboardRadius("control") }}>
             {showResultsLoading && <SearchResultSkeleton rows={4} />}
             {!showResultsLoading && options.length === 0 && (
               <Typography variant="body2" color="text.secondary" sx={{ p: 1.5 }}>

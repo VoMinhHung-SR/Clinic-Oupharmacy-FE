@@ -17,10 +17,12 @@ export default function PrescribingCatalogSection({
   diagnosisId,
   onAddMedicineLineItem,
   medicinesSubmit,
+  searchInputRef: searchInputRefProp,
 }) {
   const { user } = useContext(UserContext)
   const { medicineLineItemSchema } = SchemaModels()
-  const searchInputRef = useRef(null)
+  const internalSearchRef = useRef(null)
+  const searchInputRef = searchInputRefProp ?? internalSearchRef
 
   usePrescribingSearchFocus(searchInputRef)
 
@@ -32,9 +34,9 @@ export default function PrescribingCatalogSection({
     loading: diagnosisSuggestionsLoading,
     meta: diagnosisSuggestionsMeta,
   } = useDiagnosisMedicineSuggestions({
-      diagnosisId,
-      enabled: Boolean(user && diagnosisId),
-    })
+    diagnosisId,
+    enabled: Boolean(user && diagnosisId),
+  })
 
   const draftVariantIds = useMemo(
     () => new Set((medicinesSubmit ?? []).map((item) => item.id).filter(Boolean)),

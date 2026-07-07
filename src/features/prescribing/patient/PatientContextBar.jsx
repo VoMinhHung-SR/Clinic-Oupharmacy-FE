@@ -12,6 +12,11 @@ import CustomCollapseListItemButton from "../../../modules/common/components/col
 import MiniDiagnosisCard from "../../../modules/common/components/card/ExaminationDetailCard/MiniDiagnosisCard"
 import MiniPrescribingCard from "../../../modules/common/components/card/ExaminationDetailCard/MiniPrescribingCard"
 import { EXAM_DETAIL_RELATED_STACK_SX } from "../../../modules/common/components/card/ExaminationDetailCard/detailLayoutTokens"
+import {
+  PRESCRIBING_CONTEXT_ELEVATION,
+  prescribingContextPaperSx,
+} from "../layout/prescribingChrome"
+import { dashboardRadius } from "../../../modules/common/layout/dashboard/styleTokens"
 
 const translate = (t, k, opt) => t("prescription-detail:" + k, opt)
 const genderT = (g, t) =>
@@ -22,7 +27,7 @@ function PatientInfoPanel({ patient, t }) {
     <Box
       component={Paper}
       variant="outlined"
-      sx={{ p: 2, mt: 2, borderRadius: 2, bgcolor: "grey.50" }}
+      sx={{ p: 2, mt: 2, borderRadius: dashboardRadius("control"), bgcolor: "grey.50" }}
     >
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
@@ -98,7 +103,7 @@ function MedicalRecordsPanel({ medicalRecords, isLoading, recordTitle, t }) {
   return (
     <Box sx={{ ...EXAM_DETAIL_RELATED_STACK_SX, mt: 2 }}>
       {medicalRecords.map((m, i) => (
-        <Box key={m.id ?? i} component={Paper} variant="outlined" sx={{ borderRadius: 2, overflow: "hidden" }}>
+        <Box key={m.id ?? i} component={Paper} variant="outlined" sx={{ borderRadius: dashboardRadius("control"), overflow: "hidden" }}>
           <CustomCollapseListItemButton
             standalone
             isOpen={i === 0}
@@ -188,8 +193,9 @@ export default function PatientContextBar({ patient }) {
     <>
       <Box
         component={Paper}
-        elevation={2}
+        elevation={PRESCRIBING_CONTEXT_ELEVATION}
         sx={{
+          ...prescribingContextPaperSx,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",

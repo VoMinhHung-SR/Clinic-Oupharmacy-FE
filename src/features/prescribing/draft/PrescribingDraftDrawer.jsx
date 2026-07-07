@@ -3,6 +3,7 @@ import CloseIcon from "@mui/icons-material/Close"
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong"
 import { cloneElement, isValidElement } from "react"
 import { useTranslation } from "react-i18next"
+import { prescribingPillRadius } from "../layout/prescribingChrome"
 
 export default function PrescribingDraftDrawer({ open, onOpen, onClose, draftCount, children }) {
   const { t } = useTranslation(["prescription-detail"])
@@ -22,7 +23,7 @@ export default function PrescribingDraftDrawer({ open, onOpen, onClose, draftCou
           textTransform: "none",
           gap: 0.5,
           px: 2,
-          borderRadius: 999,
+          borderRadius: prescribingPillRadius,
           width: "auto",
           minWidth: 56,
         }}
