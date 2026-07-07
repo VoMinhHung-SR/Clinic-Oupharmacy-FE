@@ -14,6 +14,7 @@ export default function PersonalMedicineDock({
   loading,
   onSelectEntry,
   excludeVariantIds = [],
+  embedded = false,
 }) {
   const { t } = useTranslation(["medicine"])
   const [open, setOpen] = useState(false)
@@ -44,6 +45,7 @@ export default function PersonalMedicineDock({
         flexShrink: 0,
         mt: "auto",
         width: "100%",
+        overflow: "hidden",
         borderTop: 1,
         borderLeft: 0,
         borderRight: 0,

@@ -31,7 +31,20 @@ export default function CatalogCompactList({
   }
 
   if (!variants?.length) {
-    return <CatalogEmptyState variant="empty" compact />
+    return (
+      <Box
+        sx={{
+          flex: 1,
+          minHeight: 160,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CatalogEmptyState variant="empty" compact centered fullWidth />
+      </Box>
+    )
   }
 
   return (

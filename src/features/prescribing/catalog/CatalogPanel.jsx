@@ -9,11 +9,7 @@ import PrescribingIdlePanel from "./PrescribingIdlePanel"
 import DiagnosisMedicineSuggestions from "./DiagnosisMedicineSuggestions"
 import MedicineQuickAdd from "./MedicineQuickAdd"
 import { PRESCRIBING_MIN_SEARCH_LEN } from "../constants"
-import {
-  prescribingFilterButtonSx,
-  prescribingInsetPanelSx,
-  prescribingResultsZoneSx,
-} from "../layout/prescribingChrome"
+import { prescribingFilterButtonSx, prescribingInsetPanelSx } from "../layout/prescribingChrome"
 
 export default function CatalogPanel({
   variants,
@@ -62,7 +58,6 @@ export default function CatalogPanel({
     !diagnosisSuggestionsLoading && (diagnosisSuggestions?.length ?? 0) > 0
 
   const categoryId = paramsFilter.cate && paramsFilter.cate !== 0 ? paramsFilter.cate : undefined
-  const compactResultsChrome = quickAddOpen && isBaseIdle
 
   return (
     <Box
@@ -72,6 +67,7 @@ export default function CatalogPanel({
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
+        width: "100%",
       }}
     >
       <Box sx={{ flexShrink: 0 }} role="search" aria-label={t("medicine:search")}>
@@ -106,7 +102,7 @@ export default function CatalogPanel({
         </Stack>
 
         {quickAddOpen ? (
-          <Box sx={{ mt: 1 }}>
+          <Box sx={{ mt: 1, width: "100%" }}>
             <MedicineQuickAdd
               variant={selectedVariant}
               prefill={selectionPrefill}
@@ -121,7 +117,7 @@ export default function CatalogPanel({
         ) : null}
 
         {showDiagnosisSuggestions && hasDiagnosisSuggestions ? (
-          <Box sx={{ mt: quickAddOpen ? 0.75 : 1 }}>
+          <Box sx={{ mt: 1, width: "100%" }}>
             <DiagnosisMedicineSuggestions
               suggestions={diagnosisSuggestions}
               meta={diagnosisSuggestionsMeta}
@@ -155,42 +151,60 @@ export default function CatalogPanel({
       {showResultsPanel ? (
         <Box
           sx={{
-            flex: compactResultsChrome ? "0 0 auto" : 1,
-            minHeight: compactResultsChrome ? 0 : showIdleLayout ? { xs: 100, md: 120 } : 120,
+            flex: 1,
+            minHeight: { xs: 140, md: 160 },
+            width: "100%",
+            mt: 1,
             display: "flex",
             flexDirection: "column",
             alignItems: "stretch",
-            justifyContent: "flex-start",
-            overflowY: compactResultsChrome ? "visible" : "auto",
-            overflowX: "hidden",
-            WebkitOverflowScrolling: "touch",
-            mt: 1,
-            px: showIdleLayout ? 0 : 1.5,
-            pt: showIdleLayout ? 0 : 1.5,
-            pb: showIdleLayout ? 0 : 1.5,
-            position: "relative",
-            ...(showIdleLayout ? prescribingResultsZoneSx : prescribingInsetPanelSx),
+            overflow: "hidden",
+            bgcolor: "background.paper",
+            ...prescribingInsetPanelSx,
           }}
         >
-          {showIdleLayout ? (
-            <PrescribingIdlePanel
-              prefs={prefs}
-              prefsLoading={prefsLoading}
-              onSelectEntry={onSelectPrefEntry}
-              l2ExcludeVariantIds={l2ExcludeVariantIds}
-              quickAddActive={quickAddOpen}
-            />
-          ) : null}
+          <Box
+            sx={{
+              flex: 1,
+              minHeight: 0,
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              overflowY: "auto",
+              overflowX: "hidden",
+              WebkitOverflowScrolling: "touch",
+            }}
+          >
+            {showIdleLayout ? (
+              <PrescribingIdlePanel
+                prefs={prefs}
+                prefsLoading={prefsLoading}
+                onSelectEntry={onSelectPrefEntry}
+                l2ExcludeVariantIds={l2ExcludeVariantIds}
+              />
+            ) : null}
 
-          {showCatalogList ? (
-            <CatalogCompactList
-              variants={variants}
-              loading={loading}
-              frequentVariantIds={frequentVariantIds}
-              onSelectVariant={onSelectVariant}
-              selectedVariantId={selectedVariant?.id}
-            />
-          ) : null}
+            {showCatalogList ? (
+              <Box
+                sx={{
+                  flex: 1,
+                  minHeight: 0,
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  p: 1.5,
+                }}
+              >
+                <CatalogCompactList
+                  variants={variants}
+                  loading={loading}
+                  frequentVariantIds={frequentVariantIds}
+                  onSelectVariant={onSelectVariant}
+                  selectedVariantId={selectedVariant?.id}
+                />
+              </Box>
+            ) : null}
+          </Box>
         </Box>
       ) : null}
     </Box>

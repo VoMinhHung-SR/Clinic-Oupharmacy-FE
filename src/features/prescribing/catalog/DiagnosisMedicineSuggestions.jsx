@@ -53,9 +53,6 @@ function resolveSubtitle(t, meta) {
 
 function resolveChipTooltip(t, entry, fullLabel) {
   const count = entry.prescribe_count ?? 0
-  if (entry.source === "clinic_history") {
-    return t("medicine:diagnosisSuggestionChipTooltipClinic", { label: fullLabel, count })
-  }
   if (entry.prefill_allowed) {
     return t("medicine:diagnosisSuggestionChipTooltipDose", { label: fullLabel, count })
   }
@@ -131,7 +128,7 @@ export default function DiagnosisMedicineSuggestions({
 
           return (
             <Tooltip
-              key={entry.product_variant_id}
+              key={`${entry.product_variant_id}-${entry.source || "doctor"}`}
               title={resolveChipTooltip(t, entry, fullLabel)}
               enterDelay={400}
             >

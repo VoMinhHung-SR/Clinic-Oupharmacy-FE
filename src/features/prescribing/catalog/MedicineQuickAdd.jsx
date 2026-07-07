@@ -16,7 +16,8 @@ import { useTranslation } from "react-i18next"
 import useMedicineQuickAdd from "./hooks/useMedicineQuickAdd"
 import StockStatusBadge from "./StockStatusBadge"
 import { getVariantDisplayName, getVariantPackingTotal } from "../../../lib/adapters/storeProduct"
-import { prescribingInsetPanelSx } from "../layout/prescribingChrome"
+import { prescribingInsetPanelSx, prescribingPillRadius } from "../layout/prescribingChrome"
+import { dashboardRadius } from "../../../modules/common/layout/dashboard/styleTokens"
 
 export default function MedicineQuickAdd({
   variant,
@@ -27,6 +28,7 @@ export default function MedicineQuickAdd({
   onClose,
   onAdded,
   searchInputRef,
+  embedded = false,
 }) {
   const { t } = useTranslation(["prescription-detail", "yup-validate", "medicine"])
 
@@ -84,10 +86,17 @@ export default function MedicineQuickAdd({
       component="form"
       onSubmit={handleSubmit(submitWithStockCheck)}
       sx={(theme) => ({
-        ...prescribingInsetPanelSx,
+        ...(embedded ? {} : prescribingInsetPanelSx),
+        width: "100%",
         p: { xs: 1.25, sm: 1.5 },
         bgcolor: alpha(theme.palette.primary.main, 0.06),
         borderColor: alpha(theme.palette.primary.main, 0.28),
+        ...(embedded
+          ? {
+              border: "1px solid",
+              borderRadius: dashboardRadius("control"),
+            }
+          : {}),
       })}
     >
       <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1, mb: 1 }}>

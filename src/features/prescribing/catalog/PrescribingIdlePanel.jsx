@@ -8,7 +8,6 @@ export default function PrescribingIdlePanel({
   prefsLoading,
   onSelectEntry,
   l2ExcludeVariantIds,
-  quickAddActive = false,
 }) {
   const { frequent = [], recent = [] } = prefs ?? {}
   const merged = mergeQuickAccessEntries(frequent, recent)
@@ -23,7 +22,7 @@ export default function PrescribingIdlePanel({
     <Box
       sx={{
         width: "100%",
-        flex: quickAddActive ? "0 0 auto" : 1,
+        flex: 1,
         minHeight: 0,
         display: "flex",
         flexDirection: "column",
@@ -31,13 +30,14 @@ export default function PrescribingIdlePanel({
     >
       <Box
         sx={{
-          flex: quickAddActive ? "0 0 auto" : 1,
-          display: "flex",
-          alignItems: "stretch",
-          justifyContent: "flex-start",
-          alignSelf: "stretch",
-          minHeight: quickAddActive ? 0 : undefined,
+          flex: 1,
+          minHeight: 0,
           width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          px: { xs: 1.5, sm: 2 },
+          py: 2,
         }}
       >
         <CatalogEmptyState variant="idle" compact centered shortHint fullWidth />
@@ -45,6 +45,7 @@ export default function PrescribingIdlePanel({
 
       {showDock ? (
         <PersonalMedicineDock
+          embedded
           prefs={prefs}
           loading={prefsLoading}
           onSelectEntry={onSelectEntry}

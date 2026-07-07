@@ -1,7 +1,7 @@
-/** Dev-only opt-in mock submit — bật: localStorage.setItem("prescribing:mock-submit", "1"); tắt: "0" hoặc removeItem */
+/** Dev-only opt-in mock submit — bật sau khi load: localStorage.setItem("prescribing:mock-submit", "1"); tắt: disableAllPrescribingMocks() */
 export const PRESCRIBING_MOCK_SUBMIT_KEY = "prescribing:mock-submit"
 
-/** Dev-only mock L1 diagnosis suggestions — bật: localStorage.setItem("prescribing:mock-diagnosis-suggestions", "1") */
+/** Dev-only mock L1 diagnosis suggestions — bật sau khi load: localStorage.setItem("prescribing:mock-diagnosis-suggestions", "1") */
 export const PRESCRIBING_MOCK_DIAGNOSIS_SUGGESTIONS_KEY = "prescribing:mock-diagnosis-suggestions"
 
 /** Dev-only mock thuốc hay kê — bật riêng hoặc dùng chung key diagnosis mock */
@@ -88,6 +88,30 @@ export function isPrescribingMockMedicinePrefsEnabled() {
   } catch {
     return false
   }
+}
+
+export function setPrescribingMockMedicinePrefsEnabled(enabled) {
+  if (!import.meta.env.DEV) return
+  try {
+    if (enabled) {
+      localStorage.setItem(PRESCRIBING_MOCK_MEDICINE_PREFS_KEY, "1")
+    } else {
+      localStorage.removeItem(PRESCRIBING_MOCK_MEDICINE_PREFS_KEY)
+    }
+  } catch {
+    // ignore
+  }
+}
+
+/** Clears all prescribing mock localStorage flags (dev-only). */
+export function disableAllPrescribingMocks() {
+  setPrescribingMockSubmitEnabled(false)
+  setPrescribingMockDiagnosisSuggestionsEnabled(false)
+  setPrescribingMockMedicinePrefsEnabled(false)
+}
+
+if (import.meta.env.DEV) {
+  disableAllPrescribingMocks()
 }
 
 const mockPrefEntry = (id, name, packing, { frequent = true } = {}) => {
