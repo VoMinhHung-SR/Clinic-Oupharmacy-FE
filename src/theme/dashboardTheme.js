@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material/styles"
-import { DASHBOARD_TABLE_HEAD_BG } from "../modules/common/layout/dashboard/styleTokens"
+import { DASHBOARD_TABLE_HEAD_BG, DASHBOARD_RADIUS } from "../modules/common/layout/dashboard/styleTokens"
 
 /** Scoped theme for /dashboard/* — does not affect public site. */
 export const dashboardTheme = createTheme({
@@ -16,7 +16,7 @@ export const dashboardTheme = createTheme({
     },
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 4,
   },
   typography: {
     subtitle1: {
@@ -82,13 +82,21 @@ export const dashboardTheme = createTheme({
       styleOverrides: {
         root: {
           textTransform: "none",
+          borderRadius: DASHBOARD_RADIUS.control,
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: DASHBOARD_RADIUS.control,
         },
       },
     },
     MuiListItemButton: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
+          borderRadius: DASHBOARD_RADIUS.control,
           marginInline: 8,
           marginBlock: 2,
           "&.Mui-selected": {

@@ -8,9 +8,25 @@ export const DASHBOARD_BORDER_COLOR = "divider"
 export const DASHBOARD_SHADOW =
   "0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12)"
 
+/**
+ * Dashboard radius contract — explicit px strings (avoids MUI shape multiplier drift).
+ * - surface (12px): cards / panes / context strips
+ * - control (8px): buttons, inputs, inset panels, list rows
+ * - pill (999): chips, badges, drag handles
+ */
+export const DASHBOARD_RADIUS = {
+  surface: 12,
+  control: 8,
+  pill: 999,
+}
+
+/** @param {"surface" | "control" | "pill"} tier */
+export const dashboardRadius = (tier) =>
+  tier === "pill" ? DASHBOARD_RADIUS.pill : `${DASHBOARD_RADIUS[tier]}px`
+
 export const DASHBOARD_SURFACE = {
   elevation: 4,
-  borderRadius: 3,
+  borderRadius: dashboardRadius("surface"),
 }
 
 /** Shared Paper chrome for dashboard cards / panes — shadow via elevation={DASHBOARD_SURFACE.elevation}. */
@@ -45,7 +61,7 @@ export const DASHBOARD_LIST_HEADER_SX = {
 }
 
 export const DASHBOARD_FILTER_BUTTON_SX = {
-  borderRadius: 2,
+  borderRadius: dashboardRadius("control"),
   fontWeight: 500,
   textTransform: "none",
   px: 2,
@@ -206,7 +222,7 @@ export const dashboardNavItemSx = (isActive, variant = "primary") => ({
   px: 2,
   py: 1.25,
   minHeight: 44,
-  borderRadius: 2,
+  borderRadius: dashboardRadius("control"),
   transition: "background-color 0.15s ease",
   ...(isActive && variant === "warning"
     ? { bgcolor: "warning.main", color: "warning.contrastText" }
