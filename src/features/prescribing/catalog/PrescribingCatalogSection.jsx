@@ -17,21 +17,26 @@ export default function PrescribingCatalogSection({
   diagnosisId,
   onAddMedicineLineItem,
   medicinesSubmit,
+  searchInputRef: searchInputRefProp,
 }) {
   const { user } = useContext(UserContext)
   const { medicineLineItemSchema } = SchemaModels()
-  const searchInputRef = useRef(null)
+  const internalSearchRef = useRef(null)
+  const searchInputRef = searchInputRefProp ?? internalSearchRef
 
   usePrescribingSearchFocus(searchInputRef)
 
   const { prefs, loading: prefsLoading, frequentVariantIds, getPrefillForVariant, boostVariants } =
     usePrescriberMedicinePrefs({ enabled: Boolean(user) })
 
-  const { suggestions: diagnosisSuggestions, loading: diagnosisSuggestionsLoading } =
-    useDiagnosisMedicineSuggestions({
-      diagnosisId,
-      enabled: Boolean(user && diagnosisId),
-    })
+  const {
+    suggestions: diagnosisSuggestions,
+    loading: diagnosisSuggestionsLoading,
+    meta: diagnosisSuggestionsMeta,
+  } = useDiagnosisMedicineSuggestions({
+    diagnosisId,
+    enabled: Boolean(user && diagnosisId),
+  })
 
   const draftVariantIds = useMemo(
     () => new Set((medicinesSubmit ?? []).map((item) => item.id).filter(Boolean)),
@@ -137,6 +142,7 @@ export default function PrescribingCatalogSection({
         prefsLoading={prefsLoading}
         diagnosisSuggestions={visibleDiagnosisSuggestions}
         diagnosisSuggestionsLoading={diagnosisSuggestionsLoading}
+        diagnosisSuggestionsMeta={diagnosisSuggestionsMeta}
         l2ExcludeVariantIds={l2ExcludeVariantIds}
         frequentVariantIds={frequentVariantIds}
         boostVariants={boostVariants}

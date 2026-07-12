@@ -15,6 +15,9 @@
     "doctorName": "Bác sĩ chẩn đoán",
     "sign": "Triệu chứng",
     "diagnosed": "Chấn đoán",
+    "diagnosisContextHeading": "Chẩn đoán",
+    "symptomsHeading": "Triệu chứng",
+    "noSymptoms": "Chưa có triệu chứng",
     "uses": "Liều dùng",
     "quantity": "Số lượng",
     "availableQuantity": "Số lượng thực tế",
@@ -65,5 +68,8 @@
     "draftPricePending": "Giá cập nhật khi thêm thuốc",
     "draftFabLabel": "Phiếu",
     "openDraftDrawer": "Mở phiếu kê toa ({{count}} thuốc)",
-    "closeDraftDrawer": "Đóng phiếu kê toa"
+    "closeDraftDrawer": "Đóng phiếu kê toa",
+    "draftEmptyHint": "Thêm thuốc từ tìm kiếm, gợi ý hoặc thuốc bạn hay kê.",
+    "draftEmptyFocusSearch": "Tìm thuốc",
+    "draftEmptyPickSuggestion": "Chọn từ gợi ý"
 }

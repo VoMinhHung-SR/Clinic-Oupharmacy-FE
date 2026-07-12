@@ -5,6 +5,7 @@ import SearchResultSkeleton from "./SearchResultSkeleton"
 import CatalogEmptyState from "./CatalogEmptyState"
 import StockStatusBadge from "./StockStatusBadge"
 import { getVariantDisplayName } from "../../../lib/adapters/storeProduct"
+import { dashboardRadius } from "../../../modules/common/layout/dashboard/styleTokens"
 
 const pickVariantId = (variant) => variant?.id ?? variant?.product_variant_id ?? null
 
@@ -30,7 +31,20 @@ export default function CatalogCompactList({
   }
 
   if (!variants?.length) {
-    return <CatalogEmptyState variant="empty" compact />
+    return (
+      <Box
+        sx={{
+          flex: 1,
+          minHeight: 160,
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CatalogEmptyState variant="empty" compact centered fullWidth />
+      </Box>
+    )
   }
 
   return (
@@ -54,7 +68,7 @@ export default function CatalogCompactList({
             selected={isSelected}
             onClick={() => onSelectVariant(variant)}
             sx={{
-              borderRadius: 1,
+              borderRadius: dashboardRadius("control"),
               mb: 0.5,
               border: "1px solid",
               borderColor: isSelected ? "primary.main" : "divider",

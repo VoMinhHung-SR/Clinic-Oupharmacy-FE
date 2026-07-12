@@ -4,7 +4,8 @@ import PatientContextBar from "../patient/PatientContextBar"
 import DiagnosisContextStrip from "../patient/DiagnosisContextStrip"
 import PrescribingContentWrapper from "./PrescribingContentWrapper"
 import PrescribingDraftDrawer from "../draft/PrescribingDraftDrawer"
-import { DASHBOARD_PAPER_SX, DASHBOARD_SURFACE } from "../../../modules/common/layout/dashboard/styleTokens"
+import { DASHBOARD_SURFACE } from "../../../modules/common/layout/dashboard/styleTokens"
+import { prescribingShellPaperSx } from "../layout/prescribingChrome"
 
 export default function PrescribingShell({
   patient,
@@ -42,7 +43,7 @@ export default function PrescribingShell({
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
-            ...DASHBOARD_PAPER_SX,
+            ...prescribingShellPaperSx,
             px: { xs: 2, md: 2.5 },
             py: { xs: 1.5, md: 2 },
           }}

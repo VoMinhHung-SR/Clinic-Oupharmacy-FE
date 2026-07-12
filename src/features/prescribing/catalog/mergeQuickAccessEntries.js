@@ -1,5 +1,40 @@
-/** Max chips shown before "show more". */
-export const QUICK_ACCESS_VISIBLE_LIMIT = 6
+/** Max chip rows before "show more" (prescribing quick-access grids). */
+export const CHIP_GRID_MAX_LINES = 2
+
+/** Chip row height (px) — small outlined chip + gap for 2-line cap. */
+export const CHIP_ROW_HEIGHT_PX = 38
+
+/**
+ * Thuốc bạn hay kê — chips in 2 rows before "+N" / "Xem thêm" (~3 per row).
+ */
+export const PERSONAL_MEDICINE_PREVIEW_LIMIT = CHIP_GRID_MAX_LINES * 3
+
+/** Thuốc bạn hay kê — max chips when expanded (matches BE FREQUENT_LIMIT=12). */
+export const PERSONAL_MEDICINE_EXPANDED_LIMIT = 12
+
+/** @deprecated Use PERSONAL_MEDICINE_PREVIEW_LIMIT / PERSONAL_MEDICINE_EXPANDED_LIMIT */
+export const PERSONAL_MEDICINE_VISIBLE_LIMIT = PERSONAL_MEDICINE_EXPANDED_LIMIT
+
+/**
+ * Gợi ý theo chẩn đoán — hard cap, no "+N" CTA (BE TOP_SUGGESTIONS=8).
+ */
+export const DIAGNOSIS_SUGGESTIONS_VISIBLE_LIMIT = 5
+
+/** @deprecated Use PERSONAL_MEDICINE_VISIBLE_LIMIT */
+export const QUICK_ACCESS_VISIBLE_LIMIT = PERSONAL_MEDICINE_VISIBLE_LIMIT
+
+/** Clamp chip wrap to N lines (pair with QUICK_ACCESS_VISIBLE_LIMIT + show more). */
+export const chipGridLineClampSx = (lines = CHIP_GRID_MAX_LINES) => ({
+  maxHeight: lines * CHIP_ROW_HEIGHT_PX,
+  overflow: "hidden",
+})
+
+/** Expanded chip area — scroll instead of unbounded whitespace. */
+export const chipGridExpandedScrollSx = {
+  maxHeight: CHIP_GRID_MAX_LINES * CHIP_ROW_HEIGHT_PX * 2,
+  overflowY: "auto",
+  WebkitOverflowScrolling: "touch",
+}
 
 /** Truncate chip label; full text goes in tooltip. */
 export const QUICK_ACCESS_LABEL_MAX = 32

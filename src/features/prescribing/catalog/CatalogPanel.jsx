@@ -1,15 +1,15 @@
-import { Box, Button, Collapse } from "@mui/material"
+import { Box, Button, Collapse, Stack } from "@mui/material"
 import FilterListIcon from "@mui/icons-material/FilterList"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import SearchCombobox from "./SearchCombobox"
 import CatalogCategoryNav from "./CatalogCategoryNav"
 import CatalogCompactList from "./CatalogCompactList"
-import CatalogEmptyState from "./CatalogEmptyState"
-import MedicineQuickAccess from "./MedicineQuickAccess"
+import PrescribingIdlePanel from "./PrescribingIdlePanel"
 import DiagnosisMedicineSuggestions from "./DiagnosisMedicineSuggestions"
 import MedicineQuickAdd from "./MedicineQuickAdd"
 import { PRESCRIBING_MIN_SEARCH_LEN } from "../constants"
+import { prescribingFilterButtonSx, prescribingInsetPanelSx } from "../layout/prescribingChrome"
 
 export default function CatalogPanel({
   variants,
@@ -31,6 +31,7 @@ export default function CatalogPanel({
   prefsLoading,
   diagnosisSuggestions,
   diagnosisSuggestionsLoading,
+  diagnosisSuggestionsMeta,
   l2ExcludeVariantIds,
   frequentVariantIds,
   boostVariants,
@@ -45,15 +46,18 @@ export default function CatalogPanel({
   const [showAdvanced, setShowAdvanced] = useState(false)
 
   const kwActive = (paramsFilter.kw || "").trim().length >= PRESCRIBING_MIN_SEARCH_LEN
-  const showIdleQuickAccess = isIdle && !selectedVariant
-  const showCatalogList = !showIdleQuickAccess && (kwActive || hasBrowseIntent) && !selectedVariant
-  const showResultsPanel = showIdleQuickAccess || showCatalogList
-  const categoryId = paramsFilter.cate && paramsFilter.cate !== 0 ? paramsFilter.cate : undefined
-  const hasQuickSuggestions =
-    !prefsLoading && ((prefs?.frequent?.length ?? 0) > 0 || (prefs?.recent?.length ?? 0) > 0)
+  const quickAddOpen = Boolean(selectedVariant)
+  const isBaseIdle = isIdle && !hasBrowseIntent
+
+  const showIdleLayout = isBaseIdle
+  const showCatalogList = !showIdleLayout && (kwActive || hasBrowseIntent)
+  const showResultsPanel = showIdleLayout || showCatalogList
+  const showDiagnosisSuggestions = isBaseIdle && !quickAddOpen
+
   const hasDiagnosisSuggestions =
     !diagnosisSuggestionsLoading && (diagnosisSuggestions?.length ?? 0) > 0
-  const hasAnyQuickAccess = hasDiagnosisSuggestions || hasQuickSuggestions
+
+  const categoryId = paramsFilter.cate && paramsFilter.cate !== 0 ? paramsFilter.cate : undefined
 
   return (
     <Box
@@ -63,45 +67,67 @@ export default function CatalogPanel({
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
+        width: "100%",
       }}
     >
-      <Box sx={{ flexShrink: 0, pb: 0.5 }} role="search" aria-label={t("medicine:search")}>
-        <SearchCombobox
-          keyword={paramsFilter.kw}
-          onKeywordChange={onKeywordChange}
-          inputRef={searchInputRef}
-          frequentVariantIds={frequentVariantIds}
-          boostVariants={boostVariants}
-          onSelectVariant={onSelectVariant}
-          categoryId={categoryId}
-        />
+      <Box sx={{ flexShrink: 0 }} role="search" aria-label={t("medicine:search")}>
+        <Stack direction="row" spacing={1} alignItems="flex-start">
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <SearchCombobox
+              keyword={paramsFilter.kw}
+              onKeywordChange={onKeywordChange}
+              inputRef={searchInputRef}
+              frequentVariantIds={frequentVariantIds}
+              boostVariants={boostVariants}
+              onSelectVariant={onSelectVariant}
+              categoryId={categoryId}
+              noMargin
+            />
+          </Box>
+          <Button
+            type="button"
+            variant={showAdvanced ? "contained" : "outlined"}
+            size="small"
+            startIcon={<FilterListIcon />}
+            onClick={() => setShowAdvanced((v) => !v)}
+            aria-expanded={showAdvanced}
+            sx={{
+              flexShrink: 0,
+              mt: 0.25,
+              ...prescribingFilterButtonSx,
+            }}
+          >
+            {t("medicine:advancedFilters")}
+          </Button>
+        </Stack>
 
-        {selectedVariant ? (
-          <MedicineQuickAdd
-            variant={selectedVariant}
-            prefill={selectionPrefill}
-            schema={schema}
-            availableStockMap={availableStockMap}
-            onAdd={onAddToPrescription}
-            onClose={onClearSelection}
-            onAdded={onClearSelection}
-            searchInputRef={searchInputRef}
-          />
+        {quickAddOpen ? (
+          <Box sx={{ mt: 1, width: "100%" }}>
+            <MedicineQuickAdd
+              variant={selectedVariant}
+              prefill={selectionPrefill}
+              schema={schema}
+              availableStockMap={availableStockMap}
+              onAdd={onAddToPrescription}
+              onClose={onClearSelection}
+              onAdded={onClearSelection}
+              searchInputRef={searchInputRef}
+            />
+          </Box>
         ) : null}
 
-        <Button
-          type="button"
-          variant="text"
-          size="small"
-          startIcon={<FilterListIcon fontSize="small" />}
-          onClick={() => setShowAdvanced((v) => !v)}
-          sx={{ mb: 0.5, textTransform: "none", minHeight: 28, py: 0 }}
-        >
-          {t("medicine:advancedFilters")}
-        </Button>
+        {showDiagnosisSuggestions && hasDiagnosisSuggestions ? (
+          <Box sx={{ mt: 1, width: "100%" }}>
+            <DiagnosisMedicineSuggestions
+              suggestions={diagnosisSuggestions}
+              meta={diagnosisSuggestionsMeta}
+              onSelectEntry={onSelectPrefEntry}
+            />
+          </Box>
+        ) : null}
 
         <Collapse in={showAdvanced}>
-          <Box sx={{ mb: 1.5 }}>
+          <Box sx={{ my: 2 }}>
             <CatalogCategoryNav
               tree={categoryTree}
               loading={categoryTreeLoading}
@@ -126,50 +152,59 @@ export default function CatalogPanel({
         <Box
           sx={{
             flex: 1,
-            minHeight: showIdleQuickAccess ? { xs: 200, md: 240 } : 120,
-            display: showIdleQuickAccess ? "flex" : "block",
-            flexDirection: showIdleQuickAccess ? "column" : undefined,
-            alignItems: showIdleQuickAccess ? "center" : undefined,
-            justifyContent: showIdleQuickAccess ? "center" : undefined,
-            overflowY: "auto",
-            overflowX: "hidden",
-            WebkitOverflowScrolling: "touch",
-            borderRadius: 1,
-            border: "1px solid",
-            borderColor: "divider",
-            mt: 0.5,
-            px: 1.5,
-            py: showIdleQuickAccess ? 2 : 1.5,
+            minHeight: { xs: 140, md: 160 },
+            width: "100%",
+            mt: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
+            overflow: "hidden",
+            bgcolor: "background.paper",
+            ...prescribingInsetPanelSx,
           }}
         >
-          {showIdleQuickAccess && (
-            <>
-              <CatalogEmptyState variant="idle" compact centered shortHint={hasAnyQuickAccess} />
-              <Box sx={{ width: "100%", maxWidth: 720, mt: 0.5 }}>
-                <DiagnosisMedicineSuggestions
-                  suggestions={diagnosisSuggestions}
-                  loading={diagnosisSuggestionsLoading}
-                  onSelectEntry={onSelectPrefEntry}
-                />
-                <MedicineQuickAccess
-                  prefs={prefs}
-                  loading={prefsLoading}
-                  onSelectEntry={onSelectPrefEntry}
-                  excludeVariantIds={l2ExcludeVariantIds}
+          <Box
+            sx={{
+              flex: 1,
+              minHeight: 0,
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              overflowY: "auto",
+              overflowX: "hidden",
+              WebkitOverflowScrolling: "touch",
+            }}
+          >
+            {showIdleLayout ? (
+              <PrescribingIdlePanel
+                prefs={prefs}
+                prefsLoading={prefsLoading}
+                onSelectEntry={onSelectPrefEntry}
+                l2ExcludeVariantIds={l2ExcludeVariantIds}
+              />
+            ) : null}
+
+            {showCatalogList ? (
+              <Box
+                sx={{
+                  flex: 1,
+                  minHeight: 0,
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  p: 1.5,
+                }}
+              >
+                <CatalogCompactList
+                  variants={variants}
+                  loading={loading}
+                  frequentVariantIds={frequentVariantIds}
+                  onSelectVariant={onSelectVariant}
+                  selectedVariantId={selectedVariant?.id}
                 />
               </Box>
-            </>
-          )}
-
-          {showCatalogList && (
-            <CatalogCompactList
-              variants={variants}
-              loading={loading}
-              frequentVariantIds={frequentVariantIds}
-              onSelectVariant={onSelectVariant}
-              selectedVariantId={selectedVariant?.id}
-            />
-          )}
+            ) : null}
+          </Box>
         </Box>
       ) : null}
     </Box>

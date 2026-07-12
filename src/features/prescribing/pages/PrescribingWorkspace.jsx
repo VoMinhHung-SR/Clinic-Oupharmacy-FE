@@ -41,6 +41,7 @@ export default function PrescribingWorkspace({ diagnosisId }) {
 
   const [confirm, setConfirm] = useState(false)
   const hasShownDialog = useRef(false)
+  const searchInputRef = useRef(null)
 
   useEffect(() => {
     if (
@@ -142,6 +143,7 @@ export default function PrescribingWorkspace({ diagnosisId }) {
             diagnosisId={diagnosisId}
             onAddMedicineLineItem={addMedicineItem}
             medicinesSubmit={medicinesSubmit}
+            searchInputRef={searchInputRef}
           />
         }
         draftContent={draftPanel}
