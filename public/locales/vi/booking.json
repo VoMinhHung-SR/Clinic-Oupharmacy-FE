@@ -48,5 +48,15 @@
     "bestWishes": "Chúc bạn thật nhiều sức khỏe!",
     "errMissingImportantInfo": "Thiếu thông tin quan trọng",
     "errTextMissingImportantInfo": "Bạn cần cài đặt thông tin quan trọng",
-    "addressRequiredForBooking": "Vui lòng cập nhật địa chỉ để có thể đặt lịch khám"
+    "addressRequiredForBooking": "Vui lòng cập nhật địa chỉ để có thể đặt lịch khám",
+    "filterBySpecialty": "Lọc theo chuyên khoa",
+    "allSpecialties": "Tất cả",
+    "searchDoctor": "Tìm bác sĩ theo tên",
+    "filterByDate": "Có lịch ngày",
+    "clearDateFilter": "Xóa lọc ngày",
+    "noDoctorMatch": "Không có bác sĩ phù hợp bộ lọc",
+    "selectedDoctor": "Bác sĩ đã chọn",
+    "changeDoctor": "Đổi bác sĩ",
+    "slotUnavailableTitle": "Không đặt được khung giờ",
+    "slotUnavailable": "Khung giờ đã được đặt hoặc không còn trống. Vui lòng chọn giờ khác."
 }

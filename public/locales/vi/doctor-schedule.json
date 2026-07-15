@@ -17,5 +17,7 @@
     "week": "Tuần",
     "doctorScheduleTitle": "Thống kê lịch tuần của bác sĩ",
     "confirmCreateSchedule": "Xác nhận tạo lịch tuần này?",
-    "confirmUpdateSchedule": "Xác nhận cập nhật lịch tuần này?"
+    "confirmUpdateSchedule": "Xác nhận cập nhật lịch tuần này?",
+    "updateBlockedTitle": "Không thể cập nhật lịch tuần",
+    "updateBlockedHasBookings": "Tuần này đã có lịch khám của bệnh nhân. Hủy hoặc chuyển lịch trước khi cập nhật ca làm việc."
 }

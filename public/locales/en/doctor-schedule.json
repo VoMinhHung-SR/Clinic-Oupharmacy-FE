@@ -16,5 +16,7 @@
     "week": "Week",
     "doctorScheduleTitle": "Doctor Weekly Schedule Statistics",
     "confirmCreateSchedule": "Confirm to create this week schedule?",
-    "confirmUpdateSchedule": "Confirm to update this week schedule?"
+    "confirmUpdateSchedule": "Confirm to update this week schedule?",
+    "updateBlockedTitle": "Cannot update weekly schedule",
+    "updateBlockedHasBookings": "This week already has patient bookings. Cancel or reassign them before updating your working sessions."
 }
