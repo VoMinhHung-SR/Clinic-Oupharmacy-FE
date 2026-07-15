@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react"
 import { fetchCheckWeeklySchedule, fetchCreateDoctorScheduleByWeek, fetchUpdateDoctorSchedule } from "../services"
 import { useTranslation } from "react-i18next"
-import { ConfirmAlert } from "../../../../config/sweetAlert2"
+import { ConfirmAlert, ErrorAlert } from "../../../../config/sweetAlert2"
 import { useSearchParams } from "react-router-dom"
 import moment from "moment"
 import UserContext from "../../../../lib/context/UserContext"
-import { TOAST_SUCCESS } from "../../../../lib/constants"
+import { TOAST_ERROR, TOAST_SUCCESS } from "../../../../lib/constants"
 import createToastMessage from "../../../../lib/utils/createToastMessage"
 
 const useDoctorSchedule = () => {
@@ -68,7 +68,25 @@ const useDoctorSchedule = () => {
                     setFlag(prev => !prev)
                 }
             }catch (err) {
-                console.log(err)
+                const apiMsg = err?.response?.data?.errMsg
+                const errCode = err?.response?.data?.errCode
+                if (errCode === 'HAS_BOOKINGS' || apiMsg) {
+                    ErrorAlert(
+                        t('doctor-schedule:updateBlockedTitle'),
+                        apiMsg || t('doctor-schedule:updateBlockedHasBookings'),
+                        t('modal:ok'),
+                    )
+                    createToastMessage({
+                        type: TOAST_ERROR,
+                        message: t('doctor-schedule:updateBlockedHasBookings'),
+                    })
+                } else {
+                    ErrorAlert(
+                        t('modal:errSomethingWentWrong'),
+                        t('modal:pleaseTryAgain'),
+                        t('modal:ok'),
+                    )
+                }
             } finally {
                 setIsLoading(false);
             }

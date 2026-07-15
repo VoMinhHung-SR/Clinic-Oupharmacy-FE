@@ -17,7 +17,7 @@ import PatientCard from "../../modules/common/components/card/PatientCard";
 import BookingProcess from "../../modules/pages/BookingComponents/BookingProcess";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useNavigate } from "react-router";
-import BookingForm from "../../modules/pages/BookingComponents/BookingForm";
+import BookingDoctorDiscovery from "../../modules/pages/BookingComponents/BookingDoctorDiscovery";
 
 // Constants for reusable styles
 const BUTTON_STYLES = {
@@ -218,12 +218,16 @@ const Booking = () => {
         )
     
     }
-    // Step 3
+    // Step 3 — discovery then single doctor booking panel (MASTER P3)
     const renderThirdState = () => {
-        return (<Box>
-            {allConfig && allConfig.doctors ? allConfig.doctors.map((d)=> 
-                <BookingForm doctorInfo={d} key={d.id}/>) : <></>}
-        </Box>)
+        if (!allConfig?.doctors?.length) {
+            return <p className="ou-text-gray-600">{t('booking:noDoctorFound')}</p>
+        }
+        return (
+            <Box>
+                <BookingDoctorDiscovery doctors={allConfig.doctors} />
+            </Box>
+        )
     }
 
     // Step 4 

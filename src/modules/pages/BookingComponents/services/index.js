@@ -29,6 +29,24 @@ export const fetchCreateTimeSlot = async (data) => {
     return res;
 }
 
+/** P3 date-filter: parallel schedule lookups (reuse existing schedule-by-date API). */
+export const fetchSchedulesForDoctors = async (date, doctorIds = []) => {
+    const results = await Promise.all(
+        doctorIds.map(async (doctorId) => {
+            try {
+                const res = await fetchGetDoctorAvailability(date, parseInt(doctorId, 10))
+                return {
+                    doctorId: parseInt(doctorId, 10),
+                    schedules: res.status === 200 ? res.data : [],
+                }
+            } catch {
+                return { doctorId: parseInt(doctorId, 10), schedules: [] }
+            }
+        })
+    )
+    return results
+}
+
 export const fetchDeleteTimeSlot = async (timeSlotID) => {
     const res = await authApi().delete(endpoints['time-slot-detail'](timeSlotID))
     return res;
