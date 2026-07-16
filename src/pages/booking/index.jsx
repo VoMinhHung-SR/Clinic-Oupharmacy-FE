@@ -23,34 +23,37 @@ import BookingDoctorDiscovery from "../../modules/pages/BookingComponents/Bookin
 const BUTTON_STYLES = {
   base: "ou-btn-base ou-min-w-[120px]",
   booking: "ou-btn-booking ou-border-opacity-60",
-  responsive: { width: { xs: '100%', sm: 'auto' } },
-  responsiveWithMax: { 
-    width: { xs: '100%', sm: 'auto' }, 
-    maxWidth: { xs: '300px', sm: 'none' } 
-  }
 };
 
 const ICON_STYLES = {
   large: {
-    fontSize: { xs: '80px', sm: '100px', md: '120px' },
-    marginBottom: '12px'
+    fontSize: { xs: 56, sm: 64, md: 72 },
+    marginBottom: '8px'
   },
   text: {
-    paddingTop: '12px',
-    fontWeight: 'bold',
-    fontSize: { xs: '14px', sm: '16px' },
-    textAlign: 'center'
+    paddingTop: '8px',
+    fontWeight: 600,
+    fontSize: { xs: '0.95rem', sm: '1.05rem' },
+    textAlign: 'center',
+    lineHeight: 1.35,
   }
 };
 
 // Reusable SelectionButton component
 const SelectionButton = ({ onClick, isSelected, icon, text }) => (
     <button 
+        type="button"
         onClick={onClick} 
         className={clsx(BUTTON_STYLES.booking, {
             "ou-btn-booking__focus": isSelected,
         })}
-        sx={BUTTON_STYLES.responsiveWithMax}
+        style={{
+            width: '100%',
+            maxWidth: 360,
+            minHeight: 200,
+            padding: '28px 24px',
+            boxSizing: 'border-box',
+        }}
     >  
         <div className="ou-flex ou-flex-col ou-justify-center ou-items-center">
             {icon}
@@ -72,6 +75,19 @@ const Booking = () => {
 
     const {openBackdrop,patientList, isLoading} = useBooking()
     const router = useNavigate();
+
+    const contentAlignCenter = state === 1 || state === 4
+    const patientCount = patientList?.length || 0
+    const patientGridCentered = patientCount > 0 && patientCount <= 2
+    const patientItemCols =
+        patientCount === 1
+            ? { xs: 12, sm: 8, md: 5, lg: 4 }
+            : patientCount === 2
+              ? { xs: 12, sm: 6, md: 5 }
+              : patientCount <= 3
+                ? { xs: 12, sm: 6, md: 4 }
+                : { xs: 12, sm: 6, md: 4, lg: 3 }
+
     // TODO: adding skeletons here
     if (!ready)
         return <Box sx={{ minHeight: "300px" }}>
@@ -109,7 +125,7 @@ const Booking = () => {
     const renderStep = () => {
         const buttonProps = {
             className: BUTTON_STYLES.base,
-            sx: BUTTON_STYLES.responsive
+            style: { minWidth: 120 }
         };
 
         if (state === 4) return (
@@ -148,23 +164,39 @@ const Booking = () => {
             return <BackdropLoading/>
         if(patientList.length !== 0)
             return (
-                <Box 
-                    className="ou-w-full ou-flex ou-justify-center ou-items-center"    
-                    sx={{gap: { xs: 3, sm: 4, md: 6 }, flexDirection: { xs: 'column', sm: 'row' }}}
-                >
-                    <SelectionButton
-                        onClick={() => setIsAddNewPatient(true)}
-                        isSelected={isAddNewPatient === true}
-                        icon={<AddIcon sx={ICON_STYLES.large} />}
-                        text={t("booking:addingNewPatient")}
-                    />
-                    
-                    <SelectionButton
-                        onClick={() => setIsAddNewPatient(false)}
-                        isSelected={isAddNewPatient === false}
-                        icon={<PersonIcon sx={ICON_STYLES.large} />}
-                        text={t("booking:existingPatient")}
-                    />
+                <Box sx={{ width: '100%' }}>
+                    <Box
+                        sx={{
+                            mb: 3,
+                            textAlign: 'center',
+                            color: 'text.secondary',
+                            fontSize: { xs: '0.9rem', sm: '1rem' },
+                        }}
+                    >
+                        {t('booking:choosePatientMethod')}
+                    </Box>
+                    <Box 
+                        className="ou-w-full ou-flex ou-justify-center ou-items-stretch"    
+                        sx={{
+                            gap: { xs: 2, sm: 3, md: 4 },
+                            flexDirection: { xs: 'column', sm: 'row' },
+                            alignItems: { xs: 'center', sm: 'stretch' },
+                        }}
+                    >
+                        <SelectionButton
+                            onClick={() => setIsAddNewPatient(true)}
+                            isSelected={isAddNewPatient === true}
+                            icon={<AddIcon sx={ICON_STYLES.large} />}
+                            text={t("booking:addingNewPatient")}
+                        />
+                        
+                        <SelectionButton
+                            onClick={() => setIsAddNewPatient(false)}
+                            isSelected={isAddNewPatient === false}
+                            icon={<PersonIcon sx={ICON_STYLES.large} />}
+                            text={t("booking:existingPatient")}
+                        />
+                    </Box>
                 </Box>
             )
         else
@@ -191,26 +223,27 @@ const Booking = () => {
             <Box sx={{ width: '100%', maxWidth: '100%' }}>
                 <Grid 
                     container 
-                    spacing={{ xs: 3, sm: 4, md: 5 }}
-                    justifyContent="center"
+                    spacing={{ xs: 2, sm: 2.5, md: 3 }}
+                    justifyContent={patientGridCentered ? 'center' : 'flex-start'}
+                    alignItems="stretch"
                     sx={{ 
-                        padding: { xs: '0 20px', sm: '0 28px', md: '0 36px' },
-                        margin: '0 auto'
+                        px: { xs: 0, sm: 0.5 },
+                        margin: 0,
+                        width: '100%',
                     }}
                 >
                     {patientList && patientList.map(p => (
                         <Grid 
-                            item xs={12} sm={6} md={4} lg={4} xl={4} key={"patient@"+p.id}
-                            sx={{minHeight: 'fit-content'}}
-                            className="ou-flex ou-justify-center "   
+                            item
+                            key={"patient@"+p.id}
+                            {...patientItemCols}
+                            sx={{ display: 'flex' }}
                         >
-                            <Box>
-                                <PatientCard 
-                                    patientData={p} 
-                                    callBackOnClickCard={onCallbackPatientCardOnClick}
-                                    isSelected={patientSelected && patientSelected.id === p.id}
-                                />
-                            </Box>
+                            <PatientCard 
+                                patientData={p} 
+                                callBackOnClickCard={onCallbackPatientCardOnClick}
+                                isSelected={patientSelected && patientSelected.id === p.id}
+                            />
                         </Grid>
                     ))}
                 </Grid>
@@ -224,7 +257,7 @@ const Booking = () => {
             return <p className="ou-text-gray-600">{t('booking:noDoctorFound')}</p>
         }
         return (
-            <Box>
+            <Box sx={{ width: '100%', textAlign: 'left' }}>
                 <BookingDoctorDiscovery doctors={allConfig.doctors} />
             </Box>
         )
@@ -260,29 +293,34 @@ const Booking = () => {
             } 
             <Box 
                 sx={{
-                    position: 'relative',  display: 'flex',
-                    py: { xs: 2, sm: 4, md: 8 }, px: { xs: 1, sm: 2, md: 4 },
-                    minHeight: { xs: '90vh', sm: '80vh' }
+                    position: 'relative',
+                    display: 'flex',
+                    py: { xs: 2, sm: 3, md: 4 },
+                    px: { xs: 1.5, sm: 2, md: 3 },
                 }}
             >
                 <Box 
                     sx={{
                         position: 'relative',
                         width: '100%',
-                        maxWidth: { xs: '100%', sm: '1200px' },
+                        maxWidth: { xs: '100%', md: 1440 },
                         margin: '0 auto',
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
+                        alignItems: 'stretch',
+                        justifyContent: 'flex-start',
+                        flexDirection: 'column',
+                        borderRadius: { xs: 2, md: 3 },
+                        overflow: 'hidden',
+                        bgcolor: '#fff',
                     }}
                     component={Paper} 
-                    elevation={6}
+                    elevation={2}
                 >        
                     {/* Progression area */}
                     <Box 
                         sx={{
                             position: 'absolute',
-                            top: { xs: '2%', sm: '3%', md: '5%' },
+                            top: { xs: 12, sm: 16, md: 20 },
                             left: '50%',
                             transform: 'translateX(-50%)',
                             zIndex: 1
@@ -294,10 +332,16 @@ const Booking = () => {
                     {/* Main content */}
                     <Box 
                         sx={{
-                            textAlign: 'center', width: { xs: '95%', sm: '90%', md: '85%' },
-                            py: { xs: 6, sm: 8, md: 10 }, px: { xs: 3, sm: 4, md: 6 },
-                            mt: { xs: 6, sm: 8, md: 10 }, minHeight: { xs: '60vh', sm: '50vh' },
-                            display: 'flex', flexDirection: 'column', justifyContent: 'center'
+                            textAlign: contentAlignCenter ? 'center' : 'left',
+                            width: '100%',
+                            mx: 'auto',
+                            pt: { xs: 8, sm: 9, md: 10 },
+                            pb: { xs: 9, sm: 10, md: 11 },
+                            px: { xs: 2, sm: 4, md: 5, lg: 6 },
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: contentAlignCenter ? 'center' : 'flex-start',
+                            minHeight: contentAlignCenter ? { xs: 300, sm: 340 } : 'auto',
                         }}
                     >           
                         {state === 1 && renderSelectionBookingMethod()}
@@ -315,7 +359,8 @@ const Booking = () => {
                             display: 'flex',
                             flexDirection: { xs: 'column', sm: 'row' },
                             gap: { xs: 1, sm: 2 },
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            zIndex: 2,
                         }}
                     >
                         {renderStep()}

@@ -1,11 +1,10 @@
-import { Box, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField } from "@mui/material"
+import { Box, Grid, TextField } from "@mui/material"
 import { useTranslation } from "react-i18next"
 import Loading from "../../Loading"
 import PersonIcon from '@mui/icons-material/Person';
 import useCustomModal from "../../../../../lib/hooks/useCustomModal.js";
 import CustomModal from "../../Modal.jsx";
 import moment from "moment";
-import clsx from "clsx";
 import { calculateAge } from "../../../../../lib/utils/helper.js";
 
 const PatientCard = ({patientData, callBackOnClickCard = () => {}, isSelected}) => {
@@ -21,75 +20,110 @@ const PatientCard = ({patientData, callBackOnClickCard = () => {}, isSelected}) 
         callBackOnClickCard(patientData)
     }
 
-
     return (
     <>
-        <Box 
-            key={"patient"+patientData.id} 
-            onClick={()=> handleOnClick()}
-            className="ou-w-full ou-h-full ou-flex ou-flex-col"
+        <Box
+            key={"patient"+patientData.id}
+            role="button"
+            tabIndex={0}
+            onClick={() => handleOnClick()}
+            onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault()
+                    handleOnClick()
+                }
+            }}
+            className="ou-w-full ou-h-full ou-flex ou-flex-col ou-justify-between ou-cursor-pointer ou-text-center"
+            sx={{
+                minHeight: { xs: 188, sm: 200 },
+                px: { xs: 2, sm: 2.5 },
+                py: { xs: 2, sm: 2.5 },
+                boxSizing: "border-box",
+                borderRadius: 2,
+                border: "1.5px solid",
+                borderColor: isSelected ? "#1D4ED8" : "#93c5fd",
+                color: isSelected ? "#1D4ED8" : "#2563eb",
+                bgcolor: isSelected ? "#eff6ff" : "#fff",
+                opacity: isSelected ? 1 : 0.92,
+                transition: "border-color 0.15s, background-color 0.15s, box-shadow 0.15s, opacity 0.15s",
+                boxShadow: isSelected
+                    ? "0 4px 14px rgba(29, 78, 216, 0.12)"
+                    : "none",
+                "&:hover": {
+                    opacity: 1,
+                    borderColor: "#1D4ED8",
+                    boxShadow: "0 4px 12px rgba(29, 78, 216, 0.1)",
+                },
+            }}
         >
-            <Box className="ou-flex ou-flex-col ou-h-full ou-w-full">
-                <button 
-                    className={clsx("ou-btn-booking ou-border-opacity-60 ou-h-full ou-w-full ou-min-h-[280px] ou-flex ou-flex-col ou-justify-between ou-py-6 ou-px-5", {
-                        "ou-btn-booking__focus": isSelected
-                    })}
+            <div className="ou-flex ou-flex-col ou-justify-center ou-items-center ou-flex-1">
+                <PersonIcon
+                    sx={{
+                        fontSize: { xs: 48, sm: 56, md: 64 },
+                        marginBottom: 1,
+                        opacity: 0.85,
+                    }}
+                />
+                <Box
+                    sx={{
+                        fontSize: { xs: "0.95rem", sm: "1.05rem" },
+                        fontWeight: 700,
+                        lineHeight: 1.3,
+                        color: "inherit",
+                    }}
                 >
-                    <div className="ou-flex ou-flex-col ou-justify-center ou-items-center">
-                        <PersonIcon 
-                            sx={{
-                                fontSize: { xs: '90px', sm: '110px', md: '130px' },
-                                marginBottom: '20px'
-                            }}
-                        />
-                        <Box 
-                            sx={{
-                                textAlign: 'center',
-                                paddingTop: '8px',
-                                fontSize: { xs: '15px', sm: '17px' },
-                                fontWeight: 'bold',
-                                lineHeight: 1.3,
-                                marginBottom: '8px'
-                            }}
-                        >
-                            {patientData.first_name + " " +patientData.last_name} 
-                            <Box sx={{ fontSize: { xs: '13px', sm: '15px' }, marginTop: '4px' }}>
-                                ({calculateAge(patientData.date_of_birth)+" "+ t('booking:yearsOld')})
-                            </Box>
-                        </Box>
-                        <Box 
-                            sx={{
-                                fontSize: { xs: '13px', sm: '15px' },
-                                wordBreak: 'break-word',
-                                textAlign: 'center',
-                                marginBottom: '20px'
-                            }}
-                        >
-                            {patientData.email}
-                        </Box>
-                    </div>
+                    {patientData.first_name + " " + patientData.last_name}
+                </Box>
+                <Box
+                    sx={{
+                        fontSize: { xs: "0.8rem", sm: "0.875rem" },
+                        marginTop: 0.5,
+                        opacity: 0.75,
+                    }}
+                >
+                    ({calculateAge(patientData.date_of_birth) + " " + t("booking:yearsOld")})
+                </Box>
+                <Box
+                    sx={{
+                        fontSize: { xs: "0.75rem", sm: "0.8125rem" },
+                        wordBreak: "break-word",
+                        marginTop: 1,
+                        opacity: 0.7,
+                        maxWidth: "100%",
+                    }}
+                >
+                    {patientData.email}
+                </Box>
+            </div>
 
-                    <button 
-                        className="hover:ou-text-blue-900 hover:ou-font-bold ou-underline" 
-                        onClick={(e) => {
-                            e.stopPropagation(); // prevents triggering the card click
-                            handleOpenModal();
-                        }}
-                    >
-                        {t('booking:seeDetail')}
-                    </button>
-                </button>
-            </Box>
+            <span
+                role="link"
+                tabIndex={0}
+                className="hover:ou-text-blue-900 hover:ou-font-bold ou-underline ou-mt-3 ou-text-sm"
+                onClick={(e) => {
+                    e.stopPropagation()
+                    handleOpenModal()
+                }}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        handleOpenModal()
+                    }
+                }}
+            >
+                {t("booking:seeDetail")}
+            </span>
         </Box>
-        
+
         <CustomModal
             open={isOpen}
             onClose={handleCloseModal}
+            title={t("booking:patientInfo")}
+            maxWidth="sm"
             content={<PatientInfoModel patientData={patientData}/>}
-            actions={[
-            ]}
+            actions={null}
         />
-
     </>
     )
 }
@@ -97,124 +131,89 @@ const PatientCard = ({patientData, callBackOnClickCard = () => {}, isSelected}) 
 export default PatientCard
 
 
+const fieldSx = { "& .MuiInputBase-input": { py: 1.25 } }
+
 const PatientInfoModel = ({patientData}) =>{
-const {t, tReady} = useTranslation(['booking','common'])
+    const {t} = useTranslation(['booking','common'])
+    const genderLabel =
+        patientData.gender === 0 ? t('man')
+        : patientData.gender === 1 ? t('woman')
+        : t('secret')
+
     return (
-        <div className="ou-base-form-outline">
-            <h5 className="ou-text-center ou-text-2xl">{t('patientInfo')}</h5>
-                <Grid container justifyContent="flex"  id={1}>
-                    <Grid item xs={6}  className="!ou-mt-6 ou-pr-2" >
-                        <TextField
-                            fullWidth
-                            id="firstName"
-                            name="firstName"
-                            defaultValue={patientData.first_name}
-                            label={t('firstName')}
-                            InputProps={{
-                                readOnly: true,
-                            }}                        
-                            />
-                    </Grid>
-                    <Grid item xs={6} className="!ou-mt-6 ou-pl-2" >
-                        <TextField
-                            fullWidth
-                            autoComplete="given-name"
-                            id="lastName"
-                            name="lastName"
-                            defaultValue={patientData.last_name}
-                            label={t('lastName')}
-                            InputProps={{
-                                readOnly: true,
-                            }}                        
-                            />
-                    </Grid>
+        <Box sx={{ pt: 0.5 }}>
+            <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        label={t('firstName')}
+                        defaultValue={patientData.first_name}
+                        InputProps={{ readOnly: true }}
+                        sx={fieldSx}
+                    />
                 </Grid>
-
-                <Grid container justifyContent="flex" >
-                    <Grid item xs={7} className="!ou-mt-6 ou-pr-2">
-                        <TextField
-                            fullWidth
-                            autoComplete="given-name"
-                            id="email"
-                            name="email"
-                            label={t('email')}          
-                            defaultValue={patientData.email} 
-                            InputProps={{
-                                readOnly: true,
-                            }}                        
-                            />
-                    </Grid>
-
-                    <Grid item xs={5} className="!ou-mt-6 ou-pl-2">
-
-                        <TextField
-                            fullWidth
-                            autoComplete="given-name"
-                            id="phoneNumber"
-                            name="phoneNumber"
-                            label={t('phoneNumber')}
-                            defaultValue={patientData.phone_number ? patientData.phone_number : ""}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                        />
-                    </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        label={t('lastName')}
+                        defaultValue={patientData.last_name}
+                        InputProps={{ readOnly: true }}
+                        sx={fieldSx}
+                    />
                 </Grid>
-
-                <Grid container justifyContent="flex" style={{ "margin": "0 auto" }} >
-                    <Grid item xs={12} className="!ou-mt-6">
-                        <TextField
-                            fullWidth
-                            autoComplete="given-name"
-                            id="address"
-                            name="address"
-                            label={t('address')}
-                            defaultValue={patientData.address ? patientData.address : ""}
-                            InputProps={{
-                                readOnly: true,
-                            }}                        
-                            />
-                            
-                    </Grid>
-
+                <Grid item xs={12} sm={7}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        label={t('email')}
+                        defaultValue={patientData.email}
+                        InputProps={{ readOnly: true }}
+                        sx={fieldSx}
+                    />
                 </Grid>
-
-                <Grid container justifyContent="flex" style={{ "margin": "0 auto", "marginBottom": "12px" }}>
-                    <Grid item xs={6} className="!ou-mt-6">
-                        <FormControl >
-                            <TextField
-                                id="dateOfBirth"
-                                label={t('dateOfBirth')}
-                                name="dateOfBirth"
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                                defaultValue={moment(patientData.date_of_birth).format('YYYY-MM-DD')}
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={6} className="!ou-mt-6">   
-                        <FormControl >
-                            <InputLabel id="demo-simple-select-label">{t('gender')}</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                name="gender"
-                                label={t('gender')}
-                                defaultValue={patientData.gender}
-                                slotProps={{
-                                    input: {
-                                      readOnly: true,
-                                    },
-                                  }}
-                            >
-                                <MenuItem value={0}>{t('man')}</MenuItem>
-                                <MenuItem value={1}>{t('woman')}</MenuItem>
-                                <MenuItem value={2}>{t('secret')}</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
+                <Grid item xs={12} sm={5}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        label={t('phoneNumber')}
+                        defaultValue={patientData.phone_number || ""}
+                        InputProps={{ readOnly: true }}
+                        sx={fieldSx}
+                    />
                 </Grid>
-        </div>
+                <Grid item xs={12}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        label={t('address')}
+                        defaultValue={patientData.address || ""}
+                        InputProps={{ readOnly: true }}
+                        sx={fieldSx}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        label={t('dateOfBirth')}
+                        defaultValue={moment(patientData.date_of_birth).format('YYYY-MM-DD')}
+                        InputProps={{ readOnly: true }}
+                        sx={fieldSx}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        label={t('gender')}
+                        defaultValue={genderLabel}
+                        InputProps={{ readOnly: true }}
+                        sx={fieldSx}
+                    />
+                </Grid>
+            </Grid>
+        </Box>
     )
 }

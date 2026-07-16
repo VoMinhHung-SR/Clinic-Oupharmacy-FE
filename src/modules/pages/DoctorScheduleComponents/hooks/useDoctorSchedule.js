@@ -70,15 +70,25 @@ const useDoctorSchedule = () => {
             }catch (err) {
                 const apiMsg = err?.response?.data?.errMsg
                 const errCode = err?.response?.data?.errCode
-                if (errCode === 'HAS_BOOKINGS' || apiMsg) {
+                if (errCode === 'HAS_BOOKINGS') {
                     ErrorAlert(
                         t('doctor-schedule:updateBlockedTitle'),
-                        apiMsg || t('doctor-schedule:updateBlockedHasBookings'),
+                        t('doctor-schedule:updateBlockedHasBookings'),
                         t('modal:ok'),
                     )
                     createToastMessage({
                         type: TOAST_ERROR,
                         message: t('doctor-schedule:updateBlockedHasBookings'),
+                    })
+                } else if (apiMsg) {
+                    ErrorAlert(
+                        t('doctor-schedule:updateBlockedTitle'),
+                        apiMsg,
+                        t('modal:ok'),
+                    )
+                    createToastMessage({
+                        type: TOAST_ERROR,
+                        message: apiMsg,
                     })
                 } else {
                     ErrorAlert(
@@ -106,9 +116,11 @@ const useDoctorSchedule = () => {
         );
     }
 
+    const refreshSchedule = () => setFlag((prev) => !prev)
+
     return{
         onSubmit, setSelectedWeek, existSchedule,
-        selectedWeek, selectedYear, isLoading
+        selectedWeek, selectedYear, isLoading, refreshSchedule,
     }
 }
 export default useDoctorSchedule

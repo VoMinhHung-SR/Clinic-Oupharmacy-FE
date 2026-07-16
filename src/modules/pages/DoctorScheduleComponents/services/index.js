@@ -1,4 +1,4 @@
-import APIs, { endpoints } from "../../../../config/APIs"
+import APIs, { authApi, endpoints } from "../../../../config/APIs"
 
 export const fetchCreateDoctorScheduleByWeek = async (data) => {
     const res = await APIs.post(endpoints['doctor-create-schedule-weekly'], data)
@@ -17,5 +17,20 @@ export const fetchCheckWeeklySchedule = async (week_str) => {
 
 export const fetchUpdateDoctorSchedule = async (data, week_str) => {
     const res = await APIs.put(`${endpoints['doctor-update-schedule-weekly']}?${week_str}`, data)
+    return res
+}
+
+export const fetchCoverCandidates = async (payload) => {
+    const res = await authApi().post(endpoints['doctor-cover-candidates'], payload)
+    return res
+}
+
+export const fetchCoverReassign = async (payload) => {
+    const res = await authApi().post(endpoints['doctor-cover-reassign'], payload)
+    return res
+}
+
+export const fetchDoctorsForCover = async () => {
+    const res = await authApi().get(endpoints['users'])
     return res
 }
