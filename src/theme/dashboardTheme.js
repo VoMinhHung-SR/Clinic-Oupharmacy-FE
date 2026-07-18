@@ -1,20 +1,10 @@
 import { createTheme } from "@mui/material/styles"
 import { DASHBOARD_TABLE_HEAD_BG, DASHBOARD_RADIUS } from "../modules/common/layout/dashboard/styleTokens"
+import { brandPalette } from "./brandPalette"
 
 /** Scoped theme for /dashboard/* — does not affect public site. */
 export const dashboardTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#2563eb",
-      dark: "#1e3a8a",
-      light: "#3b82f6",
-      contrastText: "#ffffff",
-    },
-    background: {
-      default: "#f3f4f6",
-      paper: "#ffffff",
-    },
-  },
+  palette: brandPalette,
   shape: {
     borderRadius: 4,
   },
@@ -53,9 +43,9 @@ export const dashboardTheme = createTheme({
           fontSize: "0.8125rem",
           lineHeight: 1.25,
           letterSpacing: "0.01em",
-          color: "#1e3a8a",
+          color: brandPalette.primary.dark,
           backgroundColor: DASHBOARD_TABLE_HEAD_BG,
-          borderBottom: "2px solid #2563eb",
+          borderBottom: `2px solid ${brandPalette.primary.main}`,
           height: 48,
           minHeight: 48,
           maxHeight: 48,

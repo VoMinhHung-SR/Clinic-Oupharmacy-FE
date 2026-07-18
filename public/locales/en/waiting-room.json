@@ -41,5 +41,9 @@
     "confirmUpdateTimeSlot": "Confirm update time slot",
     "noSessionFound": "No session found",
     "appointmentNotFound": "Appointment not found",
-    "docNotFound": "Doctor not found"
+    "docNotFound": "Doctor not found",
+
+    "loadErrorTitle": "Unable to load waiting room",
+    "loadErrorDescription": "You may not have permission to view waiting room data, or the connection was interrupted. Please try again later.",
+    "emptyToday": "There are no appointments in the waiting room today."
 }

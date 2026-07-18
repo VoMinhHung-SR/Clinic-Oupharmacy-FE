@@ -39,6 +39,8 @@ export let endpoints = {
     'doctor-schedule-detail':(doctorScheduleID) => `/doctor-schedules/${doctorScheduleID}/`,
     'doctor-check-weekly-schedule': '/doctor-schedules/check-weekly-schedule/',
     'doctor-update-schedule-weekly': '/doctor-schedules/update-weekly-schedule/',
+    'doctor-cover-candidates': '/doctor-schedules/cover-candidates/',
+    'doctor-cover-reassign': '/doctor-schedules/cover-reassign/',
 
     // Doctor Profile
     'doctor-profile': '/doctor-profiles/',

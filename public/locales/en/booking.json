@@ -48,5 +48,19 @@
     "bestWishes":"Wishing you great health!",
     "errMissingImportantInfo": "Missing important information",
     "errTextMissingImportantInfo": "You need to set your information",
-    "addressRequiredForBooking": "Please update your address to book an appointment"
+    "addressRequiredForBooking": "Please update your address to book an appointment",
+    "filterBySpecialty": "Filter by specialty",
+    "allSpecialties": "All",
+    "searchDoctor": "Search doctor by name",
+    "filterByDate": "Available on date",
+    "clearDateFilter": "Clear date filter",
+    "noDoctorMatch": "No doctors match your filters",
+    "selectedDoctor": "Selected doctor",
+    "changeDoctor": "Change doctor",
+    "slotUnavailableTitle": "Time slot unavailable",
+    "slotUnavailable": "This hour is already taken or unavailable. Please pick another time.",
+    "specialtySearch": "Search specialty",
+    "doctorResultCount": "Showing {{shown}} / {{total}} doctors",
+    "moreSpecialtyCount": "+{{count}}",
+    "choosePatientMethod": "Choose how to create your booking"
 }

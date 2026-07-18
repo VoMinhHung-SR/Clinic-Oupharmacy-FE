@@ -2,8 +2,8 @@ import { useEffect, useState } from "react"
 import { fetchCreateTimeSlot, fetchGetDoctorAvailability } from "../../services";
 import useDebounce from "../../../../../lib/hooks/useDebounce";
 import moment from "moment";
-import { fetchCreateExamination, fetchCreateOrUpdatePatient, fetchExamDateData } from "../../FormAddExamination/services";
-import { TOAST_SUCCESS } from "../../../../../lib/constants";
+import { fetchCreateExamination, fetchCreateOrUpdatePatient } from "../../FormAddExamination/services";
+import { TOAST_ERROR, TOAST_SUCCESS } from "../../../../../lib/constants";
 import { useTranslation } from "react-i18next";
 import { ConfirmAlert, ErrorAlert } from "../../../../../config/sweetAlert2";
 import createToastMessage from "../../../../../lib/utils/createToastMessage";
@@ -21,8 +21,6 @@ const useDoctorAvailability = () => {
     const debouncedValueDoctor = useDebounce(doctorID, 500)
 
     const [isLoading, setIsLoading] = useState(false)
-
-    const [examinationDateData, setExaminationDateData] = useState([]);
     const [slideRight, setSlideRight] = useState(false)    
 
 
@@ -38,36 +36,9 @@ const useDoctorAvailability = () => {
         return new Date(`${selectedDate}T${selectedTime}`)
     };
 
-
-    const shouldDisableTime = (time) => {
-        const selectedDate = moment(debouncedValue).format('YYYY-MM-DD');
-        const disabledTimesFromData = examinationDateData
-            .filter((e) => e.created_date.includes(selectedDate))
-            .map((e) => moment(e.created_date).format('HH:mm:ss'));
-
-        const isDisabledRange = (time.hour() >= 0 && time.hour() < 7) || (time.hour() > 17 && time.hour() <= 23);
-
-        return (
-            disabledTimesFromData.includes(time.format('HH:mm:ss')) || isDisabledRange
-        );
-    };
-
     const handleChangeFlag = () => setFlag(!flag);
 
     useEffect(()=> {
-        const getExaminationDateData = async (date) => {
-            try {
-              const res = await fetchExamDateData(date);
-              if (res.status === 200) {
-                setExaminationDateData(res.data.examinations);
-              }
-            } catch (error) {
-              console.error(error);
-            }finally {
-              setIsLoading(false)
-            }
-          };
-
         const getDoctorAvailability = async (date, doctor) => {
             try{
                 const res = await fetchGetDoctorAvailability(date, parseInt(doctor))
@@ -76,6 +47,7 @@ const useDoctorAvailability = () => {
                 }
             } catch( err){
                 console.log(err)
+                setTimeNotAvailable([])
             }finally {
                 setIsLoading(false)
               }
@@ -84,13 +56,7 @@ const useDoctorAvailability = () => {
             setIsLoading(true)
             getDoctorAvailability(debouncedValue, debouncedValueDoctor)
         }
-        if (debouncedValue) {
-            setIsLoading(true)
-            getExaminationDateData(debouncedValue);
-        }
     },[debouncedValue, debouncedValueDoctor, flag])
-
-
 
     
     const onSubmit = async (data, patientData ,callbackSuccess, callbackFail) => {
@@ -116,37 +82,59 @@ const useDoctorAvailability = () => {
                     handleOnSubmit(res.data.id)
                 }
             }catch(err){
-                console.log(err)
+                const apiMsg = err?.response?.data?.errMsg
+                ErrorAlert(
+                    t('booking:slotUnavailableTitle'),
+                    apiMsg || t('booking:slotUnavailable'),
+                    t('modal:ok'),
+                )
+                createToastMessage({
+                    type: TOAST_ERROR,
+                    message: apiMsg || t('booking:slotUnavailable'),
+                })
+                handleChangeFlag()
             }
 
         }
 
         const handleOnSubmit = async (timeSlot) => {
-            // Update done or created patient info
-            const res = await fetchCreateOrUpdatePatient(patientData.id, patientData);
-         
-            if(res.status === 200 || res.status === 201){
-                const examinationData = {
-                    patient: res.data.id,
-                    description: data.description,
-                    created_date: new Date(data.selectedDate),
-                    time_slot: timeSlot
-                }
-                const resExamination = await fetchCreateExamination(examinationData);
-                if(resExamination.status === 201){
-                    createToastMessage({message:t('modal:createSuccess'), type:TOAST_SUCCESS})
-                    callbackSuccess();
-                    setSlideRight(false);
-                    handleChangeFlag();
+            try {
+                const res = await fetchCreateOrUpdatePatient(patientData.id, patientData);
+             
+                if(res.status === 200 || res.status === 201){
+                    const examinationData = {
+                        patient: res.data.id,
+                        description: data.description,
+                        created_date: new Date(data.selectedDate),
+                        time_slot: timeSlot
+                    }
+                    try {
+                        const resExamination = await fetchCreateExamination(examinationData);
+                        if(resExamination.status === 201){
+                            createToastMessage({message:t('modal:createSuccess'), type:TOAST_SUCCESS})
+                            callbackSuccess();
+                            setSlideRight(false);
+                            handleChangeFlag();
+                        } else {
+                            return ErrorAlert(t('modal:errSomethingWentWrong'), t('modal:pleaseTryAgain'), t('modal:ok'));
+                        }
+                    } catch (examErr) {
+                        const apiMsg = examErr?.response?.data?.errMsg
+                        ErrorAlert(
+                            t('booking:slotUnavailableTitle'),
+                            apiMsg || t('modal:errSomethingWentWrong'),
+                            t('modal:ok'),
+                        )
+                        createToastMessage({
+                            type: TOAST_ERROR,
+                            message: apiMsg || t('booking:slotUnavailable'),
+                        })
+                    }
                 }
                 else{
                     return ErrorAlert(t('modal:errSomethingWentWrong'), t('modal:pleaseTryAgain'), t('modal:ok'));
                 }
-                if(resExamination.status === 500){
-                    return ErrorAlert(t('modal:errSomethingWentWrong'), t('modal:pleaseTryAgain'), t('modal:ok'));
-                }
-            }
-            else{
+            } catch {
                 return ErrorAlert(t('modal:errSomethingWentWrong'), t('modal:pleaseTryAgain'), t('modal:ok'));
             }
         }
@@ -161,7 +149,7 @@ const useDoctorAvailability = () => {
     return {
         setDoctorID, doctorID, timeNotAvailable, onSubmit,
         isLoading, setDate, date, handleTimeChange,
-        setTime, time, shouldDisableTime,
+        setTime, time,
         slideRight, handleSlideChange
     }
 }

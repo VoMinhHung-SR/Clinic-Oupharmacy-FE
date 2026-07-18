@@ -41,5 +41,9 @@
     "confirmUpdateTimeSlot": "Xác nhận cập nhật thời gian",
     "noSessionFound": "Không tìm thấy phiên làm việc",
     "appointmentNotFound": "Không tìm thấy lịch hẹn",
-    "docNotFound": "Không tìm thấy bác sĩ"
+    "docNotFound": "Không tìm thấy bác sĩ",
+
+    "loadErrorTitle": "Không tải được phòng chờ",
+    "loadErrorDescription": "Bạn không có quyền xem dữ liệu phòng chờ hoặc kết nối bị gián đoạn. Vui lòng thử lại sau.",
+    "emptyToday": "Hôm nay chưa có lịch hẹn trong phòng chờ."
 }

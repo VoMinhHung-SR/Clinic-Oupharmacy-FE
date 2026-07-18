@@ -103,7 +103,8 @@ const TimeSlotGrid = ({ timeSlot, tickets, onTicketMove }) => {
     return(
       <Grid 
         item 
-        xs={6} 
+        xs={12}
+        sm={6} 
         md={3}
         sx={{ 
           borderRight: '1px solid #e0e0e0', 
@@ -116,7 +117,7 @@ const TimeSlotGrid = ({ timeSlot, tickets, onTicketMove }) => {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <Box sx={{ p: 2, textAlign: 'center' }}>
+        <Box sx={{ p: { xs: 1.5, sm: 2 }, textAlign: 'center' }}>
           <Typography>{timeSlot}</Typography>
         </Box>
         <Box sx={{ p: 2, minHeight: 150, borderTop: '1px solid #e0e0e0', bgcolor: '#fff' }}>

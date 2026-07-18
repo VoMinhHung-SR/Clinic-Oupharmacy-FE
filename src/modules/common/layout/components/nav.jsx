@@ -6,7 +6,6 @@ import { Link } from "react-router-dom"
 import { useContext, useState } from "react";
 import Logo from "../../../../../public/logo";
 import MailIcon from '@mui/icons-material/Mail';
-import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 import { changeLanguage } from "i18next";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -66,24 +65,28 @@ const Nav = () => {
     
   let btn = <>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Link to="/login">
-            <Button 
-              sx={{ 
-                color: 'inherit',
-                fontSize: { xs: '0.75rem', sm: '0.875rem' },
-                px: { xs: 1, sm: 2 },
-                py: { xs: 0.5, sm: 1 }
-              }}
-            >
-              <LoginIcon sx={{ mr: 0.5, fontSize: { xs: '16px', sm: '20px' } }} />
-              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                {t('common:logInAndRegister')}
-              </Box>
-              <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
-                {t('login')}
-              </Box>
-            </Button>
-          </Link>
+        <Button
+          component={Link}
+          to="/login"
+          sx={{
+            color: "inherit",
+            fontSize: { xs: "0.8125rem", sm: "0.875rem" },
+            fontWeight: 600,
+            px: { xs: 1.25, sm: 1.75 },
+            py: 0.75,
+            border: "1px solid rgba(255,255,255,0.35)",
+            borderRadius: 1,
+            "&:hover": { bgcolor: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.55)" },
+          }}
+        >
+          <LoginIcon sx={{ mr: 0.75, fontSize: 18 }} />
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            {t("common:logInAndRegister")}
+          </Box>
+          <Box sx={{ display: { xs: "block", sm: "none" } }}>
+            {t("login")}
+          </Box>
+        </Button>
       </Box>
   </>
 
@@ -203,89 +206,116 @@ const Nav = () => {
     </>
   }
 
+  const navLinkSx = (isMobile) => ({
+    color: isMobile ? "text.primary" : "inherit",
+    px: { xs: 2, md: 1.5 },
+    py: { xs: 1.25, md: 1 },
+    minWidth: "auto",
+    width: isMobile ? "100%" : "auto",
+    justifyContent: isMobile ? "flex-start" : "center",
+    fontSize: "0.9375rem",
+    fontWeight: 500,
+    letterSpacing: "0.01em",
+    lineHeight: 1.2,
+    opacity: isMobile ? 1 : 0.92,
+    borderRadius: 1,
+    textTransform: "none",
+    "&:hover": {
+      opacity: 1,
+      bgcolor: isMobile ? "action.hover" : "rgba(255,255,255,0.1)",
+    },
+  })
+
   const renderElementNav = (pageID, pageLink, pageName, isMobile = false, keyPage) => {
       if(pageID === 'prescribing'|| pageID === 'prescribing-mb')
         if(user && user.role === ROLE_DOCTOR)
           return(
-            <Link to={pageLink} key={keyPage}>
-              <Button 
-                
-                onClick={handleCloseNavMenu}
-                className={clsx('',{
-                  '!ou-text-black': isMobile,
-                  "!ou-text-white": !isMobile})
-                }
-                sx={{mx: 1, my: 1, display: 'block' }}
-                
-              >
-                {pageName}
-              </Button>
-              </Link>
+            <Button
+              key={keyPage}
+              component={Link}
+              to={pageLink}
+              onClick={handleCloseNavMenu}
+              sx={navLinkSx(isMobile)}
+            >
+              {pageName}
+            </Button>
           )
         else return 
       if(pageID === 'examinations' || pageID === 'examinations-mb')
         if(user && (user.role === ROLE_DOCTOR || user.role === ROLE_NURSE))
           return(
-            <Link to={pageLink} key={keyPage}>
-              <Button 
-                onClick={handleCloseNavMenu}
-                sx={{ mx: 1, my: 1, display: 'block' }}
-                className={clsx('',{
-                  '!ou-text-black': isMobile,
-                  "!ou-text-white": !isMobile})
-                }
-              >
-                {pageName}
-              </Button>
-              </Link>
+            <Button
+              key={keyPage}
+              component={Link}
+              to={pageLink}
+              onClick={handleCloseNavMenu}
+              sx={navLinkSx(isMobile)}
+            >
+              {pageName}
+            </Button>
           )  
         else return
       return (
-        <Link to={pageLink}  key={keyPage}>
-          <Button 
-            onClick={handleCloseNavMenu}
-            sx={{  mx: 1, my: 1, display: 'block' }}
-            className={clsx('',{
-              '!ou-text-black': isMobile,
-              "!ou-text-white": !isMobile})
-            }
-          >
-            {pageName}
-          </Button>
-          </Link>
+        <Button
+          key={keyPage}
+          component={Link}
+          to={pageLink}
+          onClick={handleCloseNavMenu}
+          sx={navLinkSx(isMobile)}
+        >
+          {pageName}
+        </Button>
       )
   }
   return (
-    <AppBar position="fixed" sx={{
-      background: 'linear-gradient(90deg, #1e3a8a 0%, #2563eb 100%)',
-      color: '#fff'
-    }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ minHeight: { xs: '56px', sm: '64px' } }}>
-            {/* Logo and Brand - Desktop */}
-            <Link to="/" className="ou-flex ou-items-center" >
-                <Box sx={{ display: { xs: 'none', lg: 'flex' }, mr: 1 }}>
-                    <Logo width={50} height={50} className="ou-text-white ou-mr-2" color={'white'}/>
-                </Box>
-                <Typography variant="h6" noWrap
-                    sx={{
-                      mr: 2,
-                      my: 0,
-                      py: 2,
-                      display: { xs: 'none', lg: 'flex' },
-                      fontWeight: 700,
-                      letterSpacing: '.3rem',
-                      color: 'inherit',
-                      textDecoration: 'none',
-                      fontSize: { lg: '1.25rem', xl: '1.5rem' }
-                    }}
-                >
-                    OUPHARMACY
-                </Typography>
-            </Link>
+    <AppBar
+      position="fixed"
+      elevation={0}
+      sx={{
+        bgcolor: "primary.dark",
+        color: "#fff",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+      }}
+    >
+      <Container maxWidth="lg">
+        <Toolbar
+          disableGutters
+          sx={{
+            minHeight: { xs: 56, md: 64 },
+            gap: { xs: 1, md: 2 },
+            justifyContent: "space-between",
+          }}
+        >
+            {/* Zone 1 — Brand */}
+            <Box
+              component={Link}
+              to="/"
+              sx={{
+                display: { xs: "none", md: "flex" },
+                alignItems: "center",
+                gap: 1.25,
+                textDecoration: "none",
+                color: "inherit",
+                flexShrink: 0,
+                minWidth: 180,
+              }}
+            >
+              <Logo width={40} height={40} color="white" />
+              <Typography
+                component="span"
+                sx={{
+                  fontWeight: 700,
+                  letterSpacing: "0.12em",
+                  fontSize: "1.05rem",
+                  lineHeight: 1,
+                }}
+              >
+                OUPHARMACY
+              </Typography>
+            </Box>
 
-            {/* Mobile Menu Button */}
-            <Box sx={{ display: { xs: 'flex', lg: 'none' }, flexGrow: 0 }}>
+            {/* Mobile: menu + centered logo */}
+            <Box sx={{ display: { xs: "flex", md: "none" }, alignItems: "center", minWidth: 48 }}>
               <IconButton
                 size="large"
                 aria-label="menu"
@@ -299,65 +329,62 @@ const Nav = () => {
               </IconButton>
             </Box>
 
-            {/* Mobile Logo */}
-            <Box sx={{ display: { xs: 'flex', lg: 'none' }, flexGrow: 1, justifyContent: 'center' }}>
-              <Link to="/" className="ou-flex ou-justify-center ou-items-center">
-                <Avatar 
-                  alt="OUPharmacy-Logo"  
-                  sx={{
-                    width: { xs: 40, sm: 45 },
-                    height: { xs: 40, sm: 45 },
-                    display: { xs: 'flex', lg: 'none' }
-                  }}
-                  src="https://res.cloudinary.com/dl6artkyb/image/upload/v1666354767/OUPharmacy/logo_oupharmacy_1x1_zks7t4.png" 
+            <Box sx={{ display: { xs: "flex", md: "none" }, flex: 1, justifyContent: "center" }}>
+              <Box component={Link} to="/" sx={{ display: "inline-flex", lineHeight: 0 }}>
+                <Avatar
+                  alt="OUPharmacy-Logo"
+                  sx={{ width: 40, height: 40 }}
+                  src="https://res.cloudinary.com/dl6artkyb/image/upload/v1666354767/OUPharmacy/logo_oupharmacy_1x1_zks7t4.png"
                 />
-              </Link>
+              </Box>
             </Box>
 
-            {/* Desktop Navigation */}
-            <Box sx={{ 
-              flexGrow: 1, 
-              display: { xs: 'none', lg: 'flex' },
-              justifyContent: 'flex-start',
-              gap: 1,
-              ml: 2
-            }}>
+            {/* Zone 2 — Primary nav (desktop, optically centered) */}
+            <Box
+              sx={{
+                flex: 1,
+                display: { xs: "none", md: "flex" },
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 0.5,
+              }}
+            >
               {pages.map((page) => renderElementNav(page.id, page.link, page.name, false, page.id+"-dek"))}
             </Box>
                 
-            {/* Right Side Actions */}
-            <Box sx={{ 
-              flexGrow: 0, 
-              display: 'flex', 
-              alignItems: 'center',
-              gap: { xs: 0.5, sm: 1, md: 1.5 }
-            }}>
-              {/* Language Toggle */}
-              <Box>
-                {i18n.language === 'en' ? 
-                  <Tooltip followCursor title={t('changeLanguage')}>
-                    <Button 
-                      className="!ou-text-white" 
-                      onClick={()=> changeLanguage('vi')}
-                      sx={{ minWidth: 'auto', p: { xs: 1, sm: 1.5 } }}
-                    >
-                      <FlagUK width={24} height={24}/>
-                    </Button> 
-                  </Tooltip>
-                  :
-                  <Tooltip followCursor title={t('changeLanguage')}>
-                    <Button 
-                      className="!ou-text-white" 
-                      onClick={()=> changeLanguage('en')}
-                      sx={{ minWidth: 'auto', p: { xs: 1, sm: 1.5 } }}
-                    >
-                      <FlagVN width={24} height={24}/>
-                    </Button>
-                  </Tooltip>
-                }
-              </Box>
+            {/* Zone 3 — Utilities */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                gap: { xs: 0.25, sm: 0.5, md: 0.75 },
+                flexShrink: 0,
+                minWidth: { md: 180 },
+              }}
+            >
+              {i18n.language === "en" ? (
+                <Tooltip followCursor title={t("changeLanguage")}>
+                  <IconButton
+                    onClick={() => changeLanguage("vi")}
+                    aria-label={t("changeLanguage")}
+                    sx={{ color: "inherit", p: 1 }}
+                  >
+                    <FlagUK width={22} height={22} />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Tooltip followCursor title={t("changeLanguage")}>
+                  <IconButton
+                    onClick={() => changeLanguage("en")}
+                    aria-label={t("changeLanguage")}
+                    sx={{ color: "inherit", p: 1 }}
+                  >
+                    <FlagVN width={22} height={22} />
+                  </IconButton>
+                </Tooltip>
+              )}
 
-              {/* User Actions */}
               {btn}
             </Box>
           </Toolbar>
@@ -378,14 +405,19 @@ const Nav = () => {
             open={Boolean(anchorElNav)}
             onClose={handleCloseNavMenu}
             sx={{
-              display: { xs: 'block', lg: 'none'},
+              display: { xs: 'block', md: 'none'},
               '& .MuiPaper-root': {
-                minWidth: '200px',
-                mt: 1
+                minWidth: 220,
+                mt: 1,
+                py: 0.5,
               }
             }}
           >
-            {pages.map((page) => renderElementNav(page.id+"-mb", page.link, page.name, true, page.id+"-mb"))}
+            {pages.map((page) => (
+              <MenuItem key={page.id + "-mb"} sx={{ p: 0 }}>
+                {renderElementNav(page.id + "-mb", page.link, page.name, true, page.id + "-mb")}
+              </MenuItem>
+            ))}
           </Menu>
         </Container>
 
