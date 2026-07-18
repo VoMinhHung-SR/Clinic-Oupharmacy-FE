@@ -48,6 +48,8 @@ import Contact from './pages/contact'
 import AboutUs from './pages/about-us'
 import Payments from './pages/dashboard/prescribing/id/payments'
 import ExternalRedirect from './modules/common/components/ExternalRedirect'
+import { ThemeProvider } from '@mui/material'
+import { publicTheme } from './theme/publicTheme'
 import { PrescriptionDetailWithProvider } from './modules/providers'
 
 export const userContext = createContext()
@@ -167,8 +169,8 @@ function App() {
                         </Route>
                       </Route>
 
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+                    <Route path="/login" element={<ThemeProvider theme={publicTheme}><Login /></ThemeProvider>} />
+                    <Route path="/register" element={<ThemeProvider theme={publicTheme}><Register /></ThemeProvider>} />
                     </Routes>
                   </ConfigLoader>
               </BookingProvider>

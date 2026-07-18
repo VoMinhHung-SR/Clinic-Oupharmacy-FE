@@ -108,24 +108,55 @@ const ConversationList = () => {
     conversationId && recipientId ? <Outlet /> : <ChatPlaceholder title={selectUserLabel} />
 
   if (!isDashboard) {
+    const showChat = Boolean(conversationId && recipientId)
     return (
       <>
         <Helmet>
           <title>{t("common:conversations")} - OUPharmacy</title>
         </Helmet>
-        <Box sx={{ width: "100%", display: "flex", minHeight: 600 }}>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            minHeight: { xs: 420, md: 600 },
+            height: { md: 640 },
+            gap: 1.5,
+          }}
+        >
           <Box
-            width="30%"
-            height={700}
-            className="ou-recipients-conversation ou-mr-2"
-            sx={{ flexShrink: 0 }}
+            className="ou-recipients-conversation"
+            sx={{
+              width: { xs: "100%", md: "32%" },
+              flexShrink: 0,
+              display: { xs: showChat ? "none" : "flex", md: "flex" },
+              flexDirection: "column",
+              minHeight: { xs: 360, md: 0 },
+              height: { md: "100%" },
+              overflow: "auto",
+              bgcolor: "background.paper",
+              borderRadius: 2,
+              border: 1,
+              borderColor: "divider",
+            }}
           >
             <SidebarInbox user={user} />
           </Box>
           <Box
-            width="70%"
-            height={700}
-            className="ou-overflow-hidden ou-h-full ou-ml-2 ou-chat-window"
+            className="ou-overflow-hidden ou-chat-window"
+            sx={{
+              width: { xs: "100%", md: "68%" },
+              flex: 1,
+              minHeight: { xs: 420, md: 0 },
+              height: { md: "100%" },
+              display: { xs: showChat ? "flex" : "none", md: "flex" },
+              flexDirection: "column",
+              bgcolor: "background.paper",
+              borderRadius: 2,
+              border: 1,
+              borderColor: "divider",
+              overflow: "hidden",
+            }}
           >
             {chatPane}
           </Box>
