@@ -1,31 +1,30 @@
 import { Map, Marker } from "react-map-gl"
-import { MAPGL_TOKEN } from "../../../../lib/constants"
-import { ORIGIN_LAT } from "../../../../lib/constants";
-import { ORIGIN_LNG } from "../../../../lib/constants";
+import { MAPGL_TOKEN, ORIGIN_LAT, ORIGIN_LNG } from "../../../../lib/constants"
 
-const MapGL = (props) => {
-      return (
-        <Map        
-          mapboxAccessToken={MAPGL_TOKEN}  
-          initialViewState={  
-              {
-                  longitude:props.longitude ? props.longitude : ORIGIN_LNG ,
-                  latitude: props.latitude ? props.latitude : ORIGIN_LAT,
-                  zoom: props.zoom ? props.zoom : 15
+const MapGL = ({ longitude, latitude, zoom, style, ...rest }) => {
+  const lng = longitude ?? ORIGIN_LNG
+  const lat = latitude ?? ORIGIN_LAT
 
-              }
-          }
-
-          style={{minWidth:300, minHeight:450}}
-          mapStyle="mapbox://styles/mapbox/streets-v11"
-        >
-
-          <Marker latitude={props.latitude ? props.latitude :  ORIGIN_LAT} 
-          longitude={props.longitude ? props.longitude : ORIGIN_LNG}>
-          </Marker>
-
-        </Map>
-      );
+  return (
+    <Map
+      mapboxAccessToken={MAPGL_TOKEN}
+      initialViewState={{
+        longitude: lng,
+        latitude: lat,
+        zoom: zoom ?? 15,
+      }}
+      style={{
+        width: "100%",
+        height: "100%",
+        minHeight: 240,
+        ...style,
+      }}
+      mapStyle="mapbox://styles/mapbox/streets-v11"
+      {...rest}
+    >
+      <Marker latitude={lat} longitude={lng} />
+    </Map>
+  )
 }
 
 export default MapGL

@@ -18,5 +18,22 @@
     "confirmCreateSchedule": "Confirm to create this week schedule?",
     "confirmUpdateSchedule": "Confirm to update this week schedule?",
     "updateBlockedTitle": "Cannot update weekly schedule",
-    "updateBlockedHasBookings": "This week already has patient bookings. Cancel or reassign them before updating your working sessions."
+    "updateBlockedHasBookings": "Some sessions still have patient bookings. Cancel or reassign those sessions before turning them off (empty sessions can still be updated).",
+    "coverTitle": "Session cover",
+    "coverHint": "Pick the busy doctor, date and session with bookings, then move exams to a same-specialty doctor.",
+    "coverFromDoctor": "Source doctor",
+    "coverDate": "Date",
+    "coverSession": "Session",
+    "coverLoadCandidates": "Find cover doctors",
+    "coverAssign": "Reassign",
+    "coverReady": "Can take session",
+    "coverConflict": "Hour conflict with existing slots",
+    "coverNoCandidatesYet": "Click «Find cover doctors» to load the list.",
+    "coverMissingFieldsTitle": "Missing fields",
+    "coverMissingFieldsBody": "Select source doctor, date, and session.",
+    "coverLoadFailedTitle": "Could not load cover candidates",
+    "coverConfirmTitle": "Confirm cover reassignment?",
+    "coverConfirmBody": "All examinations in this session will move to the selected doctor.",
+    "coverSuccess": "Cover reassignment successful",
+    "coverFailedTitle": "Cover reassignment failed"
 }

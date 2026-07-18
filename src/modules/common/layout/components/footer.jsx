@@ -1,10 +1,7 @@
-import { Avatar, Container, Grid, Stack, Typography, IconButton, Divider } from '@mui/material';
+import { Avatar, Box, Container, Grid, Stack, Typography, Divider } from '@mui/material';
 import { Link } from 'react-router-dom';
-import FacebookIcon from '@mui/icons-material/Facebook';
 import { useTranslation } from 'react-i18next';
-import IconFaceBook from '../../../../lib/assets/iconFaceBook';
 import { EMAIL_SUPPORT } from '../../../../lib/constants';
-
 
 const Footer = () => {
     const {t, tReady} = useTranslation(["home"]);
@@ -14,7 +11,7 @@ const Footer = () => {
 
     return(
         <footer style={{
-            background: 'linear-gradient(90deg, #1e3a8a 0%, #2563eb 100%)',
+            background: '#1e3a8a',
             color: '#fff',
             padding: '48px 0 16px 0',
             }}>
@@ -24,16 +21,12 @@ const Footer = () => {
                     <Stack spacing={2}>
                     <Avatar
                     sx={{ width: '200px', height: '50px' }}
-                    display={{xs:"flex", sm:"block"}}
                     variant="square"
                     src="https://res.cloudinary.com/dl6artkyb/image/upload/v1666357910/OUPharmacy/bg_Oupharmacy_3x4_jicpdp.png"
                     />
-                    <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                    <Typography variant="body2" sx={{ opacity: 0.8, wordBreak: 'break-word' }}>
                         {t('home:quote')}
                     </Typography>
-                    <Stack direction="row" spacing={1}>
-                        {/* <IconButton><FacebookIcon /></IconButton> */}
-                    </Stack>
                     </Stack>
                 </Grid>
 
@@ -41,24 +34,23 @@ const Footer = () => {
                     <Typography variant="h6" sx={{ mb: 1, fontSize: { xs: '1.1rem', md: '1.25rem' } }}>{t('home:aboutUs')}</Typography>
                     <Stack spacing={1}>
                     <Link to="/about-us" style={{ fontSize: '1rem', color: '#fff' }}>{t('home:introduce')}</Link>
-                    <Link to="#">{t('home:businessLicense')}</Link>
+                    <Link to="/contact" style={{ fontSize: '1rem', color: '#fff' }}>{t('home:contactUs')}</Link>
                     </Stack>
                 </Grid>
                 
                 <Grid item xs={12} md={3}>
                     <Typography variant="h6" sx={{ mb: 1 }}>{t('categories')}</Typography>
                     <Stack spacing={1}>
-                    <Link to="#">{t('prescriptionDrugs')}</Link>
-                    <Link to="#">{t('otcDrugs')}</Link>
-                    <Link to="#">{t('functionalFoods')}</Link>
+                    <Typography variant="body2" sx={{ opacity: 0.85 }}>{t('prescriptionDrugs')}</Typography>
+                    <Typography variant="body2" sx={{ opacity: 0.85 }}>{t('otcDrugs')}</Typography>
+                    <Typography variant="body2" sx={{ opacity: 0.85 }}>{t('functionalFoods')}</Typography>
                     </Stack>
                 </Grid>
-                {/* Cột 4: Liên hệ */}
                 <Grid item xs={12} md={3}>
                     <Typography variant="h6" sx={{ mb: 1 }}>{t('home:contactUs')}</Typography>
                     <Stack spacing={1}>
-                    <Typography>{t('home:hotline')}: 0382590839</Typography>
-                    <Typography>{t('home:emailAddress')}:
+                    <Typography sx={{ wordBreak: 'break-word' }}>{t('home:hotline')}: 0382590839</Typography>
+                    <Typography sx={{ wordBreak: 'break-word' }}>{t('home:emailAddress')}:
                         <a href={`mailto:${EMAIL_SUPPORT}`} style={{color: '#fff'}}>
                             {" "} {t('home:team')}
                         </a>

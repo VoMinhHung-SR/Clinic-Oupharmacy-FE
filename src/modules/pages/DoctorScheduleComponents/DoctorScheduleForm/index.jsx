@@ -2,14 +2,17 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import moment from 'moment';
-import { ROLE_DOCTOR } from '../../../../lib/constants';
+import { ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
 import useDoctorSchedule from '../hooks/useDoctorSchedule';
 import { useEffect, useMemo } from 'react';
 import DoctorCalendar from '../DoctorCalendar';
 import SkeletonDoctorScheduleList from '../../../common/components/skeletons/pages/doctor-schedules';
+import ScheduleCoverPanel from '../ScheduleCoverPanel';
 
 const DoctorScheduleForm = ({ doctor }) => {
-    const { onSubmit, setSelectedWeek, existSchedule, selectedWeek, selectedYear, isLoading } = useDoctorSchedule();
+    const {
+        onSubmit, setSelectedWeek, existSchedule, selectedWeek, selectedYear, isLoading, refreshSchedule,
+    } = useDoctorSchedule();
     const { t, tReady } = useTranslation(['doctor-schedule', 'common']);
     
     const methods = useForm({
@@ -160,6 +163,10 @@ const DoctorScheduleForm = ({ doctor }) => {
                     )}
                 </TableContainer>
             </form>
+
+            {doctor.role === ROLE_NURSE && (
+                <ScheduleCoverPanel onSuccess={refreshSchedule} />
+            )}
         </Box>
     );
 };

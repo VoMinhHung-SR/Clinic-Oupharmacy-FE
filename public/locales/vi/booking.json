@@ -58,5 +58,9 @@
     "selectedDoctor": "Bác sĩ đã chọn",
     "changeDoctor": "Đổi bác sĩ",
     "slotUnavailableTitle": "Không đặt được khung giờ",
-    "slotUnavailable": "Khung giờ đã được đặt hoặc không còn trống. Vui lòng chọn giờ khác."
+    "slotUnavailable": "Khung giờ đã được đặt hoặc không còn trống. Vui lòng chọn giờ khác.",
+    "specialtySearch": "Tìm chuyên khoa",
+    "doctorResultCount": "Đang hiện {{shown}} / {{total}} bác sĩ",
+    "moreSpecialtyCount": "+{{count}}",
+    "choosePatientMethod": "Chọn cách tạo phiếu khám"
 }

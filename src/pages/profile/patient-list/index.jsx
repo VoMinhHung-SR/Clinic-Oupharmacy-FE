@@ -1,199 +1,283 @@
-import { Box, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Typography, Button, Tooltip } from "@mui/material"
+import {
+  Box,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Typography,
+  Button,
+  Tooltip,
+} from "@mui/material"
 import { Helmet } from "react-helmet"
 import { useTranslation } from "react-i18next"
 import Loading from "../../../modules/common/components/Loading"
 import FormAddPatient from "../../../modules/pages/BookingComponents/FormAddPatient"
 import moment from "moment"
 import usePatient from "../../../lib/hooks/usePatient"
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit"
 import CustomModal from "../../../modules/common/components/Modal"
 import useCustomModal from "../../../lib/hooks/useCustomModal"
 import { useState } from "react"
-import clsx from "clsx"
 import BackdropLoading from "../../../modules/common/components/BackdropLoading"
-import AddIcon from '@mui/icons-material/Add';
-import PersonIcon from '@mui/icons-material/Person';
+import AddIcon from "@mui/icons-material/Add"
+import PersonIcon from "@mui/icons-material/Person"
+
+const choiceCardSx = (selected) => ({
+  width: { xs: "100%", sm: "calc(50% - 8px)" },
+  maxWidth: { xs: "100%", sm: 280 },
+  minHeight: { xs: 120, sm: 160 },
+  px: 2,
+  py: { xs: 2, sm: 3 },
+  borderRadius: 2,
+  border: 2,
+  borderColor: selected ? "primary.main" : "divider",
+  bgcolor: selected ? "rgba(37, 99, 235, 0.06)" : "background.paper",
+  cursor: "pointer",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 1.5,
+  transition: "border-color 0.2s ease, background-color 0.2s ease",
+  "&:hover": {
+    borderColor: "primary.main",
+  },
+})
 
 const PatientManagement = () => {
-    
-    const {patientList, isLoading} = usePatient()
-    const {t, tReady} = useTranslation(['booking', 'common'])
-    const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal(); 
-    const [patient, setPatient] = useState(null)
-    const [isAddNewPatient, setIsAddNewPatient] = useState(true)
-    const [step, setStep] = useState(1)
-    if (tReady)
-        return <Box sx={{ minHeight: "300px" }}>
-             <Helmet>
-                <title>Patient Management</title>
-            </Helmet>
-            <Box className='ou-p-5'>
-                <Loading></Loading>
-            </Box>
-    </Box>;
-    const openModal = (patient) => {
-        handleOpenModal()
-        setPatient(patient)
-    }
-    
-    const renderFirstState = () => {
-        if (isLoading)
-            return <BackdropLoading/>
-        if(patientList.length !== 0)
-            return (
-                <div className="ou-flex ou-justify-center ou-space-x-10 ">
-                        <button onClick={()=>{setIsAddNewPatient(true)}} 
-                            className={
-                                clsx("ou-btn-booking ou-border-opacity-60",{
-                                    "ou-btn-booking__focus": isAddNewPatient === true,
-                                })
-                            }>  
-                            <div className="ou-flex ou-flex-col ou-justify-center ou-items-center">
-                                <AddIcon className="!ou-text-[120px] ou-mb-3 "/>
-                                <span className="ou-pt-5 ou-font-bold">{t("booking:addingNewPatient")}</span>
-                            </div>
-                        </button>
-                        
-                        <div>
-                            <button onClick={()=>{setIsAddNewPatient(false)}} className={
-                                clsx("ou-btn-booking ou-border-opacity-60",{
-                                    "ou-btn-booking__focus": isAddNewPatient === false,
-                                })
-                            }
-                            >  
-                                <div className="ou-flex ou-flex-col ou-justify-center ou-items-center">
-                                    <PersonIcon  className="!ou-text-[120px] ou-mb-3 "/>
-                                    <span className="ou-pt-5 ou-font-bold">{t("booking:existingPatient")}</span>
-                                </div>
-                            </button>
-                        </div>
-                </div>
-            )
-        else
-            return (
-                <div className="ou-flex ou-justify-center">
-                    <button onClick={()=>{setIsAddNewPatient(true)}}  className={
-                                    clsx("ou-btn-booking ou-border-opacity-60",{
-                                        "ou-btn-booking__focus": isAddNewPatient === true,
-                                    })
-                                }>  
-                        <div className="ou-flex ou-flex-col ou-justify-center ou-items-center">
-                            <AddIcon className="!ou-text-[120px] ou-mb-3 "/>
-                            <span className="ou-pt-5 ou-font-bold">{t("booking:addingNewPatient")}</span>
-                        </div>
-                    </button>
-            </div>
-            )
-    }
+  const { patientList, isLoading } = usePatient()
+  const { t, tReady } = useTranslation(["booking", "common", "modal"])
+  const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal()
+  const [patient, setPatient] = useState(null)
+  const [isAddNewPatient, setIsAddNewPatient] = useState(true)
+  const [step, setStep] = useState(1)
 
-    const renderSecondState = () => {
-        if(isAddNewPatient)
-            return (
-                <>
-                    <Box className="ou-p-8"><FormAddPatient/></Box>
-                    <div className="ou-mb-4 ou-flex ou-justify-end">
-                        {renderButtonStep()}
-                    </div>
-                </>
-            )
-        return (
-            <Box sx={{ minHeight: "300px", position: "relative", display: "block", margin: 0, padding: 0 }}>
-                <TableContainer component={Paper} elevation={6} sx={{ margin: 0, overflowX: "hidden" }}>
-                    <Table aria-label="simple table" sx={{ tableLayout: "fixed", width: "100%" }}>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align="center" sx={{ width: "16%", py: 1.5 }}>{t('fullName')}</TableCell>
-                                <TableCell align="center" sx={{ width: "12%", py: 1.5 }}>{t('phoneNumber')}</TableCell>
-                                <TableCell align="center" sx={{ width: "20%", py: 1.5 }}>{t('email')}</TableCell>
-                                <TableCell align="center" sx={{ width: "8%", py: 1.5 }}>{t('gender')}</TableCell>
-                                <TableCell align="center" sx={{ width: "11%", py: 1.5 }}>{t('dateOfBirth')}</TableCell>
-                                <TableCell align="center" sx={{ width: "20%", py: 1.5 }}>{t('address')}</TableCell>
-                                <TableCell align="center" sx={{ width: "10%", py: 1.5 }}>{t('common:function')}</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {patientList.map(patient => (
-                                <TableRow key={patient.id}>
-                                    <TableCell align="center" sx={{ py: 1.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{patient.first_name + ' ' + patient.last_name}</TableCell>
-                                    <TableCell align="center" sx={{ py: 1.5 }}>{patient.phone_number}</TableCell>
-                                    <TableCell align="center" sx={{ py: 1.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{patient.email}</TableCell>
-                                    <TableCell align="center" sx={{ py: 1.5 }}>{patient.gender === 0 ? t('booking:man') : patient.gender === 1 ? t('booking:woman') : t('common:secret')}</TableCell>
-                                    <TableCell align="center" sx={{ py: 1.5 }}>{moment(patient.date_of_birth).format('DD/MM/YYYY')}</TableCell>
-                                    <TableCell align="center" sx={{ py: 1.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                                        {patient.address?.split(' ').slice(0, 2).join(' ')}
-                                        {patient.address?.split(' ').length > 2 ? '...' : ''}
-                                    </TableCell>
-                                    <TableCell align="center" sx={{ py: 1.5 }}>
-                                        <Tooltip followCursor title={t('common:edit')} className="hover:ou-cursor-pointer">
-                                            <Button variant="contained" size="small" className="!ou-min-w-0 !ou-p-1.5 hover:ou-cursor-pointer" color="success" onClick={() => openModal(patient)}>
-                                                <EditIcon sx={{ fontSize: 22 }} />
-                                            </Button>
-                                        </Tooltip>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <div className="ou-mt-4 ou-flex ou-justify-end">
-                    {renderButtonStep()}
-                </div>
-            </Box>
-        )
-    }
-
-    const renderButtonStep = () => {
-        if(step === 1)
-            return <button className="ou-btn-base ou-min-w-[120px] ou-mr-3" onClick={()=>{setStep(2)}}>{t('booking:next')}</button>
-        if(step === 2)
-            return <button className="ou-btn-base ou-min-w-[120px] ou-mr-3" onClick={()=>{setStep(1)}}>{t('booking:previous')}</button>
-    }
+  if (tReady) {
     return (
-        <>
-        
-            <Helmet>
-                <title>{t('common:patientManagement')} - OUpharmacy</title>
-            </Helmet>
-            <Box className={clsx("ou-relative ou-flex", { "ou-py-8": step === 1 })}>
-                <Box className={clsx("ou-relative ou-w-full ou-m-auto ou-flex ou-justify-center", {
-                    "ou-items-center": step === 1,
-                    "ou-items-start": step === 2,
-                })}>        
-                    {/* Main content */}
-                    <div className={clsx("ou-w-[100%]", {
-                        "ou-text-center ou-py-20": step === 1,
-                        "ou-text-left ou-m-0 ou-p-0": step === 2,
-                    })}>           
-                        {step === 1 && renderFirstState()}
-                        {step === 2 && renderSecondState()}
-                    </div>
-                    {/* Button area - only for step 1 (step 2 button is inside renderSecondState below table) */}
-                    {step === 1 && (
-                        <div className="ou-bottom-0 ou-absolute ou-right-0 ou-m-3">
-                            {renderButtonStep()}
-                        </div>
-                    )}
-                </Box>
-            </Box>
-        {patient && (
-            <CustomModal
-                className="ou-text-center"
-                open={isOpen}
-                onClose={handleCloseModal}
-                content={<Box>
-                    <FormAddPatient patientData={patient} onCallbackSuccess={() => {
-                        setStep(1)
-                        handleCloseModal()
-                    }}/>
-                </Box>}
-                actions={[
-                <Button key="cancel" onClick={handleCloseModal}>
-                    {t('modal:cancel')}
-                </Button>
-                ]}
-            />
-        )}
-        </>
+      <Box sx={{ minHeight: 240 }}>
+        <Helmet>
+          <title>Patient Management</title>
+        </Helmet>
+        <Loading />
+      </Box>
     )
+  }
+
+  const openModal = (p) => {
+    handleOpenModal()
+    setPatient(p)
+  }
+
+  const renderFirstState = () => {
+    if (isLoading) return <BackdropLoading />
+
+    const choices = [
+      {
+        key: "new",
+        selected: isAddNewPatient === true,
+        onClick: () => setIsAddNewPatient(true),
+        icon: <AddIcon sx={{ fontSize: { xs: 40, sm: 56 }, color: "primary.main" }} />,
+        label: t("booking:addingNewPatient"),
+      },
+    ]
+
+    if (patientList.length !== 0) {
+      choices.push({
+        key: "existing",
+        selected: isAddNewPatient === false,
+        onClick: () => setIsAddNewPatient(false),
+        icon: <PersonIcon sx={{ fontSize: { xs: 40, sm: 56 }, color: "primary.main" }} />,
+        label: t("booking:existingPatient"),
+      })
+    }
+
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          gap: 2,
+          py: 2,
+        }}
+      >
+        {choices.map((c) => (
+          <Box
+            key={c.key}
+            component="button"
+            type="button"
+            onClick={c.onClick}
+            sx={choiceCardSx(c.selected)}
+          >
+            {c.icon}
+            <Typography sx={{ fontWeight: 600, textAlign: "center" }}>{c.label}</Typography>
+          </Box>
+        ))}
+      </Box>
+    )
+  }
+
+  const renderSecondState = () => {
+    if (isAddNewPatient) {
+      return (
+        <>
+          <Box sx={{ py: 1 }}>
+            <FormAddPatient />
+          </Box>
+          <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>{renderButtonStep()}</Box>
+        </>
+      )
+    }
+
+    return (
+      <Box>
+        <TableContainer sx={{ overflowX: "auto" }}>
+          <Table aria-label="patients table" sx={{ minWidth: 720 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell align="center" sx={{ fontWeight: 600 }}>
+                  {t("fullName")}
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 600 }}>
+                  {t("phoneNumber")}
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 600 }}>
+                  {t("email")}
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 600 }}>
+                  {t("gender")}
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 600 }}>
+                  {t("dateOfBirth")}
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 600 }}>
+                  {t("address")}
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 600 }}>
+                  {t("common:function")}
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {patientList.map((p) => (
+                <TableRow key={p.id}>
+                  <TableCell
+                    align="center"
+                    sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                  >
+                    {p.first_name + " " + p.last_name}
+                  </TableCell>
+                  <TableCell align="center">{p.phone_number}</TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                  >
+                    {p.email}
+                  </TableCell>
+                  <TableCell align="center">
+                    {p.gender === 0
+                      ? t("booking:man")
+                      : p.gender === 1
+                        ? t("booking:woman")
+                        : t("common:secret")}
+                  </TableCell>
+                  <TableCell align="center">{moment(p.date_of_birth).format("DD/MM/YYYY")}</TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                    title={p.address}
+                  >
+                    {p.address}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Tooltip followCursor title={t("common:edit")}>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        className="!ou-min-w-0 !ou-p-1.5"
+                        color="primary"
+                        onClick={() => openModal(p)}
+                      >
+                        <EditIcon sx={{ fontSize: 22 }} />
+                      </Button>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>{renderButtonStep()}</Box>
+      </Box>
+    )
+  }
+
+  const renderButtonStep = () => {
+    if (step === 1) {
+      return (
+        <Button variant="contained" color="primary" onClick={() => setStep(2)} sx={{ minWidth: 120 }}>
+          {t("booking:next")}
+        </Button>
+      )
+    }
+    if (step === 2) {
+      return (
+        <Button variant="outlined" color="primary" onClick={() => setStep(1)} sx={{ minWidth: 120 }}>
+          {t("booking:previous")}
+        </Button>
+      )
+    }
+    return null
+  }
+
+  return (
+    <>
+      <Helmet>
+        <title>{t("common:patientManagement")} - OUpharmacy</title>
+      </Helmet>
+
+      <Typography
+        variant="h6"
+        sx={{ color: "primary.main", fontWeight: 600, mb: 2, textAlign: "center" }}
+      >
+        {t("common:patientManagement")}
+      </Typography>
+
+      <Box sx={{ position: "relative", width: "100%" }}>
+        {step === 1 && renderFirstState()}
+        {step === 2 && renderSecondState()}
+        {step === 1 && (
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>{renderButtonStep()}</Box>
+        )}
+      </Box>
+
+      {patient && (
+        <CustomModal
+          className="ou-text-center"
+          open={isOpen}
+          onClose={handleCloseModal}
+          content={
+            <Box>
+              <FormAddPatient
+                patientData={patient}
+                onCallbackSuccess={() => {
+                  setStep(1)
+                  handleCloseModal()
+                }}
+              />
+            </Box>
+          }
+          actions={[
+            <Button key="cancel" onClick={handleCloseModal}>
+              {t("modal:cancel")}
+            </Button>,
+          ]}
+        />
+      )}
+    </>
+  )
 }
+
 export default PatientManagement

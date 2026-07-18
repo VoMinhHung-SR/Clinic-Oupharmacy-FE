@@ -13,6 +13,7 @@
     "noRecipient": "Không tìm thấy người nhận trong đoạn hội thoại",
 
     "addNewConversationSuccess": "Thêm cuộc trò chuyện thành công",
-    "addFailed": "Thêm cuộc trò chuyện không thành công"
+    "addFailed": "Thêm cuộc trò chuyện không thành công",
+    "backToList": "Quay lại danh sách"
     
 }
