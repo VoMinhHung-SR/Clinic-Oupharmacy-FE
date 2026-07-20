@@ -6,6 +6,7 @@
     "patientInfo": "Thông tin bệnh nhân",
     "description": "Mô tả",
     "descriptionOptional": "Mô tả (tuỳ chọn)",
+    "allergies": "Dị ứng (tuỳ chọn)",
     "createdDate": "Ngày khám",
     "fullName": "Họ và tên",
     "firstName": "Họ",

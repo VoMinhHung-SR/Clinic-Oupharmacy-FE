@@ -11,6 +11,7 @@ import Loading from "../../../modules/common/components/Loading"
 import CustomCollapseListItemButton from "../../../modules/common/components/collapse/ListItemButton"
 import MiniDiagnosisCard from "../../../modules/common/components/card/ExaminationDetailCard/MiniDiagnosisCard"
 import MiniPrescribingCard from "../../../modules/common/components/card/ExaminationDetailCard/MiniPrescribingCard"
+import PatientAllergyAlert from "../../../modules/common/components/PatientAllergyAlert"
 import { EXAM_DETAIL_RELATED_STACK_SX } from "../../../modules/common/components/card/ExaminationDetailCard/detailLayoutTokens"
 import {
   PRESCRIBING_CONTEXT_ELEVATION,
@@ -76,6 +77,14 @@ function PatientInfoPanel({ patient, t }) {
           </Typography>
           <Typography variant="body2" fontWeight={500} sx={{ wordBreak: "break-word" }}>
             {patient?.address ?? "—"}
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="caption" color="text.secondary" display="block">
+            {translate(t, "allergies")}
+          </Typography>
+          <Typography variant="body2" fontWeight={500} sx={{ wordBreak: "break-word" }}>
+            {patient?.allergies?.trim() ? patient.allergies : "—"}
           </Typography>
         </Grid>
       </Grid>
@@ -227,6 +236,7 @@ export default function PatientContextBar({ patient }) {
           {translate(t, "patientChart")}
         </Button>
       </Box>
+      <PatientAllergyAlert allergies={patient?.allergies} sx={{ mb: 2 }} dense />
       <CustomModal
         title={translate(t, "patientChartTitle", { name: fullName })}
         open={isOpen}

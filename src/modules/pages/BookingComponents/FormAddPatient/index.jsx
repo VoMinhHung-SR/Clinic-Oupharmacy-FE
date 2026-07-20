@@ -24,6 +24,7 @@ const FormAddPatient = ({patientData, onCallbackSuccess = () => {}}) => {
             email:  patientData?.email || "",
             phoneNumber: patientData?.phone_number || "",
             address: patientData?.address || "",
+            allergies: patientData?.allergies || "",
             dateOfBirth: patientData?.date_of_birth || "",
             gender: patientData?.gender || 0
         }
@@ -122,6 +123,27 @@ const FormAddPatient = ({patientData, onCallbackSuccess = () => {}}) => {
                             
                     </Grid>
 
+                </Grid>
+
+                <Grid container justifyContent="flex" style={{ "margin": "0 auto" }} >
+                    <Grid item xs={12} className="!ou-mt-6">
+                        <TextField
+                            fullWidth
+                            multiline
+                            minRows={2}
+                            id="allergies"
+                            name="allergies"
+                            type="text"
+                            label={t('allergies')}
+                            error={methods.formState.errors.allergies}
+                            {...methods.register("allergies")}
+                        />
+                        {methods.formState.errors?.allergies ? (
+                          <p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">
+                            {methods.formState.errors.allergies?.message}
+                          </p>
+                        ) : null}
+                    </Grid>
                 </Grid>
 
                 <Grid container justifyContent="flex" style={{ "margin": "0 auto", "marginBottom": "12px" }}>

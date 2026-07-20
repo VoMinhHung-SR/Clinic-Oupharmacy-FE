@@ -6,6 +6,7 @@
     "patientInfo": "Patient information",
     "description": "Description",
     "descriptionOptional": "Description (optional)",
+    "allergies": "Allergies (optional)",
     "createdDate": "Day of the examination",
     "fullName": "Full Name",
     "firstName": "First name",

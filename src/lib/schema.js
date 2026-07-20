@@ -45,6 +45,8 @@ const SchemaModels = () => {
             .required(t('yupAddressRequired'))
             .matches(REGEX_ADDRESS, t('yupAddressInvalid')),
 
+        allergies: Yup.string().trim().max(2000),
+
         dateOfBirth: Yup.string()
             .required(t('yupDOBRequired')),
 

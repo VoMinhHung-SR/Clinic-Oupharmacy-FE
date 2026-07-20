@@ -46,6 +46,8 @@
     "email": "Email",
     "gender": "Giới tính",
     "address": "Địa chỉ",
+    "allergies": "Dị ứng",
+    "allergiesWarning": "Cảnh báo dị ứng",
     "male": "Nam",
     "female": "Nữ",
     "secret": "Bí mật",

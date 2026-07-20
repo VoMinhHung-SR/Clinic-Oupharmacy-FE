@@ -1,7 +1,18 @@
-import { TextField, FormControl, InputLabel, Select, MenuItem, Button, Box, Paper, Tooltip }  from '@mui/material';
+import { TextField, FormControl, InputLabel, Select, MenuItem, Button, Box, Tooltip }  from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import SearchIcon from '@mui/icons-material/Search';
+
+const VISIT_STATUS_OPTIONS = [
+  '',
+  'pending',
+  'confirmed',
+  'in_progress',
+  'completed',
+  'cancelled',
+  'no_show',
+]
+
 const ExaminationFilter = (props) => {
     const {t} = useTranslation(['yup-validate', 'examinations'])
     const methods = useForm({
@@ -11,17 +22,38 @@ const ExaminationFilter = (props) => {
             createdDate: props.createdDate ? props.createdDate : 0,
             kw: props.kw ? props.kw : '',
             hasDiagnosis: props.hasDiagnosis ? props.hasDiagnosis : 0,
+            visitStatus: props.visitStatus ? props.visitStatus : '',
         }
     })
+
+    const visitStatusSelect = (
+      <FormControl className={props.isMobile ? '!ou-min-w-[100px] ou-flex-1' : '!ou-min-w-[140px] !ou-mr-3'}>
+        <InputLabel id="exam_filter_visit_status">{t('examinations:visitStatus')}</InputLabel>
+        <Select
+          id="exam_filter_visit_status_label"
+          name="visitStatus"
+          label={t('examinations:visitStatus')}
+          defaultValue={props.visitStatus ? props.visitStatus : ''}
+          {...methods.register("visitStatus")}
+        >
+          {VISIT_STATUS_OPTIONS.map((value) => (
+            <MenuItem key={value || 'all'} value={value}>
+              {value ? t(`examinations:status_${value}`) : t('examinations:all')}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    )
+
     return (
     <>
         <Box className='ou-px-3 ou-mb-3'>
             <form 
                 onSubmit={methods.handleSubmit((data) => props.onSubmit(data))}
-                className={`ou-mt-5 ou-mb-3 ${props.isMobile ? 'ou-flex ou-flex-col ou-items-stretch' : 'ou-flex ou-items-center'}`}
+                className={`ou-mt-5 ou-mb-3 ${props.isMobile ? 'ou-flex ou-flex-col ou-items-stretch' : 'ou-flex ou-items-center ou-flex-wrap'}`}
             >
                 {props.isMobile ? (
-                  <div className='ou-flex ou-flex-row ou-gap-2 ou-mb-2'>
+                  <div className='ou-flex ou-flex-row ou-gap-2 ou-mb-2 ou-flex-wrap'>
                     <FormControl className='!ou-min-w-[100px] ou-flex-1'>
                       <InputLabel id="exam_filter_createdDate">{t('examinations:createdDate')}</InputLabel>
                       <Select
@@ -50,7 +82,7 @@ const ExaminationFilter = (props) => {
                       </Select>
                     </FormControl>
                     <FormControl className='!ou-min-w-[100px] ou-flex-1'>
-                      <InputLabel id="exam_filter_email">{t('examinations:hasDiagnosis')}</InputLabel>
+                      <InputLabel id="exam_filter_has_diagnosis">{t('examinations:hasDiagnosis')}</InputLabel>
                       <Select
                         id="exam_filter_has_diagnosis_label"
                         name="hasDiagnosis"
@@ -63,6 +95,7 @@ const ExaminationFilter = (props) => {
                         <MenuItem value={-1}>{t('examinations:no')}</MenuItem>
                       </Select>
                     </FormControl>
+                    {visitStatusSelect}
                   </div>
                 ) : (
                   <>
@@ -94,7 +127,7 @@ const ExaminationFilter = (props) => {
                       </Select>
                     </FormControl>
                     <FormControl className='!ou-min-w-[100px] !ou-mr-3'>
-                      <InputLabel id="exam_filter_email">{t('examinations:hasDiagnosis')}</InputLabel>
+                      <InputLabel id="exam_filter_has_diagnosis">{t('examinations:hasDiagnosis')}</InputLabel>
                       <Select
                         id="exam_filter_has_diagnosis_label"
                         name="hasDiagnosis"
@@ -107,6 +140,7 @@ const ExaminationFilter = (props) => {
                         <MenuItem value={-1}>{t('examinations:no')}</MenuItem>
                       </Select>
                     </FormControl>
+                    {visitStatusSelect}
                   </>
                 )}
                 <FormControl  

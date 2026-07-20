@@ -43,6 +43,7 @@ const usePatient = () => {
                 "gender":   data.gender,
                 "date_of_birth": data.dateOfBirth,
                 "address": data.address,
+                "allergies": (data.allergies || "").trim(),
                 "user": userID
             }
             const res = await fetchCreateOrUpdatePatient(patientID,dataSubmit)

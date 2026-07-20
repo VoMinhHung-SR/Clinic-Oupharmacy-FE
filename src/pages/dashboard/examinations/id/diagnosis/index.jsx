@@ -8,6 +8,7 @@ import MedicalRecordsModal from "../../../../../modules/pages/PrescriptionDetail
 import useDiagnosis from "../../../../../modules/pages/DiagnosisComponents/hooks/useDiagnosis"
 import AppointmentStatusBanner from "../../../../../modules/pages/DiagnosisComponents/AppointmentStatusBanner"
 import SkeletonDiagnosis from "../../../../../modules/common/components/skeletons/pages/examinations/diagnosis"
+import PatientAllergyAlert from "../../../../../modules/common/components/PatientAllergyAlert"
 import {
   DASHBOARD_PAGE_FRAME_SX,
   DASHBOARD_SCROLL_CONTENT_SX,
@@ -65,6 +66,10 @@ const Diagnosis = () => {
               <Typography variant="h5" align="center" fontWeight={600} sx={{ mb: 2 }}>
                 {t("common:basicInformation")}
               </Typography>
+              <PatientAllergyAlert
+                allergies={examinationDetail.patient?.allergies}
+                sx={{ mb: 2 }}
+              />
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6} sx={{ textAlign: "center" }}>
                   <PatientInfoModal patientData={examinationDetail.patient} />
