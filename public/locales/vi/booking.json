@@ -7,6 +7,7 @@
     "description": "Mô tả",
     "descriptionOptional": "Mô tả (tuỳ chọn)",
     "allergies": "Dị ứng (tuỳ chọn)",
+    "noSlotsAvailable": "Không còn ca trống trong ngày này. Vui lòng chọn ngày khác.",
     "createdDate": "Ngày khám",
     "fullName": "Họ và tên",
     "firstName": "Họ",
