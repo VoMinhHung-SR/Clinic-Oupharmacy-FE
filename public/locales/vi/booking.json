@@ -5,6 +5,7 @@
     "booking": "Đặt lịch khám",
     "patientInfo": "Thông tin bệnh nhân",
     "description": "Mô tả",
+    "descriptionOptional": "Mô tả (tuỳ chọn)",
     "createdDate": "Ngày khám",
     "fullName": "Họ và tên",
     "firstName": "Họ",

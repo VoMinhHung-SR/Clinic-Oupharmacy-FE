@@ -22,9 +22,11 @@ const useFormAddExamination = () => {
 
     const formAddExaminationSchema = Yup.object().shape({
         description: Yup.string().trim()
-            .required(t('yupDescriptionRequired'))
             .max(254, t('yupDescriptionMaxLength'))
-            .matches(REGEX_NOTE, t('yupDescriptionInvalid')),
+            .matches(REGEX_NOTE, {
+                message: t('yupDescriptionInvalid'),
+                excludeEmptyString: true,
+            }),
 
         doctor: Yup.string().required(t('required')),
         
@@ -114,7 +116,7 @@ const useFormAddExamination = () => {
             setOpenBackdrop(true)     
             const examinationData = {
                 patient: patientID,
-                description: data.description,
+                description: (data.description || "").trim(),
                 created_date: new Date(data.selectedDate),
                 time_slot: timeSlot
             }

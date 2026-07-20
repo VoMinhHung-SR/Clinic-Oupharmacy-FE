@@ -168,7 +168,7 @@ const BookingForm = ({doctorInfo}) => {
 
             <Grid item xs={12} className="!ou-p-4" >
                 <FormControl fullWidth >
-                    <InputLabel htmlFor="description">{t('description')}</InputLabel>
+                    <InputLabel htmlFor="description">{t('descriptionOptional')}</InputLabel>
                     <OutlinedInput
                         fullWidth
                         autoComplete="given-name"
@@ -178,7 +178,7 @@ const BookingForm = ({doctorInfo}) => {
                         id="description"
                         name="description"
                         type="text"
-                        label={t('description')}
+                        label={t('descriptionOptional')}
                         error={methods.formState.errors.description}
                         {...methods.register("description")}
                     />
