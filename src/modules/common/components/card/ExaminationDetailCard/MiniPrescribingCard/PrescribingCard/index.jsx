@@ -22,6 +22,7 @@ import {
   getPrescriptionLineDisplayName,
   resolvePrescriptionDetailUnitPrice,
 } from "../../../../../../../lib/adapters/storeProduct"
+import { isBillPaid } from "../../../../../../../lib/auth"
 import SkePrescriptionDetailCard from "../../../../skeletons/card/SkePrescriptionDetailCard"
 import {
   EXAM_DETAIL_EMBEDDED_HEADER_SX,
@@ -54,7 +55,7 @@ const PrescribingCard = ({ prescribing, embedded = false }) => {
     return <SkePrescriptionDetailCard key={`mini-load-prescribing-${prescribingID}`} />
 
   const prescriptionId = prescriptionDetail[0]?.prescribing?.id
-  const isPaid = prescriptionDetail[0]?.prescribing?.bill_status
+  const isPaid = isBillPaid(prescriptionDetail[0]?.prescribing?.bill_status)
 
   const tableContent = (
     <TableContainer sx={embedded ? { maxHeight: 280 } : undefined}>

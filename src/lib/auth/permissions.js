@@ -54,13 +54,28 @@ export function canViewPayments(user) {
 }
 
 /**
+ * True when bill_status payload means payment collected.
+ * Supports legacy `{id, amount}` (no status) and S2 `{id, amount, status}`.
+ * @param {{ status?: string } | null | undefined | boolean} billStatus
+ * @returns {boolean}
+ */
+export function isBillPaid(billStatus) {
+  if (billStatus == null || billStatus === false) return false;
+  if (typeof billStatus === "object") {
+    if (billStatus.status) return billStatus.status === "paid";
+    return true; // legacy shape without status = paid existence
+  }
+  return Boolean(billStatus);
+}
+
+/**
  * Hiển thị nút thanh toán (Momo / Pay) trên PrescriptionDetailCard: nurse và chưa thanh toán.
  * @param {{ role: string } | null} user
- * @param {boolean} billStatus
+ * @param {{ status?: string } | null | undefined | boolean} billStatus
  * @returns {boolean}
  */
 export function canShowPaymentButtons(user, billStatus) {
-  return user?.role === ROLE_NURSE && !billStatus;
+  return user?.role === ROLE_NURSE && !isBillPaid(billStatus);
 }
 
 /**
