@@ -8,7 +8,7 @@ import useDoctorAvailability from "../DoctorAvailabilityTime/hooks/useDoctorAvai
 import clsx from "clsx"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useMemo } from "react"
 import CustomCollapseListItemButton from "../../../common/components/collapse/ListItemButton"
 import BookingContext from "../../../../lib/context/BookingContext"
 import StethoscopeIcon from "../../../../lib/icon/StethoscopeIcon"
@@ -16,14 +16,18 @@ import SchemaModels from "../../../../lib/schema"
 import useCustomModal from "../../../../lib/hooks/useCustomModal"
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import Tooltip from '@mui/material/Tooltip';
+import {
+    countAvailableBookingSlots,
+    hasSelectedBookingTime,
+} from "../bookingSlotUtils"
 
 const BookingForm = ({doctorInfo}) => {
     const {t , tReady} = useTranslation(['booking', 'yup-validate', 'modal', 'home', 'common'])
 
     const doctor = doctorInfo;
     const {patientSelected, actionUpState} = useContext(BookingContext)
-    const {timeNotAvailable, isLoading, setDate, slideRight, 
-        handleSlideChange, setDoctorID, onSubmit} = useDoctorAvailability();
+    const {timeNotAvailable, isLoading, setDate,
+        setDoctorID, onSubmit} = useDoctorAvailability();
     
     const { timeSlotSchema } = SchemaModels()
     const { handleCloseModal, handleOpenModal, isOpen } = useCustomModal();
@@ -31,7 +35,7 @@ const BookingForm = ({doctorInfo}) => {
     useEffect(()=>{setDoctorID(doctor.user_display.id)},[doctor.user_display.id])
 
     const methods = useForm({
-        mode:"obSubmit", 
+        mode:"onChange", 
         resolver: yupResolver(timeSlotSchema),
         defaultValues:{
             description:"",
@@ -41,12 +45,24 @@ const BookingForm = ({doctorInfo}) => {
         }
     })
 
+    const selectedDate = methods.watch("selectedDate")
+    const selectedTime = methods.watch("selectedTime")
+    const availableSlotCount = useMemo(
+        () => countAvailableBookingSlots(timeNotAvailable),
+        [timeNotAvailable]
+    )
+    const canSubmit =
+        Boolean(selectedDate) &&
+        hasSelectedBookingTime(selectedTime) &&
+        availableSlotCount > 0 &&
+        !isLoading
+
     const handleDateChange = (event) => {
-        const selectedDate = event.target.value;
+        const nextDate = event.target.value;
         const minDate = moment(CURRENT_DATE).add(0, 'days').format('YYYY-MM-DD');
         const maxDate = moment(CURRENT_DATE).add(30, 'days').format('YYYY-MM-DD');
 
-        if (selectedDate < minDate || selectedDate > maxDate) {
+        if (nextDate < minDate || nextDate > maxDate) {
             return methods.setError("selectedDate", {
                 type: "manual",
                 message: t('yup-validate:yupCreatedDateMustBeInRange', {minDate: minDate, maxDate: maxDate})
@@ -55,12 +71,19 @@ const BookingForm = ({doctorInfo}) => {
             methods.clearErrors("selectedDate");
         }
 
-        setDate(selectedDate);
-        methods.setValue("selectedDate", selectedDate);
+        setDate(nextDate);
+        methods.setValue("selectedDate", nextDate);
+        methods.setValue("selectedTime", {});
         methods.trigger("selectedDate");
     };
 
     const handleBookingSubmit = (data) => {
+        if (!hasSelectedBookingTime(data.selectedTime) || countAvailableBookingSlots(timeNotAvailable) === 0) {
+            return methods.setError("selectedTime", {
+                type: "manual",
+                message: t('booking:noSlotsAvailable'),
+            })
+        }
         onSubmit(data, patientSelected, () => {
             methods.reset(); 
             actionUpState();
@@ -74,147 +97,120 @@ const BookingForm = ({doctorInfo}) => {
         </Box>
     </Box>;
 
-    const disableButton = () => {
-        return <Button variant="contained" 
-            color="primary" 
-            type="button" 
-            onClick={handleSlideChange}
-            disabled={(!methods.getValues('selectedDate') || !methods.getValues('selectedTime')) && true }
-            className="ou-py-2 ou-px-10 !ou-ml-auto"
-            >
-            {t('booking:continue')}
-        </Button>         
-    }
-
-    const renderPatientInformationForm = (slideRight) => {
-        if(!slideRight)
-            return  (<>
-                <CustomCollapseListItemButton isOpen={true} title={
-                    <div className="ou-flex ou-items-center">
-                        <Avatar className="ou-mr-3">
-                            <StethoscopeIcon size={20}/>
-                        </Avatar>
-                        <div className="ou-flex ou-flex-col">
-                            <div className="ou-flex ou-items-center ou-gap-2">
-                                <span className="ou-font-bold ou-text-blue-700">
-                                    {doctor?.user_display?.first_name} {doctor?.user_display?.last_name}
-                                </span>
-                                <Tooltip title={t('booking:viewDoctorDetail')}>
-                                    <span
-                                        onClick={e => {
-                                            e.stopPropagation();
-                                            handleOpenModal();
-                                        }}
-                                        className="ou-cursor-pointer ou-text-blue-700 ou-pb-1"
-                                    >
-                                        <InfoOutlinedIcon fontSize="small" />
-                                    </span>
-                                </Tooltip>
-                            </div>
-                            <SpecializationTag specialization={doctor?.specializations}/>
-                        </div>
-                    </div>} 
-                    loading={isLoading}
-                    content={
-                        <>
-                        <Divider />
-                        <Grid item className="!ou-mt-6 !ou-mb-3">
-                            <TextField
-                                fullWidth
-                                id="selectedDate"
-                                name="selectedDate"
-                                type="date"
-                                label={t('createdDate')}
-                                value={methods.getValues("selectedDate") ? methods.getValues("selectedDate") : ""}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                inputProps={{
-                                    min: moment(CURRENT_DATE).add(0, 'days').format('YYYY-MM-DD'),
-                                    max: moment(CURRENT_DATE).add(30, 'days').format('YYYY-MM-DD'),
-                                }}
-                                onChange={handleDateChange}
-                            />
-                                {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">
-                                    {methods.formState.errors.selectedDate?.message}</p>) : <></>}
-                                
-                                {(doctor && timeNotAvailable && methods.getValues('selectedDate')) && (
-                                    <Grid item xs={12} className={clsx("!ou-mt-6")}>
-                                     <DoctorAvailabilityTime 
-                                        schedule={timeNotAvailable} 
-                                        onChange={(selectedTimeData) => {
-                                            methods.setValue('selectedTime', selectedTimeData);
-                                            methods.trigger("selectedTime");
-                                        }}
-                                        isLoading={isLoading}
-                                        defaultValue={methods.getValues('selectedTime')}
-                                        />
-                                </Grid>)}
-                        </Grid>
-                        </>
-                        
-                    }
-                />                    
-            </>)
-        return (<>
-            <div className="ou-flex ou-justify-center ou-items-center ou-py-2 ou-px-4">
-                <div className="ou-mr-2">
-                    <Avatar></Avatar>
-                </div>
-                <p className="ou-w-full ou-text-blue-700 ou-font-bold ou-text-left">{doctor?.user_display?.first_name} {doctor?.user_display?.last_name}</p>
-                <Divider />
-            </div>
-            <h5 className="ou-text-center ou-text-xl ou-py-2 ou-mt-2">{t('home:makeAnAppointMent')}</h5>
-
-            <Grid item xs={12} className="!ou-p-4" >
-                <FormControl fullWidth >
-                    <InputLabel htmlFor="description">{t('description')}</InputLabel>
-                    <OutlinedInput
-                        fullWidth
-                        autoComplete="given-name"
-                        autoFocus
-                        multiline
-                        rows={2}
-                        id="description"
-                        name="description"
-                        type="text"
-                        label={t('description')}
-                        error={methods.formState.errors.description}
-                        {...methods.register("description")}
-                    />
-                    {methods.formState.errors ? (<p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">{methods.formState.errors.description?.message}</p>) : <></>}
-                </FormControl>
-            </Grid>
-        </>)
-    }
-
     return (
         <>
             <Container className="!ou-py-4">
                 <Box className="ou-flex ou-py-4" component={Paper} elevation={4} >           
                     <div className="ou-w-[100%]">
                         <form onSubmit={methods.handleSubmit(handleBookingSubmit)} className="ou-m-auto ou-px-5"> 
-                            {renderPatientInformationForm(slideRight)}
-                            <Grid item className="!ou-my-3 ou-flex ou-justify-end">
-                                {!slideRight ?  disableButton() : 
-                                    <Box className="ou-flex ou-justify-end ou-mb-3 ou-w-full">
-                                            <Button variant="contained" 
-                                                color="primary" 
-                                                type="button" 
-                                                onClick={handleSlideChange}
-                                                className="ou-py-2 ou-px-10 !ou-mr-2"
+                            <CustomCollapseListItemButton isOpen={true} title={
+                                <div className="ou-flex ou-items-center">
+                                    <Avatar className="ou-mr-3">
+                                        <StethoscopeIcon size={20}/>
+                                    </Avatar>
+                                    <div className="ou-flex ou-flex-col">
+                                        <div className="ou-flex ou-items-center ou-gap-2">
+                                            <span className="ou-font-bold ou-text-blue-700">
+                                                {doctor?.user_display?.first_name} {doctor?.user_display?.last_name}
+                                            </span>
+                                            <Tooltip title={t('booking:viewDoctorDetail')}>
+                                                <span
+                                                    onClick={e => {
+                                                        e.stopPropagation();
+                                                        handleOpenModal();
+                                                    }}
+                                                    className="ou-cursor-pointer ou-text-blue-700 ou-pb-1"
                                                 >
-                                                {t('booking:goBack')}
-                                            </Button> 
-                                            <Button variant="contained" 
-                                                color="success" 
-                                                type="submit" 
-                                                className="ou-py-2 ou-px-10"
-                                                >
-                                            {t('submit')}
-                                        </Button>
-                                    </Box>
+                                                    <InfoOutlinedIcon fontSize="small" />
+                                                </span>
+                                            </Tooltip>
+                                        </div>
+                                        <SpecializationTag specialization={doctor?.specializations}/>
+                                    </div>
+                                </div>} 
+                                loading={isLoading}
+                                content={
+                                    <>
+                                    <Divider />
+                                    <Grid item className="!ou-mt-6 !ou-mb-3">
+                                        <TextField
+                                            fullWidth
+                                            id="selectedDate"
+                                            name="selectedDate"
+                                            type="date"
+                                            label={t('createdDate')}
+                                            value={selectedDate || ""}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                            inputProps={{
+                                                min: moment(CURRENT_DATE).add(0, 'days').format('YYYY-MM-DD'),
+                                                max: moment(CURRENT_DATE).add(30, 'days').format('YYYY-MM-DD'),
+                                            }}
+                                            onChange={handleDateChange}
+                                        />
+                                        {methods.formState.errors?.selectedDate ? (
+                                            <p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">
+                                                {methods.formState.errors.selectedDate?.message}
+                                            </p>
+                                        ) : null}
+                                        
+                                        {(doctor && timeNotAvailable && selectedDate) && (
+                                            <Grid item xs={12} className={clsx("!ou-mt-6")}>
+                                             <DoctorAvailabilityTime 
+                                                schedule={timeNotAvailable} 
+                                                onChange={(selectedTimeData) => {
+                                                    methods.setValue('selectedTime', selectedTimeData, { shouldValidate: true });
+                                                    methods.clearErrors("selectedTime");
+                                                }}
+                                                isLoading={isLoading}
+                                                defaultValue={selectedTime}
+                                                />
+                                            {!isLoading && availableSlotCount === 0 && (
+                                                <p className="ou-text-sm ou-text-amber-700 ou-mt-3 ou-mx-[14px]">
+                                                    {t('booking:noSlotsAvailable')}
+                                                </p>
+                                            )}
+                                            {methods.formState.errors?.selectedTime?.message ? (
+                                                <p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">
+                                                    {methods.formState.errors.selectedTime.message}
+                                                </p>
+                                            ) : null}
+                                        </Grid>)}
+
+                                        <FormControl fullWidth className="!ou-mt-6">
+                                            <InputLabel htmlFor="description">{t('booking:descriptionOptional')}</InputLabel>
+                                            <OutlinedInput
+                                                fullWidth
+                                                multiline
+                                                rows={2}
+                                                id="description"
+                                                name="description"
+                                                type="text"
+                                                label={t('booking:descriptionOptional')}
+                                                error={Boolean(methods.formState.errors.description)}
+                                                {...methods.register("description")}
+                                            />
+                                            {methods.formState.errors?.description ? (
+                                                <p className="ou-text-xs ou-text-red-600 ou-mt-1 ou-mx-[14px]">
+                                                    {methods.formState.errors.description?.message}
+                                                </p>
+                                            ) : null}
+                                        </FormControl>
+                                    </Grid>
+                                    </>
                                 }
+                            />
+                            <Grid item className="!ou-my-3 ou-flex ou-justify-end">
+                                <Button
+                                    variant="contained"
+                                    color="success"
+                                    type="submit"
+                                    disabled={!canSubmit}
+                                    className="ou-py-2 ou-px-10"
+                                >
+                                    {t('submit')}
+                                </Button>
                             </Grid>
 
                         </form>
