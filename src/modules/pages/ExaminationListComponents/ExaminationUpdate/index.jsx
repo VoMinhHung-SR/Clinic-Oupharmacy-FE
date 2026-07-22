@@ -70,7 +70,7 @@ const ExaminationUpdate = ({examination, handleClose, onUpdateSuccess, ...props}
                         <Grid container justifyContent="flex">
                             <Grid item xs={12} className="!ou-mt-6" >
                                 <FormControl fullWidth >
-                                    <InputLabel htmlFor="description">{t('description')}</InputLabel>
+                                    <InputLabel htmlFor="description">{t('descriptionOptional')}</InputLabel>
                                     <OutlinedInput
                                         fullWidth
                                         autoComplete="given-name"
@@ -80,7 +80,7 @@ const ExaminationUpdate = ({examination, handleClose, onUpdateSuccess, ...props}
                                         id="description"
                                         name="description"
                                         type="text"
-                                        label={t('description')}
+                                        label={t('descriptionOptional')}
                                         error={methods.formState.errors.description}
                                         {...methods.register("description")}
                                     />

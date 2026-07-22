@@ -100,6 +100,7 @@ const Examinations = () => {
             createdDate={paramsFilter.createdDate}
             kw={paramsFilter.kw}
             hasDiagnosis={paramsFilter.hasDiagnosis}
+            visitStatus={paramsFilter.visitStatus}
             isMobile={isMobile}
           />
         }
@@ -121,6 +122,7 @@ const Examinations = () => {
                 <DashboardTableHeadCell>{t("id")}</DashboardTableHeadCell>
                 <DashboardTableHeadCell>{t("description")}</DashboardTableHeadCell>
                 <DashboardTableHeadCell align="center">{t("createdDate")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell align="center">{t("visitStatus")}</DashboardTableHeadCell>
                 <DashboardTableHeadCell align="center">{t("mailStatus")}</DashboardTableHeadCell>
                 <DashboardTableHeadCell align="center">{t("diagnosisStatus")}</DashboardTableHeadCell>
                 <DashboardTableHeadCell>{t("userCreated")}</DashboardTableHeadCell>
@@ -131,7 +133,7 @@ const Examinations = () => {
             <TableBody>
               {isLoadingExamination && (
                 <TableRow>
-                  <TableCell colSpan={8}>
+                  <TableCell colSpan={9}>
                     <Box sx={{ textAlign: "center", py: 2 }}>
                       <SkeletonListLineItem count={10} height="40px" className="ou-w-full" />
                     </Box>
@@ -156,7 +158,7 @@ const Examinations = () => {
 
               {!isLoadingExamination && examinationList.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={8} sx={{ border: 0 }}>
+                  <TableCell colSpan={9} sx={{ border: 0 }}>
                     <DashboardEmptyState message={t("examinations:errExamsNull")} />
                   </TableCell>
                 </TableRow>

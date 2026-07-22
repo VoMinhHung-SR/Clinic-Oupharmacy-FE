@@ -3,6 +3,7 @@ import useCustomModal from "../../../../lib/hooks/useCustomModal";
 import CustomModal from "../../../common/components/Modal";
 import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import moment from "moment";
+import PatientAllergyAlert from "../../../common/components/PatientAllergyAlert";
 
 const PatientInfoModal = ({patientData}) => {
     const { t } = useTranslation(["prescription-detail", "common", "modal"]);
@@ -28,7 +29,9 @@ const PatientInfoModal = ({patientData}) => {
             onClose={handleCloseModal}
             content={<Box component={Paper} elevation={5}>
                  <Grid container justifyContent="flex" className="ou-p-5" component={Paper} elevation={4}> 
-                 
+                    <Grid item xs={12} className="ou-p-2">
+                        <PatientAllergyAlert allergies={patientData?.allergies} />
+                    </Grid>
                     <Grid item xs={6} className="ou-p-2" >
                         <Typography>
                             <span >{t('patientFullName')}: </span>
@@ -68,6 +71,12 @@ const PatientInfoModal = ({patientData}) => {
                         <Typography>
                             <span >{t('address')}: </span>
                             {patientData?.address}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} className="ou-p-2">
+                        <Typography>
+                            <span >{t('allergies')}: </span>
+                            {patientData?.allergies?.trim() ? patientData.allergies : "—"}
                         </Typography>
                     </Grid>
                    

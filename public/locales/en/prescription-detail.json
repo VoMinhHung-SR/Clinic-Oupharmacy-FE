@@ -46,6 +46,8 @@
     "patientInfo": "Patient information",
     "gender": "Gender",
     "address": "Address",
+    "allergies": "Allergies",
+    "allergiesWarning": "Allergy warning",
     "email": "Email",
     "male": "Male",
     "female": "Female",

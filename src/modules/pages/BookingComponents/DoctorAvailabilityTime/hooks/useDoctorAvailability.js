@@ -104,7 +104,7 @@ const useDoctorAvailability = () => {
                 if(res.status === 200 || res.status === 201){
                     const examinationData = {
                         patient: res.data.id,
-                        description: data.description,
+                        description: (data.description || "").trim(),
                         created_date: new Date(data.selectedDate),
                         time_slot: timeSlot
                     }

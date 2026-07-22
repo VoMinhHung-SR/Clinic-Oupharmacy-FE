@@ -1,5 +1,6 @@
 import {
   Button,
+  Chip,
   CircularProgress,
   TableCell,
   TableRow,
@@ -30,12 +31,22 @@ const actionButtonSx = {
   p: 1,
 };
 
+const VISIT_STATUS_CHIP_COLOR = {
+  pending: "warning",
+  confirmed: "info",
+  in_progress: "secondary",
+  completed: "success",
+  cancelled: "default",
+  no_show: "error",
+};
+
 const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => {
   const { t } = useTranslation(["examinations", "common", "modal", "examination-detail"]);
 
-  const {id, description, created_date, mail_status, schedule_appointment, diagnosis_info} = examinationData
+  const {id, description, created_date, mail_status, schedule_appointment, diagnosis_info, status} = examinationData
   const { handleCloseModal, isOpen, handleOpenModal } = useCustomModal();
   const router = useNavigate()
+  const visitStatus = status || "pending"
 
   const handleSendEmailConfirm = () => {
     sendEmailConfirm();
@@ -122,12 +133,20 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
         </TableCell>
         <TableCell align="left">
           <Typography className="ou-table-truncate-text-container">
-            {description}
+            {description || "—"}
           </Typography>
         </TableCell>
         <TableCell align="center">
           <Typography>{schedule_appointment.day ? <span>{moment(new Date(schedule_appointment.day)).format("DD/MM/YYYY")}</span>
           : <span>{moment(created_date).format("DD/MM/YYYY")}</span>}</Typography>
+        </TableCell>
+        <TableCell align="center">
+          <Chip
+            size="small"
+            label={t(`status_${visitStatus}`)}
+            color={VISIT_STATUS_CHIP_COLOR[visitStatus] || "default"}
+            variant="outlined"
+          />
         </TableCell>
         <TableCell align="center">
           <Typography>{mail_status ? <span><CheckCircleIcon className="!ou-text-green-700"/></span>

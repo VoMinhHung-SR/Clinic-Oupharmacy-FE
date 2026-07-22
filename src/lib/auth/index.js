@@ -4,6 +4,7 @@ export {
   canDiagnose,
   canPrescribe,
   canViewPayments,
+  isBillPaid,
   canShowPaymentButtons,
   canShowPrintButton,
   canSendConfirmEmail,

@@ -8,7 +8,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { SERVICE_FEE } from "../../../../../lib/constants";
-import { canShowPaymentButtons, canShowPrintButton, canViewPayments } from "../../../../../lib/auth";
+import { canShowPaymentButtons, canShowPrintButton, canViewPayments, isBillPaid } from "../../../../../lib/auth";
 import { useContext } from "react";
 import UserContext from "../../../../../lib/context/UserContext";
 import Loading from "../../Loading";
@@ -74,7 +74,7 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
     }, 0) || 0;
 
     const isPaymentsMode = typeof handlePayment === "function"
-    const isPaid = Boolean(bill_status)
+    const isPaid = isBillPaid(bill_status)
 
     const handlePrintClick = () => {
         if (onPrint) {
@@ -170,8 +170,8 @@ const PrescriptionDetailCard = ({ prescriptionData, handlePayment, isLoadingButt
                     </Box>
                     {canViewPayments(user) && (
                         <Chip
-                            label={bill_status ? t('payment:paid') : t('payment:unpaid')}
-                            color={bill_status ? "success" : "warning"}
+                            label={isPaid ? t('payment:paid') : t('payment:unpaid')}
+                            color={isPaid ? "success" : "warning"}
                             variant="filled"
                             size="large"
                         />

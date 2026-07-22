@@ -45,6 +45,8 @@ const SchemaModels = () => {
             .required(t('yupAddressRequired'))
             .matches(REGEX_ADDRESS, t('yupAddressInvalid')),
 
+        allergies: Yup.string().trim().max(2000),
+
         dateOfBirth: Yup.string()
             .required(t('yupDOBRequired')),
 
@@ -81,9 +83,11 @@ const SchemaModels = () => {
 
     const timeSlotSchema = Yup.object().shape({
             description: Yup.string().trim()
-                .required(t('yupDescriptionRequired'))
                 .max(254, t('yupDescriptionMaxLength'))
-                .matches(REGEX_NOTE, t('yupDescriptionInvalid')),
+                .matches(REGEX_NOTE, {
+                    message: t('yupDescriptionInvalid'),
+                    excludeEmptyString: true,
+                }),
             
             selectedTime: Yup.object().shape({
                 scheduleID: Yup.string().required(t('yupCreatedTimeRequired')),

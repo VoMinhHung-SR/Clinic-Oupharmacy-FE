@@ -20,7 +20,8 @@ const useExaminationConfirm = () =>{
         mailStatus:0,
         createdDate:0,
         kw: '',
-        hasDiagnosis: ''
+        hasDiagnosis: '',
+        visitStatus: '',
     })
     
     // ====== Pagination ======
@@ -63,11 +64,12 @@ const useExaminationConfirm = () =>{
                 
                 const queryParams = `page=${page}`+
                 `&kw=${paramsFilter.kw === '' ? '' : paramsFilter.kw}`+
-                `&status=${paramsFilter.mailStatus === 1 ? 'true' 
+                `&mail_status=${paramsFilter.mailStatus === 1 ? 'true' 
                 :(paramsFilter.mailStatus === -1 ? "false" : "")}` +
                 `&ordering=${paramsFilter.createdDate === 0 ? "-created_date": "created_date"}` +
                 `&has_diagnosis=${paramsFilter.hasDiagnosis === 1 ? 'true' 
-                :(paramsFilter.hasDiagnosis === -1 ? "false" : "")}`
+                :(paramsFilter.hasDiagnosis === -1 ? "false" : "")}` +
+                `&visit_status=${paramsFilter.visitStatus || ""}`
 
                 querySample === "" ? querySample += '?' + queryParams : querySample += queryParams
                 

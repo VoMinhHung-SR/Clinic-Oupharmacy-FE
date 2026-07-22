@@ -1,7 +1,7 @@
 import { Button, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import moment from "moment";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { canPrescribe, canViewPayments } from "../../../../../lib/auth";
+import { canPrescribe, canViewPayments, isBillPaid } from "../../../../../lib/auth";
 import { Link, useNavigate } from "react-router-dom";
 import PaidIcon from "@mui/icons-material/Paid";
 import { useTranslation } from "react-i18next";
@@ -27,7 +27,7 @@ const DiagnosedCard = ({ diagnosedInfo, user }) => {
             return <span><CancelIcon className="!ou-text-red-700"/></span> 
 
 
-        if (prescribingArray.some(prescribing => prescribing && prescribing.bill_status === null)) {
+        if (prescribingArray.some(prescribing => prescribing && !isBillPaid(prescribing.bill_status))) {
             doneStatus = -1;
         }
 
