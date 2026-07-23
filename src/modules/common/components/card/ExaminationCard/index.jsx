@@ -149,16 +149,12 @@ const ExaminationCard = ({examinationData, user, loading, sendEmailConfirm}) => 
           />
         </TableCell>
         <TableCell align="center">
-          <Typography>{mail_status ? <span><CheckCircleIcon className="!ou-text-green-700"/></span>
-          : <span><CancelIcon className="!ou-text-red-700"/></span>}</Typography>
-        </TableCell>
-        <TableCell align="center">
           <Typography> {diagnosis_info?.length ? 
             <span><CheckCircleIcon className="!ou-text-green-700"/></span> 
           : <span><CancelIcon className="!ou-text-red-700"/></span>}
           </Typography>
         </TableCell>
-        <TableCell align="center">
+        <TableCell>
           <Typography>{examinationData?.user?.email ? examinationData.user.email : "undefined"}</Typography>
         </TableCell>
         <TableCell align="center">

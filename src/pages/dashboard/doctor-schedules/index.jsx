@@ -7,7 +7,6 @@ import { Helmet } from "react-helmet"
 import SkeletonDoctorScheduleList from "../../../modules/common/components/skeletons/pages/doctor-schedules"
 import {
   DASHBOARD_PAGE_FRAME_SX,
-  DASHBOARD_SCROLL_CONTENT_SX,
   DASHBOARD_SURFACE,
 } from "../../../modules/common/layout/dashboard/styleTokens"
 
@@ -35,11 +34,15 @@ const DoctorSchedules = () => {
           elevation={DASHBOARD_SURFACE.elevation}
           className="ou-scrollbar"
           sx={{
-            ...DASHBOARD_SCROLL_CONTENT_SX,
             borderRadius: DASHBOARD_SURFACE.borderRadius,
             width: "100%",
             maxWidth: "100%",
             mx: "auto",
+            flex: 1,
+            minHeight: 0,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
           }}
         >
           <DoctorScheduleForm doctor={user} />
