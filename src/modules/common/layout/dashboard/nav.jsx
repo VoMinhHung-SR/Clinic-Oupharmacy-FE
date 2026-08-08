@@ -18,8 +18,8 @@ import FlagVN from '../../../../../public/flagVN';
 import Logout from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import { changeLanguage } from "i18next";
-import { AVATAR_DEFAULT, ERROR_CLOUDINARY, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
-import { isRoleIn } from '../../../../lib/auth';
+import { AVATAR_DEFAULT, ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
+import { isBusinessAdmin, isRoleIn } from '../../../../lib/auth';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useContext, useState } from "react";
 import MailIcon from '@mui/icons-material/Mail';
@@ -38,6 +38,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import PaymentIcon from '@mui/icons-material/Payment';
+import CategoryIcon from '@mui/icons-material/Category';
 import { isDashboardNavItemActive } from './styleTokens';
 
 const drawerWidth = 240;
@@ -95,13 +96,15 @@ const NavDashboard = ({ open, toggleDrawer }) => {
 
   const {t, i18n}= useTranslation(['common', 'modal']);
 
-  const pages = [
+  const page_DASHBOARD_HOME = [
     {
       id: 'dashboard',
       name: t('home'),
       icon: <HomeIcon className='ou-text-white'/>,
       link: '/dashboard'
     },
+  ];
+  const page_CLINIC_SHARED = [
     {  
       id: 'examinations',
       name: t('examinations'),
@@ -137,6 +140,14 @@ const NavDashboard = ({ open, toggleDrawer }) => {
         link: '/dashboard/prescribing'
     }
   ];
+  const page_BUSINESS_ADMIN = [
+    {
+      id: 'categories',
+      name: t('categories'),
+      icon: <CategoryIcon className='ou-text-white'/>,
+      link: '/dashboard/categories'
+    }
+  ];
     
   const { user, handleLogout, hasValidUserAddress, defaultAddress } = useContext(UserContext);
   const { navigate } = useCustomNavigate();
@@ -152,6 +163,10 @@ const NavDashboard = ({ open, toggleDrawer }) => {
   let badgeContent = <></>
 
   const handleNav = (allowedRoles, link) => {
+    if (allowedRoles == null) {
+      if (isBusinessAdmin(user)) return navigate(link);
+      return navigate("/dashboard/forbidden");
+    }
     if (isRoleIn(user, allowedRoles)) return navigate(link);
     navigate("/dashboard/forbidden");
   };
@@ -419,13 +434,31 @@ const NavDashboard = ({ open, toggleDrawer }) => {
 
           {/* Nav */}
           <List component="nav" className="ou-overflow-y-auto">
-              {renderPage(pages, [ROLE_DOCTOR, ROLE_NURSE], open)}
-              <Divider sx={{ my: 1 }} />
-
-              {renderPage(page_ROLE_DOCTOR, [ROLE_DOCTOR], open)}
-
-              <Divider sx={{ my: 1 }} />
-              {renderPage(page_ROLE_NURSE, [ROLE_NURSE], open)}
+              {renderPage(page_DASHBOARD_HOME, [ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE], open)}
+              {isRoleIn(user, [ROLE_DOCTOR, ROLE_NURSE, ROLE_ADMIN]) && (
+                <>
+                  <Divider sx={{ my: 1 }} />
+                  {renderPage(page_CLINIC_SHARED, [ROLE_DOCTOR, ROLE_NURSE, ROLE_ADMIN], open)}
+                </>
+              )}
+              {isRoleIn(user, [ROLE_DOCTOR, ROLE_ADMIN]) && (
+                <>
+                  <Divider sx={{ my: 1 }} />
+                  {renderPage(page_ROLE_DOCTOR, [ROLE_DOCTOR, ROLE_ADMIN], open)}
+                </>
+              )}
+              {isRoleIn(user, [ROLE_NURSE, ROLE_ADMIN]) && (
+                <>
+                  <Divider sx={{ my: 1 }} />
+                  {renderPage(page_ROLE_NURSE, [ROLE_NURSE, ROLE_ADMIN], open)}
+                </>
+              )}
+              {isBusinessAdmin(user) && (
+                <>
+                  <Divider sx={{ my: 1 }} />
+                  {renderPage(page_BUSINESS_ADMIN, [ROLE_ADMIN], open)}
+                </>
+              )}
           </List>
 
       </StyledDrawer>

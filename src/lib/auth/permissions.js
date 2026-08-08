@@ -1,4 +1,41 @@
-import { ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../constants';
+import { ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE, ROLE_USER } from '../constants';
+
+/**
+ * Business dashboard admin (Clinic FE). BE flag `is_admin`.
+ * Superuser may also use FE but Jazzmin (/admin) is is_superuser-only.
+ */
+export function isBusinessAdmin(user) {
+  return Boolean(user?.is_admin) || Boolean(user?.is_superuser);
+}
+
+/**
+ * FE effective role: is_admin (on ROLE_USER) → ROLE_ADMIN. Doctor/nurse unchanged.
+ * @param {{ role?: string, is_admin?: boolean, is_superuser?: boolean } | null} user
+ * @returns {string | null}
+ */
+export function getEffectiveRole(user) {
+  if (!user) return null;
+  if (isBusinessAdmin(user) && (!user.role || user.role === ROLE_USER)) {
+    return ROLE_ADMIN;
+  }
+  return user.role || null;
+}
+
+/** Persist ROLE_ADMIN on client session when is_admin; keep DB role in role_db. */
+export function normalizeClientUser(user) {
+  if (!user) return user;
+  const role = getEffectiveRole(user);
+  if (role === user.role) return user;
+  return { ...user, role_db: user.role ?? null, role };
+}
+
+export function getPostLoginPath(user) {
+  const role = getEffectiveRole(user);
+  if (role === ROLE_ADMIN || role === ROLE_DOCTOR || role === ROLE_NURSE) {
+    return '/dashboard';
+  }
+  return '/';
+}
 
 /**
  * Kiểm tra user có role nằm trong danh sách roles cho phép không.
@@ -7,8 +44,9 @@ import { ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../constants';
  * @returns {boolean}
  */
 export function isRoleIn(user, allowedRoles) {
-  if (!user?.role || !Array.isArray(allowedRoles)) return false;
-  return allowedRoles.includes(user.role);
+  const role = getEffectiveRole(user);
+  if (!role || !Array.isArray(allowedRoles)) return false;
+  return allowedRoles.includes(role);
 }
 
 /**
@@ -17,7 +55,7 @@ export function isRoleIn(user, allowedRoles) {
  * @returns {boolean}
  */
 export function canViewExaminationList(user) {
-  return isRoleIn(user, [ROLE_DOCTOR, ROLE_NURSE]);
+  return isRoleIn(user, [ROLE_DOCTOR, ROLE_NURSE, ROLE_ADMIN]);
 }
 
 /**
@@ -45,12 +83,12 @@ export function canPrescribe(user, diagnosedInfo) {
 }
 
 /**
- * User có quyền vào trang thanh toán và thực hiện thanh toán (nurse).
- * @param {{ role: string } | null} user
+ * Thanh toán: y tá hoặc business admin (ops). Không thay bác sĩ kê toa.
+ * @param {{ role?: string, is_admin?: boolean, is_superuser?: boolean } | null} user
  * @returns {boolean}
  */
 export function canViewPayments(user) {
-  return user?.role === ROLE_NURSE;
+  return getEffectiveRole(user) === ROLE_NURSE || isBusinessAdmin(user);
 }
 
 /**
@@ -69,13 +107,13 @@ export function isBillPaid(billStatus) {
 }
 
 /**
- * Hiển thị nút thanh toán (Momo / Pay) trên PrescriptionDetailCard: nurse và chưa thanh toán.
- * @param {{ role: string } | null} user
+ * Hiển thị nút thanh toán (Momo / Pay): y tá hoặc business admin, chưa thanh toán.
+ * @param {{ role?: string, is_admin?: boolean, is_superuser?: boolean } | null} user
  * @param {{ status?: string } | null | undefined | boolean} billStatus
  * @returns {boolean}
  */
 export function canShowPaymentButtons(user, billStatus) {
-  return user?.role === ROLE_NURSE && !isBillPaid(billStatus);
+  return canViewPayments(user) && !isBillPaid(billStatus);
 }
 
 /**
@@ -88,10 +126,10 @@ export function canShowPrintButton(user) {
 }
 
 /**
- * Nurse có thể gửi email xác nhận (khi mail_status false).
- * @param {{ role: string } | null} user
+ * Gửi email xác nhận lịch: y tá hoặc business admin (ops).
+ * @param {{ role?: string, is_admin?: boolean, is_superuser?: boolean } | null} user
  * @returns {boolean}
  */
 export function canSendConfirmEmail(user) {
-  return user?.role === ROLE_NURSE;
+  return getEffectiveRole(user) === ROLE_NURSE || isBusinessAdmin(user);
 }

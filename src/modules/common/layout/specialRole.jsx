@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { isRoleIn } from '../../../lib/auth';
 import UserContext from '../../../lib/context/UserContext';
 
 const ProtectedSpecialRoleRoute = ({allowedRoles = []}) => {
@@ -19,7 +20,7 @@ const ProtectedSpecialRoleRoute = ({allowedRoles = []}) => {
         return 
     if (allowedRoles.length === 0)
         return <Outlet/>;
-    return allowedRoles.includes(user.role) ? <Outlet/> : navigateForbidden()
+    return isRoleIn(user, allowedRoles) ? <Outlet/> : navigateForbidden()
 }
 
 export default ProtectedSpecialRoleRoute

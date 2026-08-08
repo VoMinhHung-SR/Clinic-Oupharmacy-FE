@@ -16,6 +16,7 @@ import Booking from './pages/booking'
 import Examinations from './pages/dashboard/examinations'
 import ProtectedUserRoute from './modules/common/layout/userRoute'
 import { MEDICINE_STORE_URL, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from './lib/constants'
+import ProtectedBusinessAdminRoute from './modules/common/layout/businessAdminRoute'
 import ProtectedSpecialRoleRoute from './modules/common/layout/specialRole'
 import Forbidden from './modules/common/layout/components/403-forbidden'
 import NotFound from './modules/common/layout/components/404-not_found'
@@ -134,7 +135,7 @@ function App() {
                       <Route path='/dashboard/' element={<DashboardLayout/>}>
                         <Route element={<ProtectedUserRoute/>}>
                             <Route path='/dashboard/' element={<DashBoard/>} />                          
-                            <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_DOCTOR, ROLE_NURSE]} />}>
+                            <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_DOCTOR, ROLE_NURSE, ROLE_ADMIN]} />}>
                               <Route path='/dashboard/examinations' element={<Examinations/>}/>
                               <Route path='/dashboard/doctor-schedules' element={<DoctorSchedules/>}/>  
                               <Route path='/dashboard/medicines' element={<ExternalRedirect url={MEDICINE_STORE_URL} replace={true}/>} />
@@ -147,11 +148,11 @@ function App() {
                               <Route path='/dashboard/prescribing/:diagnosisId' element={<PrescriptionDetailWithProvider/>} />
                             </Route>
 
-                            <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_NURSE]}/>}>
+                            <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_NURSE, ROLE_ADMIN]}/>}>
                               <Route path='/dashboard/prescribing/:diagnosisId/payments' element={<Payments />} />
                             </Route>
 
-                            <Route element={<ProtectedSpecialRoleRoute allowedRoles={[ROLE_ADMIN]}/>}> 
+                            <Route element={<ProtectedBusinessAdminRoute/>}>
                               <Route path='/dashboard/categories' element={<CategoryList/>}/>
                             </Route>
 

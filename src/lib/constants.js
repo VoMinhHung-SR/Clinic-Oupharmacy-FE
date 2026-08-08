@@ -1,3 +1,4 @@
+/** Legacy FE label only — BE has no UserRole ROLE_ADMIN. Use user.is_admin. */
 export const ROLE_ADMIN = "ROLE_ADMIN"
 export const ROLE_DOCTOR = "ROLE_DOCTOR"
 export const ROLE_NURSE = "ROLE_NURSE"
