@@ -1,11 +1,13 @@
+import { normalizeClientUser } from '../auth';
+
 const userReducer = (user, action) => {
     switch (action.type) {
         case 'login':
-          return action.payload;
+          return normalizeClientUser(action.payload);
         case 'logout':
           return null;
         case 'update':
-          return { ...user, ...action.payload };
+          return normalizeClientUser({ ...user, ...action.payload });
         default:
           return user;
       }

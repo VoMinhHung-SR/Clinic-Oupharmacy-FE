@@ -4,7 +4,8 @@ import StatisticCard from "../../modules/common/components/card/StatisticCard"
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"
 import AssignmentIcon from "@mui/icons-material/Assignment"
 import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew"
-import { CURRENT_DATE, MAX_EXAM_PER_DAY, ROLE_ADMIN, ROLE_DOCTOR } from "../../lib/constants"
+import { CURRENT_DATE, MAX_EXAM_PER_DAY, ROLE_DOCTOR } from "../../lib/constants"
+import { isBusinessAdmin } from "../../lib/auth"
 import useStatistic from "../../modules/pages/DashboardComponents/hooks/useStatistic"
 import useLimitExamPerDay from "../../modules/pages/HomeComponents/hooks/useLimitExamPerDay"
 import { useTranslation } from "react-i18next"
@@ -88,7 +89,7 @@ const DashBoard = () => {
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
               <Paper elevation={DASHBOARD_SURFACE.elevation} sx={{ ...DASHBOARD_PAPER_SX, p: 2 }}>
-                {user.role === ROLE_ADMIN || user.role === ROLE_DOCTOR ? (
+                {isBusinessAdmin(user) || user.role === ROLE_DOCTOR ? (
                   <DoctorScheduleWeeklyChart />
                 ) : (
                   <BookingChart />
