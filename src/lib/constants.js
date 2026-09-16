@@ -3,6 +3,7 @@ export const ROLE_ADMIN = "ROLE_ADMIN"
 export const ROLE_DOCTOR = "ROLE_DOCTOR"
 export const ROLE_NURSE = "ROLE_NURSE"
 export const ROLE_USER = "ROLE_USER"
+export const ROLE_PHARMACIST = "ROLE_PHARMACIST"
 
 // === REGEX === 
 export const REGEX_STRONG_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).*$/

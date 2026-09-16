@@ -91,6 +91,10 @@ export let endpoints = {
     'store-search': '/api/store/search/',
     'store-search-suggest': '/api/store/search/suggest/',
     'store-categories': '/api/store/categories/',
+    'consultation-sessions': '/api/store/consultation-sessions/',
+    'consultation-session-detail': (id) => `/api/store/consultation-sessions/${id}/`,
+    'consultation-session-claim': (id) => `/api/store/consultation-sessions/${id}/claim/`,
+    'consultation-session-complete': (id) => `/api/store/consultation-sessions/${id}/complete/`,
     
     // Bill
     'bill':'/bills/',

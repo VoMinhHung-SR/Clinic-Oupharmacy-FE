@@ -4,6 +4,9 @@
     "enterUserEmail":"Enter user email",
     "conversation": "Conversation",
     "user": "Search users",
+    "tabQueue": "Queue",
+    "tabInbox": "Inbox",
+    "tabUsers": "Users",
     "errNoConversation": "There is no conversations",
     "errNoRecipient": "No recipients found",
     "errNoMessage": "Entering something to send new message",
@@ -14,5 +17,20 @@
 
     "addNewConversationSuccess": "Add new conversation successfully",
     "addFailed":"Add conversation failed",
-    "backToList": "Back to list"
+    "backToList": "Back to list",
+
+    "consultQueue": "Pharmacist queue",
+    "consultQueueEmpty": "No waiting consultation sessions",
+    "consultQueueLoadFailed": "Could not load consultation queue",
+    "consultClaim": "Claim",
+    "consultOpen": "Open chat",
+    "consultComplete": "Complete",
+    "consultWaiting": "Waiting",
+    "consultInProgress": "In progress",
+    "consultNoNeedText": "No need text yet",
+    "consultClaimed": "Consultation claimed",
+    "consultClaimFailed": "Could not claim session (maybe taken)",
+    "consultCompleted": "Consultation completed",
+    "consultCompleteFailed": "Could not complete session",
+    "consultMissingThread": "Session has no Firestore thread yet"
 }

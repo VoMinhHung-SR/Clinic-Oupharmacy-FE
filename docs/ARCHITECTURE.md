@@ -59,7 +59,7 @@ Tất cả route `/dashboard/*` dùng shell **`DashboardLayout`** (`modules/comm
 | Frame | `index.jsx` | `100vh`, `main` `overflow: hidden`, outlet `flex: 1` |
 | Tokens | `styleTokens.js` | `DASHBOARD_PAGE_FRAME_SX`, `DASHBOARD_SURFACE`, spacing |
 | List shell | `shell/DashboardPageShell.jsx` | Header + filter + scroll table + pagination footer |
-| Split shell | `shell/DashboardSplitShell.jsx` | 30/70 panes, scroll riêng (conversations) |
+| Split shell | `shell/DashboardSplitShell.jsx` | 30/70 panes; `mobilePane` master–detail trên xs/sm (conversations) |
 
 **Quy tắc:** page con fill frame (`flex: 1; minHeight: 0`); scroll nội bộ qua `ou-scrollbar` / `DASHBOARD_SCROLL_CONTENT_SX`; không `calc(100vh)` trong page.
 
@@ -67,6 +67,7 @@ Tất cả route `/dashboard/*` dùng shell **`DashboardLayout`** (`modules/comm
 
 - **List** — examinations, prescribing list, categories → `DashboardPageShell`
 - **Split** — profile, conversations (dashboard) → flex split hoặc `DashboardSplitShell`
+  - **Pharmacist consult queue** — Inbox tab claim `ConsultationSession` (store API) + Firestore; doc [`docs/consultation-hub.md`](consultation-hub.md)
 - **Workspace** — prescribing detail → `PrescribingContentWrapper` + `PrescribingShell`
 - **Scroll content** — home charts, waiting-room grid, doctor-schedules form, diagnosis, payments → `DASHBOARD_PAGE_FRAME_SX` + scroll body
 

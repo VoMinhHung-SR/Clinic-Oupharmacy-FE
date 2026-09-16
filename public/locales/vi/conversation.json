@@ -4,6 +4,9 @@
     "enterUserEmail":"Nhập email người dùng",
     "conversation": "Hộp thoại tin nhắn",
     "user": "Người dùng tìm kiếm",
+    "tabQueue": "Hàng chờ",
+    "tabInbox": "Tin nhắn",
+    "tabUsers": "Người dùng",
     "errNoConversation": "Không tồn tại đoạn hội thoại",
     "errNoRecipient": "Không có kết quả tìm kiếm",
     "errNoMessage": "Nhập nội dung để gửi tin nhắn",
@@ -14,6 +17,20 @@
 
     "addNewConversationSuccess": "Thêm cuộc trò chuyện thành công",
     "addFailed": "Thêm cuộc trò chuyện không thành công",
-    "backToList": "Quay lại danh sách"
-    
+    "backToList": "Quay lại danh sách",
+
+    "consultQueue": "Hàng chờ dược sĩ",
+    "consultQueueEmpty": "Không có phiên tư vấn đang chờ",
+    "consultQueueLoadFailed": "Không tải được hàng chờ tư vấn",
+    "consultClaim": "Nhận",
+    "consultOpen": "Mở chat",
+    "consultComplete": "Hoàn thành",
+    "consultWaiting": "Chờ nhận",
+    "consultInProgress": "Đang tư vấn",
+    "consultNoNeedText": "Khách chưa mô tả nhu cầu",
+    "consultClaimed": "Đã nhận phiên tư vấn",
+    "consultClaimFailed": "Không nhận được phiên. Có thể đã có dược sĩ khác nhận",
+    "consultCompleted": "Đã hoàn thành phiên tư vấn",
+    "consultCompleteFailed": "Không hoàn thành được phiên",
+    "consultMissingThread": "Phiên chưa có thread Firestore"
 }

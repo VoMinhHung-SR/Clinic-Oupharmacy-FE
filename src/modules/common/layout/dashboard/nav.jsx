@@ -18,7 +18,7 @@ import FlagVN from '../../../../../public/flagVN';
 import Logout from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import { changeLanguage } from "i18next";
-import { AVATAR_DEFAULT, ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
+import { AVATAR_DEFAULT, ERROR_CLOUDINARY, ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE, ROLE_PHARMACIST } from '../../../../lib/constants';
 import { isBusinessAdmin, isRoleIn } from '../../../../lib/auth';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useContext, useState } from "react";
@@ -102,6 +102,14 @@ const NavDashboard = ({ open, toggleDrawer }) => {
       name: t('home'),
       icon: <HomeIcon className='ou-text-white'/>,
       link: '/dashboard'
+    },
+  ];
+  const page_ROLE_PHARMACIST = [
+    {
+      id: 'consult-conversations',
+      name: t('conversations'),
+      icon: <MailIcon className='ou-text-white'/>,
+      link: '/dashboard/conversations'
     },
   ];
   const page_CLINIC_SHARED = [
@@ -434,7 +442,13 @@ const NavDashboard = ({ open, toggleDrawer }) => {
 
           {/* Nav */}
           <List component="nav" className="ou-overflow-y-auto">
-              {renderPage(page_DASHBOARD_HOME, [ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE], open)}
+              {renderPage(page_DASHBOARD_HOME, [ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE, ROLE_PHARMACIST], open)}
+              {isRoleIn(user, [ROLE_PHARMACIST]) && !isBusinessAdmin(user) && (
+                <>
+                  <Divider sx={{ my: 1 }} />
+                  {renderPage(page_ROLE_PHARMACIST, [ROLE_PHARMACIST], open)}
+                </>
+              )}
               {isRoleIn(user, [ROLE_DOCTOR, ROLE_NURSE, ROLE_ADMIN]) && (
                 <>
                   <Divider sx={{ my: 1 }} />

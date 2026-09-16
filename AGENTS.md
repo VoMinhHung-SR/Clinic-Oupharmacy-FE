@@ -29,6 +29,7 @@
 | Endpoint API | `src/config/APIs.js` (hoặc file config API hiện có) |
 | Gọi API / axios | `src/lib/services/` |
 | Auth / token | `src/lib/auth/`, storage/local config |
+| Pharmacist consult queue | `SidebarInbox` + `docs/consultation-hub.md` |
 
 ## Lệnh
 
