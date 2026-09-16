@@ -123,10 +123,9 @@ const Examinations = () => {
                 <DashboardTableHeadCell>{t("description")}</DashboardTableHeadCell>
                 <DashboardTableHeadCell align="center">{t("createdDate")}</DashboardTableHeadCell>
                 <DashboardTableHeadCell align="center">{t("visitStatus")}</DashboardTableHeadCell>
-                <DashboardTableHeadCell align="center">{t("mailStatus")}</DashboardTableHeadCell>
                 <DashboardTableHeadCell align="center">{t("diagnosisStatus")}</DashboardTableHeadCell>
                 <DashboardTableHeadCell>{t("userCreated")}</DashboardTableHeadCell>
-                <DashboardTableHeadCell>{t("doctorName")}</DashboardTableHeadCell>
+                <DashboardTableHeadCell align="center">{t("doctorName")}</DashboardTableHeadCell>
                 <DashboardTableHeadCell align="center">{t("function")}</DashboardTableHeadCell>
               </TableRow>
             </TableHead>

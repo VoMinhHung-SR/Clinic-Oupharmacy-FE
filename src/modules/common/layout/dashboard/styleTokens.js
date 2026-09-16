@@ -1,6 +1,6 @@
 /** Shared dashboard surface + spacing tokens (Phase 0 style contract + P0 polish). */
 
-import { ROLE_DOCTOR, ROLE_NURSE } from "../../../../lib/constants"
+import { ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE } from "../../../../lib/constants"
 
 export const DASHBOARD_BORDER = "1px solid"
 export const DASHBOARD_BORDER_COLOR = "divider"
@@ -184,16 +184,16 @@ export const isDashboardNavItemActive = (pathname, item, user = null) => {
     return pathname === "/dashboard" || pathname === "/dashboard/"
   }
 
-  // Kê toa: list (doctor) + workspace /prescribing/:id — never payments sub-routes
+  // Kê toa: list (doctor/admin oversight) + doctor workspace — never payments sub-routes
   if (id === "prescribing") {
     if (pathname.includes("/payments")) return false
     if (pathname === "/dashboard/prescribing") {
-      return user?.role === ROLE_DOCTOR
+      return user?.role === ROLE_DOCTOR || user?.role === ROLE_ADMIN
     }
     return /^\/dashboard\/prescribing\/[^/]+$/.test(pathname) && user?.role === ROLE_DOCTOR
   }
 
-  // Thanh toán: list (nurse) + .../payments detail
+  // Thanh toán: list (nurse) + .../payments detail (nurse/admin)
   if (id === "payments") {
     if (pathname.includes("/payments")) return true
     if (pathname === "/dashboard/prescribing") {

@@ -1,9 +1,7 @@
 import {
   Avatar,
   Box,
-  Button,
   FormControl,
-  Grid,
   IconButton,
   InputAdornment,
   ListItem,
@@ -51,6 +49,7 @@ const ChatWindow = () => {
   const backToListPath = location.pathname.startsWith("/dashboard")
     ? "/dashboard/conversations"
     : "/conversations"
+  const isDashboard = location.pathname.startsWith("/dashboard")
 
   const renderMessages = () => {
     if (messagesSnapshot) {
@@ -60,13 +59,13 @@ const ChatWindow = () => {
             sx={{
               opacity: 0.5,
               textAlign: "center",
-              minHeight: { xs: 280, md: 420 },
+              minHeight: { xs: 180, md: 320 },
               display: "grid",
               placeContent: "center",
               gap: 1,
             }}
           >
-            <InsertCommentIcon sx={{ width: 48, height: 48, mx: "auto" }} />
+            <InsertCommentIcon sx={{ width: { xs: 40, md: 48 }, height: { xs: 40, md: 48 }, mx: "auto" }} />
             <Typography>{t("conversation:errNoMessage")}</Typography>
           </Box>
         )
@@ -86,7 +85,16 @@ const ChatWindow = () => {
         <title>{t("common:conversations")} - OUPharmacy</title>
       </Helmet>
 
-      <Grid item sx={{ height: "100%", display: "flex", flexDirection: "column", minHeight: 0 }}>
+      <Box
+        sx={{
+          flex: 1,
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          minHeight: 0,
+        }}
+      >
         <Box sx={{ bgcolor: "primary.main", flexShrink: 0 }}>
           <ListItem
             sx={{
@@ -141,11 +149,16 @@ const ChatWindow = () => {
           ref={chatWindowRef}
           sx={{
             flex: 1,
-            minHeight: { xs: 280, sm: 360, md: 420 },
-            maxHeight: { xs: "55vh", md: 520 },
+            minHeight: 0,
             bgcolor: "grey.200",
             overflowY: "auto",
             scrollBehavior: "smooth",
+            ...(isDashboard
+              ? {}
+              : {
+                  minHeight: { xs: 280, sm: 360, md: 420 },
+                  maxHeight: { xs: "55vh", md: 520 },
+                }),
           }}
         >
           {renderMessages()}
@@ -159,7 +172,7 @@ const ChatWindow = () => {
               value={newMessage}
               onChange={(event) => setNewMessage(event.target.value)}
               onKeyDown={sendMessageOnEnter}
-              rows={2}
+              rows={isMobile ? 1 : 2}
               endAdornment={
                 <InputAdornment position="end">
                   <SendIcon
@@ -172,7 +185,7 @@ const ChatWindow = () => {
             />
           </FormControl>
         </Box>
-      </Grid>
+      </Box>
     </>
   )
 }

@@ -15,7 +15,16 @@ function SplitPane({ children, sx = {} }) {
         ...sx,
       }}
     >
-      <Box className="ou-scrollbar" sx={{ flex: 1, minHeight: 0, overflow: "auto" }}>
+      <Box
+        className="ou-scrollbar"
+        sx={{
+          flex: 1,
+          minHeight: 0,
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         {children}
       </Box>
     </Paper>
@@ -24,28 +33,40 @@ function SplitPane({ children, sx = {} }) {
 
 /**
  * Two-pane dashboard layout (conversations, profile-like).
- * When fillViewport=false, keeps legacy min-height for public routes.
+ * @param {'left'|'right'|'both'} mobilePane — on xs/sm which pane shows; md+ always both.
  */
 export default function DashboardSplitShell({
   left,
   right,
   leftWidth = "30%",
   fillViewport = true,
+  mobilePane = "both",
 }) {
+  const showLeftOnMobile = mobilePane === "left" || mobilePane === "both"
+  const showRightOnMobile = mobilePane === "right" || mobilePane === "both"
+  const masterDetail = mobilePane !== "both"
+
   return (
     <Box
       sx={{
         ...(fillViewport ? DASHBOARD_PAGE_FRAME_SX : { width: "100%", minHeight: 600 }),
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
-        gap: 2,
+        gap: { xs: 1, md: 2 },
       }}
     >
       <SplitPane
         sx={{
-          flex: { xs: "0 0 auto", md: `0 0 ${leftWidth}` },
+          flex: { xs: masterDetail && showLeftOnMobile ? "1 1 auto" : "0 0 auto", md: `0 0 ${leftWidth}` },
           width: { xs: "100%", md: leftWidth },
-          maxHeight: { xs: "42vh", md: "100%" },
+          maxHeight: {
+            xs: masterDetail ? "none" : "42vh",
+            md: "100%",
+          },
+          display: {
+            xs: showLeftOnMobile ? "flex" : "none",
+            md: "flex",
+          },
         }}
       >
         {left}
@@ -56,6 +77,10 @@ export default function DashboardSplitShell({
           flex: { xs: "1 1 auto", md: "1 1 0" },
           width: { xs: "100%", md: "auto" },
           maxHeight: { xs: "none", md: "100%" },
+          display: {
+            xs: showRightOnMobile ? "flex" : "none",
+            md: "flex",
+          },
         }}
       >
         {right}

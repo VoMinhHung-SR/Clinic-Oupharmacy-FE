@@ -8,7 +8,7 @@ import { userContext } from '../../../../App';
 import Cookies from 'js-cookie';
 import { useTranslation } from 'react-i18next';
 import UserContext from '../../../../lib/context/UserContext';
-import { ROLE_DOCTOR, ROLE_NURSE } from '../../../../lib/constants';
+import { getPostLoginPath, normalizeClientUser } from '../../../../lib/auth';
 import { signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { auth, googleProvider, facebookProvider } from '../../../../config/firebase';
 
@@ -66,12 +66,7 @@ const useLogin = () => {
                 'type': 'login',
                 'payload': response.user
             });
-            
-            if (response.user.role === ROLE_DOCTOR || response.user.role === ROLE_NURSE) {
-                nav('/dashboard');
-            } else {
-                nav('/');
-            }
+            nav(getPostLoginPath(response.user));
         } catch (error) {
             console.error('Google login error:', error);
             setOpenError(true);
@@ -95,12 +90,7 @@ const useLogin = () => {
                 'type': 'login',
                 'payload': response.user
             });
-            
-            if (response.user.role === ROLE_DOCTOR || response.user.role === ROLE_NURSE) {
-                nav('/dashboard');
-            } else {
-                nav('/');
-            }
+            nav(getPostLoginPath(response.user));
         } catch (error) {
             console.error('Facebook login error:', error);
             setOpenError(true);
@@ -111,15 +101,14 @@ const useLogin = () => {
 
     const getInfoCurrentUser = async () => {
         const user = await authApi().get(endpoints['current-user'])
-        Cookies.set('user', JSON.stringify(user.data))
+        const sessionUser = normalizeClientUser(user.data)
+        Cookies.set('user', JSON.stringify(sessionUser))
         dispatch({
             'type': 'login',
-            'payload': user.data
+            'payload': sessionUser
         })
         if (user !== null) {
-            if (user.data.role === ROLE_DOCTOR || user.data.role === ROLE_NURSE)
-                return nav('/dashboard')
-            return nav("/")
+            return nav(getPostLoginPath(sessionUser))
         }
     }
     const loginSchema = Yup.object().shape({

@@ -1,5 +1,9 @@
 export {
   isRoleIn,
+  isBusinessAdmin,
+  getEffectiveRole,
+  normalizeClientUser,
+  getPostLoginPath,
   canViewExaminationList,
   canDiagnose,
   canPrescribe,

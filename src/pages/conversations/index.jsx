@@ -11,7 +11,16 @@ import SkeletonListLineItem from "../../modules/common/components/skeletons/list
 import { DASHBOARD_PAGE_FRAME_SX } from "../../modules/common/layout/dashboard/styleTokens"
 
 const ChatPlaceholder = ({ title }) => (
-  <Box sx={{ display: "flex", flexDirection: "column", height: "100%", minHeight: 280 }}>
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      flex: 1,
+      height: "100%",
+      minHeight: { xs: 220, md: 0 },
+      width: "100%",
+    }}
+  >
     <DashboardPaneHeader title={title} />
     <Box
       sx={{
@@ -20,16 +29,24 @@ const ChatPlaceholder = ({ title }) => (
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: 2,
-        p: 2,
+        gap: 1.5,
+        p: { xs: 1.5, sm: 2 },
       }}
     >
       <Tooltip title={title}>
-        <Box>
-          <IconRecipientChatPlaceholder size={280} />
+        <Box
+          sx={{
+            width: { xs: 140, sm: 200, md: 260 },
+            height: { xs: 140, sm: 200, md: 260 },
+            "& svg": { width: "100%", height: "100%" },
+          }}
+        >
+          <IconRecipientChatPlaceholder size={260} />
         </Box>
       </Tooltip>
-      <Typography color="text.secondary">{title}</Typography>
+      <Typography color="text.secondary" align="center" sx={{ px: 1, fontSize: { xs: "0.875rem", sm: "1rem" } }}>
+        {title}
+      </Typography>
     </Box>
   </Box>
 )
@@ -106,9 +123,9 @@ const ConversationList = () => {
 
   const chatPane =
     conversationId && recipientId ? <Outlet /> : <ChatPlaceholder title={selectUserLabel} />
+  const showChat = Boolean(conversationId && recipientId)
 
   if (!isDashboard) {
-    const showChat = Boolean(conversationId && recipientId)
     return (
       <>
         <Helmet>
@@ -170,7 +187,12 @@ const ConversationList = () => {
       <Helmet>
         <title>{t("common:conversations")} - OUPharmacy</title>
       </Helmet>
-      <DashboardSplitShell fillViewport left={<SidebarInbox user={user} />} right={chatPane} />
+      <DashboardSplitShell
+        fillViewport
+        mobilePane={showChat ? "right" : "left"}
+        left={<SidebarInbox user={user} />}
+        right={chatPane}
+      />
     </>
   )
 }

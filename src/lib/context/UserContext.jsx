@@ -1,13 +1,14 @@
 import React, { createContext, useEffect, useState, useReducer } from 'react';
 import Cookies from 'js-cookie';
 import userReducer from '../reducer/userReducer';
+import { normalizeClientUser } from '../auth';
 import { getCookieValue } from '../utils/getCookieValue';
 import { changeAvatar } from '../../modules/pages/ProfileComponents/services';
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, dispatch] = useReducer(userReducer, getCookieValue('user'));
+  const [user, dispatch] = useReducer(userReducer, normalizeClientUser(getCookieValue('user')));
   const [userState, setUserState] = useState(user);
 
   const [imageUrl, setImageUrl] = useState(null);
@@ -33,6 +34,12 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     setUserState(user);
+    if (user?.role && Cookies.get('user')) {
+      const cookieUser = getCookieValue('user');
+      if (cookieUser && cookieUser.role !== user.role) {
+        Cookies.set('user', JSON.stringify(user));
+      }
+    }
 
     if (selectedImage) {
       setImageUrl(URL.createObjectURL(selectedImage));
@@ -40,8 +47,9 @@ export const UserProvider = ({ children }) => {
   }, [user, selectedImage]);
 
   const updateUser = (updatedData) => {
+    const next = normalizeClientUser({ ...user, ...updatedData });
     dispatch({ type: 'update', payload: updatedData });
-    Cookies.set('user', JSON.stringify(updatedData));
+    Cookies.set('user', JSON.stringify(next));
   };
 
   const handleChangeAvatar = async (onSuccess, onError) => {

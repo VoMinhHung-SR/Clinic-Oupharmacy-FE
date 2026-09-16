@@ -1,5 +1,6 @@
 import APIs, { authApi, endpoints } from "../../../../config/APIs"
 import Cookies from "js-cookie"
+import { normalizeClientUser } from "../../../../lib/auth"
 
 export const fetchAccessToken = async (username, password) =>{
     
@@ -7,7 +8,7 @@ export const fetchAccessToken = async (username, password) =>{
         try{
             const user = await authApi().get(endpoints['current-user'])
             if(user.status === 200){
-                Cookies.set('user', JSON.stringify(user.data))
+                Cookies.set('user', JSON.stringify(normalizeClientUser(user.data)))
              }
         }catch(err){
             console.error(err)
@@ -45,7 +46,7 @@ export const firebaseSocialLogin = async (idToken, provider) => {
         if (response.status === 200) {
             Cookies.set('token', response.data.access_token);
             Cookies.set('refresh_token', response.data.refresh_token);
-            Cookies.set('user', JSON.stringify(response.data.user));
+            Cookies.set('user', JSON.stringify(normalizeClientUser(response.data.user)));
             return response.data;
         }
     } catch (error) {

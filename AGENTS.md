@@ -29,6 +29,7 @@
 | Endpoint API | `src/config/APIs.js` (hoặc file config API hiện có) |
 | Gọi API / axios | `src/lib/services/` |
 | Auth / token | `src/lib/auth/`, storage/local config |
+| Pharmacist consult queue | `SidebarInbox` + `docs/consultation-hub.md` |
 
 ## Lệnh
 
@@ -49,7 +50,7 @@ npm run build
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **Clinic-Oupharmacy-FE** (3137 symbols, 5072 relationships, 151 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **Clinic-Oupharmacy-FE** (3316 symbols, 5292 relationships, 148 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
