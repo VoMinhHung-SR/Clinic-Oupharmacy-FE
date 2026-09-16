@@ -1,4 +1,4 @@
-import { ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE, ROLE_USER } from '../constants';
+import { ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE, ROLE_PHARMACIST, ROLE_USER } from '../constants';
 
 /**
  * Business dashboard admin (Clinic FE). BE flag `is_admin`.
@@ -31,7 +31,12 @@ export function normalizeClientUser(user) {
 
 export function getPostLoginPath(user) {
   const role = getEffectiveRole(user);
-  if (role === ROLE_ADMIN || role === ROLE_DOCTOR || role === ROLE_NURSE) {
+  if (
+    role === ROLE_ADMIN ||
+    role === ROLE_DOCTOR ||
+    role === ROLE_NURSE ||
+    role === ROLE_PHARMACIST
+  ) {
     return '/dashboard';
   }
   return '/';
